@@ -1,0 +1,566 @@
+{
+  "created_at": "2026-09-07T15:19:22.802049+00:00",
+  "prompt_sha256": "21dd3b9e6cd783df7c7ff7c40543a620c4d4cbbb54990dc560a33f3b5a557988",
+  "papers": {
+    "autowebglm_comprehensive_summary.md": {
+      "source_sha256": "ee5100b55bdcc64eca63c5a0f9604a61dcaf60efdeea44838f60ba246cedfa72",
+      "draft_sha256": "c9aed088f0fac9f69bc164c1a17643ebbfd304f7dc06e31efd80cb51a221a24e",
+      "final_sha256": "c88d9b848ae9c2f1281f3a0fe84903e70e460a63cad40d6689b9a896a77bac72"
+    },
+    "go_browse_comprehensive_summary.md": {
+      "source_sha256": "4ddfc98553e56a7251c3c4ac87401044c369d758f3268d8dd010bdc7c32a1445",
+      "draft_sha256": "25bc88271e7b499e99c82b3aa61862f754892a78e1f9ce41804620f223c42cc5",
+      "final_sha256": "056b848f7aad3af91b176d4daded40b5c12f9e81e3ce32df98b64e1fc655c1a9"
+    },
+    "seeact_comprehensive_summary.md": {
+      "source_sha256": "ac281a3c5cdbda428e14605e9d96035fd35af82073ce46117c27c34792eea041",
+      "draft_sha256": "4bb9c9212f2abaac2088b4dddcb3eb28a4f261e6ce8a21653719d74b04d36ab7",
+      "final_sha256": "b93eb0e87cc0f942dd8d00b6cc1be4aa93efad50e1413d63658c8cb40f89b6bc"
+    },
+    "laser_comprehensive_summary.md": {
+      "source_sha256": "7e1ff14ef22ea7e4ac44b84b88563f830a14386f4da7354a8af366070ac5f989",
+      "draft_sha256": "aa1b3152f83fb70cc6dec0e4798ccbbef02ba8f030c09585e00b22ea40a3dbe1",
+      "final_sha256": "c3582f6a3a834c07e7abac2bd2d3e9dd9a38ed7a093848d98d1e52c80add2fdd"
+    },
+    "react_comprehensive_summary.md": {
+      "source_sha256": "f285b0971ae4a790e402fb93966bed3adde2cf0a04977d08b2b40d6ab0cace69",
+      "draft_sha256": "a05f70f003f54a56f1bca5a2d21b167b2a917bddbb38364bc9e422380d468f0d",
+      "final_sha256": "2aa6e399ae242b375ae5041bc9c0f15669833a1d3c2c5fd8f796618f8124d4ae"
+    },
+    "webvoyager_comprehensive_summary.md": {
+      "source_sha256": "69094c0247e519a50f3457a00830e818f0d1e68233248bb958d3527f7d17d99f",
+      "draft_sha256": "217c52554c831db8c134f0dc8826436600c91fadc0a9adde3f25d7c8d1c58ce8",
+      "final_sha256": "790bbb9efa1ccdf66e8c1f5f27acf736f82111f4345bed63ad1cc24a798066d3"
+    },
+    "bearcubs_comprehensive_summary.md": {
+      "source_sha256": "ed897dba84175152161a98532ea2fa84189a41d12151d39b965d7d0b42ff4055",
+      "draft_sha256": "79333985d2452f04f11b527baffc197643c7b0f5185b683761c4e64b61f40941",
+      "final_sha256": "4442dbad8e6715e48f9c57f7c8f1daa4def665c719a4994e89f62e53f786c01f"
+    },
+    "browsecomp_comprehensive_summary.md": {
+      "source_sha256": "8de2e7a024b43ff7fbab29e0bb6dbdc131ad07206e6c186c2122502d69477760",
+      "draft_sha256": "1aeb66196947ee1980a509191c0d6ef45f2974c3c2e84bce512bbddaa55915c7",
+      "final_sha256": "9355474be8333e5abf42d32b866940afcde0e86ca4b9c12a0345ca911cab0c91"
+    },
+    "mind2web_comprehensive_summary.md": {
+      "source_sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "draft_sha256": "95504b4ae2952c1839975084aacd596d211b9b8084a10af1fb1f3a41b6fe5cdd",
+      "final_sha256": "a0bfb8248127d2f1d03a5769dfed385856a4457865c299728aecaa1c79e63f4b"
+    },
+    "mmina_comprehensive_summary.md": {
+      "source_sha256": "1295b51e37abc2b4147cef166cc31e5c6a5e4df47ef1c394df7d3af84a9dcc81",
+      "draft_sha256": "bd5a7676202c8d79ae0b2df3613407eefb0d91e62d3643273f1a942c79432f69",
+      "final_sha256": "2f9d37158344c671f25b134d639ea51951146d9e12eca8096dc1e92e93f20d48"
+    },
+    "browsergym_comprehensive_summary.md": {
+      "source_sha256": "faf67147c8f28aca96ad6174c3ccaf4f127bab91fdeaaf0a8ac92f110e4fe09a",
+      "draft_sha256": "a50f4a141f7669a0ee9fcfe97396b4c3604e4e52bdab51b422648067957fbcb4",
+      "final_sha256": "e362e980bee389457b7f11368a98826e489a370a191dbe1a2d3e8e9022fd6aa1"
+    },
+    "visualwebarena_comprehensive_summary.md": {
+      "source_sha256": "6fc85c38c975c2af170c1d1a28f72ba557906d9019d1d9106a15215868bb491e",
+      "draft_sha256": "354e00511c488c4218de393a08069d3a0f7a187f5d776d6df3bd5d11a765beac",
+      "final_sha256": "7990c80ac0d4f3533d884a5c8c263de8f8e1a0e51896714fca799d08b9bef3c9"
+    },
+    "webarena_comprehensive_summary.md": {
+      "source_sha256": "2240e08a747462c59b49796e56985428f592e45d96debfa2aa88286263a4a787",
+      "draft_sha256": "487306f00ad975777d5f63351160ba4b334c6d4659217019254fbbc811c71cf1",
+      "final_sha256": "ddfedcaa9659f3469062de4cd9b59da5ed6bbb7a8723ce7331a59cfe95170b78"
+    },
+    "weblinx_comprehensive_summary.md": {
+      "source_sha256": "b6e07743ffd1f7939998fae362d42f87a3f00a88e42445b4b791b5fdf5a091e0",
+      "draft_sha256": "ed2935160e609fb5ec720e14df461a045bdb1463db2fdbb2357da53718a969b9",
+      "final_sha256": "9120d58e826ddecf3d5e654c53489188d328c366b15d404efa6a913a03b0faaf"
+    },
+    "webshop_comprehensive_summary.md": {
+      "source_sha256": "de9dba42d2ee1a7ded4de5c85870c8570bfb1beddf1f491cc2cde84cdaa4b42f",
+      "draft_sha256": "2abce3fb41ec22cfa97928eb5383c09df74f133c1bf28048d93ff628801af32f",
+      "final_sha256": "c60e128c6eda192a4a11ffb2cf29f23811924e09678ebfe983eff2547854a69c"
+    },
+    "workarena_comprehensive_summary.md": {
+      "source_sha256": "686792a9085d998be3ac3de3e9c126fd0a9256b6ccb313aa006edb62f7645295",
+      "draft_sha256": "5a41cc6b8dcb0038b6ad1635876392047c450d09c14eda4eeddb4aef08dc1a79",
+      "final_sha256": "cb55866dc2a14fd03cf983033e3002b28b157016bc828149a96165d704cc81d5"
+    },
+    "workarena_plus_comprehensive_summary.md": {
+      "source_sha256": "9e93845d77c1e954cbdcc7c7bfc1b2b284a850171058193f0b43c79914b423e1",
+      "draft_sha256": "6cb2e7b83987d56039501840c61d7a86a29f7acef1ca6f6c26b23e9efc11b647",
+      "final_sha256": "c9ec5a556009e3a591b96800ebda1d7e6b0c0043e64f8e84848063d0cda5b906"
+    },
+    "autoscraper_comprehensive_summary.md": {
+      "source_sha256": "b86e2a6f54ce405eb093ff5eddcd28ac0ce9becf5452a9e3500fb8e1b44f585f",
+      "draft_sha256": "8036b0206dc21b9d740b9a55afd535d1ec5403bec09afed5809ae326b2dc9286",
+      "final_sha256": "d8debcca18b8e4eb7d8fddb6a1942a8ff33f5d830d2cf478896ca13e06938f0d"
+    },
+    "mind2web_2_comprehensive_summary.md": {
+      "source_sha256": "1aaba4b08b43f832e2f55d6273475d958c3615b376e7f354eafd5ba31ee9449e",
+      "draft_sha256": "0e810c2ed9ebc38d04dcb81213a674abf1e77598455de662ba8832578a288a02",
+      "final_sha256": "b1f9ead858ce6463f82f29126d4958139dc75feb7272a5f7c626530931f87f92"
+    },
+    "webdancer_comprehensive_summary.md": {
+      "source_sha256": "e7ea9dab41d1284d7ddcebc53022e23f14d868f4639469c7122d1f86797c9a51",
+      "draft_sha256": "b5f679791099a1c23f49a450daba243bee1568624f8b999ef1ea7d7e720c3368",
+      "final_sha256": "807a0f174f80a7bbd4790acf75e843b8363a3d69d228b01ceda21ab55e03a813"
+    },
+    "webgpt_comprehensive_summary.md": {
+      "source_sha256": "acad8d9fd55a30b94de9dfdae413e10b21e07bde54d767b2405b31341739cedb",
+      "draft_sha256": "a43e38fcdc66ecbe2353611427c8a47e7bc1c0066cf615b8cfe420b5601fcd51",
+      "final_sha256": "d714f0b091ad2277a97493fca1e914157b5c6e2118ad069aa680c8498dc3e5b1"
+    },
+    "websailor_comprehensive_summary.md": {
+      "source_sha256": "f4d03667b7de9073c6b42f935344cf80f65417eab482d77f8c68b844c45b9e16",
+      "draft_sha256": "2fb31b8df3701c8d67144d98318945ddc90a39950f5abae17c6df920b0bf2f45",
+      "final_sha256": "5fb9887c41be5d896566fc0ce56e5d124b2f9101a666673541ceed7f46d0ab82"
+    },
+    "webscraper_comprehensive_summary.md": {
+      "source_sha256": "30909091703af2b60f8abfb05c44321532b0949ca7242e1d0e747e9909000ab4",
+      "draft_sha256": "a76b3cdefac39c0d6fae817f3346657314404fe7445f9a9b4901610474a512dc",
+      "final_sha256": "e6b80bb8b607870473396e2928b779e12e8c320f299463659304e29a9b736b0e"
+    },
+    "webwalker_comprehensive_summary.md": {
+      "source_sha256": "732f69fef0a8255beda990b28de040a720edf74bb6dd41cb59c0e9a27be47626",
+      "draft_sha256": "2cc7315b2106ccfeb819ab197744a5166af6543873573db4fe17214813cad707",
+      "final_sha256": "b11f7c15caf00c0b72e5e95f9db75e3b8cc59f4bf8b90fb4911387ab7b4e853b"
+    },
+    "advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.md": {
+      "source_sha256": "e2b5e36a069cd91d79413c0f4f506243bb276d42ae2204c5adadc99aa2118bef",
+      "draft_sha256": "eec1d7617c69c3d1dc08012a4c677b2493cd28fa489ff7ff727347962710cb86",
+      "final_sha256": null
+    },
+    "agentfuzzer_generic_black_box_fuzzing_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "f41a7b42c8e11de28365641c590d92d9da831ad4bf4aee426e985dc07c2c27b7",
+      "draft_sha256": "dfe18c8dad5fe70befb27ebbf7bdbe388fa66278d776b7828c4dd61c34f8e5e6",
+      "final_sha256": null
+    },
+    "agentvigil_generic_black_box_red_teaming_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "4bc0b57c44454a82f6d979378e223c49e7367ab137c189394eb9db510a2ffc39",
+      "draft_sha256": "aa22c7e3decfa138593151e26eede39a42c1846707a34cffe30031d76421423d",
+      "final_sha256": null
+    },
+    "attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.md": {
+      "source_sha256": "24e0d5a90275064313ffe5d791e3c5a46f694716b8c803d02afab118a73efd74",
+      "draft_sha256": "9b1c60726c5cefac37a388fcdcc138ab012fd99d990658d391ae30542b8b4b02",
+      "final_sha256": null
+    },
+    "commercial_llm_agents_are_already_vulnerable_to_simple_yet_dangerous_attacks_comprehensive_summary.md": {
+      "source_sha256": "5b3edc81df1df668ec22c9c4363d1a1070c6a01b46a8151b192d898d4a6eb90e",
+      "draft_sha256": "0f46f5ca110d2e814d40d4dfc49a7a8fac059e52446a47238480b8d1369f386e",
+      "final_sha256": null
+    },
+    "dissecting_adversarial_robustness_of_multimodal_lm_agents_comprehensive_summary.md": {
+      "source_sha256": "8549edb0501857b3ed9913946ca919a701b95374d9765ac197169eb76e2f71bd",
+      "draft_sha256": "6e5d4d71d15da6da49890001a57adb67a585e05f9ba0e279bdea80606d94bd4f",
+      "final_sha256": null
+    },
+    "eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.md": {
+      "source_sha256": "8b3f9bd8a09991ccb66bee6d01d8e2b2e87a004428f1f3d6ebb791c321afed07",
+      "draft_sha256": "2ced9414a86eb0c2116fc9e78b43c6ec1fc4f5a0b6e73270b0669c7125bf5df4",
+      "final_sha256": null
+    },
+    "searchgeo_comprehensive_summary.md": {
+      "source_sha256": "f18d2d996f196614989c86e725c4bcc186e233358b042070cda440a7a924f6a5",
+      "draft_sha256": "8b52e8c433ec4b6a5fe37ab8084cd83ed449cc642288ea882d1f0f61217cfdb8",
+      "final_sha256": "bec72219835793147015556dc1fe4c0d1551bb239ba448d5ce7b7c447ebbd86c"
+    },
+    "canary_tokens_comprehensive_summary.md": {
+      "source_sha256": "2b3a5363fdb15c5a18362fbba13f640f13fe29f8c227a93968ab6ff9485c84a5",
+      "draft_sha256": "48fba40267b2f193407c52ae9dd4a090515c99fc38ca711c2f4f3f366b9225a2",
+      "final_sha256": "0a06dc4367eb404d93967346654e962836733bdc38b9519ec3901ffa03b1eaf8"
+    },
+    "indirect_prompt_injection_real_world_comprehensive_summary.md": {
+      "source_sha256": "56b01f1fade2c770cd9d859bea4f80cdd050e6414dbd36600c49d63b3447901d",
+      "draft_sha256": "d5c5c762275faab817f77424bc1826c7f6fecd7e52a50a2aa1c9fb3b8c2459d0",
+      "final_sha256": "4a7d66a8f3aafe08f7f8194ad0f6bda1de14a68b38a06eacb0576b950a147711"
+    },
+    "forge_comprehensive_summary.md": {
+      "source_sha256": "6db036cce16ad627f9bdf243e0b25a0db8c00b9cf6445a3456c6d7d06a6db150",
+      "draft_sha256": "2bff60a446a08990e92b7eeb56688906f303f828114710bcc1894e58e561638d",
+      "final_sha256": "31f375677640510b13acd754c220d6335dff66deb6ffed909019175c6cd073d3"
+    },
+    "retrieval_barrier_comprehensive_summary.md": {
+      "source_sha256": "745d721cf4fa003ef45b64d33373cbd42f211f09659c5b572d7601e5ef608fde",
+      "draft_sha256": null,
+      "final_sha256": "9142ecfbdd3a63e2ad0f904efd91e2988e23b0ee142840fa197f32772690f547"
+    },
+    "toolhijacker_comprehensive_summary.md": {
+      "source_sha256": "1749efa3dbb7d90d32ce1b48c7b122c069048ce389bc1be8d7dac4bf86467967",
+      "draft_sha256": null,
+      "final_sha256": "cbd58eb9bedc674931c52bf5a01237e4373969cfa5b6eee2b783dfd8e666e01d"
+    },
+    "unsafe_llm_search_comprehensive_summary.md": {
+      "source_sha256": "aa19adbc8d8d046713057d8ad5b1778162dc62df739d3703d110183abf04f780",
+      "draft_sha256": null,
+      "final_sha256": "9b49e174ca3deb71974f864be800762b3655be7d654eb0096c93902a213744d2"
+    },
+    "vpi_bench_visual_prompt_injection_attacks_for_computer_use_agents_comprehensive_summary.md": {
+      "source_sha256": "769803e65b999b6ced77abe3ca7e4c783e8f0f66946202072117d7b1c8e2c166",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "waaa_web_adversaries_against_agentic_browsers_comprehensive_summary.md": {
+      "source_sha256": "486e671e26958e8af4d5eab28ea4dd181d4a8214db2ca2fcd47029c657d6499a",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "webcloak_characterizing_and_mitigating_threats_from_llm_driven_web_agents_as_intelligent_scrapers_comprehensive_summary.md": {
+      "source_sha256": "451ba2bb2a8503b4590455a14593b8ac232c372689e4029368d689dd3ea21594",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "webinject_prompt_injection_attack_to_web_agents_comprehensive_summary.md": {
+      "source_sha256": "ca1374bd826c17e3570487401de333eb1a4096a71e9fddcf76fdcc9aad9e431b",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "when_ai_meets_web_comprehensive_summary.md": {
+      "source_sha256": "dd7ef2b3a06eaea6b7d229537f63a97a0c873676f4ad0a4d6512b33c329c74a6",
+      "draft_sha256": null,
+      "final_sha256": "f643656ac89a6098fda7de4f22c2db4f463d33c81e955d09eacf2fb1405a6181"
+    },
+    "agentlab_benchmarking_llm_agents_against_long_horizon_attacks_comprehensive_summary.md": {
+      "source_sha256": "860bfc133add288ad8b16b8e245b7167d0aa4946a3f6553b625907281a1cb3b8",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "ai_agent_traps_comprehensive_summary.md": {
+      "source_sha256": "603f0cae8cd8ab944f3e700a169d325120db42239075350d07c8183da71a527c",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "breaking_agents_compromising_autonomous_llm_agents_through_malfunction_amplification_comprehensive_summary.md": {
+      "source_sha256": "4cda5554dd3c73a743d1b55cbccf60a160dcf442970df06eb9b69296ad19ea54",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "context_manipulation_attacks_web_agents_are_susceptible_to_corrupted_memory_comprehensive_summary.md": {
+      "source_sha256": "c1acb6ff039f69fda4e181dff2223cd1d677b8e64d4d458ba97b593070c55a3b",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "hidden_in_memory_sleeper_memory_poisoning_in_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "6be0f159249e5a66c438d224a1b41c62c9bf97770bb20ea5229bd610987e32dc",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "how_adversarial_environments_mislead_agentic_ai_comprehensive_summary.md": {
+      "source_sha256": "0e5d385cfbbb91812762493dbc2bb5bc09806c1359ac195114765993201af3c2",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "its_a_trap_task_redirecting_agent_persuasion_benchmark_for_web_agents_comprehensive_summary.md": {
+      "source_sha256": "21826c891fad709395c830f81afb8ef6a48643775aa54049a6715f040935ead6",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "mind_the_web_the_security_of_web_use_agents_comprehensive_summary.md": {
+      "source_sha256": "d9d8dd67c192eccb3a47c2a13d06258f4250f5c24a2d84516abab9686bd3f7ad",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "mind_the_web_the_security_of_web_use_agents_5a834c4e_comprehensive_summary.md": {
+      "source_sha256": "5a834c4ef546307f06cb4d081cce6d026ec9a7029039befbf9ff18bb70831a9a",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "autonomy_comes_with_costs_detecting_denial_of_service_vulnerabilities_caused_by_resource_abusing_in_llm_based_agents_comprehensive_summary.md": {
+      "source_sha256": "3f2bf1948dcde95883304013d9eb6a86b728470f3dc51dca51baf675d338fa5c",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "beyond_max_tokens_stealthy_resource_amplification_via_tool_calling_chains_in_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "ed33f5670b718dbb449a216656c9369f48cee9daa6e66995dae097ee3ad8b7a7",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "denial_of_wallet_defining_a_looming_threat_to_serverless_computing_comprehensive_summary.md": {
+      "source_sha256": "6b6a34a604e17634d86f339a707ce2e5e8c480a4db002db65290c276ba14d316",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "overthinking_loops_in_agents_a_structural_risk_via_mcp_tools_comprehensive_summary.md": {
+      "source_sha256": "32493b11937620225490382eb3a6c48d957671ece044cdac2d5cc2deae851198",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "recurguard_runtime_monitoring_for_reasoning_token_consumption_attacks_comprehensive_summary.md": {
+      "source_sha256": "1cad6d424dc3890737e5530a21d95eecd9f87efa3b6432531b7a8083a40bf372",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "when_agents_do_not_stop_uncovering_infinite_agentic_loops_in_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "b83573a510a6653c176bde3666a95b2302b819f24b2d2d767ccc60c6039ad335",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "26a3f0426ee1d533e4dd9f62d1343a7a1d231fe718cfaf3a362cc7de829ae913",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "formalizing_prompt_injection_comprehensive_summary.md": {
+      "source_sha256": "9adb2f4e55bf9bfd171f7ddfc2c5f46c168f1cd28326101552b81fd2ebd2aaec",
+      "draft_sha256": null,
+      "final_sha256": "fea13e7183c98f7b7be990252a66fa3f88642a5139d8ebda9fd33d73da43d169"
+    },
+    "indirect_prompt_injections_are_firewalls_all_you_need_or_stronger_benchmarks_comprehensive_summary.md": {
+      "source_sha256": "43f15bd759c2ec68fd0f7738f3d730a7231ebccc420027f2626c6b6ee11b9447",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "safearena_comprehensive_summary.md": {
+      "source_sha256": "03e535c1c0b69f56ba8eb6f2e1596f55c65ca4e1a15356eb3775983a974cdcb0",
+      "draft_sha256": null,
+      "final_sha256": "0d78412091b9cfafd9ee4fb150485d07b1ef72ef64df56d4624f6f728b52a0fe"
+    },
+    "securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md": {
+      "source_sha256": "b7ea2139f2d1c474cf8fa128548f1f23170c8a761ffd3d61b38486f7bd8f1bb9",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "st_webagentbench_comprehensive_summary.md": {
+      "source_sha256": "3ee56f95b39fb59a6a19c0c6a53638c1adea5e8366216ce1bb321cc9a4ae0f8d",
+      "draft_sha256": null,
+      "final_sha256": "d234ad31fcf3e8ac87524da06339f7813b5b7458e4ea5e149d0a90948ba07a7e"
+    },
+    "wasp_comprehensive_summary.md": {
+      "source_sha256": "bf0c5f7118860c0d9672cf6ca3b214285f142b45c9d4dee9c007d787f146229e",
+      "draft_sha256": null,
+      "final_sha256": "f570d93c41ed4b62e0fb276fc9c5477153a31fc3aeab38a5ac4a961f54c9e5ff"
+    },
+    "ace_comprehensive_summary.md": {
+      "source_sha256": "da686f6107fa0e40a440dc2f7ee4b2d0b93ce23cb77f2a3c2fa7512ab36c2ff0",
+      "draft_sha256": null,
+      "final_sha256": "63ca4afd25dbd54113e53d633cc578d2ea01f19aef74fd8820bf0073856a1e80"
+    },
+    "rennervate_comprehensive_summary.md": {
+      "source_sha256": "c607e41816c18cb5171ea8c3b045c05cc5025899c63d0fc7752e7cd061e9a8e6",
+      "draft_sha256": null,
+      "final_sha256": "55c5186a45d8cd023886a16c67844dd8df79af85da91a8ca4003a49dda68f2ff"
+    },
+    "browsesafe_understanding_and_preventing_prompt_injection_within_ai_browser_agents_comprehensive_summary.md": {
+      "source_sha256": "65582a1d404d2b62e9a76e9696127618e5c2becb46489f89b35a9085f854a007",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "cellmate_sandboxing_browser_ai_agents_comprehensive_summary.md": {
+      "source_sha256": "3bcee9a85cbcca525351e9b1b184fb86a7ac1641cd15e623fac4c3345fa34491",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "defeating_prompt_injections_by_design_comprehensive_summary.md": {
+      "source_sha256": "c3719f6ce73eecf45e3764debef8a3d8ff8c9233b37d128c558b694ec3790cc7",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.md": {
+      "source_sha256": "0e99c2ad0af85eb97fce9f940a8010783641fa91f3aafedc5edf6becc5dc4ce2",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md": {
+      "source_sha256": "98c28e6d68ab378348fb8a1aea311c39533384fd7bdc15a4782a5bbf1ea057c0",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "melon_provable_defense_against_indirect_prompt_injection_attacks_in_ai_agents_comprehensive_summary.md": {
+      "source_sha256": "5b1ae66b933f722c981710e5782d3dfd80977ff8ac3566b108b7de1b88a99f8d",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "planguard_defending_agents_against_indirect_prompt_injection_via_planning_based_consistency_verification_comprehensive_summary.md": {
+      "source_sha256": "eb6b5ebaed769c95ec05de10b08c4feae53fd00ba028e737241a1aa7909023c3",
+      "draft_sha256": "234d50a529c3985a4de5b5859470978d584af7e0072853fdbfb317bcd2990042",
+      "final_sha256": null
+    },
+    "prismata_confining_cross_site_prompt_injection_in_web_agents_comprehensive_summary.md": {
+      "source_sha256": "10612beadc515de9565242cdf5c9e97a034195073d1f81ac763418d73829bbce",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "secalign_defending_against_prompt_injection_with_preference_optimization_comprehensive_summary.md": {
+      "source_sha256": "fd4931f9c1278dbd2ad2cabc9f7200d79ee3d1fee6a1dc86badcc5c3f65dbe27",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "snapguard_lightweight_prompt_injection_detection_for_screenshot_based_web_agents_comprehensive_summary.md": {
+      "source_sha256": "d00648fa086d0a041ccea96371c3fbd48d0ba73049e2e7bdd665a0e8a35ef079",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "struq_defending_against_prompt_injection_with_structured_queries_comprehensive_summary.md": {
+      "source_sha256": "98c56a8aabb43d1e1fd6eae5111bc09c79c069e52fac8139c578239d9ff74ff7",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "057ff02152c0bb61892b08abdc80f7af22416c03819e526878091ee87d3bf1e6",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "untrusted_content_masking_for_web_agents_with_security_guarantees_comprehensive_summary.md": {
+      "source_sha256": "d25d31e68ce316c495d154c1427b07c6a2b9f01369fbd329c44260f008b6b45d",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "ward_comprehensive_summary.md": {
+      "source_sha256": "60d29d0418e9027651e7c3baa354251853a4f92af1b0b5a33e2b070f4ae24eb6",
+      "draft_sha256": null,
+      "final_sha256": "bf3d8757db1c7f1d8a434a3d4ccf1cd01a9b93e1a1a688a143aa01c6ab8dc44a"
+    },
+    "webagentguard_a_reasoning_driven_guard_model_for_detecting_prompt_injection_attacks_in_web_agents_comprehensive_summary.md": {
+      "source_sha256": "6021b2ee18987f9614db50eac523aa253133de2706afe4c4b477fefc3e2e1444",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "agentrewardbench_evaluating_automatic_evaluations_of_web_agent_trajectories_comprehensive_summary.md": {
+      "source_sha256": "9c7d44da20f638f58d8aa4f547685eb1ebd9da78127c44493a9f2e31d0e324c9",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "an_illusion_of_progress_assessing_the_current_state_of_web_agents_comprehensive_summary.md": {
+      "source_sha256": "6aae476380da204f170bb785a40912bdc271fa6232e3ae90303bb2dd9b8fbfa8",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "focusagent_simple_yet_effective_ways_of_trimming_the_large_context_of_web_agents_comprehensive_summary.md": {
+      "source_sha256": "7965e54d13b59a9e3bc410f3ed146b2983a84f99864c3d9110db39e040849350",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "guide_interpretable_gui_agent_evaluation_via_hierarchical_diagnosis_comprehensive_summary.md": {
+      "source_sha256": "1bf91b3823009ae3ca0eb3dba4dfd9c6e871ef87929f7a88977765f2368e1a0c",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "odysseys_benchmarking_web_agents_on_realistic_long_horizon_tasks_comprehensive_summary.md": {
+      "source_sha256": "281fd20b2e68a5fea73d9dc95a371e7e95dfd20217dd7732526e36c5d41ae077",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "the_long_horizon_task_mirage_diagnosing_where_and_why_agentic_systems_break_comprehensive_summary.md": {
+      "source_sha256": "515851522526216becaadd883a6a1201e45fdc8b4259c3bc55698253c501119c",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "webchorearena_evaluating_web_browsing_agents_on_realistic_tedious_web_tasks_comprehensive_summary.md": {
+      "source_sha256": "b249731a61bfebc1d435fe6797b8964304d7c82add8c8d0f9d62d105e6ff463e",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "detection_of_crawler_traps_formalization_and_implementation_defeating_protection_on_internet_and_on_the_tor_network_comprehensive_summary.md": {
+      "source_sha256": "1c7be7d81b301ee62efe1842315f99a161489a8e25fe711c6ce0697076c2769f",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "irlbot_scaling_to_6_billion_pagesand_beyond_comprehensive_summary.md": {
+      "source_sha256": "e9bd69f22ad6f2ca12b3a9e264e44dac550dd3d3b4ea318596a328590c812f46",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "measuring_what_the_crawler_sees_discovery_curves_core_persistence_and_shell_dynamics_in_longitudinal_web_crawls_comprehensive_summary.md": {
+      "source_sha256": "821e47e4a865d8e70cd212eea3c1d4842c3e9096cd384b4ed9a9232fd728365f",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "the_impact_of_crawl_policy_on_web_search_effectiveness_comprehensive_summary.md": {
+      "source_sha256": "bee052f814bcbdd19a4eabcfb086b3c505829f811c0408e9b19d284c6788ecbd",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "web_crawling_comprehensive_summary.md": {
+      "source_sha256": "46f9b9ca7e200798c294c6dfb57db71a8823065ec065d8703f15a042042195d9",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "a_survey_on_autonomy_induced_security_risks_in_large_model_based_agents_comprehensive_summary.md": {
+      "source_sha256": "8d4a26f6b0de285a7b683fba8056db691a0f8a4d71be472719876912fcc335d7",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "a_survey_on_trustworthy_llm_agents_threats_and_countermeasures_comprehensive_summary.md": {
+      "source_sha256": "d88f294eb5a6f0ab1a3e7931372e96ebbe450e966b75b12917809c81e743c189",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "a_systematic_survey_of_security_threats_and_defenses_in_llm_based_ai_agents_a_layered_attack_surface_framework_comprehensive_summary.md": {
+      "source_sha256": "91b2131716ee0a426f5304e318bb5ca218de7c5de85ca5ac75be37e28471ed48",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "sok_attack_and_defense_landscape_of_agentic_ai_systems_comprehensive_summary.md": {
+      "source_sha256": "61f744eb2f4f6299f268e712a845916e99022b4333a03fded586ce182056903c",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "talk_is_not_cheap_a_taxonomy_and_benchmark_coverage_audit_for_llm_attacks_comprehensive_summary.md": {
+      "source_sha256": "0cc1a6988d0c71fd7801e2decaf38e1ab4b26e488fb512c00edac3193ced4805",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "toward_secure_llm_agents_comprehensive_summary.md": {
+      "source_sha256": "878b26db78805a0edd186b004826227dcea007cdc9c45c4b756394f0674c4f89",
+      "draft_sha256": null,
+      "final_sha256": "7de7e581e4f11a6caad3b27587f01b97cb3ea66ac140200639df8dc78a9f4388"
+    },
+    "androidworld_comprehensive_summary.md": {
+      "source_sha256": "37775d3c1a2f35b56fa0831d7e7496c9ca263b54fc6acd84471131556af90ae8",
+      "draft_sha256": null,
+      "final_sha256": "38eb1a26df07493bae803bbf626435f1b87c4415d23b64fd00f6721ce8849cfe"
+    },
+    "awe_comprehensive_summary.md": {
+      "source_sha256": "444fa363b42871fe4f4f289c8bfcad27cc030277baf502ea3164c7068fba1403",
+      "draft_sha256": null,
+      "final_sha256": "f1359d751658c3de5ac8a5e6c3d868b050db92a4eceaf5c30d088cabb80c1c7b"
+    },
+    "backdooragent_comprehensive_summary.md": {
+      "source_sha256": "104e3fa18fbf58c027ca7f8e3c4037be6b5c3c4e27f11fd118ca79bfe59e763d",
+      "draft_sha256": null,
+      "final_sha256": "66a4ce3d8c9d33da610bcc1b343ced997c14ce967e4105eba618d9208a4762a8"
+    },
+    "dont_click_that_teaching_web_agents_to_resist_deceptive_interfaces_comprehensive_summary.md": {
+      "source_sha256": "44136c75aec98025803cc388bd2cf3be4fc692a979606771d72e31939f0f2982",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "doomarena_a_framework_for_testing_ai_agents_against_evolving_security_threats_comprehensive_summary.md": {
+      "source_sha256": "7b4a2d6085e0f66a3b1f88291f349c52e679e35f2e122d86578895541632b6d5",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "evocrawl_comprehensive_summary.md": {
+      "source_sha256": "bc0333d4cffdacd05f2f4823ef4d3de5cc96aa23a273e72d62b5bbbd6d956b5c",
+      "draft_sha256": null,
+      "final_sha256": "5aa2de8ab9edaeb24b1af23209e7c35fe02bfecc284881123b2bb115a24706b1"
+    },
+    "gorilla_comprehensive_summary.md": {
+      "source_sha256": "db45fa166012d3c0449f7222baccb3ceefd84906cff74a9f4fddde93ee6fe969",
+      "draft_sha256": null,
+      "final_sha256": "911556cba1a9800eb7dd6d238ee5ecc73a3cb07793975947b33245609224378a"
+    },
+    "injecagent_benchmarking_indirect_prompt_injections_in_tool_integrated_large_language_model_agents_comprehensive_summary.md": {
+      "source_sha256": "690a5d14abf0d33002822b531b78fa375da51783ff831ba8ecbb6e22f3d4f382",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "skilltrojan_comprehensive_summary.md": {
+      "source_sha256": "d7c8e992f573589a9ed2119b1667d7ffee51f984bb7d7d19c4ef5c95c4315f89",
+      "draft_sha256": null,
+      "final_sha256": "6a6c05bb4d740564bfdd6f04c014cb927e59ed1fe4ec88b4714e42d74dab749c"
+    },
+    "the_hidden_dangers_of_browsing_ai_agents_comprehensive_summary.md": {
+      "source_sha256": "31d2d63b2ec6a08d735938ba35a6d50c46bc48a72fe55fe7a388eaf06cd4123d",
+      "draft_sha256": null,
+      "final_sha256": null
+    },
+    "toolformer_comprehensive_summary.md": {
+      "source_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+      "draft_sha256": null,
+      "final_sha256": "85ee748f4f51213171d3f5f037c065aa8faf57ce7fbde02266399e023411df1e"
+    },
+    "yurascanner_comprehensive_summary.md": {
+      "source_sha256": "d14f2628fde42eaf5bf3fc671b39ca9b22f10cb088c59db2afa3c8c4979487f3",
+      "draft_sha256": null,
+      "final_sha256": "3e76808d565ee096b18738267b40d0f0985de66cee1fefcd2a37742c0f167f7d"
+    }
+  }
+}
