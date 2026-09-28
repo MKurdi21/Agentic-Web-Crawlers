@@ -1,0 +1,78 @@
+"""Author sanitized operational reports. Never reads reserved scientific sources."""
+from pathlib import Path
+import sys
+sys.path.insert(0,str(Path(__file__).parent/'recovery_protocol'))
+from engine import *
+O=Path(__file__).resolve().parent;R=O.parents[1]
+def put(name,value):
+    p=O/name;p.parent.mkdir(parents=True,exist_ok=True)
+    p.write_bytes(canonical(value)+b'\n' if not isinstance(value,str) else value.encode('utf-8'))
+log=Path(r'C:\Users\moham\.codex\sessions\2026\09\13\rollout-2026-09-13T10-07-38-01a09b18-5662-7af0-a781-c681cb6489f0.jsonl')
+selected={5926:('RUN_STARTED','Implementation request'),5972:('RECOVERY_REQUESTED','Direct recovery request'),5980:('USAGE_LIMIT_PREEMPTION','Worker quota-status observation'),6041:('OPERATION_REPLAYED','Dependency-copy overlap explanation; test rerun'),6209:('RECOVERY_REQUESTED','Direct recovery request'),6215:('USAGE_LIMIT_PREEMPTION','Repeated worker quota-status observation'),6274:('RECOVERY_REQUESTED','Direct recovery request'),6279:('RECOVERY_PREFLIGHT','Pending-review recovery explanation'),6455:('RUN_COMPLETED','Phase4BC final response')}
+timeline=[]
+with log.open('rb') as f:
+    for i,line in enumerate(f,1):
+        if i not in selected:continue
+        row=loads(line);kind,description=selected[i]
+        timeline.append({'event_id':f'bc-operational-{i}','timestamp':row.get('timestamp'),'session_id':'01a09b18-5662-7af0-a781-c681cb6489f0','event_type':kind,'phase':'PHASE4BC','atomic_unit':None,'last_durable_state':None,'next_expected_state':None,'interruption_reason':'WORKER_USAGE_STATUS' if kind=='USAGE_LIMIT_PREEMPTION' else None,'recovery_command':'recover and continue' if kind=='RECOVERY_REQUESTED' else None,'pre_recovery_hashes':None,'post_recovery_hashes':None,'replayed_operations':[],'duplicate_operations_detected':None,'partial_outputs_detected':None,'resolution':description,'evidence_location':str(log)+f':{i}','evidence_line_sha256':digest(line),'evidence_status':'OBSERVED','timestamp_provenance':'session JSONL envelope','subject':'worker_status_observation' if kind=='USAGE_LIMIT_PREEMPTION' else 'coordinator_or_user','limitations':'Not an immutable milestone; quota observations are not distinct usage windows.'})
+put('PHASE4BC_RECOVERY_TIMELINE.jsonl',''.join(canonical(x).decode()+'\n' for x in timeline))
+answers=[
+ 'OBSERVED: three direct recovery requests and two quota-status observations. Three affected worker identities. Underlying distinct interruption/window count UNKNOWN; repeated worker notifications are deduplicated.',
+ 'OBSERVED: bc_engine, bc_layers and bc_arch_review had usage-limit statuses. No direct coordinator quota-failure record established.',
+ 'OBSERVED: tests reran after incomplete dependency copy and fixture-layout fixes; packets and packaging were rebuilt. INFERRED: ordinary implementation corrections, not proven recovery-caused replay of committed work.',
+ 'OBSERVED: preserved failed attempts coexist with final outputs. No duplicate authoritative registrations established; archive members unique.',
+ 'OBSERVED: incomplete attempts (23 tests/8 errors and139/9 errors) were not counted in final151 inherited passes. Intermediate execution correctness UNKNOWN.',
+ 'OBSERVED: final immutable files and reviewed packets match hashes. Pre-final protocol and fingerprint-sort corrections are not demonstrated post-freeze drift. No evidence of interruption-caused methodology change.',
+ 'OBSERVED: parent preservation reported12876 unchanged; supplement independently rehashed14449 unchanged at recovery. Attribution of unrecorded intermediate writes UNKNOWN.',
+ 'OBSERVED: seven untouched metadata reservations, no source-access event or derived scientific output found. An existing private PDF copy does not prove substantive access. Not an OS-wide audit.',
+ 'OBSERVED: original G-drive real-link creation failed; supplement NTFS creation failed1314. INFERRED: reported readiness blocker unrelated to usage interruption.',
+ 'UNKNOWN: exact coordinator interruption boundaries, distinct quota windows, every pre-recovery hash, original atomic receipt chain, OS-wide access, unrecorded overwrite/side-effect history.'
+]
+audit={'verdict':'NO_EVIDENCE_OF_RECOVERY_INDUCED_STATE_CORRUPTION','blocker_attribution':'BLOCKER_UNRELATED_TO_USAGE_INTERRUPTION','direct_recovery_requests':3,'usage_status_observations':2,'affected_worker_identities':3,'distinct_usage_windows':None,'distinct_underlying_interruptions':None,'questions':answers,'independent_final_checks':{'archive_members':86,'allowlisted_outputs':85,'crc':True,'member_hashes':True,'reviewed_packet_hashes':True,'immutable_manifest':True,'json_parse':True,'final_tests':{'total':223,'passed':222,'failed':0,'skipped':1}},'limitations':['Final consistency does not prove all intermediate operations.','Historical Phase4BC lacked formal atomic receipts.','No OS-wide source access audit.'],'reviewer':'/root/supplement_review','review_type':'READ_ONLY_MODEL_REVIEW_NOT_HUMAN_APPROVAL'}
+put('RECOVERY_INTEGRITY_AUDIT.json',audit)
+put('RECOVERY_INTEGRITY_AUDIT.md','# Retrospective recovery integrity audit\n\nVerdict: **'+audit['verdict']+'**. Blocker: **'+audit['blocker_attribution']+'**.\n\n'+'\n\n'.join(f'{i}. {a}' for i,a in enumerate(answers,1))+'\n\nEvidence: PHASE4BC_RECOVERY_TIMELINE.jsonl; Phase4BC test_results/ARCHIVE_VALIDATION_INITIAL.json and final archive; preserved private incomplete dependency/fixture attempts; independent read-only reviewer. Phase4BC final total151+48+4+20=223 (222 pass,1skip). External final-handoff hash differs from archived copy by the documented external-receipt convention.\n')
+symlink=read(O/'REAL_SYMLINK_TEST_RESULT.json')
+put('REAL_SYMLINK_TEST_SPEC.md','# Original real-link contract\n\nOriginal test: test_context_engine.PacketTests.test_symlink_rejected. Source SHA-256: '+symlink['original_test_source_sha256']+'. Guard SHA-256: '+symlink['guard_sha256']+'. Parent architecture:63927844eaac94765a7a804ab128076a88cad6eac2f534b715b08b17c4e21606.\n\nThe unchanged method creates a real file symbolic link to an otherwise admissible synthetic document, redirects registry inclusion to that link, and requires build_packet to raise GuardError. The regular-file positive control must succeed. A junction, shortcut, copied file, mock, or outside-root-only rejection is not equivalent. The harness changes synthetic fixture placement only and imports frozen code read-only with bytecode disabled.\n')
+put('REAL_SYMLINK_TEST_REPORT.md','# Supplemental symlink result\n\n**ENVIRONMENT_BLOCKED / SYMLINK_PRIVILEGE_BLOCKED**. G reports FAT32; local C reports NTFS. Regular-file positive control passed. The unchanged original Python real-file-link operation failed with WinError1314 before the guard could inspect a link. Thus no real-link identity or rejection was demonstrated; invariant remains unsatisfied. The original Drive error1 and local privilege error1314 are distinct. No settings, elevation, junction substitution or permissions changes occurred. Fixture cleanup succeeded.\n\nIndependent read-only reviewer confirmed original-method fidelity. Historical Phase4BC remains223 checks:222pass,0fail,1skip. Supplemental test is separately ENVIRONMENT_BLOCKED, not an extra passing test. Modern Python Windows symlink creation was the already-permitted non-elevated path tested; no equivalent evidence is claimed.\n')
+protocol={'version':VERSION,'authority':'exclusive immutable receipt chain plus hash-linked event history; canonical state is reconstructable projection','states':STATES,'replay_policies':POLICIES,'source_delivery':'NOT_IMPLEMENTED; synthetic only','usage_headroom':'USAGE_HEADROOM_UNKNOWN','platform':'Windows msvcrt OS lock; no cross-machine lock claim','runtime':'private synthetic fixtures only in this phase','real_post_source_continuation':'BLOCKED until evidence-backed Phase4BC context/review adapter exists','scientific_parent':'phase4br-scientific-v3.0.0','context_parent':'phase4bc-context-v1.0.0'}
+put('PREEMPTION_RECOVERY_PROTOCOL.json',protocol)
+put('PREEMPTION_RECOVERY_PROTOCOL.md','''# Durable preemption and recovery
+
+Version: phase4bc-recovery-v1.0.0. This additive Windows toolkit does not change scientific or context rules and contains no real source-delivery implementation.
+
+## Authority and commit
+Under a single-writer OS byte lock: persist exclusive intent with run/unit/attempt, exact pins, expected outputs and replay policy; stage and flush/readback bytes; exclusively publish final outputs; exclusively publish immutable receipt linked to preceding receipt; append/fsync hash-linked event; atomically replace same-directory canonical state. A receipt, not an output filename, commits a unit. Recover receipt-before-journal and journal-before-state crashes from the same receipt. No overwrite of accepted output ownership is permitted.
+
+Genesis pins and bindings are immutable trusted inputs. State cannot redefine them. Validate run identity, immutable intent, input digest, output scope, prior receipt, event receipt references, and current state anchor. Missing bytes, altered bytes, receipt gaps/branches or missing committed receipts block. This is integrity against accidental interruption, not authentication against an attacker replacing the entire trusted genesis and all records.
+
+## Lock and failure
+RUN_LOCK.json describes PID, Windows creation-time evidence, session, heartbeat and status. The OS lock decides exclusion; timestamps/PIDs alone do not authorize reclaim. Unknown owner liveness blocks. Reused PID with different creation time is recorded separately. ACTIVE_OPERATION.json must exactly equal persisted intent at commit. A failed preflight creates an active durable failure latch. Begin/commit/finish cannot bypass it; only a successful full recovery may clear it.
+
+## Recovery
+Every recover-and-continue request requires preflight: journal, canonical state, genesis pins, live bindings, receipt chain, event/state commit anchors, owner lock, active intent, uncommitted files, source-consumption and packet pins. Supplied observations must be independently computed; actual path bindings are rehashed by the engine. Model recollection and prose are not commit evidence. Unknown unregistered outputs receive a logical quarantine inventory and block; partial expected files move into private quarantine before a new attempt. Staging bytes remain preserved with quarantine records. CAN_REPLAY_SAFELY and REQUIRES_CLEAN_RESTART both use new attempts after quarantine; MUST_NOT_REPLAY blocks until authoritative side-effect evidence resolves it. Same unit/input committed receipt returns existing outcome; different input conflicts. No generic exactly-once external side-effect claim.
+
+Missing state conservatively blocks. Truncated JSON state can reconstruct from genesis, valid receipt chain and source-access journal; a parseable invalid state is not silently repaired. Torn non-newline terminal journal records are preserved, hashed and linked to a new segment. Corrupt committed/interior records block; no truncation. Recovery diagnostics and all failed test attempts remain preserved.
+
+## Source and context
+Before source access, untouched status additionally requires no substantive bytes reaching any context. After access, consumption is permanent. Same-report continuation requires exact source/method/context/packet pins, committed scientific milestones, fresh clean packet review and unambiguous acceptance. The synthetic continuity booleans test mechanics only: they cannot authorize real continuation. No real source API exists here; future evidence-backed adapter and separate authorization are required. Never feed recovery history, diagnoses, previous outcomes or coordinator prose into workers. Saved or new Codex sessions both undergo identical durable preflight.
+
+## Preemption
+Record USAGE_HEADROOM_UNKNOWN when no account telemetry exists; do not infer quota percentages or promise uninterrupted work. Near exhaustion blocks a new expensive scientific unit. Persist PREEMPTED_BY_USAGE_LIMIT when tools remain available; otherwise recover from the last receipt. Distinguish scientific failure, context failure, controller failure, environment blocker, usage preemption, user stop, tool failure and unknown interruption. Natural safe points: pre-access, extraction commit, verification commit, report gate; later authorized rehearsal import/snapshot/restore/rollback boundaries.
+
+## Durability and testing
+Flush/fsync/readback, exclusive publication and atomic state replacement are process-crash controls. No arbitrary-power-loss, filesystem, disk/controller, Drive-sync or distributed-lock guarantee. Synthetic SQLite checks run integrity_check and foreign_key_check separately and quarantine corruption without repair. Runtime tests and backups stay NEVER_PACKAGE. CLI offers init, begin, commit, preempt, recover and finish; recover performs quarantine/replay reconciliation. Requests are JSON; no arbitrary scientific source launch.
+
+Documentation: https://learn.chatgpt.com/docs/codex/cli (session resumption), https://learn.chatgpt.com/docs/pricing (usage estimates, not account balance), https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createsymboliclinkw and https://knowledge.workspace.google.com/admin/drive/drive-faq-for-admins. Local observed results govern environment conclusions.
+''')
+put('RECOVERY_CONTEXT_FIREWALL.md','''# Recovery context firewall
+
+Recovery coordinator knowledge is orchestration-only. Primary/verifier packets must be built through frozen phase4bc-context-v1.0.0 allowlists and exact-byte static/semantic review; recovery transcripts, failure diagnoses, prior findings and coordinator summaries are forbidden. Resume a fresh primary/verifier context with no inherited scientific history. Require exact reviewed packet hash acknowledgement before any later authorized source delivery. A resumed chat is not evidence of durable scientific continuity. This toolkit does not deliver real sources; synthetic approval flags cannot satisfy the future evidence-backed adapter or trusted-human approval.
+''')
+put('PHASE4B_RESUME_WITH_RECOVERY_PROTOCOL.md','''# Future resume instructions — not executed
+
+Resolve the real-symlink gate and evidence-backed recovery integration before requesting separate B02 authorization. Start fresh coordinator context; load approved orchestration records only. Verify recovery library and schema fingerprints, scientific ad691060099fff81a3e75de6d4ffdfeb4a8906e006dbfbeefc80a6c601f1d07f, architecture63927844eaac94765a7a804ab128076a88cad6eac2f534b715b08b17c4e21606, code, protected inputs, and7 untouched reservations. Record unknown headroom honestly.
+
+Execute preflight, build clean B02 packet, static scan, separate semantic review, freeze reviewed hash, durably commit pre-access receipt, bind fresh context and acknowledgement, then (only under later authorization) record source access before delivery. Use fresh verifier packet/context. Commit extraction, verification and final gate separately. On usage exhaustion preserve preemption if possible; recover from receipts, never prose. After source access consumption cannot be reset. Block if continuity unknown. Fully gate B02 before B03; stop on mandatory failure and preserve later reports. No tuning against validation. AI-only pass ceiling and conditional Lane B remain; Phase5 separately authorized. This file does not authorize execution.
+''')
+put('INDEPENDENT_RETROSPECTIVE_REVIEW.json',{'reviewer':'/root/supplement_review','mode':'READ_ONLY_MODEL_REVIEW','audit':audit,'symlink_fidelity':'CONFIRMED_ENVIRONMENT_BLOCKED','human_approval':False})
+print('Sanitized reports authored; no scientific source opened.')
