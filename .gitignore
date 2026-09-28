@@ -12,9 +12,11 @@ current_repo*.txt
 **/NEVER_PACKAGE/
 **/private_source_material/
 analysis/**/private_*/
+**/private/
 **/test_results/
 **/_deps/
 **/vendor/
+**/shadow/
 **/execution_candidate/
 **/deploy_payload/
 **/milestone_receipts/
