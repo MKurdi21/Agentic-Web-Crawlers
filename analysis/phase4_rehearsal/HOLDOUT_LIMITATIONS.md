@@ -1,0 +1,3 @@
+# Holdout limitations
+
+This was a six-report challenge to a frozen workflow, not a statistically representative estimate for 112 reports. Verification used separate Codex contexts and source checks; there was no qualified independent human source review and no production trusted-human approval. Model agreement or disagreement is useful error evidence but is not human ground truth. The 43 disagreement items were excluded from supported conclusions; only the decisive numeric defects received additional coordinator source checks. A failed holdout is development evidence for the next methodology version, not permission to tune and reuse the same reports as an untouched test set.

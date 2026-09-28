@@ -1,0 +1,3 @@
+# Phase 4 executive result
+
+**`NO_GO`.** Lane A found critical errors in the frozen extraction and source-locator workflow. Separate-context model verification covered 209 critical and 18 sampled lower-risk evidence items across six reports; it detected four strict primary false accepts, including two coordinator-confirmed quantitative misstatements. No human-reviewed ground truth exists. Lane B was not started, so no import, database, cross-store backup, rollback, or cutover simulation occurred. Live scientific state remains isolated, with no Phase 4 promotion or skill installation. A versioned repair and a new untouched validation set are required before repeating workflow validation.
