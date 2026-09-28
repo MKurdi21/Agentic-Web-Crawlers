@@ -1,0 +1,571 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v3:scientific-evidence",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "3.0.0"
+    },
+    "paper_report_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "result_inventory": {
+      "type": "object",
+      "properties": {
+        "document_wide_complete": {
+          "type": "boolean"
+        },
+        "searched_locations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ABSTRACT",
+              "MAIN_RESULTS",
+              "TABLES",
+              "FIGURES",
+              "ABLATIONS",
+              "APPENDICES",
+              "SUPPLEMENTARY",
+              "LATER_COMPARISONS"
+            ]
+          }
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "result_id": {
+                "type": "string",
+                "minLength": 1,
+                "format": "identifier"
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1
+              },
+              "metric": {
+                "type": "string",
+                "minLength": 1
+              },
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "task": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dataset": {
+                "type": "string",
+                "minLength": 1
+              },
+              "benchmark": {
+                "type": "string",
+                "minLength": 1
+              },
+              "split": {
+                "type": "string",
+                "minLength": 1
+              },
+              "condition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model_configuration": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_location_id": {
+                "type": "string",
+                "minLength": 1,
+                "format": "identifier"
+              },
+              "result_class": {
+                "enum": [
+                  "MAIN_RESULT",
+                  "APPENDIX_RESULT",
+                  "SUPPLEMENTARY_RESULT",
+                  "ABLATION_RESULT",
+                  "SECONDARY_RESULT"
+                ]
+              },
+              "support_locator_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "format": "identifier"
+                }
+              }
+            },
+            "required": [
+              "result_id",
+              "subject",
+              "metric",
+              "value",
+              "unit",
+              "task",
+              "dataset",
+              "benchmark",
+              "split",
+              "condition",
+              "model_configuration",
+              "source_location_id",
+              "result_class",
+              "support_locator_ids"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "document_wide_complete",
+        "searched_locations",
+        "results"
+      ],
+      "additionalProperties": false
+    },
+    "table_cells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "table_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "caption": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "row_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "column_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cell_value": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "footnote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "merged_header_context": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "condition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "missing": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "table_id",
+          "caption",
+          "page",
+          "row_label",
+          "column_label",
+          "cell_value",
+          "unit",
+          "footnote",
+          "merged_header_context",
+          "condition",
+          "locator_id",
+          "missing"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "atomic_propositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "proposition_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "support_status": {
+            "enum": [
+              "SUPPORTED",
+              "PARTIALLY_SUPPORTED",
+              "CONTRADICTED",
+              "AMBIGUOUS",
+              "NOT_LOCATABLE",
+              "UNRESOLVED"
+            ]
+          },
+          "support_locator_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            }
+          }
+        },
+        "required": [
+          "proposition_id",
+          "statement",
+          "support_status",
+          "support_locator_ids"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "locator_assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "locator_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "role": {
+            "enum": [
+              "DISCOVERY_LOCATOR",
+              "SUPPORT_LOCATOR"
+            ]
+          },
+          "status": {
+            "enum": [
+              "LOCATOR_EXACT_SUPPORT",
+              "LOCATOR_PARTIAL_SUPPORT",
+              "LOCATOR_CONTEXT_ONLY",
+              "LOCATOR_WRONG_LOCATION",
+              "LOCATOR_NOT_LOCATABLE",
+              "LOCATOR_COMPOUND_INSUFFICIENT"
+            ]
+          },
+          "source_sha256": {
+            "type": "string",
+            "minLength": 1,
+            "format": "sha256"
+          },
+          "source_review_record_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "supported_proposition_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            }
+          },
+          "locator_components": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "PAGE",
+                    "PAGE_RANGE",
+                    "SECTION",
+                    "FIGURE",
+                    "TABLE",
+                    "EQUATION",
+                    "APPENDIX",
+                    "TEXT_SPAN",
+                    "ARTIFACT_URL",
+                    "REPOSITORY_FILE",
+                    "UNKNOWN",
+                    "PDF_METADATA"
+                  ]
+                },
+                "reference": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "type",
+                "reference"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "locator_id",
+          "role",
+          "status",
+          "source_sha256",
+          "source_review_record_id",
+          "supported_proposition_ids",
+          "locator_components"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_type": {
+            "enum": [
+              "AUTHOR_REPORTED",
+              "DIRECTLY_OBSERVABLE",
+              "DERIVED",
+              "ANALYST_INFERRED",
+              "NEGATIVE_FINDING"
+            ]
+          },
+          "atomic_proposition_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            }
+          },
+          "support_status": {
+            "enum": [
+              "FULLY_SUPPORTED",
+              "PARTIALLY_SUPPORTED_COMPOUND_CLAIM",
+              "UNRESOLVED",
+              "CONTRADICTED"
+            ]
+          },
+          "quantity_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "metric": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "directionality": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "scope": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "comparison_result_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            }
+          },
+          "condition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reported_or_derived": {
+            "enum": [
+              "REPORTED",
+              "DERIVED",
+              "NOT_QUANTITATIVE"
+            ]
+          },
+          "derivation": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "source_values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "uncertainty": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target_result_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "direction": {
+            "enum": [
+              "MAX",
+              "MIN",
+              "NONE"
+            ]
+          },
+          "support_locator_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            }
+          }
+        },
+        "required": [
+          "claim_id",
+          "statement",
+          "claim_type",
+          "atomic_proposition_ids",
+          "support_status",
+          "quantity_type",
+          "value",
+          "unit",
+          "metric",
+          "directionality",
+          "scope",
+          "comparison_result_ids",
+          "condition",
+          "reported_or_derived",
+          "derivation",
+          "source_values",
+          "uncertainty",
+          "target_result_id",
+          "direction",
+          "support_locator_ids"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "source_result_conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "result_ids": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            }
+          },
+          "resolution_status": {
+            "enum": [
+              "UNRESOLVED",
+              "EXPLAINED_BY_CONDITION",
+              "RESOLVED_SOURCE_ERROR"
+            ]
+          }
+        },
+        "required": [
+          "result_ids",
+          "resolution_status"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "paper_report_id",
+    "source_sha256",
+    "result_inventory",
+    "table_cells",
+    "atomic_propositions",
+    "locator_assessments",
+    "claims",
+    "source_result_conflicts"
+  ],
+  "additionalProperties": false
+}
