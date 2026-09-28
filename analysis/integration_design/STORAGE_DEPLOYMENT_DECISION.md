@@ -1,0 +1,7 @@
+# Storage Deployment Decision
+
+ProfileA: authoritative DB inside synced repository is not selected; local test success establishes no distributed lock or sync guarantee. ProfileB: local nonsynced SQLite with metadata exports is plausible for one-host coordination. ProfileC: local SQLite with controlled verified DB+artifact backup/export is recommended for future review, with actual directory/ownership unresolved. ProfileD: client/server storage is appropriate to evaluate if multi-host concurrent writers become a real requirement; it is not implemented now.
+
+Shadow profile explicitly verifies foreign_keys=1,journal_mode=delete,synchronous=3(EXTRA),application_id=0x4C525632,user_version=2,busy_timeout=5000,read_uncommitted=0,ignore_check_constraints=0,trusted_schema=0,temp_store=2 on every bootstrap. Metadata also requires UUID,schema hash and NON_AUTHORITATIVE_SHADOW. Existing identity/config mismatches fail closed; creation alone may initialize headers. Read-only opens do not rewrite persistent identity.
+
+SQLite documents EXTRA's additional directory sync after DELETE-journal removal; FULL is not universally strongest for rollback durability. WAL requires same-host coordination. Both facts inform design, not a guarantee about Google Drive. File-backed tests remain under shadow as required. Database integrity,artifact availability,and sync durability are three separate claims. See WEB_ARCHITECTURE_SOURCES.md.
