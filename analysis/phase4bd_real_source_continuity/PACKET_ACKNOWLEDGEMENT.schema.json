@@ -1,0 +1,78 @@
+{
+  "$id": "PACKET_ACKNOWLEDGEMENT.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acknowledgement_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "context_architecture_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "fork_history": {
+      "const": "none"
+    },
+    "methodology_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "packet_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "packet_template_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "path_containment_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "primary_context_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "recovery_protocol_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "report_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "status": {
+      "const": "ACKNOWLEDGED"
+    },
+    "timestamp": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "acknowledgement_id",
+    "run_id",
+    "report_id",
+    "primary_context_id",
+    "timestamp",
+    "source_sha256",
+    "methodology_sha256",
+    "context_architecture_sha256",
+    "path_containment_sha256",
+    "recovery_protocol_sha256",
+    "packet_template_sha256",
+    "packet_sha256",
+    "status",
+    "fork_history"
+  ],
+  "type": "object"
+}

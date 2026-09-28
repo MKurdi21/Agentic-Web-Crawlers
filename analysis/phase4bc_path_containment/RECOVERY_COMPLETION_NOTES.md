@@ -1,0 +1,11 @@
+# Recovery and completion evidence
+
+Recovery preflight observed interruption during IMPLEMENT_CONTAINMENT_AND_CONTINUITY, after development outputs but before any committed phase milestone. The absence of a receipt was not treated as completed work. The historical intent was logically quarantined under REQUIRES_CLEAN_RESTART; a new attempt began after rechecking all 16,050 protected files, frozen dependencies, prior archives and seven reserved source hashes. Full inventory and fingerprint evidence remains in recovery_observations/4bdf5d8674644c0ea087ebf39ee66025.json. Recovery journal event 8ecb555d43a14363a3fca1dcc66fb6a2 links that observation and records no duplicate effects, no blind replay, and the next permitted operation.
+
+Completed inherited test results were reconciled and retained. Implementation review corrections were made only in the new phase. Continuity tests were rerun when executed code changed. Earlier failed attempts are preserved, including a new test's incorrect fixture key; final accounting uses only completed stable suites, not sums of reruns. These were pre-freeze development corrections, not changes to frozen scientific methodology.
+
+The new implementation manifest and stable test summary are bound by immutable milestone receipt c1c1d6eaf6d85183a6cd8fbb14ea24633bed2b2af4aa62d71bf4c0a157810650. Subsequent report/preservation and package milestones use the same unchanged parent recovery engine. Local recovery_coordination is durable control evidence, excluded from the convenience archive. Arbitrary files outside committed output receipts remain non-authoritative; implementation/report manifests bind the reviewed deliverables.
+
+No real scientific atomic unit was started. Reserved reports retain their recorded untouched state; source hashing is not scientific inspection. Account usage headroom remains unknown. One earlier reviewer usage interruption was not classified as a scientific failure. A resumed conversation alone was never treated as proof of recovery correctness.
+
+Packaging uses a non-circular convention: the archived handoff points to an external receipt. The external handoff gains the final ZIP hash only after independent archive validation. The archived handoff's earlier hash is intentionally preserved by the reports milestone. Package creation never mutates prior archives.

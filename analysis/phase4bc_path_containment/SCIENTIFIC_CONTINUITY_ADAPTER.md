@@ -1,0 +1,11 @@
+# Scientific continuity adapter
+
+Version `phase4bc-continuity-v1.0.0` wraps unchanged context/recovery dependencies and the new Guard. `Continuity.create` binds exact synthetic source, approved packets, separate semantic-review records and all executed code/schema pins; `access` commits source/receipt identity before worker delivery. `unit` uses durable idempotent PRIMARY/VERIFIER receipts; `recover` validates inputs, repairs only supported journal/state projections under the inherited OS lock, reconstructs committed units and quarantines replayable partial computation.
+
+The generic `reconstruct_worker_context` interface accepts a validated current binding, exact approved packet, source bytes, role, receipt chain and optional committed atomic item. It accepts no conversation or coordinator narrative. Primary bytes must equal the pre-access receipt packet; verifier input is read against the committed PRIMARY output hash. Caller authority/pins must already be verified; this function is not approval authentication.
+
+Fresh workers are subprocesses with stdin-only scientific input: packet, current source, stage, and committed current primary item for verification. Session IDs remain control metadata. No filesystem/history arguments reach the scientific worker. Packet and source drift are checked even before returning a cached committed result. Recovery metadata never enters primary/verifier packets.
+
+The executable transport intentionally accepts synthetic content only. Example: ten trials and seven successes, one atomic 0.7 fraction with exact operands and source-bound text span; a separate worker recomputes it. A new coordinator object/session identity resumes an interrupted verifier using only durable state. Same-session identity also works; conversational memory has no authority. This is actual receipt/context code execution but not a test of a hosted Codex reconnect.
+
+Before access the synthetic report is untouched; access is permanently consumed even after interruption. Missing or ambiguous source receipts block recovery. Receipt-before-state, torn tails and malformed projection recovery use the frozen inherited protocol. Interior corruption, changed committed outputs, conflicting authority, stale reviews and incorrect pins fail closed. Real-source access remains unavailable in this phase.

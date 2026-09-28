@@ -1,0 +1,83 @@
+{
+  "$id": "SOURCE_ACCESS_EVENT.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "context_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "event_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "event_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "event_type": {
+      "const": "SOURCE_ACCESS_BEGAN"
+    },
+    "new_state": {
+      "const": "CONSUMED_VALIDATION_EVIDENCE"
+    },
+    "packet_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "previous_event_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "prior_state": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "report_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "session_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "timestamp": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "triggering_receipt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "timestamp",
+    "session_id",
+    "run_id",
+    "report_id",
+    "context_id",
+    "prior_state",
+    "event_sha256",
+    "previous_event_sha256",
+    "source_sha256",
+    "packet_sha256",
+    "triggering_receipt_sha256",
+    "sequence",
+    "event_type",
+    "new_state"
+  ],
+  "type": "object"
+}

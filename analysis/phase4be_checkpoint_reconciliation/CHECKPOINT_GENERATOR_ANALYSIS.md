@@ -1,0 +1,7 @@
+# Checkpoint generator analysis
+
+Before repair, `scripts/summary_state.py` used `ROOT.rglob('*.pdf')` from the project root, then treated every path except one containing `99_Duplicates` as canonical. It added an `Unmapped PDF` issue for every canonical path outside `manifest.csv`. Thus operational PDFs under `analysis/` inflated the canonical count. The old generator wrote `analysis/checkpoint.json` and `analysis/CHECKPOINT.md` in one invocation, each through its own temporary file and atomic rename; the pair was not a single atomic transaction. The shared `now` value appears in both outputs. It would create `analysis/baseline.json` only if absent; that file already exists.
+
+The 2026-09-28T00:14:51.262910+00:00 drifted timestamp is the generator's shared update value. The saved checkpoint enumerated 157 paths; isolated replay against those exact paths reproduces 152 canonical, five duplicate extra copies, 40 unmapped issues, all 112 paper records, and the full normalized JSON semantics. Issue order depends on set iteration. Six later operational PDFs are now present, so a present-time old-generator run would report 158 canonical and 163 total. The observed timestamps and hashes do not identify the OS process that ran the generator.
+
+After repair, discovery traverses twelve approved roots and `99_Duplicates` separately. The manifest must stay within approved roots. Status calculation, review validity, duplicate hash checks, and Markdown rendering are unchanged.

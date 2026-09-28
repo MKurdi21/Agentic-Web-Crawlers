@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:taxonomy",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "format": "semver"
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "definition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inclusion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "exclusion": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "term_id",
+          "definition",
+          "inclusion",
+          "exclusion"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "record_id",
+    "version",
+    "terms"
+  ],
+  "additionalProperties": false
+}

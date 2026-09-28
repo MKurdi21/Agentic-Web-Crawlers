@@ -1,0 +1,43 @@
+{
+  "$id": "CONSUMPTION_STATE.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "irreversible": {
+      "const": true
+    },
+    "prior_state": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "report_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_access_event_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "state": {
+      "const": "CONSUMED_VALIDATION_EVIDENCE"
+    }
+  },
+  "required": [
+    "run_id",
+    "report_id",
+    "source_access_event_id",
+    "prior_state",
+    "source_sha256",
+    "state",
+    "irreversible"
+  ],
+  "type": "object"
+}

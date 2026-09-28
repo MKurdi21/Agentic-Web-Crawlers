@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:paper_taxonomy_coding",
+  "type": "object",
+  "properties": {
+    "paper_report_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "taxonomy_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "taxonomy_version": {
+      "type": "string",
+      "minLength": 1,
+      "format": "semver"
+    },
+    "codes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            },
+            "minItems": 1
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "term_id",
+          "evidence_ids",
+          "rationale"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "paper_report_id",
+    "source_sha256",
+    "schema_version",
+    "taxonomy_id",
+    "taxonomy_version",
+    "codes"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,3 @@
+# Recovery context firewall
+
+Recovery coordinator knowledge is orchestration-only. Primary/verifier packets must be built through frozen phase4bc-context-v1.0.0 allowlists and exact-byte static/semantic review; recovery transcripts, failure diagnoses, prior findings and coordinator summaries are forbidden. Resume a fresh primary/verifier context with no inherited scientific history. Require exact reviewed packet hash acknowledgement before any later authorized source delivery. A resumed chat is not evidence of durable scientific continuity. This toolkit does not deliver real sources; synthetic approval flags cannot satisfy the future evidence-backed adapter or trusted-human approval.

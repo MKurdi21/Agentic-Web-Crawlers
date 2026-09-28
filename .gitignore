@@ -7,17 +7,29 @@
 # Draft generation scratch and repository snapshots
 .summary_work_*/
 current_repo*.txt
+.codex_*.ps1
 
 # Validation inputs and generated run artifacts
 **/NEVER_PACKAGE/
 **/private_source_material/
+analysis/**/private_*/
+**/private/
 **/test_results/
 **/_deps/
+**/vendor/
+**/shadow/
 **/execution_candidate/
 **/deploy_payload/
 **/milestone_receipts/
 **/lock_diagnostics/
+analysis/**/holdout_validation/
+analysis/**/holdout_lane/
+analysis/**/durable_run/
+analysis/**/recovery_coordination/
+analysis/**/recovery_receipts/
+analysis/**/recovery_observations/
 analysis/phase3_calibration/calibration_records/
+*.sqlite3
 
 # Local distribution archives; source directories remain available
 *.zip

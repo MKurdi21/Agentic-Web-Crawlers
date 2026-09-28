@@ -1,0 +1,7 @@
+# Schema Semantics
+
+Layer1 parses UTF-8 JSON and rejects duplicate keys/nonfinite constants. Layer2 uses Draft2020-12 schemas for object shape,required properties,enums and cardinalities. Layer3 explicitly checks timestamps,hashes,IDs,semver,DOI and HTTP(S) syntax; no URL/DOI resolution occurs. Layer4 checks meaningful text,claim/report/source agreement,unique items,ranges,evidence references within entities and denominators. Layer5 checks actual current records,source/page bounds,taxonomy definitions/versions,reviewed evidence hashes and synthesis eligibility. SCHEMA success is never called scientific verification.
+
+All11 locator variants are discriminated structures: PAGE>=1; PAGE_RANGE ordered positive bounds; SECTION/APPENDIX headings; FIGURE identifier/caption; TABLE identifier; EQUATION identifier/anchor; TEXT_SPAN exact text hash plus declared Unicode offset convention and nonempty bounds; ARTIFACT_URL supported absolute HTTP(S); REPOSITORY_FILE pinned revision,repository and safe relative path; UNKNOWN nonempty reason and missing context. Known page and text bounds are checked against stored sources/artifacts.
+
+UNKNOWN does not satisfy supported verification. Verification must reference an existing claim of the correct paper and exact evidence-artifact hash. Taxonomy coding requires defined term/version and related evidence. Contradictions need two distinct actual claims plus comparability context. Deterministic validation cannot determine whether submitted prose is scientifically true; full source review remains separate.

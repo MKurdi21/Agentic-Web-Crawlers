@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:artifact_metadata",
+  "type": "object",
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "privacy": {
+      "enum": [
+        "NEVER_PACKAGE",
+        "SYNTHETIC"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 1,
+      "format": "timestamp"
+    }
+  },
+  "required": [
+    "artifact_id",
+    "sha256",
+    "kind",
+    "privacy",
+    "created_at"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:worker_result",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "worker": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "submission_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "paper_report_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "kind": {
+      "enum": [
+        "normalized_paper",
+        "summary",
+        "evidence",
+        "verification",
+        "research_object",
+        "taxonomy",
+        "paper_taxonomy_coding",
+        "contradiction",
+        "synthesis",
+        "gap_candidate",
+        "research_question"
+      ]
+    },
+    "output_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "attempt_number": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "task_id",
+    "attempt_id",
+    "run_id",
+    "worker",
+    "token",
+    "generation",
+    "submission_id",
+    "paper_report_id",
+    "source_sha256",
+    "kind",
+    "output_path",
+    "output_sha256",
+    "attempt_number"
+  ],
+  "additionalProperties": false
+}

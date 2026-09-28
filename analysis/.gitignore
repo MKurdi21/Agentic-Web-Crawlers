@@ -1,0 +1,7 @@
+# Reproducible renderings and local process output can be large or sensitive.
+generation.lock
+evidence/**/page_*.png
+evidence/**/article.txt
+evidence/**/images.txt
+evidence/**/generation.log
+*.tmp
