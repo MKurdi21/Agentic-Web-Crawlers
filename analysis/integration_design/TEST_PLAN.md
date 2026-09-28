@@ -1,0 +1,7 @@
+# Test Plan
+
+Use hardened/scripts/run_tests.py for actual unittest outcomes. Tests create file-backed DBs only under shadow/synthetic; current-data import uses shadow/current.sqlite3. Synthetic sources and schema fixtures do not invoke a model. Every connection passes db.connect,including independent tests and backup handles. Static checks search for bypass connection sites and active configuration paths.
+
+Failure injection covers before/during/after staging,after immutable publication,before/during SQL,after commit,before/during disposable views. A subprocess exits abruptly after publication; other points raise deterministic injected failures. Each recovered scenario requires separate database and store checks. Accepted references must never require a later blob rename. Tests also cover replay,lease/source/pin changes,review hash/content/currentness,empty schema objects,locators,term/version checks and synthesis gates.
+
+Independent verify_equivalence does not call importer counting/export helpers; it directly queries SQL and hashes live/private files. Backup validation compares independently reopened snapshot rows and copied blob hashes. ZIP validator reopens actual members and does not trust builder success. Shared SQLite bootstrap,hash library and same-host environment are declared dependencies; no power-loss,remote-sync,scientific-correctness or live-deployment certification follows.

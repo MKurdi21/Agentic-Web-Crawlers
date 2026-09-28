@@ -1,0 +1,51 @@
+# Reference design disposition
+
+REFERENCE_TARGET_ARCHITECTURE is not production-ready authority. Original ZIP remains unchanged.
+
+| Component | Disposition | Reason |
+|---|---|---|
+| Route all review phases | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/literature-review-router/SKILL.md; rebuild/skills/literature-review-router/agents/openai.yaml |
+| State, eligibility, attempts and recovery | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/review-state-coordinator/SKILL.md; rebuild/skills/review-state-coordinator/agents/openai.yaml |
+| Hash/register/dispose source reports | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/corpus-ingestion/SKILL.md; rebuild/skills/corpus-ingestion/agents/openai.yaml |
+| Normalize and deeply summarize one source | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/paper-deep-reader/SKILL.md; rebuild/skills/paper-deep-reader/agents/openai.yaml |
+| Create source-located structured evidence | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/paper-evidence-extractor/SKILL.md; rebuild/skills/paper-evidence-extractor/agents/openai.yaml |
+| Independent material evidence checking | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/evidence-verifier/SKILL.md; rebuild/skills/evidence-verifier/agents/openai.yaml |
+| Link report versions to contributions | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/research-object-resolver/SKILL.md; rebuild/skills/research-object-resolver/agents/openai.yaml |
+| Evidence-backed controlled coding | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/taxonomy-thematic-coder/SKILL.md; rebuild/skills/taxonomy-thematic-coder/agents/openai.yaml |
+| Build contribution-aware verified matrices | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/cross-paper-synthesizer/SKILL.md; rebuild/skills/cross-paper-synthesizer/agents/openai.yaml |
+| Comparable cross-object claims and drivers | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/contradiction-replication-analyzer/SKILL.md; rebuild/skills/contradiction-replication-analyzer/agents/openai.yaml |
+| Evidence-supported candidate generation and scores | DEFER | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/research-gap-detector/SKILL.md; rebuild/skills/research-gap-detector/agents/openai.yaml |
+| Reproducible external novelty checking | DEFER | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/external-gap-validator/SKILL.md; rebuild/skills/external-gap-validator/agents/openai.yaml |
+| Traceable falsifiable RQs | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/research-question-generator/SKILL.md; rebuild/skills/research-question-generator/agents/openai.yaml |
+| Thematic verified review prose | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/literature-review-writer/SKILL.md; rebuild/skills/literature-review-writer/agents/openai.yaml |
+| Coverage, provenance, compatibility and claim audit | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/skills/corpus-auditor/SKILL.md; rebuild/skills/corpus-auditor/agents/openai.yaml |
+| Schema: worker_task | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/worker_task.schema.json |
+| Schema: worker_result | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/worker_result.schema.json |
+| Schema: artifact_metadata | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/artifact_metadata.schema.json |
+| Schema: corpus_manifest | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/corpus_manifest.schema.json |
+| Schema: normalized_paper | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/normalized_paper.schema.json |
+| Schema: summary | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/summary.schema.json |
+| Schema: evidence | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/evidence.schema.json |
+| Schema: verification | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/verification.schema.json |
+| Schema: research_object | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/research_object.schema.json |
+| Schema: taxonomy | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/taxonomy.schema.json |
+| Schema: paper_taxonomy_coding | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/paper_taxonomy_coding.schema.json |
+| Schema: contradiction | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/contradiction.schema.json |
+| Schema: gap_candidate | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/gap_candidate.schema.json |
+| Schema: research_question | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/schemas/research_question.schema.json |
+| SQLite authoritative state | REWRITE | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/db/schema.sql; rebuild/scripts/litrevctl.py |
+| Immutable accepted bundles | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/scripts/litrevctl.py:260-302 |
+| Leases, retry and stale recovery | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/scripts/litrevctl.py:217-230,305-316 |
+| Semantic version and hash pinning | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/scripts/litrevctl.py:60-95,347-383 |
+| Calibration and phase gates | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/MASTER_CODEX_INSTRUCTION.md; rebuild/scripts/litrevctl.py:388-410 |
+| Deterministic gap scoring | DEFER | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/scripts/gap_score.py; rebuild/config/gap_scoring.json |
+| Versioned review protocol | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/workspace-template/protocol/review_protocol.md |
+| Generic project configuration | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/config/project.example.json; rebuild/workspace-template/config.json |
+| Generic empty workspace and placeholder prompt | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/workspace-template/ |
+| Master instructions / AGENTS / plugin manifest | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/MASTER_CODEX_INSTRUCTION.md; rebuild/AGENTS.md; rebuild/.codex-plugin/plugin.json |
+| Semantic QA gates | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/references/qa-gates.md; rebuild/tests/test_static.py |
+| Evidence/artifact provenance graph | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/references/provenance.md; rebuild/db/schema.sql:179-224 |
+| Corpus-stage artifact registration | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/scripts/litrevctl.py:332-344 |
+| Methodology source bibliography | ADAPT | Preserve current aliases/provenance; require current pins,semantic validation and isolated acceptance. Reference: rebuild/references/methodology-sources.md |
+
+Stale/reaped completion,packet-only pins,pre-SQL mutable copying,weak schema semantics and free-form phase bypass are rewritten or blocked. Generic gap weights/external search are deferred. Live deployment,authenticated researcher backend and scientific calibration are explicitly deferred; production readiness is not claimed.

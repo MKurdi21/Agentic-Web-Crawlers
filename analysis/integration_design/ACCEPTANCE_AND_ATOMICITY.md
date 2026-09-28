@@ -1,0 +1,7 @@
+# Acceptance And Atomicity
+
+Validate the envelope and candidate bytes, then Layers1-4 and preliminary Layer5. Write a temporary blob on the same target filesystem; flush/fsync and close; reread/hash; publish non-overwriting to full-SHA CAS; hash-check publication. Windows uses MoveFileExW with WRITE_THROUGH but without REPLACE_EXISTING or COPY_ALLOWED. POSIX uses same-filesystem link. A rejected hard-link operation on this Google Drive filesystem was observed during development; import SQL rolled back. The Windows move path was selected and exercised thereafter.
+
+Only after publication begin IMMEDIATE and reread task/current attempt/state/lease expiry/generation/worker/token/source/current pins/prerequisites/replay. Rehash external source,repeat authoritative semantic checks and required review receipt checks. Register artifact,receipt,attempt/task transitions,event and logical accepted pointer in one commit. Postcommit JSON views are disposable. No accepted row knowingly references a temporary file needing later rename.
+
+Failure before commit may leave orphan bytes. Failure after commit may leave stale views. Recovery checks SQLite and registered blobs before rebuilding views. Existing same-hash bytes are independently compared and reused; mismatched bytes are a critical corruption/implementation/collision failure, never overwritten. Publication/GC share the coordinator lock. No claim is made about arbitrary power loss,remote sync,disk bugs or adversarial external writers.
