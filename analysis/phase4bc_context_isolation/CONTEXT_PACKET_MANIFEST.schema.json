@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_type",
+    "packet_id",
+    "methodology_fingerprint",
+    "policy_fingerprint",
+    "template_fingerprint",
+    "current_report_binding_fingerprint",
+    "included_artifacts",
+    "included_artifact_hashes",
+    "excluded_historical_layers",
+    "denylist_scan_result",
+    "semantic_review_result",
+    "build_timestamp",
+    "builder_version",
+    "packet_sha256"
+  ],
+  "properties": {
+    "packet_type": {
+      "enum": [
+        "primary",
+        "verifier"
+      ]
+    },
+    "packet_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "methodology_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policy_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "template_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "current_report_binding_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "included_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "included_artifact_hashes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "excluded_historical_layers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "denylist_scan_result": {
+      "enum": [
+        "STATIC_CONTEXT_CLEAN",
+        "STATIC_CONTEXT_CONTAMINATED"
+      ]
+    },
+    "semantic_review_result": {
+      "enum": [
+        "SEMANTIC_CONTEXT_CLEAN",
+        "SEMANTIC_CONTEXT_CONTAMINATED",
+        "SEMANTIC_CONTEXT_UNRESOLVED"
+      ]
+    },
+    "build_timestamp": {
+      "type": "string",
+      "minLength": 1
+    },
+    "builder_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packet_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
