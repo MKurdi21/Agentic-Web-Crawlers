@@ -1,0 +1,98 @@
+{
+  "$id": "PRE_ACCESS_RECEIPT.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ack_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "atomic_unit_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "commit_timestamp": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "helper_receipt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "immutable_fingerprints": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "required": [
+        "methodology",
+        "context",
+        "path",
+        "recovery",
+        "integration"
+      ],
+      "type": "object"
+    },
+    "packet_acknowledgement_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "packet_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "prior_consumption_state": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "report_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "role": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "semantic_status": {
+      "const": "SEMANTIC_CONTEXT_CLEAN"
+    },
+    "source_access_started": {
+      "const": false
+    },
+    "source_file_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "static_status": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "atomic_unit_id",
+    "report_id",
+    "source_file_id",
+    "packet_acknowledgement_id",
+    "static_status",
+    "role",
+    "prior_consumption_state",
+    "commit_timestamp",
+    "source_sha256",
+    "packet_sha256",
+    "ack_sha256",
+    "helper_receipt_sha256",
+    "immutable_fingerprints",
+    "semantic_status",
+    "source_access_started"
+  ],
+  "type": "object"
+}

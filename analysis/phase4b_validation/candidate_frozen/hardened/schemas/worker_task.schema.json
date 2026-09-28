@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:worker_task",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "worker": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "expiry": {
+      "type": "number"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "paper_report_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "stage": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pins": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "outbox": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_number": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "task_id",
+    "attempt_id",
+    "run_id",
+    "worker",
+    "token",
+    "generation",
+    "expiry",
+    "source_sha256",
+    "paper_report_id",
+    "stage",
+    "pins",
+    "outbox",
+    "attempt_number"
+  ],
+  "additionalProperties": false
+}
