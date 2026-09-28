@@ -11,13 +11,22 @@ current_repo*.txt
 # Validation inputs and generated run artifacts
 **/NEVER_PACKAGE/
 **/private_source_material/
+analysis/**/private_*/
 **/test_results/
 **/_deps/
+**/vendor/
 **/execution_candidate/
 **/deploy_payload/
 **/milestone_receipts/
 **/lock_diagnostics/
+analysis/**/holdout_validation/
+analysis/**/holdout_lane/
+analysis/**/durable_run/
+analysis/**/recovery_coordination/
+analysis/**/recovery_receipts/
+analysis/**/recovery_observations/
 analysis/phase3_calibration/calibration_records/
+*.sqlite3
 
 # Local distribution archives; source directories remain available
 *.zip
