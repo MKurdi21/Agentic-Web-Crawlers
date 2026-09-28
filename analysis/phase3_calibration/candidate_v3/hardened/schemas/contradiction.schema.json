@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:contradiction",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "format": "identifier"
+      },
+      "minItems": 2
+    },
+    "comparison_context": {
+      "type": "object",
+      "properties": {
+        "metric_or_proposition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conditions": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparability_rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "metric_or_proposition",
+        "conditions",
+        "comparability_rationale"
+      ],
+      "additionalProperties": false
+    },
+    "interpretation": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "record_id",
+    "claim_ids",
+    "comparison_context",
+    "interpretation"
+  ],
+  "additionalProperties": false
+}
