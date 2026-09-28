@@ -1,0 +1,10 @@
+{
+  "finished_at": "2026-09-07T15:34:25.7474625Z",
+  "prompt_sha256": "21dd3b9e6cd783df7c7ff7c40543a620c4d4cbbb54990dc560a33f3b5a557988",
+  "source_sha256": "745d721cf4fa003ef45b64d33373cbd42f211f09659c5b572d7601e5ef608fde",
+  "target": ".summary_v2\\retrieval_barrier_comprehensive_summary.md",
+  "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation\\Overcoming_the_Retrieval_Barrier_Indirect_Prompt_Injection_in_the_Wild_for_LLM_Systems.pdf",
+  "status": "generated_requires_source_review",
+  "started_at": "2026-09-07T15:21:40.4174564Z",
+  "process_id": 25136
+}

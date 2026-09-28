@@ -1,0 +1,177 @@
+{
+  "main_document_available": true,
+  "page_range_available": "1-20",
+  "page_count": 20,
+  "pages_apparently_missing": "not assessed; accessible page count does not establish completeness",
+  "pages_with_low_native_text": [],
+  "visual_content_available": "partial visual rendering",
+  "rendered_visual_pages": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    19,
+    20
+  ],
+  "candidate_visual_pages_total": 15,
+  "visual_page_limit": 56,
+  "tables_readable": "native/extracted text plus rendered candidate pages; exact readability must be assessed in analysis",
+  "equations_readable": "native/extracted text plus rendered candidate pages; OCR-sensitive notation must be flagged",
+  "appendix_pages_detected": [
+    11
+  ],
+  "embedded_file_count": 0,
+  "supplementary_references_detected": [],
+  "ocr_needed": false,
+  "page_records": [
+    {
+      "page": 1,
+      "native_text_chars": 4540,
+      "chosen_text_chars": 4540,
+      "embedded_images": 1,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 2,
+      "native_text_chars": 5253,
+      "chosen_text_chars": 5253,
+      "embedded_images": 20,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 3,
+      "native_text_chars": 5516,
+      "chosen_text_chars": 5516,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 4,
+      "native_text_chars": 5234,
+      "chosen_text_chars": 5234,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 5,
+      "native_text_chars": 4838,
+      "chosen_text_chars": 4838,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 6,
+      "native_text_chars": 5754,
+      "chosen_text_chars": 5754,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 7,
+      "native_text_chars": 3785,
+      "chosen_text_chars": 3785,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 8,
+      "native_text_chars": 5452,
+      "chosen_text_chars": 5452,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 9,
+      "native_text_chars": 4286,
+      "chosen_text_chars": 4286,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 10,
+      "native_text_chars": 5690,
+      "chosen_text_chars": 5690,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 11,
+      "native_text_chars": 5421,
+      "chosen_text_chars": 5421,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 12,
+      "native_text_chars": 6285,
+      "chosen_text_chars": 6285,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 13,
+      "native_text_chars": 5867,
+      "chosen_text_chars": 5867,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 14,
+      "native_text_chars": 5841,
+      "chosen_text_chars": 5841,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 15,
+      "native_text_chars": 4091,
+      "chosen_text_chars": 4091,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 16,
+      "native_text_chars": 4353,
+      "chosen_text_chars": 4353,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 17,
+      "native_text_chars": 4056,
+      "chosen_text_chars": 4056,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 18,
+      "native_text_chars": 4358,
+      "chosen_text_chars": 4358,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 19,
+      "native_text_chars": 4496,
+      "chosen_text_chars": 4496,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    },
+    {
+      "page": 20,
+      "native_text_chars": 3016,
+      "chosen_text_chars": 3016,
+      "embedded_images": 0,
+      "likely_scanned_or_low_text": false
+    }
+  ]
+}
