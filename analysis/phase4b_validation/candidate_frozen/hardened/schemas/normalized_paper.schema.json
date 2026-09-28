@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:normalized_paper",
+  "type": "object",
+  "properties": {
+    "paper_report_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "source_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "text_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "inventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "object_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "object_type": {
+            "enum": [
+              "SECTION",
+              "FIGURE",
+              "TABLE",
+              "EQUATION",
+              "APPENDIX",
+              "EXPERIMENT",
+              "ALGORITHM"
+            ]
+          },
+          "locator": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "PAGE"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "page"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "PAGE_RANGE"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "start": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "start",
+                  "end"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "SECTION"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "heading": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "heading"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "FIGURE"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "identifier_or_caption": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "identifier_or_caption"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "TABLE"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "identifier": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "identifier"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "EQUATION"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "identifier_or_anchor": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "identifier_or_anchor"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "APPENDIX"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "heading": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "heading"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "TEXT_SPAN"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "text_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "offset_convention": {
+                    "const": "UNICODE_CODEPOINT"
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "text_sha256",
+                  "start",
+                  "end",
+                  "offset_convention"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "ARTIFACT_URL"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "http-uri"
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "url"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "REPOSITORY_FILE"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "repository": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "revision": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "repository",
+                  "revision",
+                  "path"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "UNKNOWN"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "sha256"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "missing_context": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "source_sha256",
+                  "reason",
+                  "missing_context"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "object_id",
+          "object_type",
+          "locator"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "paper_report_id",
+    "source_sha256",
+    "schema_version",
+    "text_sha256",
+    "inventory"
+  ],
+  "additionalProperties": false
+}

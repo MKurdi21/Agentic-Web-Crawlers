@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:litrev:v2:synthesis",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "identifier"
+    },
+    "input_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "format": "identifier"
+      },
+      "minItems": 1
+    },
+    "input_fingerprint": {
+      "type": "string",
+      "minLength": 1,
+      "format": "sha256"
+    },
+    "report_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "format": "identifier"
+      },
+      "minItems": 1
+    },
+    "research_object_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "format": "identifier"
+      },
+      "minItems": 1
+    },
+    "report_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "object_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coverage": {
+      "enum": [
+        "COMPLETE_ELIGIBLE_SCOPE",
+        "PARTIAL_AUTHORIZED"
+      ]
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "report_id",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "row_id": {
+            "type": "string",
+            "minLength": 1,
+            "format": "identifier"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "identifier"
+            },
+            "minItems": 1
+          },
+          "finding": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "row_id",
+          "evidence_ids",
+          "finding"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "record_id",
+    "input_ids",
+    "input_fingerprint",
+    "report_ids",
+    "research_object_ids",
+    "report_count",
+    "object_count",
+    "coverage",
+    "exclusions",
+    "matrix"
+  ],
+  "additionalProperties": false
+}
