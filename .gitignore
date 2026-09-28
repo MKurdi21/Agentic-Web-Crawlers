@@ -1,0 +1,23 @@
+# Local Python and process output
+**/__pycache__/
+*.py[cod]
+*.log
+*.lock
+
+# Draft generation scratch and repository snapshots
+.summary_work_*/
+current_repo*.txt
+
+# Validation inputs and generated run artifacts
+**/NEVER_PACKAGE/
+**/private_source_material/
+**/test_results/
+**/_deps/
+**/execution_candidate/
+**/deploy_payload/
+**/milestone_receipts/
+**/lock_diagnostics/
+analysis/phase3_calibration/calibration_records/
+
+# Local distribution archives; source directories remain available
+*.zip
