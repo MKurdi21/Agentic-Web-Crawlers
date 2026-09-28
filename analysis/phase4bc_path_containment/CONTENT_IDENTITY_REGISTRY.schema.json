@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "items": {
+    "additionalProperties": false,
+    "properties": {
+      "artifact_id": {
+        "pattern": "^[A-Za-z0-9_.-]+$",
+        "type": "string"
+      },
+      "content_class": {
+        "enum": [
+          "GENERIC_METHODOLOGY",
+          "FROZEN_POLICY",
+          "PACKET_TEMPLATE",
+          "HISTORICAL_DEVELOPMENT_ONLY",
+          "RAW_SOURCE"
+        ]
+      },
+      "dependencies": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "immutable": {
+        "type": "boolean"
+      },
+      "layer": {
+        "enum": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "packet_types": {
+        "items": {
+          "enum": [
+            "primary",
+            "verifier"
+          ]
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "path": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "role": {
+        "enum": [
+          "primary",
+          "verifier",
+          "both",
+          "template_primary",
+          "template_verifier"
+        ]
+      },
+      "root_id": {
+        "type": "string"
+      },
+      "sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      }
+    },
+    "required": [
+      "artifact_id",
+      "path",
+      "root_id",
+      "sha256",
+      "content_class",
+      "packet_types",
+      "immutable",
+      "dependencies",
+      "layer",
+      "role"
+    ],
+    "type": "object"
+  },
+  "type": "array"
+}
