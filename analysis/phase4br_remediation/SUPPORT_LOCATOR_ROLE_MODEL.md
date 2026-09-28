@@ -1,0 +1,7 @@
+# Proposition-specific locator roles
+
+VALUE_SUPPORT identifies the reported cell or text value. METRIC_SUPPORT defines what was measured and its unit. CONDITION_SUPPORT binds dataset, denominator, task, model, split, attack/benign status and configuration. COMPARISON_SET_SUPPORT enumerates eligible alternatives. RANKING_SUPPORT binds all compared numeric values. SCOPE_SUPPORT establishes the local/table/document-wide boundary. DERIVATION_INPUT binds every operand, including percentage denominators. QUALIFIER_SUPPORT preserves attribution, version and uncertainty. NEGATIVE_RESULT_SUPPORT locates the negative finding. LIMITATION_SUPPORT locates a stated limitation.
+
+A locator can play several roles only if each proposition-role relation has a recorded source review. Topic proximity is not support. A correct value cannot compensate for a wrong attack condition. A table cell alone rarely supplies a complete experimental condition; use caption, methods and relevant context as separate locators. Discovery locations remain separate from support locations.
+
+SOURCE_REPORTED assertions use EXACT/PARTIAL/CONTEXT_ONLY/CONTRADICTORY/IRRELEVANT/UNRESOLVED entailment. Grounded analyst inferences retain their distinct origin and partial source entailment. Unknown absence is not zero or not-applicable. An unsupported whole-document absence stays unresolved rather than acquiring a broad page range.
