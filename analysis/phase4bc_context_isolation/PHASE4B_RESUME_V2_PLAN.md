@@ -1,0 +1,9 @@
+# Future resumed Phase 4B — not executed
+
+Requires separate user authorization. Verify Phase4BC package/receipt, frozen context architecture, scientific parent and generic/policy/code fingerprints; verify all seven reservations from access records and source hashes only. B01 remains excluded development evidence. This is the seven-report remainder, not the original eight-report cohort or corpus accuracy sample.
+
+Order B02→B03→B04→B05→B06→B07→B08. For each report, construct and independently scan/review exact current-only primary packet, commit durable pre-access receipt, create fresh context without prior history, acknowledge exact bytes/context ID, record access event and only then deliver source. Future real-source release is not implemented by the synthetic-only Phase4BC harness and must be supplied through separately authorized reviewed integration.
+
+Complete all fields, result inventories, proposition/role support, arithmetic, document-wide comparisons, absence/conflict semantics, frozen sampling, fresh-context critical and sampled verification, adjudication and mandatory gate before opening the next. Preserve exact source/protocol pins and immutable equality before/after each report. No tuning against held-out findings. A mandatory failure stops immediately and preserves later sources; use no unopened source for diagnosis.
+
+AI-only success remains PASS_WITH_LIMITATIONS; human ground-truth error counts remain UNKNOWN. No software satisfies trusted-human approval. Lane B stays blocked until the complete eligible sequence passes and separate authorization covers rehearsal. Retain all migration-equivalence/idempotency/replay/stale-source checks, separate SQLite/FK/store gates, paired quiesced backups, restore/rollback and single-writer simulations if reached. No live migration, promotion, checkpoint refresh or skill installation. Phase5 remains separately authorized.
