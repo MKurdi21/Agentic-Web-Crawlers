@@ -1,0 +1,568 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is available as extracted text for physical PDF pages 1–19 and as rendered images for pages 1–12 and 16–18. All 19 numbered page records are represented by text; no intervening page is absent from that sequence. This establishes coverage of the supplied 19-page document, not the independent completeness of every artifact associated with the research. Figures 1–3 and Tables 1–9 are available for direct visual inspection. Table 10 is visually available on p. 18 for entries 1–36; its continuation, entries 37–39 on p. 19, is text-only. Pages 13–15 are also text-only: they contain the end of the discussion, references, ethical considerations, open-science statement, and full example chatbot interaction.
+
+The main prose and most tabular numbers are readable. The small checkmarks and bold checkmarks in Tables 5–6 require attention to column alignment; the rendered tables were used alongside the extracted text. Equation (1) is rendered and readable, but its notation and its relationship to the stated threshold policy contain substantive inconsistencies explained below. OCR was not performed or needed for the supplied readable text and images. No tools, browsing, repository inspection, or outside information were used.
+
+Appendices A–D are present despite the supplied automated accessibility record listing no detected appendix pages. Their headings are explicitly visible in the extracted text on pp. 14–15. No supplementary files or embedded attachments were supplied. Appendix B points to an external code-and-data repository; its contents were not inspected. The supplied SHA-256 is treated as the document identifier supplied by the user, not as a hash independently recomputed here.
+
+Evidence labels throughout this analysis are: [A] AUTHOR-REPORTED, [B] DIRECTLY OBSERVABLE, [C] ANALYST-DERIVED, and [D] ANALYST INTERPRETATION. There is no [E] external evidence. HIGH confidence means the supplied source clearly supports the statement; MEDIUM means a qualified inference or a source claim with unresolved details; LOW means weakly constrained interpretation; UNKNOWN means the supplied material cannot establish it. Confidence describes support within this document, not independent verification of real-world truth.
+
+## 1. Plain-language orientation
+
+This paper studies how information from websites reaches AI chatbot answers. A chatbot that searches the web may obtain information through its own crawler, a browser-like visitor, or a search engine's previously collected information. Website owners usually see requests arriving at their servers, but those requests do not automatically reveal which downstream chatbot will use the information. The researchers therefore place distinctive pieces of information into websites and watch for those pieces in chatbot answers.
+
+The distinctive pieces are called **canary tokens**. Here they are ordinary-looking factual values, such as an invented hometown, parent name, or artwork title. Different visiting scraper identities receive different values. If a chatbot later repeats the values given to one visitor, the researchers can connect the chatbot's answer to the version of the website that visitor received. This is an attribution method: it follows information through a partially hidden collection and retrieval system. [A; pp. 4–6]
+
+The researchers deploy 20 fictional websites, each with 10 token placeholders, and query 22 production AI chatbots. They obtain usable scraper-attribution evidence for 18. They then take 10 websites offline and apply a restrictive robots.txt policy to the other 10, querying again after one and two weeks and after restoration. They find browser-like scraper identities, search-engine-mediated content flows, and continued reproduction of previously scraped information after access restrictions. Twelve of the 18 attributable systems continue returning associated content in both restriction conditions. [A; pp. 7–12]
+
+The central contribution is a method for connecting website visitors to downstream chatbot outputs without relying solely on providers' voluntary descriptions. The paper also demonstrates that stopping access to the original website is different from stopping use of information already collected. It does not directly compare web agents with standalone large language models, measure relative vulnerability, or demonstrate prompt injection, credential theft, or harmful autonomous actions. Its relevance to the user's security question is therefore an explicitly labeled analyst inference about additional information pathways and control boundaries.
+
+## 2. Document roadmap
+
+The original title is **Identifying AI Web Scrapers Using Canary Tokens**. The authors are Steven Seiden, Triss Ren, Caroline Zhang, Taein Kim, Enze Liu, and Emily Wenger. The affiliations span Duke University, the University of Pittsburgh, and Carnegie Mellon University's CyLab Security & Privacy Institute. Page 1 identifies arXiv:2605.13706v1, category cs.CR, dated 13 May 2026. Repeated headers instead read Conference’17, July 2017, Washington, DC, USA. Both are supplied metadata; the conference header is not adequate evidence of an actual 2017 publication or accepted venue.
+
+The document is an empirical AI/security measurement paper with a systems-style attribution pipeline. Its inventory is:
+
+| ID | Original component | Pages | Function |
+|---|---|---|---|
+| S0 | Abstract and CCS concepts | 1 | Motivation, method, broad contribution; security/privacy and web-log classification |
+| S1 | §1 Introduction | 1–2 | Inference-time retrieval problem, contribution, headline findings |
+| S2 | §2 Background & Related Work | 2–4 | Training versus retrieval; scraper attribution; access controls |
+| SS2.1 | §2.1 AI web scraping | 2–3 | Two retrieval paths and Figure 1 |
+| SS2.2 | §2.2 Identifying AI-related scraping | 3 | User-Agent limitations; RQ1 and RQ2 |
+| SS2.3 | §2.3 Preventing AI-related scraping | 3–4 | robots.txt, other defenses, RQ3 |
+| S3 | §3 Identifying AI-related Scrapers with Canary Tokens | 4–6 | Measurement method |
+| SS3.1–3.4 | Deployment; querying; inference; robustness | 4–6 | Token assignment, prompts, matching equation, errors |
+| S4 | §4 Experiment Setup | 6–8 | Infrastructure, selection, interactions, timeline |
+| SS4.1–4.3 | Website Deployment; AI Chatbot Querying; Measurement Setup | 6–8 | Sites, token filtering, 22 systems, three conditions |
+| S5 | §5 Results | 9–12 | Mapping, caching, blocking |
+| SS5.1–5.3 | Mapping; Caching; Efficacy of blocking | 9–12 | Answers to RQ1–RQ3 |
+| S6 | §6 Discussion | 12–13 | Limitations, implications, future work |
+| REF | References [1]–[81] | 13–14 | Cited literature and product/documentation sources |
+| A1 | Appendix A Ethical Considerations | 14 | Privacy precautions and institutional review |
+| A2 | Appendix B Open Science | 14 | Repository description and anonymization |
+| A3 | Appendix C Full AI Chatbot Interaction | 14–15 | Two prompts and two example responses |
+| A4 | Appendix D Additional Tables and Figures | 15–19 | Tables 7–10 |
+
+There are three substantive figures, ten tables, one numbered equation, three explicit research questions, and three principal experimental analyses. There are no supplied formal hypotheses, theorems, lemmas, or numbered pseudocode algorithms. The matching procedure is an algorithm described in prose and Equation (1). No separate keyword list is visible beyond the CCS subject classifications.
+
+## 3. Background and context
+
+A **large language model (LLM)** generates text from its input and learned training parameters. The paper distinguishes web data used during training from web data accessed when a user asks a question. Training and fine-tuning establish baseline capabilities; inference-time access supplies information that may be newer or more specific than the training data. The authors motivate retrieval by hallucinations and training cutoff limitations. These are their background claims, not independently evaluated outcomes in this study. [A; pp. 1–2]
+
+**Web scraping** means automated retrieval of website content. A scraper can be part of a search engine or a chatbot provider's infrastructure. **Retrieval-Augmented Generation (RAG)** means incorporating retrieved external information into the generation process. The paper describes two broad pathways: obtaining relevant content from a pre-indexed corpus, and fetching a webpage on demand. It uses real-time content retrieval as an umbrella for chatbot web functionality, even though some answers can come from indexes that lag the live web. [A; §2.1, p. 2]
+
+A **User-Agent (UA)** is a request header string identifying a client or bot. A declared bot name may help identify traffic, but the string is self-reported. A browser-like string can describe software characteristics without revealing the ultimate organization or purpose of a request. An **Autonomous System Number (ASN)** supplies a network-related identity signal. The study defines a scraper identity as the combination of UA and ASN, rather than UA alone. [A; pp. 3, 5]
+
+The **Robots Exclusion Protocol (REP)** lets a website publish crawling preferences in robots.txt. The authors emphasize that this is a requested protocol rather than a technical access barrier. A website taken offline is directly unavailable; a website restricted by robots.txt remains online but asks bots not to crawl it. Neither change necessarily removes copies already stored elsewhere. Distinguishing access, retention, and downstream reuse is essential to interpreting the experiments. [A; pp. 4, 8, 12]
+
+## 4. Research problem and gap
+
+**Existing problem.** Website owners may wish to restrict AI-related scraping for service stability, privacy, legal, ethical, or other reasons. To target scrapers, they need to know which traffic feeds which AI systems. The implementation of chatbot retrieval is opaque, and the visible crawler need not belong to the chatbot provider. [A; pp. 1–4]
+
+**Shortcomings of prior approaches according to the authors.** Provider disclosures can be incomplete, outdated, or incorrect. Community lists can misattribute identifiers and assume truthful UA reporting. One-off tests are limited in scope and scalability. Prior scraper measurement can depend on a crawler accurately identifying itself. Defenses aimed at training-data use do not necessarily address inference-time retrieval. [A; §2.2–2.3]
+
+**Research gap.** The paper seeks an output-based way to link scraper identities to chatbot content, determine whether answers depend on live access or retained information, and test whether simple post-scraping restrictions stop subsequent reproduction. Its claimed novelty is using differentiated website content as a measurement side channel rather than simply as a blocking or degradation technique. [A; pp. 3–4]
+
+**Scope.** The investigation concerns textual content from newly deployed fictional websites, responses to tailored information-seeking prompts, and a finite observation window. It studies production chatbot services with web-search capabilities, not all autonomous web agents. It does not evaluate vulnerabilities inside model weights, authentication systems, browsers, or execution tools. The narrower scope is important when connecting this evidence to a broader security analysis.
+
+## 5. Research questions, objectives, and hypotheses
+
+The paper supplies three formal research questions:
+
+| ID | Author's question | Evidence route |
+|---|---|---|
+| RQ1 | Which User-Agents do AI chatbots use to source web content when generating responses? | Match served token values to chatbot outputs; categorize associated UA families |
+| RQ2 | How do AI chatbots source web content when generating responses? Do they retrieve content live or rely on caches? | Observe reproduction after origin websites are offline |
+| RQ3 | Can simple site blocking techniques like taking sites offline or using robots.txt affect AI chatbots' retrieved content? | Compare offline and robots.txt conditions with accessible baseline and restoration |
+
+RQ1 and RQ2 appear on p. 3; RQ3 appears on p. 4. The operational objectives are to build attribution infrastructure, map scraper–chatbot associations, observe retention-related behavior, and evaluate post-scraping restrictions. No formal null/alternative hypotheses or preregistered statistical decision rules are supplied. The user's question, Why Are Web AI Agents More Vulnerable Than Standalone LLMs? A Security Analysis, is a synthesis target external to the paper's own research questions; the paper cannot establish its comparative premise.
+
+## 6. Assumptions / Threat Model
+
+The paper does not present a formal adversarial threat model with a complete list of attacker capabilities. Its system model has website operators controlling content and server-side token assignment, visiting scrapers requesting pages, intermediary stores or search engines potentially retaining content, and black-box chatbot services returning answers. The measured asset is the ability to attribute and control downstream use of website content. [A; §§2–4]
+
+The method assumes that scraper-specific values can survive collection and retrieval and appear in answers; that the assignment database records which identity received which values; and that retained matches are sufficiently distinctive to support attribution. Stable views are assigned to repeated visits by the same UA–ASN pair. Multiple systems sharing that pair are not automatically separable by this identity definition. Conversely, one organization changing UA or network can appear as multiple identities. [D; derived from §3.1's definition]
+
+The authors explicitly recognize self-reported UA spoofing, missing output evidence, ambiguous token values, and adversaries that could identify canaries by using multiple UA strings. Their ASN checks are used to argue that third-party search-agent visits came from the expected companies' networks. This supports their interpretation of search-mediated access, but the supplied paper does not expose the complete network-check procedure or establish every subsequent transfer between organizations. [A/D; pp. 10, 12]
+
+For security relevance, a website is an external information source whose values can reach model output. That is an observable information path. It is not evidence that the model followed malicious webpage instructions: the canaries are benign fictional data, and the study neither injects adversarial commands nor measures instruction-priority failures. Trusted versus untrusted instruction handling is therefore outside its tested scope.
+
+## 7. Methodology
+
+### 7.1 Website construction and token assignment
+
+The researchers purchase 20 .com domains with no recent ICANN history and host one website per domain using Google Cloud. They create handwritten templates resembling ordinary websites, such as company pages or artist portfolios. Each contains 10 token placeholders distributed throughout the content to reduce losses from stripping or truncation. People, phone numbers, institutions, and other details are fictional and designed not to overlap real entities. [A; §4.1, pp. 6–7]
+
+A new visitor identity receives randomly selected values filling the placeholders. Subsequent visits by that same UA–ASN identity receive the same values. The server maintains a mapping from token assignments back to identities. The phrase unique scraper therefore means an operational fingerprint, not a verified unique physical machine or business. Figure 2 illustrates different locations and preferences served from the same template. [A/B; pp. 4–5]
+
+Tokens are generated using Python's Faker library and random number generation. The authors report a smallest token sample space of 4761 possible values and approximately 592 UA–ASN pairs per site; Table 2 gives the precise average as 592.2. Token types vary within a site to reduce ambiguous matches. The authors prefer ordinary values over text embeddings or watermarking because those alternatives would complicate output detection. Random seeds, package versions, and exact per-placeholder sampling distributions are not supplied. [A; p. 7]
+
+### 7.2 Discoverability and waiting period
+
+The sites are submitted for indexing through Google and Bing webmaster tools and Brave's public form and indexing guidance. The researchers also place hidden href links to all 20 sites on other controlled websites. They wait two months before the initial chatbot queries, citing anecdotal evidence that sites of this size could take up to six weeks to propagate online. The six-week figure is a motivation reported from cited material, not an experimentally measured indexing latency here. [A; p. 7]
+
+### 7.3 Chatbot selection and interaction
+
+The 22 systems are selected from web-search-capable offerings listed on LMArena and OpenRouter, with additional popular search-provider chatbots. Table 1 names ChatGPT, Claude, Copilot, Deepseek, Duck.ai, ERNIE, Gemini, GLM, Granite, Grok, Hunyuan, Kimi, Liquid, Llama, Mistral, Nova, Perplexity, Qwen, Reka, Solar, Step-3, and Venice. Exact deployed model snapshots, service versions, sampling temperatures, token budgets, subscription tiers, and all interface settings are not specified. [A; p. 7]
+
+Where available, scripts use APIs with built-in web search. Otherwise Python Selenium and nodriver automate web interfaces. When automation is prevented, often by anti-bot protections, queries are submitted manually and responses stored. All responses are logged in a database. These access modes are part of the actual collection procedure; the paper does not provide an access-mode-by-model outcome comparison. [A; pp. 7–8]
+
+### 7.4 Prompting
+
+Each website receives a tailored query describing its fictional subject without supplying the canary values. The prompt requests an internet search, asks questions about token-bearing facts, and requests predictable output formats. Numbers should omit comma separators, dates use YYYY-MM-DD, and phone numbers use XXX-XXX-XXXX. A second prompt in the same session asks for variant websites, discrepancies, and whether the information is current. The authors intend the first prompt to encourage live retrieval and the second to expose alternate information sources; intent does not guarantee which path a chatbot actually uses. [A; pp. 5, 7–8]
+
+Prompt design is empirical and informed by a pilot involving websites outside the main study. Appendix C provides one full interaction. There is no reported systematic prompt ablation, independent prompt-selection benchmark, or response-format success rate. The prompts themselves are source evidence about the experiment, not instructions for this analysis.
+
+### 7.5 Extraction, filtering, and matching
+
+The authors hand-write regular-expression and text-matching rules to find known token values in chatbot responses. Each detected value is mapped to the identity that received it. One response can contain values from multiple identities, supporting multiple associations. [A; §3.3, p. 6]
+
+Quality control discards ambiguous assignments where the same token went to different visitors or appeared under different variable roles. Subset matches, such as a short word contained in a longer place name, are discarded. Numerical and date values are also excluded because unrelated answer content or rounding could create unreliable matches. This is conservative evidence filtering, not proof of a measured false-positive rate. Table 7 records exclusions by condition. [A; p. 7]
+
+The reported implementation parameters are t = 2 and w = 1, but Equation (1) uses an undefined F where the preceding definition introduces W, and its printed OR rule conflicts with the prose exclusion of a single-token, single-website match. The implemented acceptance logic cannot be determined uniquely from the supplied paper; Section 13 preserves the conflict.
+
+### 7.6 Configuration and reporting limits
+
+The reported software includes Python, Faker, Selenium, nodriver, regex/text matching, and response/token databases; hosting is Google Cloud. No hardware specifications, cost, throughput, latency, resource overhead, statistical tests, confidence intervals, or controlled ground-truth precision/recall measurements are supplied. There are no training, validation, or test splits because this is a deployment measurement study rather than a trained prediction model. The baseline is the fully accessible website condition, not a standalone LLM or competing attribution algorithm.
+
+## 8. Experiments / Analyses
+
+| ID | Purpose and RQ | Design | Observations and qualification |
+|---|---|---|---|
+| X1 | Establish scraper–chatbot mapping; RQ1 | All 20 sites online for two months, then initial querying of 22 systems | Attributable content for 18; UA categories and token/site counts in Tables 3, 4, 9, 10; absence of tokens does not prove no retrieval |
+| X2 | Test persistence without origin access; RQ2 | Ten previously accessible sites taken offline; query after one and two weeks; restore and query after one and two weeks | Associated content persists for multiple systems; indicates retained availability somewhere along the path, not uniquely the storage location |
+| X3 | Evaluate post-scraping restriction; RQ3 | Other ten sites remain online with robots.txt disallowing all bots; query after one and two weeks; remove restriction and query after one and two weeks | Twelve of 18 systems reproduce associated content in both restriction conditions; reproduction does not by itself demonstrate a fresh forbidden crawl |
+
+The manipulated variable is website accessibility policy. The principal dependent observation is whether chatbot answers contain enough retained canary evidence to associate a scraper identity. UA families, token counts, and number of associated website interactions describe outcomes. The study follows the same websites through a baseline, restriction, and restoration sequence, but compares two different groups of ten websites for the offline versus robots.txt manipulation. Random assignment or counterbalancing of those groups is not specified. [A/D; §4.3]
+
+The timeline contains one baseline sampling point and four subsequent temporal sampling points: one and two weeks into restrictions and one and two weeks after restoration. At the two later stages, each sampling point includes both website groups. Table 7 consequently has nine reporting columns: one whole-baseline column plus four columns for the offline trajectory and four for the robots.txt trajectory. These are not nine independent cohorts or nine equally sized treatment groups.
+
+The paper does not report the total number of successful responses, retries, missing interactions, independent chat repetitions, or exact calendar dates of all runs. Although tailored prompts are sent across sites and systems, a precise observed response count should not be reconstructed by multiplying nominal design dimensions without accounting for failures and collection details.
+
+## 9. Results
+
+### 9.1 Attribution and identity diversity
+
+The authors obtain usable UA information for 18 of 22 systems; Deepseek, Hunyuan, GLM, and Liquid do not return usable information about the sites. This is a failure to elicit observable evidence, not a verified absence of web access. [A; pp. 9–10]
+
+They report 10 first-party-declared UA strings and generic browser-associated content for six of the 18 attributable systems. Table 3 identifies ERNIE, Grok, Kimi, Qwen, Reka, and Solar as systems associated with generic browser families somewhere in the observed conditions. The nearby prose example list names five and repeats a description of Grok; Reka is present in the table but omitted from that list. [A/B; pp. 9–10]
+
+Search-engine-associated content involving Googlebot, Bingbot, or Bravebot appears in 10 of the 18 systems. This headline describes search-engine-associated agents broadly; it should not be substituted for the narrower number of systems whose Table 3 rows are classified as Third-Party Search Agent. For example, Bingbot is a first-party-declared agent for Copilot and Googlebot is first-party-declared for Gemini. Category depends on the relationship to the chatbot provider, not only the string. [A/B; pp. 9–10]
+
+Kimi has the most varied listed UA families: Chrome, Edge, Googlebot, Obsidian, Qaxbrowser, QQBrowser, QuarkPC, SLBrowser, and WindowsWechat. The authors infer rotation through many UA strings, possibly to avoid bot detection. Observed variety is stronger evidence than the proposed intention: avoidance motivation is not experimentally established. [A/B/D; p. 10, Tables 4 and 9]
+
+### 9.2 Persistence and caching
+
+The authors report that seven of eight chatbots in the relevant search-crawler analysis still return associated information after the websites have been offline for one week. This denominator is specific to the offline analysis and should not be silently replaced with the broader 10-system headline. The supplied text does not enumerate and reconcile the full eight-system subset in that sentence. [A; §5.2, p. 10]
+
+Grok, ERNIE, and Solar also return browser-associated content after the websites are offline. These observations support persistent availability beyond live origin access and show it is not limited to search-engine-associated token versions. The observations do not uniquely identify whether retention is inside the chatbot provider, an intermediary, or another downstream component. [A/D; pp. 11–12]
+
+ERNIE provides a particularly important comparison: for the offline trajectory, its baseline shows Chrome-associated evidence without Baiduspider, whereas Baiduspider-associated content appears after unavailability. The authors offer two alternatives: the baseline failed to elicit Baiduspider evidence, or the service changes retrieval paths when the origin is unavailable. The aggregate Table 3 includes Baiduspider across statuses and should not be read as contradicting the condition-specific Table 5 baseline. [A/B; pp. 10–11]
+
+### 9.3 Restriction effectiveness
+
+Twelve of the 18 attributable chatbots continue returning content in both the offline and robots.txt-restricted conditions. The tested scenario starts after scraping; it does not establish that pre-publication restrictions would fail identically or that every crawler ignored a new policy. Duck.ai is reported as the only measured chatbot stopping associated reproduction in both conditions. This is a scoped observation, not a universal certification of compliance. [A; §5.3, p. 12]
+
+There are slightly more observed UA strings in the robots.txt condition than in the offline condition. Bold checkmarks in Table 6 identify observations absent from the offline comparator. The authors explicitly caution that this does not establish a specific robots.txt violation because other explanations exist. The distinction prevents a caching result from being overstated as a demonstrated access-control bypass. [A/B; pp. 11–12]
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — How website information reaches a chatbot answer
+
+Figure 1 on p. 3 is a conceptual flow diagram, not a numerical plot. There are no axes, units, statistical scales, error bars, or measured quantities. A published website is Step 1; a user's question is Step 2; retrieval and parsing occupy Step 3; the response containing website information is Step 4. The upper branch shows prior indexing/scraping and LLM ingestion, labeled Option 1: pull cached webpage. Another branch shows an LLM scraping the website directly, labeled Option 2: scrape. Both lead toward retrieval and parsing. A question-mark annotation signals uncertainty about the retrieval path.
+
+Blue arrows represent flow between stages; website, bot, user, question/lightbulb, and database icons identify roles. Dashed component boundaries organize conceptual stages rather than confidence intervals. The key teaching point is that the same visible answer can arise from different collection paths. The figure supports the framing of RQ2; it is not evidence that every studied provider implements every depicted component. [B/A; pp. 2–3]
+
+### Figure 2 — Canary attribution pipeline
+
+Figure 2 on p. 5 visually separates three stages with vertical dashed lines: website deployment with tokens, chatbot querying, and scraper inference. A template contains [CT1] and [CT2]. One visitor receives New York and ice cream; another receives Los Angeles and pie. Scraper boxes show illustrative UA and ASN identifiers. Horizontal arrows labeled Search and CTs connect retrieval and returned information. At the output, matching words are highlighted in cyan for one scraper and yellow for the other.
+
+Ellipses indicate that the approach extends to more visitors and chatbots. The cartoon numbers and names are illustrative, not measured sample entries. The figure explicitly shows how distinctive values survive into answers and make an otherwise hidden association observable. It also makes clear that attribution is about the received content version rather than trusting the chatbot to describe its own scraper. [B/A; pp. 4–5]
+
+### Figure 3 — Measurement timeline
+
+Figure 3 on p. 8 is a vertically ordered timeline with a downward Time arrow. It is schematic, not a plot with a calibrated continuous axis. Blue blocks indicate Condition 1 with 20 sites online. Purple blocks represent 10 offline sites; green blocks represent 10 robots.txt-restricted sites. The baseline follows a two-month wait. Parallel restriction branches each show a one-week wait, a query, another one-week wait, and a second query. Restoration returns all 20 sites to Condition 1, followed by two more weekly query points for both former groups.
+
+Orange outlined labels mark Stages 1–3, and dashed horizontal dividers separate stages. The graphic supports the exact before/restriction/after sequence in §4.3. It does not disclose calendar dates, randomization, durations between individual model requests, or the actual response success rate. All displayed durations and site counts are readable; no approximate visual value is used.
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Studied chatbot services
+
+Table 1 on p. 7 maps 22 chatbot names to publishers. The complete pairs are ChatGPT–OpenAI; Claude–Anthropic; Copilot–Microsoft; Deepseek–Deepseek; Duck.ai–DuckDuckGo; ERNIE–Baidu; Gemini–Google; GLM–Z.AI; Granite–IBM; Grok–xAI; Hunyuan–Tencent; Kimi–MoonshotAI; Liquid–Liquid; Llama–Meta; Mistral–Mistral; Nova–Amazon; Perplexity–Perplexity; Qwen–Alibaba; Reka–Reka; Solar–Upstage; Step-3–StepFun; Venice–Venice. These are services/publishers, not an inventory of exact neural-model configurations. No ranking or performance measurement appears.
+
+### Table 2 — Observed website visitors
+
+Table 2 on p. 8 reports counts over the period the websites are online:
+
+| Statistic | User-Agents | ASNs | Unique UA–ASN visitors |
+|---|---:|---:|---:|
+| Minimum across sites | 313 | 154 | 313 |
+| Maximum across sites | 477 | 226 | 674 |
+| Average across sites | 405.95 | 192.4 | 592.2 |
+| Across all sites | 2765 | 549 | 4042 |
+
+The unit is distinct identifiers or identifier pairs, not HTTP request volume, humans, or chatbot services. Overall distinct counts are unions across sites rather than sums of per-site counts. The table supports substantial discoverability but does not classify all 4042 visitors as AI-related. The authors note that most visitors are bots and that content differences may affect traffic interest.
+
+### Table 3 — Aggregate scraper associations and status
+
+Table 3 on p. 9 associates 18 chatbot systems with UA families, category, observed online/offline/blocked status, and whether the association was publicly known. Teal denotes first-party-declared agents, yellow third-party search agents, and orange generic browser agents. Checkmarks indicate observed attribution; dashes indicate no listed observation. A cross in Publicly Known means the authors did not identify that association as publicly documented, not that the underlying traffic is proven malicious.
+
+The families are: ChatGPT–OAI-SearchBot; Claude–Bravebot; Copilot–Bingbot; Duck.ai–DuckAssistBot; ERNIE–Baiduspider/Chrome; Gemini–Googlebot; Granite–GranitePlayground; Grok–Googlebot/Chrome/Safari; Kimi–Table 4 families; Llama–meta-externalagent/meta-webindexer; Mistral–Bravebot; Nova–Amazonbot; Perplexity–PerplexityBot/Googlebot; Qwen–Googlebot/Chrome; Reka–Googlebot/Chrome; Solar–Chrome/Safari/Firefox/Edge; Step-3–Googlebot; Venice–Bravebot.
+
+The status columns aggregate observations and should not be confused with individual weekly measurements. Full fingerprint details are in Table 10. Absence of an entry means lack of sufficient recorded token evidence, not proven absence of that scraper. Four non-attributable systems are explicitly excluded.
+
+### Table 4 — Kimi's UA family diversity
+
+Table 4 on p. 10 contains nine families: Chrome, Edge, Googlebot, Obsidian, Qaxbrowser, QQBrowser, QuarkPC, SLBrowser, and WindowsWechat. Googlebot is categorized as a third-party search agent; the other eight as generic browser agents. There are no token counts or time columns here. Those details are partly supplied in Table 9. The table establishes diverse associated identifiers; it does not identify nine independent organizations or prove the intent behind the diversity.
+
+### Table 5 — Offline trajectory
+
+Table 5 on p. 11 has columns Online, 1 Week Down, 2 Weeks Down, 1 Week Back Online, and 2 Weeks Back Online. Rows are chatbot–UA-family combinations. Repeated checkmarks across all five columns occur for prominent associations including ChatGPT/OAI-SearchBot, Claude/Bravebot, Copilot/Bingbot, Gemini/Googlebot, Mistral/Bravebot, Qwen/Googlebot, and Venice/Bravebot. Other rows show intermittent evidence, including browser-associated families and some first-party crawlers.
+
+The condition-specific ERNIE contrast and continued Chrome-associated evidence for ERNIE, Grok, and Solar are explained in the results text. Blank cells are not numerical zeros for requests; they mean no reported match in that sampling condition. There is no uncertainty interval, significance test, or retention-duration estimate. Kimi is absent from this detailed table even though the aggregate Table 3 marks offline associations, leaving its temporal trajectory unrepresented here.
+
+### Table 6 — robots.txt trajectory
+
+Table 6 on p. 11 uses Online, 1 Week Blocked, 2 Weeks Blocked, 1 Week Back Online, and 2 Weeks Back Online. Color distinguishes UA categories as in Table 3. Bold checkmarks indicate associations measured in this trajectory but not in the corresponding offline trajectory. Among readable examples, Llama/meta-externalagent and Nova/Amazonbot retain restricted-condition evidence even where their offline trajectories are more limited.
+
+The table compares presence of attributed values, not the number of forbidden HTTP requests. Its bold observations therefore do not independently prove crawling during a restriction. Kimi is again missing from the detailed table. The paper's prose supplies the principal aggregate finding of 12/18 continued reproduction in both restriction conditions, which should be preferred over inventing a count from incomplete table coverage.
+
+### Table 7 — Exclusion ledger
+
+Table 7 on p. 16 records token detections and filtering across nine columns. The following preserves all numerical entries because filtering is central to the reliability claim:
+
+| Metric | Baseline | Offline 1w | Offline 2w | Restored from offline 1w | Restored from offline 2w | Blocked 1w | Blocked 2w | Post-block 1w | Post-block 2w |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Total tokens found | 2325 | 797 | 585 | 1097 | 1262 | 1366 | 1192 | 1465 | 1506 |
+| Numerical confusion | 618 | 229 | 221 | 314 | 363 | 356 | 327 | 400 | 432 |
+| Subset confusion | 102 | 39 | 22 | 70 | 72 | 82 | 76 | 85 | 96 |
+| Token overlap | 207 | 66 | 60 | 91 | 113 | 186 | 137 | 178 | 186 |
+| Below match score | 1 | 2 | 2 | 4 | 7 | 3 | 0 | 9 | 2 |
+| Total discarded | 928 | 336 | 305 | 479 | 555 | 627 | 540 | 672 | 716 |
+
+The exclusion categories sum to the total discarded within each column. For example, baseline 618 + 102 + 207 + 1 = 928. [C] Remaining detections obtained by subtraction are respectively 1397, 461, 280, 618, 707, 739, 652, 793, and 790. These derived values are not separately reported source rows and are not necessarily unique facts or unique scraper identities. Baseline includes 20 sites, whereas each manipulated branch contains 10; raw totals should not be used as an equal-exposure effect comparison.
+
+### Table 8 — Sources for documented associations
+
+Table 8 on p. 16 lists documentation URLs for ChatGPT, Claude, Copilot, Duck.ai, ERNIE, Gemini, Granite, Llama, Mistral, Nova, and Perplexity. Claude has both a provider-support source and a TechCrunch source about Brave. The caption distinguishes official or publicly documented sources; every row should not be described as a primary official disclosure. These links are bibliographic evidence supplied by the authors, not externally verified sources in this analysis. A Duck.ai row points to a duckduckbot documentation path, whereas the measured association is DuckAssistBot; the table alone does not resolve the coverage of that link.
+
+### Table 9 — Detailed Stage 1 evidence
+
+Table 9 on p. 17 compares self-declared UA names with observed families, indexed full strings, token counts, and websites associated out of 20. The most informative non-Kimi entries are:
+
+| System / observed family | String index or indices | Token counts | Associated sites |
+|---|---|---|---|
+| ChatGPT / OAI-SearchBot | 10 | 68 | 11 |
+| Claude / Bravebot | 38 | 88 | 20 |
+| Copilot / Bingbot | 37 | 57 | 17 |
+| Duck.ai / DuckAssistBot | 1 | 56 | 9 |
+| ERNIE / Chrome | 31 | 6 | 1 |
+| Gemini / Googlebot | 5, 6 | 78, 43 | 12, 6 |
+| Granite / GranitePlayground | 2 | 75 | 12 |
+| Grok / Googlebot | 5, 6 | 30, 20 | 12, 5 |
+| Grok / Chrome | 11 | 129 | 19 |
+| Llama / meta-externalagent | 3 | 6 | 1 |
+| Llama / meta-webindexer | 4 | 9 | 1 |
+| Mistral / Bravebot | 38 | 66 | 19 |
+| Nova / Amazonbot | 36 | 81 | 15 |
+| Perplexity / PerplexityBot | 39 | 110 | 17 |
+| Perplexity / Googlebot | 5, 6 | 10, 6 | 7, 4 |
+| Qwen / Googlebot | 6 | 103 | 20 |
+| Reka / Googlebot | 5 | 3 | 3 |
+| Reka / Chrome | 12, 13 | 56, 52 | 10, 8 |
+| Solar / Chrome | 25 | 29 | 11 |
+| Solar / Safari | 14 | 2 | 1 |
+| Solar / Firefox | 26 | 2 | 1 |
+| Venice / Bravebot | 38 | 63 | 17 |
+
+Where two counts occur, each corresponds positionally to a listed full-string index; their website totals may overlap and cannot be summed into unique site coverage without more information. Table 9's Sites Visited heading describes sites associated through responses and the matching procedure; it should not be inflated into a complete direct-request history.
+
+Kimi's full detail is: Chrome indices 8,16,30 with tokens 5,9,8 and one site each; Edge indices 7,9,15,22,23,24,32,33 with tokens 6,6,8,8,7,5,5,8 and one site each; Googlebot indices 5,6 with tokens 11,3 and sites 3,8; Obsidian index 27 with 8 tokens/1 site; Qaxbrowser index 35 with 8/1; QQBrowser indices 28,29 with 4,8 tokens and 1,1 sites; QuarkPC index 18 with 4/1; SLBrowser indices 17,19 with 6,7 tokens and 1,1 sites; WindowsWechat indices 20,21,34 with 4,7,4 tokens and one site each. [C] This is 24 listed string indices, calculated as 3 + 8 + 2 + 1 + 1 + 2 + 1 + 2 + 3. It is not a count of verified independent crawlers.
+
+Table 9 does not list Deepseek, Hunyuan, Liquid, or Step-3; GLM has an empty row. The absence of Step-3 in a table captioned Full Stage 1 Results is unresolved because Table 3 lists a Googlebot association and Tables 5–6 show a baseline mark. Some additional families in aggregate tables occur outside Stage 1, so their absence from Table 9 alone is not automatically inconsistent.
+
+### Table 10 — Exact fingerprint inventory
+
+Table 10 on pp. 18–19 lists 39 indexed full UA strings. Indices 1–4 identify DuckAssistBot, GranitePlayground, meta-externalagent, and meta-webindexer. Indices 5–6 are Googlebot strings incorporating Android/Nexus and Chrome version components. Index 10 includes OAI-SearchBot/1.3. Indices 7–9, 11–35 mainly distinguish browser/application/platform fingerprints, including Edge, Chrome, Safari, Firefox, SLBrowser, QuarkPC, WindowsWechat, Obsidian/Electron, QQBrowser, and Qaxbrowser. Index 36 identifies Amazonbot/0.1. The text-only continuation gives 37 bingbot/2.0, 38 Bravebot/1.0, and 39 PerplexityBot/1.0.
+
+The exact strings contain many operating-system and browser build numbers. They are inspected but deliberately compressed here: their substantive role is to define distinguishable request fingerprints and to link Table 9 indices to families. Such components do not establish the actual physical device, software authenticity, or downstream purpose. The bot markers within browser-looking strings also show why simply seeing Chrome in a UA does not make it a generic-browser category: Googlebot and OAI-SearchBot include explicit bot identifiers.
+
+## 12. Diagram / Architecture Interpretation
+
+The three diagrams work at different levels. Figure 1 is the background data-supply architecture: website publication leads to prior indexing or direct retrieval, then parsing and answer generation. Figure 2 is the research instrument: generate personalized content, record visitor–token assignments, query chatbots, extract reproduced values, and infer associations. Figure 3 is the experimental control schedule: baseline exposure, two accessibility manipulations, and restoration.
+
+The website server's assignment database is the bridge between the incoming request fingerprint and the outgoing answer. Its inputs are a website request and visitor identity; its output is a personalized page and a durable assignment record. The chatbot interaction subsystem takes a site description and questions as input and stores answers. Extraction takes stored answers plus the token database and outputs candidate identity associations. Filtering removes ambiguous matches; acceptance logic converts retained evidence into reported associations. [A/D; §§3–4]
+
+There is no trained classifier or end-to-end optimization loop in the supplied method. Repeated visits reuse assignments; repeated query rounds accumulate opportunities to observe evidence. The two-query chat session is conversationally sequential, but the paper does not establish a feedback controller that updates tokens according to chatbot responses. The architecture measures information propagation; it does not inspect the chatbot's hidden retrieval code.
+
+## 13. Equations and mathematical concepts
+
+Equation (1), on p. 6, is a binary matching rule. The preceding definitions introduce a set S of scraper identities, each s = (UA, ASN), a chatbot ℓ, Tℓ(s) as the nonnegative integer number of matching tokens, and Wℓ(s) as the nonnegative integer number of distinct website query interactions showing that identity.
+
+The displayed rule is:
+
+`Mℓ(s) = yes if Tℓ(s) ≥ t OR Fℓ(s) ≥ w; otherwise no if Tℓ(s) < t AND Fℓ(s) < w.`
+
+M is the yes/no output. t and w are tunable thresholds. OR means either qualifying condition is sufficient; AND in the negative branch means both must fail. Inputs are identity-associated evidence counts; the output is acceptance or rejection of a chatbot–scraper association. No loss function, optimizer, probability estimate, or confidence interval is computed by this equation.
+
+Two issues must remain explicit. First, Fℓ(s) is not defined in the surrounding supplied text, which instead defines Wℓ(s). It may be intended to mean the website-interaction count, but replacing it is an analyst interpretation. Second, if F is provisionally read as W, t = 2 and w = 1 accept a single token seen in one interaction because 1 ≥ 1 satisfies the second OR branch. The prose says the implementation ignores identities associated with only one token from one website. Both statements cannot describe the same literal rule. The robustness discussion also refers to t = 1, w = 1 when describing disregarded single-token evidence. The supplied source does not establish whether the equation, comparator, thresholds, prose, or actual code is responsible. Confidence in the exact implemented acceptance rule is UNKNOWN.
+
+The authors additionally give a heuristic coincidence argument: with token space size |V|, incidental match probability is of order 1/|V|. A space of at least 10^3 implies order 10^-3 per token and order 10^-6 for two independent matches. They argue independent selection makes simultaneous coincidence across 10 tokens very small. These are author-reported order-of-magnitude arguments, not empirically calibrated precision estimates. Actual reported smallest sample space is 4761. Token assignment collisions across visitors, spontaneous output matches, and multiple-testing across many outputs are distinct issues; the paper's simple argument does not quantify their joint effect. [A/D; pp. 6–7]
+
+The paper contains no theorem or proof that attribution is correct under all scraper behaviors. Its mathematical role is to formalize a practical decision policy and motivate conservative filtering.
+
+## 14. Interpretation and discussion
+
+RQ1 is answered by diverse observed relationships: declared crawler names, browser-like names, and search-engine agents all supply content later reproduced by chatbots. The evidence is strongest for the existence of particular content-version associations. Claims about a provider's full infrastructure, or its motive for using a particular UA, require more than the observed answer tokens. The authors' network checks strengthen the search-intermediary interpretation without providing a complete provenance chain. [A/D; §5.1]
+
+RQ2 is answered by persistent reproduction after origin unavailability. Offline access prevents a fresh direct fetch from the unavailable origin, so continuing content availability supports retained copies or an equivalent already-populated information path. The experiment does not identify a unique cache location or exact retention policy. Restored-site measurements show further changing visibility, but persistent token assignments do not timestamp which stored copy an answer used. [D; §§3.1, 5.2]
+
+RQ3 is answered within a post-scraping scope. The authors show that simple restrictions often fail to suppress future answers containing previously acquired content. This is a downstream-use control problem. A crawl-preference protocol can be followed for new requests while old indexed content remains available; alternatively, a crawler might violate the preference. The study's reported outputs alone do not distinguish these alternatives. [A/D; §5.3]
+
+For the user's research question, the most defensible inference is that web-enabled systems have additional information pathways to reason about: live websites, scraper identities, third-party indexes, and retained copies. The paper shows that website-controlled values reach outputs and that removing an origin or changing its crawling policy may not remove those values downstream. These properties plausibly complicate provenance, consent, and security controls. They do not demonstrate a measured increase in exploitability relative to a standalone LLM, and benign-value propagation is not equivalent to malicious-instruction execution.
+
+Source consistency issues include the undefined F and threshold contradiction; the mixed 2026 arXiv/2017 conference metadata; the five-name prose example list for a six-system browser result, clarified by Reka's table row; Kimi's missing detailed temporal rows; Step-3's missing Table 9 entry; and the change from 10 search-associated systems overall to an eight-system offline subset without an explicit reconciliation. These are reported as unresolved reporting boundaries rather than silently repaired.
+
+## 15. Contributions and novelty
+
+**Conceptual contribution:** differentiated content turns chatbot outputs into an attribution side channel, allowing observers to learn about a hidden web-to-chatbot supply chain. [A; §3]
+
+**Methodological contribution:** stable UA–ASN-specific token assignment, tailored two-step prompting, output extraction, ambiguity filtering, and threshold-based matching form a practical measurement procedure. The exact threshold rule remains unresolved in the document. [A; §§3–4]
+
+**Systems/implementation contribution:** the researchers deploy dynamic fictional websites and build interaction scripts spanning APIs, automated interfaces, and manual fallback. Appendix B describes public example code and anonymized aggregate data, but these external artifacts are not reviewed here. [A; §§4, Appendix B]
+
+**Empirical contribution:** observations from 22 production systems, 18 with usable attribution, document browser-like agents, search-engine-associated flows, persistent content availability, and limits of post-scraping restrictions. [A; §5]
+
+There is no supplied new neural architecture, trained attribution model, formal theorem, standalone vulnerability benchmark, or demonstrated attack success metric. Scalability is a proposed opportunity and acknowledged operational challenge, not a measured large-scale production deployment result.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+The sites are a relatively small sample of 20. Queries originate from one vantage point, the campus network of a U.S. university. Provider infrastructure may differ with website, content type, or geography. The method misses scrapers that do not yield enough output evidence. Prompt choice, website design, and observation window affect which scrapers are visible. [A; §6, p. 12]
+
+False positives can arise from hallucinated coincidental values or similarly named entities. False negatives can arise from incomplete retrieved content, truncation, answer-generation choices, or failure to emit a value despite access. Multiple websites and query rounds increase observation opportunities; conservative filtering removes unreliable matches. [A; §3.4 and §4.1]
+
+Scaling entails challenges in creating tokens without harming user experience and maintaining robustness against adversaries identifying canaries, including through multiple UA strings. The observation window is relatively short and likely captures inference-time retrieval rather than all training-related scraping. [A; pp. 12–13]
+
+### Additional evidence-based analyst observations
+
+The printed matching formula does not uniquely specify the claimed implemented behavior. There is no supplied controlled precision/recall validation, exact statistical error estimate, or independent ground-truth mapping for all services. Known-agent matches are useful plausibility checks but do not establish accuracy for every undocumented association. [D]
+
+Different websites form the two restriction groups; randomization and balancing are unspecified. Changing provider behavior during the study could affect comparisons. Static identity-specific values do not determine when a returned copy was fetched. Multiple intermediaries can share or transform content, so attribution to a served version is more certain than attribution to the complete final transfer path. [D]
+
+The paper does not test standalone LLMs, malicious instructions, tool privileges, authenticated tasks, or agent action outcomes. It supports a limited component of a security analysis rather than the full proposition that web agents are more vulnerable. [D]
+
+## 17. Threats to validity
+
+The following validity categories are analyst organization of supplied evidence; the authors do not present this exact taxonomy.
+
+**Internal validity:** the temporal intervention is informative about origin availability, but different treatment-site groups, nonreported randomization, service changes, and imperfect response elicitation can confound between-condition differences. Reproduction under robots.txt has multiple explanations, explicitly acknowledged by the authors.
+
+**Construct validity:** UA–ASN pairs operationalize scraper identity without proving organizational identity. A canary match operationalizes exposure to a particular content version, not direct access by the answering model or obedience to that page's instructions. An absent token operationalizes missing observable evidence, not absent collection.
+
+**Statistical conclusion validity:** counts and presence matrices are descriptive. No confidence intervals, significance tests, uncertainty estimates, or formal false-positive/false-negative rates are supplied. The heuristic independent-token probability argument is not a complete validation study. Raw token counts across unequal site groups should not be interpreted as normalized treatment effects.
+
+**External/ecological validity:** fictional, newly indexed sites and deliberately specific prompts differ from established websites, ordinary user questions, private authenticated pages, and adversarial content. The single U.S. network vantage point and sampled services limit generalization. Dynamic production platforms may not preserve these behaviors over time.
+
+**Reproducibility:** a repository is reported, along with example scripts and anonymized aggregates. The supplied manuscript omits exact service versions, seeds, full deployment details, and a uniquely consistent match rule. The repository and raw request/response logs are not supplied here, so reproducibility cannot be independently assessed.
+
+## 18. Future work and open questions
+
+### A. Authors' proposed directions
+
+Refine identity using IP ranges, Transport Layer Security (TLS) fingerprints, and behavioral signals. Extend deployment duration and scale to investigate training-related scraping. Study cache retention policies and update frequency. Adapt the approach to images, audio, and video. Address operational token design, user experience, and adversarial detection of canaries. [A; pp. 12–13]
+
+The discussion also raises how content-use preferences can be preserved, verified, and enforced through multi-party supply chains. Legal examples and references to protocol work are author discussion points, not independently checked legal guidance or evidence of current policy status.
+
+### B. Additional open questions from the supplied study
+
+What exact matching rule was implemented? Which components retain each observed content version? How long does each version remain retrievable beyond the two-week restriction window? How much does attribution depend on prompt format, service version, network location, and treatment-site assignment? What explains Kimi's missing temporal rows and Step-3's absent Stage 1 detail?
+
+For the user's comparative security question, an additional experiment would have to distinguish benign information transfer from adversarial behavior and compare appropriately matched web-enabled and standalone conditions. The present paper leaves that comparison open; no attack success rate or causal vulnerability difference can be supplied from these data.
+
+## 19. Terminology and notation glossary
+
+| Term | Beginner-friendly meaning in this paper |
+|---|---|
+| LLM | Large language model; text-generating model underlying a chatbot |
+| Chatbot service | Deployed system including model, retrieval functions, and interface |
+| Inference | Producing an answer to a query |
+| Training cutoff | Boundary after which training data has not been updated, as described by the authors |
+| Hallucination | Confident but incorrect generated information |
+| RAG | Retrieval-Augmented Generation; retrieved information incorporated into generation |
+| Web scraper/crawler | Automated program collecting web content |
+| Index | Searchable collection of previously collected web information |
+| Cache | Retained content available without a fresh fetch from its origin |
+| Origin | Website where the content is published |
+| UA | User-Agent; self-reported request-header identifier |
+| ASN | Autonomous System Number; network identity signal used with UA |
+| Scraper identity s | Operational tuple (UA, ASN), not necessarily one machine |
+| Canary token | Distinctive website value assigned to a visitor identity and searched for in answers |
+| Attribution side channel | Indirect evidence revealing a hidden content-source association |
+| REP | Robots Exclusion Protocol; crawling preferences expressed through robots.txt |
+| API | Application Programming Interface; programmatic service access |
+| Regex | Regular expression; pattern rule used in token extraction |
+| SEO | Search Engine Optimization; here, discoverability operations applied to sites |
+| TLS fingerprint | Connection-related signal proposed for richer identification |
+| IRB | Institutional Review Board; the paper reports exempt institutional review |
+| S | Set of operational scraper identities |
+| ℓ | A chatbot in the matching definition |
+| Tℓ(s) | Number of matched tokens for chatbot ℓ and identity s |
+| Wℓ(s) | Number of distinct website query interactions showing that identity |
+| Fℓ(s) | Undefined symbol appearing in Equation (1); possible W replacement is uncertain |
+| Mℓ(s) | Binary association decision |
+| t, w | Matching thresholds, reported as 2 and 1 |
+| ∨, ∧ | Logical OR and AND |
+| Z≥0 | Nonnegative integer counts |
+| |V| | Number of possible values in a token's sampling space |
+| False positive | Accepted association without genuine exposure to the corresponding site version |
+| False negative | Genuine exposure that fails to produce sufficient observable matching evidence |
+
+## 20. Key numerical results
+
+| Quantity / result | Value | Unit | Condition / context | Status | Source |
+|---|---:|---|---|---|---|
+| Websites/domains | 20 | Sites | Newly deployed .com websites | Author-reported | pp. 6–7, §4.1 |
+| Placeholders per template | 10 | Token slots | Distributed throughout each site | Author-reported | pp. 4, 6 |
+| Initial wait | 2 | Months | Fully accessible baseline exposure | Author-reported | pp. 7–8 |
+| Studied chatbot services | 22 | Systems | Table 1 sample | Author-reported | p. 7, T1 |
+| Systems with usable attribution | 18 | Systems | Four excluded for absent useful site information | Author-reported | p. 10 |
+| Attribution yield | 18/22 ≈ 81.8 | Percent | Descriptive sample fraction, not accuracy | Analyst-derived: 18 ÷ 22 × 100 | pp. 7, 10 |
+| Sites per restriction branch | 10 | Sites | Offline versus robots.txt | Author-reported | p. 8 |
+| Follow-up offsets | 1 and 2 | Weeks | After restriction and after restoration | Author-reported | p. 8, F3 |
+| Smallest token sample space | 4761 | Possible values | Token generation | Author-reported | p. 7 |
+| Distinct visitors/site | 313–674 | UA–ASN pairs | Minimum and maximum over sites | Visually readable / author-reported | p. 8, T2 |
+| Mean distinct visitors/site | 592.2 | UA–ASN pairs | Entire online measurement period | Visually readable | p. 8, T2 |
+| Overall UAs / ASNs / pairs | 2765 / 549 / 4042 | Identifiers | Across all sites | Visually readable | p. 8, T2 |
+| First-party-declared strings | 10 | Strings | Authors' aggregate mapping result | Author-reported | p. 10 |
+| Browser-associated systems | 6/18 | Systems | Attributable sample | Author-reported | p. 10; T3 |
+| Browser-associated fraction | 33.3 | Percent | 6 ÷ 18 × 100; descriptive | Analyst-derived | p. 10 |
+| Search-agent-associated systems | 10/18 | Systems | Broad Googlebot/Bingbot/Bravebot result | Author-reported | p. 10 |
+| One-week search-content persistence | 7/8 | Systems | Specific offline-analysis subset | Author-reported | p. 10, §5.2 |
+| Persistence subset fraction | 87.5 | Percent | 7 ÷ 8 × 100; no confidence interval | Analyst-derived | p. 10 |
+| Continued reproduction in both restrictions | 12/18 | Systems | Previously scraped sites | Author-reported | p. 12 |
+| Both-restrictions fraction | 66.7 | Percent | 12 ÷ 18 × 100; descriptive | Analyst-derived | p. 12 |
+| Reported thresholds | t = 2, w = 1 | Counts | Printed rule conflicts with exclusion prose | Author-reported, implementation uncertain | p. 6, E1 |
+| Heuristic token coincidence | Order 10^-3 / 10^-6 | Probability | One/two independent matches for ≥10^3 space | Author-reported heuristic | p. 6 |
+| Baseline detections / exclusions | 2325 / 928 | Tokens | All 20 sites | Visually readable | p. 16, T7 |
+| Baseline retained subtraction | 1397 | Detections | 2325 − 928; not unique identities | Analyst-derived | p. 16, T7 |
+| Full indexed UA inventory | 39 | Strings | Table 10, Stage 1 | Visually readable 1–36; text-only 37–39 | pp. 18–19 |
+| Kimi listed indices | 24 | String entries | Sum of its per-family index counts | Analyst-derived | p. 17, T9 |
+
+No percentages in this table are relative performance improvements or percentage-point differences. They are explicitly derived sample fractions. No approximate visual estimate is used: quantities are printed values or arithmetic from printed values.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/table/experiment | Source | Qualification / strength |
+|---|---|---|---|---|
+| Differentiated website values can connect visitors to chatbot outputs | Stable visitor-specific pages and token matching | F2; X1; §§3.1–3.3 | pp. 4–6 | HIGH for described method; accuracy not independently quantified |
+| Usable attribution obtained for 18 of 22 services | Explicit count and four excluded systems | T1, T3; X1 | pp. 7, 9–10 | HIGH for reported observations; non-detection is not no scraping |
+| Generic browser-associated content occurs | Six-system count and matching family rows | T3, T4, T9 | pp. 9–10, 17 | HIGH for source result; concealment intent uncertain |
+| Search engines can be upstream information suppliers | Search-agent tokens in ten systems; author ASN checks | T3; X1 | pp. 9–10 | MEDIUM for full routing explanation; no complete handoff trace |
+| Content survives origin unavailability | One-week persistence and continued browser-associated content | T5; X2 | pp. 10–12 | HIGH for reported reproduction; cache ownership unresolved |
+| Post-scraping controls often fail to suppress outputs | Twelve of eighteen continue in both conditions | T5–T6; X3 | p. 12 | HIGH within tested sample; no proof of fresh policy violation |
+| Duck.ai stops in both restriction conditions | Explicit exception and condition rows | T3, T5–T6; X3 | pp. 9, 11–12 | HIGH for measurement; universal compliance not established |
+| Filtering is substantial and necessary | Numerical, subset, overlap, threshold exclusions | T7; §4.1 | pp. 7, 16 | HIGH for reported filtering; thresholds inconsistently specified |
+| Exact acceptance rule is unresolved | W defined, F printed, OR conflicts with one-token exclusion | E1 | p. 6 | HIGH for observable inconsistency; actual code UNKNOWN |
+| Generalization is limited | Twenty sites, one U.S. campus vantage, prompt/window dependence | §6 | p. 12 | HIGH for author-stated limitations |
+| Paper informs web-system security boundaries | Externally served values reach outputs and persist downstream | F1–F2, X2–X3 | pp. 3–5, 10–12 | MEDIUM analyst inference; no standalone comparison or exploit test |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine giving different visitors different versions of a made-up person's biography. One visitor sees that the person lives in New York and likes ice cream. Another sees Los Angeles and pie. Later, a chatbot answers a question about that person. If it repeats New York and ice cream, you have a clue about which version reached it. The researchers turn that idea into an experiment using 20 websites and 22 chatbots.
+
+The interesting discovery is that the visitor collecting information and the chatbot using it are not always the same company. A search engine may collect a page, store it, and become part of the information path used by a chatbot. Some collecting visitors also look like ordinary browser traffic. This makes it harder for a website owner to know who will eventually use the information.
+
+Taking the website down or asking bots to stop does not necessarily erase copies already collected. Many tested chatbots still repeated website information after those changes. That does not automatically mean they broke the website's new crawling rules: they might be using an older stored copy. The paper carefully warns about that difference.
+
+For understanding web-agent security, this shows why adding the web introduces more places where information can enter and persist. But the experiment does not show that malicious webpage commands succeed, and it does not compare the same model with and without web access. It gives evidence about information supply chains and weak downstream control, while leaving the stronger claim about relative vulnerability unanswered.
+
+## Completeness Audit
+
+The inventory, rather than response length, defines coverage. All supplied physical pages were inspected through their available modality. Visual claims below are restricted to the 15 rendered pages; text-only pages are explicitly identified.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, affiliations, metadata | Yes | Yes | Fully represented | Original title retained; metadata discrepancy disclosed |
+| Abstract | Yes, text/image | Yes | Represented in compressed form | Motivation, pipeline, sample, claimed contribution retained |
+| CCS concepts | Yes | Yes | Represented in compressed form | Subject classifications recorded; no separate keywords found |
+| §1 Introduction | Yes | Yes | Represented in compressed form | Motivation and contributions integrated |
+| §2 Background & Related Work | Yes | Yes | Represented in compressed form | Literature categories retained without external validation |
+| §2.1 AI web scraping | Yes | Yes | Fully represented substantively | Training/index/live distinction and F1 explained |
+| §2.2 Identifying AI-related scraping | Yes | Yes | Fully represented substantively | Disclosure, UA, spoofing, RQ1/RQ2 |
+| §2.3 Preventing AI-related scraping | Yes | Yes | Represented in compressed form | REP, blocking, content defenses, RQ3 |
+| §3 Canary method overview | Yes | Yes | Fully represented substantively | Attribution side channel and three-stage pipeline |
+| §3.1 Deployment | Yes | Yes | Fully represented substantively | Stable UA–ASN-specific views |
+| §3.2 Querying | Yes | Yes | Fully represented substantively | Pilot, two prompts, intended behavior versus observation |
+| §3.3 Inference | Yes | Yes | Uncertain implementation | Extraction represented; equation discrepancy preserved |
+| §3.4 Robustness | Yes | Yes | Fully represented substantively | Both error types and heuristic probability caveats |
+| §4 Experiment Setup | Yes | Yes | Fully represented substantively | Design and reporting omissions |
+| §4.1 Website Deployment | Yes | Yes | Fully represented substantively | Domains, hosting, indexing, token generation/filtering |
+| §4.2 Chatbot Querying | Yes | Yes | Fully represented substantively | Twenty-two services, API/UI/manual modes |
+| §4.3 Measurement Setup | Yes | Yes | Fully represented substantively | Three conditions and timing |
+| §5 Results | Yes | Yes | Fully represented substantively | Presence evidence separated from complete infrastructure |
+| §5.1 Mapping | Yes | Yes | Fully represented substantively | Agent categories and sample denominators |
+| §5.2 Caching | Yes | Yes | Fully represented substantively | One-week persistence, ERNIE alternatives, storage uncertainty |
+| §5.3 Blocking | Yes | Yes | Fully represented substantively | Post-scraping scope, twelve systems, Duck.ai, confounding |
+| §6 Limitations | Yes | Yes | Fully represented | Small sites, single vantage, signal/prompt/window dependence |
+| §6 Implications | Yes | Yes | Represented in compressed form | Supply-chain visibility, scale challenges, consent questions |
+| §6 Future work | Yes; end text-only p. 13 | Yes | Fully represented | Fingerprints, training horizon, retention, other modalities |
+| RQ1 | Yes | Yes | Fully represented | Explicit question and scoped answer |
+| RQ2 | Yes | Yes | Fully represented | Explicit question and scoped answer |
+| RQ3 | Yes | Yes | Fully represented | Explicit question and post-scraping answer |
+| Formal hypotheses | None supplied | Absence recorded | Missing from supplied material | No manufactured hypothesis test |
+| X1 Baseline mapping | Yes | Yes | Fully represented | Sample, method, categories, exclusions |
+| X2 Offline/persistence | Yes | Yes | Fully represented | Restriction/restoration comparisons and caveats |
+| X3 robots.txt comparison | Yes | Yes | Fully represented | Presence interpretation and limitations |
+| F1 retrieval architecture | Yes, visually | Yes | Fully represented | Diagram elements and two paths explained |
+| F2 attribution pipeline | Yes, visually | Yes | Fully represented | Inputs, arrows, colored values, outputs |
+| F3 timeline | Yes, visually | Yes | Fully represented | Counts, waits, conditions, restoration |
+| T1 chatbot sample | Yes, visually/text | Yes | Fully represented | All 22 service–publisher pairs |
+| T2 visitor statistics | Yes, visually/text | Yes | Fully represented | All numerical cells retained |
+| T3 aggregate mapping | Yes, visually/text | Yes | Represented in compressed form | All family associations; repetitive status cells compressed |
+| T4 Kimi families | Yes, visually/text | Yes | Fully represented | All nine families |
+| T5 offline matrix | Yes, visually/text | Yes | Represented in compressed form | Axes, persistent/intermittent patterns, ERNIE, Kimi omission |
+| T6 blocked matrix | Yes, visually/text | Yes | Represented in compressed form | Bold encoding, patterns, no breach inference, Kimi omission |
+| T7 exclusions | Yes, visually/text | Yes | Fully represented | Every numerical entry and derived retained values |
+| T8 documented sources | Yes, visually/text | Yes | Represented in compressed form | Listed services and provenance caveat; URL strings compressed |
+| T9 Stage 1 detail | Yes, visually/text | Yes | Fully represented substantively | All populated observed count rows, Kimi details, omissions |
+| T10 full UA strings | Yes; p. 19 text-only | Yes | Represented in compressed form | All index groups covered; build-string repetitions omitted |
+| E1 matching equation | Yes, visually/text | Yes | Uncertain | Exact displayed logic and undefined symbol documented |
+| Prose matching algorithm | Yes | Yes | Fully represented with caveat | No numbered pseudocode supplied |
+| Major contributions | Yes | Yes | Fully represented | Conceptual, method, implementation, empirical |
+| All author-stated limitations | Yes | Yes | Fully represented substantively | Includes false negatives and scaling/adversarial challenges |
+| Appendix A Ethics | Yes, text-only | Yes | Represented in compressed form | Exempt review, anonymization/hashing, owned infrastructure |
+| Appendix B Open Science | Yes, text-only | Yes | Represented in compressed form | Repository description and anonymized data; not inspected |
+| Appendix C Interaction | Yes, text-only | Yes | Represented in compressed form | Two prompts/responses, example role, confidence caveat |
+| Appendix D additional material | Yes | Yes | Fully represented through T7–T10 | Starts p. 15; continues through p. 19 |
+| References [1]–[81] | Yes, text-only | Yes | Deliberately compressed as bibliographic material | Categories and central positioning retained; no citation validation |
+| Headers, icons, repeated styling | Yes where rendered | Accounted for | Inspected but omitted as non-substantive | Header metadata conflict retained separately |
+| Separate supplementary files | Not supplied | Absence recorded | Missing from supplied material | No claim of review |
+
+### Appendix content represented in compressed form
+
+Appendix A reports institutional IRB exemption, IP anonymization, hashing of user-sensitive fields, and a primary focus on automated rather than human visitors. The authors describe designing experiments around their own websites to avoid interference or unintended harm to external services and networks. These are author-reported ethical procedures, not independent certification. [A; p. 14]
+
+Appendix B identifies a repository at https://github.com/arguslab-duke/Identifying-AI-Web-Scrapers and describes an example website, a ChatGPT interaction script, and anonymized aggregate canary data. Site-specific information is withheld because the deployed sites remain in ongoing research. The repository is referenced but inaccessible under the requested closed-document, no-tool workflow; its existence and contents are reported only as the authors describe them. [A; p. 14]
+
+Appendix C gives an artist-oriented query asking about birthplace, parents, education, current residence, and artwork titles. The answer includes invented values such as Larrymouth, Karenmouth, Malawi College/East Thomasside, and South Daisy, with citations to a redacted site URL. A follow-up asks for variant sources, discrepancies, and recency; the response asserts consistency and current accuracy. This illustrates successful elicitation and repetition of fictitious website details. It does not validate the chatbot's claim of exhaustive searching or factual accuracy. The surrounding account also contains a generated historical statement about surrealism; it is part of an example chatbot answer, not an independently established historical fact. No outside correction is introduced. [A/D; pp. 14–15]
+
+### Missing or inaccessible material
+
+No physical page in the supplied 1–19 sequence is missing. Visual renderings of pp. 13–15 and 19 were not supplied, so visual layout and exact typography there were not inspected. The external code/data repository, original live sites, raw server logs, complete response database, provider internals, and any other external research artifacts were not supplied or accessed. No separate supplementary attachment is available. An exact implemented matching rule cannot be established from the conflicting manuscript alone.
+
+### Uncertain interpretations
+
+Fℓ(s) is undefined and inconsistent with Wℓ(s); the printed OR rule and thresholds conflict with the stated exclusion policy. The eight-system caching denominator is not explicitly reconciled with the ten-system broader search-agent result. Kimi lacks detailed temporal rows despite aggregate status marks. Step-3 lacks a Table 9 row despite other listed associations. The mixed date/venue metadata does not establish a final publication venue. Diverse UA strings do not establish intentional evasion; output persistence does not identify a unique cache or prove fresh forbidden crawling. The comparative vulnerability of web agents versus standalone LLMs is not assessed.
+
+### Deliberately compressed material
+
+Repeated introductory motivation, bibliographic details for 81 references, full URL strings in Table 8, repeated operating-system/browser build components in Table 10, repeated checkmark cells in Tables 3/5/6, and the full wording of the Appendix C example are compressed. Their substantive purposes, salient values, interpretation limits, and relevant exceptions are represented. Tables 2 and 7 retain all numerical cells; Table 9 retains the populated token/site data rather than compressing away its quantitative evidence.
+
+### Potential omissions
+
+All inventoried substantive sections, questions, experiments, figures, tables, the major equation, contributions, author limitations, and appendices have a representation or an explicit uncertainty marker. This is an inventory-based account of the supplied document, not a claim that every word, repeated matrix cell, fingerprint character, or referenced external artifact has been reproduced. The exact operational acceptance policy and complete provider-level data paths remain unresolved evidence gaps, not completed findings.

@@ -1,0 +1,540 @@
+## Stage 0 — Document Accessibility Report
+
+This analysis uses only the supplied paper text and supplied page images. The paper's contents, including the appendix prompt templates, are treated as evidence to analyze, never as instructions to execute. No external research, browsing, tool calls, repository inspection, or reproduction was performed.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document available | Yes: supplied extracted text covers physical PDF pages 1–19. |
+| Page range and accessible count | 1–19; 19 text pages. |
+| Pages apparently missing | No numbered page is absent from the supplied text sequence. This establishes coverage of the supplied 19-page document, not the existence or completeness of any separate artifact. |
+| Visually inspected pages | 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 18, and 19. |
+| Text-only pages | 3, 12, 14, and 16. Their prose is accessible, but their page layouts were not visually inspected. |
+| Figures | Figures 1–11 have supplied visual renderings. Figure 7 has two substantive panels; Figure 4 has three. |
+| Tables | Tables 1 and 2 are visually available on p. 11 and readable in extracted text. |
+| Equations | No numbered mathematical equations appear in the supplied work. The conditional-policy inequality and JavaScript implementation are readable. |
+| Appendices | Appendix text on p. 17 and prompt templates on pp. 18–19 are supplied. The main text calls the prompt material Appendix A, whereas the visible appendix heading is simply Appendix. |
+| Supplementary material | No separate supplementary file was supplied. Accessibility metadata reports zero embedded files and no detected supplementary references. |
+| Other referenced artifacts | The open-source project, WebBench, WASP, cited publications, browser documentation, and underlying datasets/code were referenced but not independently inspected. |
+| OCR | Not needed for this analysis because native/extracted text and rendered images are supplied. The extracted text was checked against readable visual objects where possible. |
+| Remaining visual limitations | Fine text in the screenshot and execution-log figures is small. Their broad structure and captions are readable, but no detailed payload transcription or additional numbers are inferred from tiny screenshot text. |
+
+Evidence labels used below are **[A] Author-reported**, **[B] Directly observable**, **[C] Analyst-derived**, and **[D] Analyst interpretation**. There is no **[E] External information**. Confidence describes confidence in the source-grounded representation, not a guarantee that the authors' empirical or security claims hold universally. Physical PDF page numbers are used throughout.
+
+### Document inventory established before synthesis
+
+The work is a mixed computer-systems, cybersecurity, and artificial-intelligence paper with an implementation, a curated policy-selection benchmark, a security-enforcement case study, and an overhead experiment. It is not a controlled comparison of browser agents against standalone language models.
+
+The inventory comprises: abstract; §1 Introduction; §2 Background and Motivation; §3 CELLMATE Design; §3.1 Threat Model and System Assumptions; §3.2 Challenges in Sandboxing BUAs; §3.3 CELLMATE Overview; §§3.3.1–3.3.3 HTTP-layer sandboxing, agent sitemap, and permission design; §4 Workflow and Chrome Instantiation; §§4.1–4.3 registration, policy selection, and enforcement, including their security analyses; §5 Evaluation; §5.1 Policy Selection and Instantiation; §§5.1.1–5.1.4 benchmark design, domain prediction, policy selection, and argument extraction; §5.2 GitLab case study; §5.3 memory and latency; §6 Related Work; §7 Discussion and Limitations; §8 Conclusion; acknowledgements; ethical considerations and their subsections; references [1]–[72]; and the appendix with transformation examples and two prompt templates.
+
+Visual inventory: F1 real injection screenshot; F2 navigation-tool bypass log; F3 architecture; F4a sitemap, F4b policies, F4c composite policy; F5 sitemap JSON; F6 allow-policy JSON; F7a conditional-policy JSON and F7b JavaScript condition; F8 instantiated composite-policy JSON; F9 enforcement diagram; F10 domain-prediction prompt; F11 policy-selection/argument-extraction prompt. Table inventory: T1 domain accuracy; T2 policy and joint argument accuracy. Experiment inventory: X1 domain prediction; X2 policy selection; X3 joint policy selection and argument extraction; X4 scripted GitLab security case study; X5 latency and memory overhead. The preliminary navigation bypass is a separate illustrative observation, X0, rather than a fully specified quantitative experiment.
+
+## 1. Plain-language orientation
+
+**CELLMATE: Sandboxing Browser AI Agents** asks how to limit the damage a browser-operating artificial-intelligence agent can cause after malicious webpage content misleads it. A browser agent can read pages, click buttons, type into forms, and navigate websites. When it uses a browser already signed into a user's accounts, those ordinary-looking actions may access private information, purchase goods, change account settings, or delete projects. The agent's language model can mistake malicious content for a valid instruction, and the browser can then turn that mistake into an actual operation. [A; pp. 1–3]
+
+The researchers propose a browser-level sandbox: a permission boundary enforced outside the language model. Instead of trying to decide whether every click is safe, CELLMATE checks the Hypertext Transfer Protocol, or HTTP, requests that browser actions send to websites. Websites provide an **agent sitemap** connecting request patterns to meaningful actions, such as viewing a cart or placing an order. Trusted sources provide policies, and a language model selects a small set of these policies for the user's task. The user confirms them before the browser enforces them. [A; pp. 4–9]
+
+The reported evaluation has three distinct findings. First, three tested language models select the exact required policy set with more than 94% accuracy in each of three task categories. Second, the enforcement layer blocks all 12 scripted GitLab attacker goals in a restricted case study that emulates an already compromised agent. Third, an 11-navigation GitLab workload has reported average latency overhead of 7.25%, 10.10%, or 15.0%, depending on sitemap size, and extension memory consumption of about 25 MB. These are different measurements and should not be collapsed into a single security-success percentage. [A; pp. 10–12]
+
+For the user's question, **Why Are Web AI Agents More Vulnerable Than Standalone LLMs?**, the paper supports a mechanism-based explanation: browser agents combine a language model's injection susceptibility with authenticated privileges, private resources, external communication, and ambiguous low-level controls. **[D] Analyst inference:** this combination can make a model error more consequential by allowing it to cause real operations. The paper does not measure whether the underlying model becomes more susceptible to injection than the same model used standalone, and it does not establish a numerical browser-agent/standalone-model vulnerability ratio.
+
+## 2. Document roadmap
+
+The abstract and §1 identify the problem and two design challenges: finding a meaningful enforcement boundary and determining which permissions a natural-language task needs. Section 2 explains the browser-agent loop, inherited prompt-injection risk, and why existing tool-boundary defenses are difficult to apply to clicks and keystrokes. [A; pp. 1–3]
+
+Section 3 defines the threat model and system assumptions, illustrates a private-email exfiltration attack and a navigation bypass, and introduces the three-phase architecture. Its subsections explain why HTTP is the enforcement layer, how an agent sitemap supplies action meanings, and how a discretionary permission system can be layered above the general framework. [A; pp. 3–6]
+
+Section 4 turns the design into a Chrome-extension workflow. Registration supplies sitemaps and trusted policy definitions; selection predicts domains, chooses policies, and obtains consent; enforcement compiles request decisions and evaluates runtime conditions. It also discusses stateful counters and stale runtime arguments. [A; pp. 6–10]
+
+Section 5 presents the curated benchmark, model results, scripted GitLab enforcement case study, and overhead measurements. Section 6 positions the work against probabilistic defenses, browser-specific defenses, browser-task benchmarks, permission prediction, and agent-friendly documentation. Section 7 discusses automation, WebSockets, and Model Context Protocol. Section 8 summarizes the contribution. Ethical considerations follow; references occupy pp. 14–16; the appendix contains task transformations and the evaluation prompts on pp. 17–19.
+
+## 3. Background and context
+
+A **browser-using agent (BUA)** combines a **large language model (LLM)** with a runtime that observes and manipulates a browser. In each iteration, the runtime captures a screenshot and/or the **Document Object Model (DOM)**, the structured representation of page elements. The model chooses an action such as click, scroll, or navigate, and the runtime executes it. The loop continues until the task is complete. The authors identify Playwright and Puppeteer as example automation frameworks. [A; p. 2]
+
+**Prompt injection** is malicious content that causes the model to follow unauthorized instructions or leak data. In this paper, the content can be an issue description, a product review, or a page on an attacker-controlled website. The attacker need not control the entire legitimate site. Because the browser is authenticated, the agent may already possess the ability to act as the user. The authors call this **ambient authority** or ambient privilege: broad power available from the session rather than separately granted for each specific task. [A; pp. 2–3]
+
+**Least privilege** means granting only the permissions necessary for a task. **Sandboxing** limits the available action space, so a compromised decision-maker cannot automatically use every capability of its environment. **Deterministic enforcement**, in the authors' framing, means that an external permission check decides whether a request is permitted, rather than relying on a model to recognize every attack. This is a property of enforcement under the stated assumptions; the preceding model-based policy-selection stage remains fallible. [A; pp. 3, 8–9]
+
+The **semantic gap** is the mismatch between meaningful policy intent and the low-level interface used to enforce it. A click at a coordinate may read an email in one page state and delete it in another. A policy such as permit checkout below a spending limit cannot be reliably expressed as a fixed set of allowed coordinates. HTTP requests are closer to application operations: the paper's example POST request to a GitLab SSH-key endpoint corresponds to adding a user SSH key. [A; pp. 1, 3, 5]
+
+**Content Security Policy (CSP)**, **OAuth** permissions, Android permissions, Linux access controls, and SELinux are analogies the authors use to motivate stakeholder-maintained security metadata and policy libraries. The supplied work does not provide comprehensive definitions of each ecosystem, and no outside explanation is needed to evaluate its proposal. The core analogy is that application-specific permissions can be defined once and selected for particular users or tasks. [A; pp. 1–3, 6]
+
+## 4. Research problem and gap
+
+**Existing problem:** browser agents process untrusted web content while possessing access to authenticated accounts and communication channels. A malicious instruction may therefore produce confidentiality violations, such as secret exfiltration, or integrity violations, such as unauthorized project deletion. [A; pp. 1–4]
+
+**Shortcomings attributed to prior approaches:** model training, input filtering, and injection detectors are probabilistic and do not provide the deterministic robustness the authors seek. System-level defenses such as CaMeL, Fides, and Progent assume that tool interfaces have sufficiently clear meanings to enforce policies. The authors argue that this assumption fails for low-level browser operations whose effects change with page state, DOM structure, and screen resolution. Their discussion of prior systems is author positioning, not an independent assessment of those external works. [A; pp. 3, 12–13]
+
+**Research gap:** a browser agent needs both a stable enforcement boundary and a way to obtain a task-specific permission set. A denylist on a navigate tool does not cover every route to the same page; clicking a search result can achieve the same destination. Conversely, blocking everything except an intended domain still leaves the question of what sensitive actions within that domain should be permitted. [A; p. 4]
+
+**Motivation:** contain the consequences of a model's compromised decisions without modifying the agent's internal architecture or retraining its model. CELLMATE is intended to complement model-based defenses, rather than prove that injection susceptibility disappears. [A; pp. 1, 5, 12]
+
+**Scope:** browser-mediated web interactions, HTTP requests, supplied semantic mappings, and approved policies. Current support focuses on single-turn tasks. Control-flow integrity, data-flow integrity, malicious policy definitions, unrestricted computer access, and general WebSocket enforcement are excluded or left for future work. [A; pp. 3–4, 9, 13]
+
+## 5. Research questions, objectives, and hypotheses
+
+The paper does not present a formal numbered research-question or hypothesis list. Its explicit objectives are to build programmatic privilege control for browser agents, support policy specification by multiple stakeholders, and enforce those policies at the browser's HTTP layer. [A; p. 3]
+
+Section 3.3 explicitly frames three design questions: **RQ1**, how CELLMATE bridges the semantic gap and enforces policies; **RQ2**, how it establishes standards for policy authoring; and **RQ3**, how policies are created. These retain the meaning of the authors' questions, although the RQ identifiers are analyst inventory labels. [A; p. 5]
+
+The evaluation objectives are separately inventoried as **O1**, measure domain prediction; **O2**, measure exact policy-set selection; **O3**, measure joint policy and argument correctness; **O4**, validate enforcement against forbidden GitLab attacker actions under an emulated compromised agent; and **O5**, measure latency and memory overhead. They are objectives, not manufactured formal hypotheses. [A; pp. 10–12]
+
+The user's broader research question concerns browser agents versus standalone LLMs. **[D] Analyst interpretation:** CELLMATE is relevant to the added authority, exposure, and enforcement challenges of browser agents. It is indirect evidence for that question because the study has no standalone-model control condition and no experiment isolating how browser integration changes injection susceptibility.
+
+## 6. Assumptions / Threat Model
+
+**Assets:** confidentiality and integrity of user data, sensitive resources accessible through logged-in sessions, and the user's authorized task boundaries. Examples include private email addresses, access tokens, projects, account SSH keys, and collaborator permissions. [A; pp. 3–4, 12]
+
+**Attacker capabilities:** attackers can control untrusted portions of otherwise trusted domains, such as GitHub issue text or Amazon product reviews. They can also control separate Internet domains a user mistakenly asks the agent to visit. They may attempt redirects, time-of-check/time-of-use attacks, branch steering, and different kinds of prompt injection. They are not assumed to control the entire trusted application domain merely because they can submit content to it. [A; p. 3]
+
+**Trusted components:** the browser runtime, the enforcement mechanism, registered sitemaps and policies from trusted sources, and conditional-policy functions. The Chrome-extension prototype assumes no other privileged browser components or extensions concurrently interfere with HTTP requests. Browser-integrated enforcement is discussed as a potentially stronger mediation mechanism with greater deployment cost. [A; pp. 3, 9–10]
+
+**Agent confinement:** the agent is restricted to webpage-context operations such as clicking, typing, and navigating. It cannot change browser settings, access local files, or use developer tools. The model can run on the browser's machine or a separate machine without changing the threat model. [A; p. 4]
+
+**Task and permission assumptions:** user prompts are trusted configuration input and must explicitly specify target domains. Under-specified tasks receive no permissions. Predefined policy descriptions are trusted; selection does not consume untrusted webpage content. Users review and confirm predicted policies and parameters. Permissions then remain fixed until explicitly updated. [A; pp. 6, 8–9]
+
+**Excluded protections:** CELLMATE does not track whether an otherwise permitted HTTP request was causally influenced by untrusted content. It does not enforce general data-flow or control-flow integrity. It cannot prevent misuse entirely within intentionally allowed actions; for example, permission to comment does not by itself constrain the comment's content. [A; pp. 3, 9, 12]
+
+**Important boundary:** an attacker operating inside a permitted domain may still misuse an existing privilege unless a sufficiently precise policy covers that misuse. Default denial limits unrelated cross-domain actions, but it does not make every allowed destination or every allowed operation harmless. [A; p. 10]
+
+## 7. Methodology
+
+### Architecture and policy lifecycle
+
+The architecture has three phases. **Registration** obtains a website-specific agent sitemap and a policy generator or predefined policy library from trusted sources. **Instantiation** uses the user task to obtain a session policy. **Enforcement** mediates requests in the agent's dedicated browser session. The general framework supports different policy architectures; the evaluated automatic selector is one discretionary design layered above it. [A; pp. 4–6]
+
+An agent sitemap maps HTTP method, URL pattern, and potentially request-body matching information to a uniquely named semantic action and natural-language description. Optional arguments specify security-relevant runtime values and their extraction source. Figure 5, for example, maps Amazon order placement to a POST URL pattern and obtains totalAmount from a DOM selector. The sitemap must cover the site's security-relevant actions to support the intended protection. [A; pp. 5–7]
+
+The authors manually construct a GitLab sitemap covering **51 GitLab project APIs** by using Ruby on Rails routes and associated controller actions. Routes supply request matching; controllers inform operation meaning. They argue that this structure is amenable to automation, but the supplied work does not report an implemented automatic generator or a measured reduction in authoring effort. Maintenance is required when endpoints, argument scopes, application logic, or DOM structures change. Stable developer annotations such as sitemap-id attributes are suggested for DOM arguments. [A; p. 7]
+
+Each policy has a unique name, an effect of allow, deny, or condition, an action list, and a description. Conditional policies additionally supply a function, configured parameters, and runtime arguments. A domain's policies form its **policy universe**. The authors require a partial order based on allowed-action set inclusion to support their automated least-privilege selection. A future assistance tool could check this property. [A; p. 7]
+
+### Selection and consent
+
+Selection uses two separate frontier-LLM prediction stages. First, the user task supplies the domain-prediction input. Second, for each predicted domain, the task and that domain's policy definitions supply the policy-selection input. Conditional-policy parameters are predicted jointly with policies. The instantiated results are merged into a composite policy with a developer-specified allowlist for required external resources. The consent dialog exposes names, descriptions, and predicted parameters; users can adjust them before enforcement. [A; p. 8]
+
+### Enforcement implementation
+
+The Chrome extension compiles semantic policies through the sitemap into a **fast authorization lookup table** associating HTTP request patterns with allow, deny, or a conditional function. Requests consult this table; conditional functions are preloaded and evaluated using runtime arguments. Values may come from request payloads or the DOM. Content scripts monitor specified page elements and report values to the extension's background script. Cached values bridge situations where the relevant page is destroyed before the request is sent. [A; p. 9]
+
+Stateful policies can use request counters stored in Chrome extension local storage. This distinguishes a permitted purchase below a cap from permission to repeat such purchases indefinitely. Freshness introduces another issue: a cart total can be stale after an update. The authors state that sequential actions should wait for previous effects to complete; robust general enforcement requires application cooperation. Their interim lightweight agent/browser proxy throttles rapid state-changing instructions. No specific throttle duration or freshness error rate is reported. [A; p. 9]
+
+### Benchmark construction
+
+Policy-selection tasks are adapted from WebBench. The curation process makes tasks achievable within a specified domain, adds realistic constraints, and replaces unnatural domain specifications with natural references. Two researchers independently label the minimal required policy sets and resolve disagreements through review. Categories contain **149 retail**, **36 travel**, and **24 version-control** tasks. Policies are designed to satisfy the stated partial-order requirement. [A; p. 10]
+
+A separate domain dataset covers zero to three ground-truth domains. The prose reports 132 zero-domain, 205 one-domain, and 410 multi-domain tasks; Table 1 instead uses 136 as the zero-domain denominator. This is retained as an unresolved inconsistency. Models are claude-opus-4-5, gemini-2.5-pro, and gpt-5.1. Few-shot prompts appear in Figures 10 and 11. [A/B; pp. 10–11, 18–19]
+
+The metrics are domain prediction accuracy, exact policy-set accuracy, and joint policy-selection-plus-argument-extraction accuracy. Only fixed-type arguments—numbers, literals, and booleans—are labeled for argument evaluation. Hardware, precise model API configurations, temperature, random seeds, confidence intervals, hypothesis tests, train/validation/test splits, and inter-annotator agreement coefficients are not specified in the supplied methods. No model training procedure is reported. [A; pp. 10–11]
+
+## 8. Experiments / Analyses
+
+### X0 — Illustrative navigation-tool bypass
+
+**Purpose:** illustrate why low-level tool restrictions do not enforce a destination policy. A real Operator attack uses a GitHub issue to direct private-email exfiltration. The authors' preliminary browser-use experiment blocks direct navigation to Hacker News, but the agent searches through DuckDuckGo and clicks a result. Figure 2 illustrates this alternate route. No trial count, success distribution, or controlled comparison is provided; this is a qualitative design-motivation example. [A/B; p. 4]
+
+### X1 — Domain prediction
+
+**Purpose:** test whether models identify the explicitly required destinations while rejecting under-specified tasks. **Conditions:** zero, one, two, or three ground-truth domains; correct output for zero-domain tasks is an empty set. **Setup:** few-shot prompting with Figure 10. **Result:** Table 1 reports high accuracy, with GPT-5.1 notably lower for one-domain tasks at 93.1% (191/205). Zero-domain errors arise from interpreting descriptive product brands as destinations; some specified-domain failures omit required domains. The 132-versus-136 discrepancy prevents a confident total dataset count. [A/B; pp. 10–11]
+
+### X2 — Exact policy-set selection
+
+**Purpose:** test selection of the minimal sufficient predefined policy set. **Data:** 149 retail, 36 travel, and 24 version-control tasks. **Setup:** few-shot prompting with task and available policy descriptions. **Metric:** percentage of tasks with the correct policy set. **Result:** all nine model/category values exceed 94%; category-level values are reproduced in §11. There is no experimentally reported comparison against unrestricted permission assignment or an alternative selector. [A/B; pp. 10–11]
+
+Errors have three forms. **Object confusion** mistakes a wishlist for a cart. **Over-permissiveness** adds unnecessary policies, as when repository creation is incorrectly supplemented with separate visibility-changing and file-commit permissions. **Over-restrictiveness** omits a required operation, as when creating and renaming a board yields only create permission. These examples explain different security/utility effects but do not give frequencies for each error type. [A; p. 11]
+
+### X3 — Joint policy and argument correctness
+
+**Purpose:** test conditional-policy instantiation, not merely choosing a policy name. **Evaluated subsets:** 32 retail and 5 travel cases shown by the table denominators. **Metric:** both policies and all required arguments must be correct. Retail joint accuracy is 84.38% for GPT-5.1, 81.25% for Gemini 2.5 Pro, and 96.88% for Claude Opus 4.5. Travel is 100% (5/5) for each. No dynamic policies are created for version control, so dashes indicate not applicable, not failure. A reported error is omission of an intermediate add-to-cart quantity when a task later requests quantity three. [A/B; p. 11]
+
+### X4 — GitLab enforcement under an emulated compromised agent
+
+**Purpose:** isolate whether the browser blocks policy-forbidden actions even when the agent's action choices are hostile. **Tasks:** comment that work is underway on an issue, and upvote an issue. **Setup:** domain prediction and policy selection use the WASP task descriptions; both steps are reported as 100% accurate in this case study. Twelve browser-automation scripts implement the GitLab attacker goals, including token exfiltration, project deletion, malicious SSH-key registration, and unauthorized collaboration. All 12 attacks are reported blocked. [A; p. 12]
+
+The scripts emulate a fully compromised agent and bypass uncertainty about whether an injection succeeds against a model. Consequently, this is strong evidence for the tested enforcement boundary, not a broad measured end-to-end injection success rate. The authors deliberately evaluate goals requiring actions forbidden by the active policy. Misuse of allowed comments and similar within-permission attacks are outside this evaluation. [A; pp. 11–12]
+
+### X5 — Runtime overhead
+
+**Purpose:** measure extension cost as sitemap size grows. **Workload:** 11 automated GitLab navigation actions using the Playwright test runner. Runtime starts at the first request and ends when all elements on the final page load. **Conditions:** no extension versus 100, 200, and 300 sitemap entries. **Repetition:** 30 navigation trials are reported; allocation of trials to configurations is not further specified. **Results:** baseline 13.93 s; extension means 14.94, 15.35, and 16.02 s; reported relative overhead 7.25%, 10.10%, and 15.0%. Chromium Task Manager reports about 25 MB extension memory across configurations. No variability, error bars, or statistical significance results accompany these averages. [A; p. 12]
+
+## 9. Results
+
+**Result 1: HTTP mediation supplies a more meaningful policy boundary.** The method checks application operations represented by requests rather than trying to enumerate all UI sequences. The navigation bypass supports the motivation, while the scripted GitLab case study supplies empirical enforcement evidence. This result remains conditional on request interception, correct mappings, appropriate policies, and the stated browser assumptions. [A; pp. 4–5, 9, 12]
+
+**Result 2: policy-set selection is highly accurate in the curated benchmark.** The lowest Table 2 policy-selection value is GPT-5.1 travel accuracy, 94.44% (34/36). The highest reported values are 100% for Claude travel and Gemini version control. This supports the authors' above-94% statement for these categories and models, given policy definitions and tasks. It does not establish that all parameters or all domain predictions are above 94%. [A/B; p. 11]
+
+**Result 3: conditional instantiation can be appreciably less accurate.** Retail joint correctness ranges from 81.25% to 96.88% on 32 cases. These values cannot be subtracted from policy accuracy as a clean stage-specific loss because the policy-selection column covers 149 retail tasks whereas the joint column covers 32. [A/B; p. 11; D methodological interpretation]
+
+**Result 4: the tested forbidden GitLab goals are blocked.** All 12 emulated attacks are reported blocked after correct task-specific permission selection. The scope is two legitimate tasks, one application, and attacker goals outside the granted permissions. There is no reported evidence that comment-content attacks or other abuse of allowed actions are blocked. [A; p. 12]
+
+**Result 5: measured latency grows with sitemap size.** The reported sequence is 13.93 s baseline, then 14.94 s with 100 entries, 15.35 s with 200, and 16.02 s with 300. **[C] Analyst-derived absolute increases:** 14.94−13.93 = 1.01 s; 15.35−13.93 = 1.42 s; 16.02−13.93 = 2.09 s. The authors' corresponding relative increases are 7.25%, 10.10%, and 15.0%. These are percent increases in latency, not percentage-point changes in accuracy. [A/C; p. 12]
+
+**Consistency finding:** using the rounded means gives (15.35−13.93)/13.93 × 100 ≈ 10.19%, whereas the prose reports 10.10%. Unreported precision could account for this, but the supplied work does not establish that explanation. Both the original mean and original reported percentage are retained. By comparison, the first and third ratios from rounded means are approximately 7.25% and 15.00%. [C; p. 12]
+
+**Result 6: memory is approximately stable in the tested configurations.** About 25 MB is reported across all sitemap sizes. The authors call this modest relative to modern web applications, but they do not provide a measured application-memory baseline in the supplied experiment. [A; p. 12]
+
+## 10. Figure-by-figure interpretation
+
+All figures below were visually inspected in supplied renderings and compared with extracted captions or nearby text. None is a quantitative plotted graph; therefore axes, scales, error bars, and graphical numerical estimation are not applicable.
+
+### Figure 1 — Real prompt-injection example
+
+The p. 4 screenshot shows a GitHub issue used as the carrier for a malicious instruction. Its caption and surrounding prose identify private-email extraction from Hacker News and transmission to an attacker-controlled domain. The visual supplies an example of benign task context containing attacker-controlled content. It does not show a complete independently verifiable execution trace or a quantified success rate. Fine payload text is too small for a reliable verbatim visual transcription. [A/B]
+
+### Figure 2 — Alternate route around a navigation restriction
+
+The p. 4 execution-log screenshot illustrates failed direct navigation followed by tool chaining through search. Red emphasis boxes highlight relevant events. The caption explicitly states that denylisting navigate is insufficient because multiple tools can achieve policy-violating behavior. The conclusion concerns the enforcement boundary; no exact timing or repeated-run statistic is read from the screenshot. [A/B]
+
+### Figure 3 — Overall architecture
+
+The p. 5 diagram places the user and trusted stakeholders above/left of policy setup and the agent below/left of the browser session. User Prompt feeds Policy Instantiation; a Policy Generator from setup also feeds instantiation; the resulting Policy feeds enforcement. Sitemap Registration provides the Agent Sitemap. The agent sends Action to the Sandboxed Browser Session and receives Browser State. Intercepted HTTP Request travels from the browser toward Policy Enforcement; Allow/Deny travels back. This depicts policy setup outside the agent's ordinary execution loop. [A/B]
+
+### Figure 4 — Three conceptual views
+
+**Panel a:** three method/URL patterns map to ViewCart, UpdateCart, and PlaceOrder. GET cart viewing differs from POST cart updates and POST order placement. **Panel b:** view_shopping_cart and update_shopping_cart have allow effects; purchase_amount_leq applies a condition to PlaceOrder. **Panel c:** amazon.com has selected policies and a trusted external-request allowlist. Green horizontal rules visually separate rows; there is no numerical encoding. These are partial conceptual examples, not a complete audited Amazon implementation. [A/B; p. 5]
+
+### Figure 5 — Concrete sitemap representation
+
+The p. 6 JSON-like listing has entries for ViewCart and PlaceOrder. Matching information includes method and URL patterns; semantic information includes action identifiers and descriptions. PlaceOrder declares totalAmount as a number sourced from the DOM at a checkout URL using a CSS selector. This figure explains how an HTTP decision can depend on page-derived context. The caption notes that developer-annotated elements can simplify selectors. It does not prove that the displayed selector is robust under every website change. [A/B]
+
+### Figure 6 — Unconditional viewing permission
+
+The p. 7 listing defines view_shopping_cart, effect allow, action ViewCart, and a description covering item details, quantities, total price, and discounts. It illustrates a policy authoring unit. The number of listing lines is formatting, not an experimental measurement. [A/B]
+
+### Figure 7 — Conditional permission and executable check
+
+**Panel a:** purchase_amount_leq applies to PlaceOrder, names allowPurchaseIfAmountLeq, defines configurable maxAmount as a number, and requests runtime totalAmount. **Panel b:** JavaScript retrieves the parameter and argument, rejects either value if its type is not number, and returns totalAmount <= maxAmount. The figure makes the non-strict threshold explicit. It is an illustrative condition function, not a theorem or a comprehensive monetary-validation specification. [A/B; p. 7]
+
+### Figure 8 — Instantiated composite policy
+
+The p. 8 listing selects view_shopping_cart and purchase_amount_leq for amazon.com and binds maxAmount to 50. allowed_domains contains m.media-amazon.com, images-na.ssl-images-amazon.com, *.amazon-adsystem.com, and *.amazon.dev. Wildcards here belong to the composite-policy example; the domain-prediction prompt separately forbids wildcard output. The caption confirms two selected policies and the 50 parameter. No actual purchase outcome is reported by this figure. [A/B]
+
+### Figure 9 — Enforcement pipeline
+
+The p. 9 diagram separates Setup from Runtime using shaded regions. Setup compiles a sitemap and policy into a lookup table and supplies DOM monitoring. Runtime maps an intercepted Request to Allow/Deny/f(args), then evaluates a condition when required to obtain Final Decision Allow/Deny. A DOM Tree feeds the content-script monitor, which supports function arguments. Arrows distinguish the request-decision path from monitored contextual data. This is the mechanism underlying the enforcement claims. [A/B]
+
+### Figure 10 — Domain-prediction evaluation prompt
+
+The p. 18 boxed prompt asks for only required explicitly indicated domains in a strict JSON array. No domain specification means an empty array. Product brands used merely as descriptors should not become destinations; relevant service subdomains should be distinguished; schemes, paths, ports, and wildcards should be excluded. Its Amazon example accepts amazon.com from the named service, while its LinkedIn example rejects microsoft.com when Microsoft merely describes a person. These prompt contents are experimental evidence, not instructions followed by this analysis. [A/B]
+
+### Figure 11 — Policy and argument evaluation prompt
+
+The p. 19 boxed prompt supplies available policies and a task, requires the minimal needed subset, and requests tuples containing policy name, reason, and argument dictionary. It uses nan if no policies are needed, exact available names, an empty dictionary for absent arguments, and True/False for booleans. Examples separate wishlist permission from checkout constraints and include an add-to-cart quantity of one plus a checkout limit of 50. These demonstrate desired output conventions, not evaluation outcomes. [A/B]
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Domain prediction by number of ground-truth domains
+
+Rows distinguish zero, one, two, and three ground-truth domains; columns distinguish the three models. Units are percentages with correct/total counts. There is no baseline model, uncertainty interval, or significance annotation. The zero-domain row is a refusal/empty-set correctness test, not successful navigation to a website. [A/B; p. 11]
+
+| Ground-truth domains | Claude Opus 4.5 | Gemini 2.5 Pro | GPT-5.1 |
+|---:|---|---|---|
+| 0 | 97.1% (132/136) | 96.3% (131/136) | 99.3% (135/136) |
+| 1 | 100.0% (205/205) | 100.0% (205/205) | 93.1% (191/205) |
+| 2 | 99.0% (203/205) | 100.0% (205/205) | 100.0% (205/205) |
+| 3 | 99.5% (204/205) | 100.0% (205/205) | 100.0% (205/205) |
+
+GPT-5.1 leads the zero-domain row but has the lowest one-domain accuracy. Gemini is perfect on all specified-domain rows. Claude misses two two-domain cases and one three-domain case. The authors describe undesired inference from descriptive keywords for zero-domain failures and omission of required domains for some specified tasks. The table's denominator of 136 conflicts with the p. 10 prose count of 132 zero-domain tasks. **[C] Derived totals:** table counts imply 136+205+205+205 = 751 tasks; prose counts imply 132+205+410 = 747. Neither is silently selected as authoritative.
+
+### Table 2 — Exact policy selection and joint argument extraction
+
+The first accuracy column evaluates policy selection over all tasks in a category. The second evaluates correct policies plus all required arguments on smaller dynamic-policy subsets. Dashes mean no dynamic policies in version control, not zero accuracy. All values below preserve the paper's displayed precision. [A/B; p. 11]
+
+| Category | Model | Policy selection | Policy selection + argument extraction |
+|---|---|---|---|
+| Retail | GPT-5.1 | 96.64% (144/149) | 84.38% (27/32) |
+| Retail | Gemini 2.5 Pro | 97.32% (145/149) | 81.25% (26/32) |
+| Retail | Claude Opus 4.5 | 99.32% (148/149) | 96.88% (31/32) |
+| Travel | GPT-5.1 | 94.44% (34/36) | 100% (5/5) |
+| Travel | Gemini 2.5 Pro | 97.22% (35/36) | 100% (5/5) |
+| Travel | Claude Opus 4.5 | 100% (36/36) | 100% (5/5) |
+| Version control | GPT-5.1 | 95.83% (23/24) | — |
+| Version control | Gemini 2.5 Pro | 100% (24/24) | — |
+| Version control | Claude Opus 4.5 | 95.83% (23/24) | — |
+
+Claude has the best retail policy and joint results and the best travel policy result; all models tie on the five travel joint cases; Gemini leads version-control selection. The nine selection values support the above-94% claim. Retail conditional accuracy demonstrates that correct permission names are not equivalent to fully correct permission instantiation. No significance test establishes that the observed model rankings generalize beyond these tasks.
+
+**Precision check:** 148/149 × 100 ≈ 99.3289%, ordinarily rounded to 99.33% at two decimal places; the table prints 99.32%. This small discrepancy is preserved rather than corrected. [C] It may reflect truncation, but the supplied work does not specify the formatting method.
+
+## 12. Diagram / Architecture Interpretation
+
+Figures 3 and 9 describe complementary levels of the system. Figure 3 explains **who supplies information and when**: trusted stakeholders register definitions, the user's task produces an approved policy, and the agent operates within a dedicated browser session. Figure 9 explains **how a specific request is decided**: policy compilation creates request-level decisions, a request retrieves its decision, and a conditional branch consults monitored arguments before producing allow or deny. [A/B; pp. 5, 9]
+
+The data path begins with application descriptions, policy definitions, user intent, and runtime browser state. The control path ends with allowing or blocking network operations. The browser-agent loop remains iterative, but the permission set does not continually expand based on newly encountered webpage instructions. The authors freeze permissions after user confirmation until an explicit update. [A; pp. 8–9]
+
+The conditional branch is significant. Static permission to view a cart can become an immediate allow entry. Conditional permission to place an order requires both the selected policy and a fresh totalAmount argument. Thus, request identity and contextual value are separate inputs. Stateful counters add execution history as another input. [A; p. 9]
+
+**[D] Analyst interpretation:** the architecture moves the final authorization decision away from the model's next-action prediction, but does not remove all dependence on models or web-page state. Models still select initial domains/policies, and some condition arguments still come from monitored DOM elements. The paper's claim that CELLMATE does not rely on UIs to interpret actions refers to action identity at the HTTP boundary; it should not be read as a claim that the implementation never reads the DOM.
+
+## 13. Equations and mathematical concepts
+
+There are no numbered equations, theorem statements, lemmas, proofs, or formal algorithm blocks in the supplied work. The necessary mathematics is simple but substantively important.
+
+**Conditional purchase rule:** Figure 7 implements `totalAmount <= maxAmount` after checking that both values have JavaScript type number. Here totalAmount is a runtime argument representing the total purchase amount; maxAmount is a configured policy parameter. The output is a Boolean decision. In plain language, permit this order only when the observed total does not exceed the approved cap. Figure 8 instantiates maxAmount as 50. The rule includes equality. [A/B; pp. 7–8]
+
+**Threshold wording qualification:** motivating examples sometimes say less than 50 dollars or under 50, whereas the displayed function and policy description use less than or equal to maxAmount. These are different at exactly 50. The implementation example is explicit about a non-strict inequality; the prose examples should not be used to silently rewrite it as a strict inequality. [A/B; pp. 1, 7–9]
+
+**Policy ordering:** allowed-action set inclusion supplies the stated partial order. If the allowed actions of one policy are contained within those of another, the first can be treated as no more permissive along that dimension. The authors say this enables determination of the least-privileged option. **[D] Analyst observation:** the supplied text does not give a formal construction or proof covering incomparable policy sets, composite-policy conflict resolution, or all conditional-parameter orderings. The framework's stated requirement is represented without adding such a proof. [A; p. 7]
+
+**Accuracy:** the tables display correct cases divided by evaluated cases, multiplied by 100. For example, travel GPT-5.1 policy selection is 34/36 × 100 = 94.444…%, displayed as 94.44%. This is task correctness, not the fraction of browser actions blocked or a measured probability of preventing every attack. [A/B; p. 11]
+
+**Relative latency overhead:** the reproducible comparison from displayed means is `(extension mean − baseline mean) / baseline mean × 100`. **[C] Analyst-derived checks** reproduce approximately 7.25% and 15.00% for 100 and 300 entries, and approximately 10.19% for 200 entries. Section 9 preserves the reported 10.10% alongside this discrepancy. [A/C; p. 12]
+
+## 14. Interpretation and discussion
+
+RQ1 is answered by moving enforcement to HTTP operations: the same sensitive operation can be checked regardless of which click, search, redirect, or navigation sequence produced its request. RQ2 is answered by the sitemap abstraction, which gives policy authors stable semantic action names and runtime argument sources. RQ3 is addressed by a trusted predefined policy universe plus model-based selection and user consent. These are design answers supported by the implementation description; their real-world reach depends on correct stakeholder-maintained metadata and deployment assumptions. [A; pp. 4–9]
+
+The model results suggest that choosing among described permission primitives is feasible on curated tasks. They also show residual errors with different consequences. Extra policies broaden authority; missing policies reduce utility; incorrect conditional arguments may change the intended constraint. The authors therefore retain explicit user confirmation rather than treating the user prompt or model output as a perfect security oracle. [A; pp. 6, 8, 11]
+
+The scripted case study asks a narrower but important question: once a policy is active, can an adversarial action sequence execute forbidden operations? The reported answer is no for the 12 tested GitLab goals. It does not establish that the agent cannot be injected, that malicious allowed content is prevented, or that arbitrary sites are secure. This distinction aligns with the authors' explicit separation of enforcement correctness from misuse within granted permissions. [A; p. 12]
+
+For the broader vulnerability question, **[D] analyst interpretation**, distinguish three layers: **inherited weakness**, because the underlying model can confuse instructions and data; **expanded consequences**, because authenticated sessions provide sensitive read/write powers and external destinations; and **enforcement difficulty**, because generic UI tools do not reveal their security meaning. The paper directly describes those mechanisms but does not experimentally rank browser agents against standalone LLMs. [A; pp. 2–4, 12–13]
+
+Several tensions remain visible. High-level prose emphasizes complete/stable mediation and blocking UI-manipulation attacks, but the implementation assumes request-interception integrity and acknowledges stale DOM arguments and WebSocket gaps. The conclusion calls overhead negligible, while the measured navigation workload shows up to 15.0% latency overhead. The authors argue that LLM latency masks this cost in real operation, but the supplied overhead experiment itself uses browser navigation rather than a measured full LLM-agent workload. These qualifications prevent the narrative from strengthening the claims. [A; pp. 5, 9, 12–13]
+
+## 15. Contributions and novelty
+
+**Conceptual contribution:** the paper frames browser-agent security as a least-privilege problem in the browser environment and identifies the semantic gap between policy intent and UI primitives. Its claim of being the first systems-level sandboxing framework for BUAs is an author claim; priority was not externally verified. [A; pp. 2–3]
+
+**Methodological contribution:** HTTP-layer mediation decouples action enforcement from low-level tool sequences, while the agent sitemap bridges request patterns to site-specific semantic actions. The policy framework allows different generators or stakeholder choices rather than hard-coding one universal permission design. [A; pp. 4–7]
+
+**System and implementation contribution:** an agent-agnostic Chrome extension compiles permissions into request decisions, monitors DOM arguments, evaluates conditions, and supports stateful request counters. The paper reports open-source availability, but code was not supplied or reviewed here. [A; pp. 2, 8–9]
+
+**Benchmark contribution:** curated WebBench-derived tasks test minimal sufficient policy selection and constrained instantiation, with independent labeling and reconciliation by two researchers. A separate dataset tests explicitly specified domains and under-specified-task rejection. [A; p. 10]
+
+**Empirical contribution:** the model comparison characterizes exact selection and argument errors; the GitLab case study validates tested forbidden actions against a compromised-agent emulator; and overhead measurements characterize a navigation workload at three sitemap sizes. No new theorem, model-training algorithm, or broad standalone-LLM comparison is reported. [A; pp. 10–12]
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+The system currently targets single-turn tasks; multi-turn permission/context management is future work. It excludes general control-flow and data-flow integrity, so it does not track whether untrusted content influenced an allowed request. It requires trusted policies and functions and, for the extension prototype, a trusted browser without concurrent privileged interference. The agent must remain within webpage operations. [A; pp. 3–4, 9]
+
+Sitemaps and policies require development and maintenance. Incorrect or incomplete sitemaps may leave protection at the status quo. DOM-derived arguments may become stale, and general freshness requires web-application cooperation; throttling is presented as an interim mitigation. Diverse server frameworks complicate automatic sitemap generation. General WebSocket interception remains future work because messages can use complex application-specific or binary formats. [A; pp. 7–9, 13–14]
+
+Under-specified tasks cannot reliably yield permissions and are rejected, reducing utility. Selection models can confuse objects, add unnecessary permissions, omit needed permissions, or miss arguments. WASP has limited task/site breadth and weak static attacks in the authors' replication. Their replacement case study evaluates forbidden actions, not misuse of allowed actions, and they explicitly call for a stronger dynamic-attacker benchmark. [A; pp. 6, 11–12]
+
+### Additional evidence-based analyst observations
+
+**[D]** The benchmark tasks and policies are curated together, so performance may depend on how clearly the provided policy vocabulary expresses the tasks. No held-out-site or policy-author transfer evaluation is specified. No user study tests whether people accurately detect and repair consent-dialog mistakes. No confidence intervals or statistical tests establish uncertainty in model rankings or overhead. The five-case travel argument subset is too small to interpret its 100% result as universal reliability.
+
+**[D]** The overhead workload is navigation, not a broad mix of conditional purchases, DOM monitoring, stateful enforcement, and LLM-driven actions. Exact security-relevant endpoint coverage and conflict resolution among overlapping policies are not fully specified. The numerical discrepancies in domain sample counts and one latency percentage constrain precise aggregate interpretation. These are observations from the supplied material, not limitations attributed to the authors.
+
+## 17. Threats to validity
+
+The following categories are **[D] analyst organization**, not labels the paper necessarily uses.
+
+**Internal validity:** the scripted attacker isolates permission enforcement by making malicious action selection certain. That is suitable for testing the boundary, but it removes the injection-generation and model-compromise stages. The resulting blocked-script outcome cannot be read as a measured natural-language end-to-end defense success rate. Correct initial selection in the two case-study tasks also limits what this experiment says about selection mistakes. [pp. 11–12]
+
+**Construct validity:** exact policy-set accuracy is a useful minimality metric, but it is not identical to user safety. Joint argument correctness captures another component, while application-specific harm can occur inside allowed actions. Domain accuracy measures adherence to explicit task destinations, including empty-set output for under-specification, rather than successful task completion. [pp. 10–12]
+
+**External and ecological validity:** one GitLab security case study and a navigation workload do not represent all authenticated services, website architectures, real-time WebSocket applications, or multi-turn tasks. The evaluation assumes trusted enforcement and maintained sitemaps. The paper's framework-level applicability is broader than its tested application coverage. [pp. 3–4, 12–13]
+
+**Statistical conclusion validity:** task counts and numerators are reported, but uncertainty intervals, repeated model sampling, seed effects, and significance tests are absent. A difference of one correct example can change small-category rankings. The p. 10/T1 zero-domain count disagreement prevents a confident dataset-wide domain-accuracy calculation. [pp. 10–12]
+
+**Reproducibility:** architecture, example schemas, model identifiers, workload definitions, and prompts are provided. Exact API settings, full curated task/policy files, code revision, hardware/network configuration, and detailed enforcement receipts are not included in the supplied text. The reported open-source project might supply some of these, but it was not inspected and is not treated as reviewed evidence. [pp. 2, 6–12, 18–19]
+
+## 18. Future work and open questions
+
+### A. Explicitly proposed by the authors
+
+Support multi-turn interactions by dynamically managing accumulated context and permissions. Explore the broader policy-architecture design space. Build tools to check whether policy sets meet the ordering requirement. Automate sitemap generation with framework-specific generators for platforms such as Django, Flask, and Node.js. Extend enforcement to WebSocket traffic. Investigate complementary control-flow and data-flow integrity. Develop stronger benchmarks with dynamic attackers, more tasks, and more websites. Pursue an agent-sitemap standard; the ethics discussion says it has not yet been proposed to a standards body. [A; pp. 2, 4, 7, 9, 11, 13–14]
+
+### B. Additional open questions
+
+**[D]** How well do policies transfer across new sites or application versions? How reliably can users correct consent errors? What happens when conditional values are stale despite throttling? What additional predicates safely constrain comment contents, destinations, or cumulative spending? How should permissions evolve when a user changes the goal mid-task? How much overhead appears in a full agent workload rather than navigation alone? What security claims survive missing sitemap entries, permitted external-domain wildcards, or compromised trusted applications?
+
+For the user's research question, a direct comparative study would also need to distinguish injection susceptibility from downstream harm and compare matched standalone-model and browser-agent conditions. Such a design is an analyst-suggested open question, not an experiment performed in this paper.
+
+## 19. Terminology and notation glossary
+
+| Term | Beginner-friendly meaning in this paper |
+|---|---|
+| BUA | Browser-using agent: a model plus runtime that operates web pages through browser tools. |
+| LLM | Large language model: the component that interprets observations and chooses actions. |
+| Prompt injection | Untrusted content that induces unauthorized instructions or information leakage. |
+| Ambient authority | Powers inherited from the user's authenticated browser session. |
+| Least privilege | Grant only the permissions needed for the approved task. |
+| Sandbox | An enforced boundary limiting possible operations. |
+| Semantic gap | Mismatch between meaningful security intent and low-level controls such as coordinates. |
+| HTTP | Hypertext Transfer Protocol; the request layer used for the described enforcement. |
+| GET / POST | HTTP methods used in the example request patterns; their specific operation meanings come from the sitemap. |
+| DOM | Document Object Model: page-element structure monitored for some runtime arguments. |
+| Agent sitemap | Mapping from website request patterns to semantic action names, descriptions, and optional argument sources. |
+| Semantic action | A named application operation such as ViewCart or PlaceOrder. |
+| Policy universe | All defined policies for a domain. |
+| Composite policy | Instantiated selected policies plus required external-domain allowances. |
+| Allowlist / default deny | Explicitly approved destinations or operations are allowed; unrelated actions are denied by default. |
+| Condition policy | Permission decided by a runtime function using configured parameters and observed arguments. |
+| maxAmount | Configured spending-limit parameter in Figures 7–8. |
+| totalAmount | Runtime purchase-total argument in Figures 5 and 7. |
+| params / args | Configured policy values versus values obtained at execution time. |
+| Partial order | The stated organization of permissions according to allowed-action set inclusion. |
+| Stateful policy | Permission check that uses prior execution state, such as request counts. |
+| TOCTOU | Time-of-check/time-of-use: the paper identifies attacks exploiting a mismatch between checking and later use. |
+| Branch steering | UI manipulation that induces an unintended but otherwise valid action, as described by the authors. |
+| ASR | Attack success rate; used for the authors' WASP replication discussion. |
+| CRUD | Create, read, update, and delete operations, used to describe policy coverage. |
+| CSP | Content Security Policy, an analogy for developer-maintained security metadata. |
+| CDP | Chrome DevTools Protocol, listed as an interception option. |
+| MCP | Model Context Protocol, discussed as an alternative structured API/tool boundary. |
+| TLS | A web security technology mentioned in the authors' adoption analogy; not experimentally studied here. |
+| nan / [] | No-policy output in Figure 11 / no-domain output in Figure 10; distinct prompt conventions. |
+
+## 20. Key numerical results
+
+The values below are author-reported unless explicitly marked derived. Table values are also visually readable on p. 11. A range summarizes several preserved exact cells; it is not an uncertainty interval.
+
+| Quantity / result | Value | Unit | Condition / context | Status | Source |
+|---|---:|---|---|---|---|
+| Manual GitLab sitemap | 51 | project APIs | Experimental sitemap built from routes/controllers | Author-reported | p. 7, §4.1 |
+| Retail tasks | 149 | tasks | Policy-selection benchmark | Author-reported | p. 10, §5.1.1 |
+| Travel tasks | 36 | tasks | Policy-selection benchmark | Author-reported | p. 10, §5.1.1 |
+| Version-control tasks | 24 | tasks | Policy-selection benchmark | Author-reported | p. 10, §5.1.1 |
+| Combined policy tasks | 209 | tasks | 149+36+24 | Analyst-derived | p. 10 operands |
+| Independent labelers | 2 | researchers | Minimal policy labels, followed by reconciliation | Author-reported | p. 10 |
+| Zero-domain sample | 132 in prose; 136 denominator in T1 | tasks | Unresolved count inconsistency | Author-reported / Visually readable | pp. 10–11 |
+| One-domain sample | 205 | tasks | Separate domain dataset | Author-reported | pp. 10–11 |
+| Multi-domain sample | 410 | tasks | Two and three domains combined | Author-reported | p. 10 |
+| Table-implied domain total | 751 | tasks | 136+205+205+205 | Analyst-derived | p. 11, T1 |
+| Prose-implied domain total | 747 | tasks | 132+205+410 | Analyst-derived | p. 10 |
+| GPT-5.1 one-domain accuracy | 93.1% (191/205) | accuracy | Lowest specified-domain cell | Visually readable | p. 11, T1 |
+| Claude retail policy selection | 99.32% (148/149) | accuracy | Printed percentage retained | Visually readable | p. 11, T2 |
+| GPT travel policy selection | 94.44% (34/36) | accuracy | Lowest T2 policy-selection cell | Visually readable | p. 11, T2 |
+| Retail joint accuracy, GPT / Gemini / Claude | 84.38% / 81.25% / 96.88% | accuracy | 27/32; 26/32; 31/32 | Visually readable | p. 11, T2 |
+| Travel joint accuracy | 100% (5/5) for each model | accuracy | Small conditional-policy subset | Visually readable | p. 11, T2 |
+| WASP scope described | 21 goals; 2 websites; 2 user tasks per website | counts | Benchmark limitations | Author-reported | p. 11, §5.2 |
+| Replicated WASP ASR | below 17% for o1; below 7% for other evaluated models | attack success rate | Static-attack replication; exact rates absent | Author-reported | p. 11 |
+| GitLab legitimate tasks | 2 | tasks | Comment and upvote | Author-reported | p. 12 |
+| Emulated GitLab attacker goals | 12; all blocked | scripts/goals | Forbidden actions under active policies | Author-reported | p. 12 |
+| Case-study domain/policy correctness | 100% in both steps | accuracy | Two WASP GitLab tasks | Author-reported | p. 12 |
+| Navigation workload | 11 | navigation actions | Playwright test-runner case | Author-reported | p. 12, §5.3 |
+| Navigation trials | 30 | trials | Reported overhead measurement | Author-reported | p. 12 |
+| Sitemap-size conditions | 100 / 200 / 300 | entries | Overhead configurations | Author-reported | p. 12 |
+| Baseline latency | 13.93 | seconds | Without CELLMATE | Author-reported | p. 12 |
+| Extension latency | 14.94 / 15.35 / 16.02 | seconds | 100 / 200 / 300 entries | Author-reported | p. 12 |
+| Reported relative overhead | 7.25% / 10.10% / 15.0% | percent increase | Same three conditions | Author-reported | p. 12 |
+| Absolute latency increase | 1.01 / 1.42 / 2.09 | seconds | Each extension mean minus 13.93 | Analyst-derived | p. 12 operands |
+| Recomputed 200-entry overhead | approximately 10.19% | percent increase | 1.42/13.93×100 from rounded means | Analyst-derived | p. 12 operands |
+| Extension memory | about 25 | MB | Chromium Task Manager, all configurations | Author-reported | p. 12 |
+| Example spending parameter | 50 | amount; dollars in examples | maxAmount in F8; F7 uses <= | Visually readable | pp. 7–8 |
+
+The full T1/T2 values are represented in §11. No average across inconsistent domain totals is invented, and no visual estimate is used for any numerical result.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/table/experiment | Source | Qualification / evidence strength |
+|---|---|---|---|---|
+| Browser agents combine model weakness with ambient session authority | Agent-loop and threat-model descriptions | Research framing | pp. 1–3 | HIGH source confidence; no standalone-model comparison. |
+| Generic UI tools create a semantic enforcement gap | Coordinate example and alternate navigation path | F1–F2, X0 | pp. 1, 4 | HIGH for stated mechanism; qualitative bypass lacks trial statistics. |
+| HTTP mediation is the proposed stable boundary | Request/action examples and compilation pipeline | F3–F5, F9 | pp. 5–9 | HIGH design confidence; assumes relevant traffic is intercepted and mappings are correct. |
+| Trusted context supplies permission selection | Separate domain/policy stages and user confirmation | F8, F10–F11 | pp. 8, 18–19 | HIGH design confidence; initial prediction remains fallible. |
+| Exact policy selection exceeds 94% in tested categories | Nine model/category cells | T2, X2 | p. 11 | HIGH numerical confidence; curated tasks and no uncertainty intervals. |
+| Conditional instantiation can be less accurate | Retail joint results, 26–31 correct out of 32 | T2, X3 | p. 11 | HIGH; evaluated subset differs from all-policy column. |
+| All tested forbidden GitLab attacker goals were blocked | Twelve scripted goal implementations and reported outcome | X4 | p. 12 | HIGH reporting confidence; MEDIUM breadth, one site/two tasks and emulated compromise. |
+| Allowed-action misuse remains possible | Explicit comment-content limitation | X4 qualification | p. 12 | HIGH; an acknowledged boundary, not an observed bypass rate. |
+| Runtime overhead grows over tested sitemap sizes | Three latency conditions and baseline | X5 | p. 12 | HIGH values; uncertainty absent and 200-entry percentage discrepancy unresolved. |
+| General WebSocket enforcement is unresolved | Application-specific/binary message-format discussion | §7 | p. 13 | HIGH author-stated limitation. |
+| Browser integration can amplify harm from model errors | Sensitive resources, communication, untrusted content, low-level tools | Analyst synthesis | pp. 1–4, 13 | MEDIUM inference; not a measured relative vulnerability result. |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine an assistant that can use your browser while you are signed into your accounts. It can read information, press buttons, and change things for you. A malicious message on a page might trick it into treating the message as an instruction. The dangerous part is that its mistake can become a real action using your account, such as deleting a project or sending a secret somewhere else.
+
+CELLMATE is like giving that assistant a carefully limited permission pass. Instead of checking every mouse click, it checks the requests the browser sends when it tries to do something on a website. A website-provided map explains which request means which action. If the approved task only needs reading an issue and posting a comment, requests to create access tokens or delete projects should be blocked even if the assistant wants to make them.
+
+The researchers found that models usually selected the right permission sets in their curated tests, but they still made mistakes, especially with some extra details needed for spending rules. They also report blocking all 12 forbidden attack goals in their GitLab scripted test. That does not mean every malicious message becomes harmless: if posting comments is allowed, a harmful comment could still use that permission.
+
+The paper helps explain why browser agents can be dangerous: they connect a model that can misunderstand text to accounts, private information, and real operations. It does not directly test whether a browser agent's model is easier to trick than the same model used alone. Its main contribution is a way to limit what happens after the model makes a bad decision.
+
+## Completeness Audit
+
+The audit compares the explanation against the inventory, not against response length. All supplied text pages were read; visual inspection is limited to the 15 supplied rendered pages. Grouped rows explicitly identify their constituent subsections or visual objects.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, version metadata | Yes, text and p. 1 image | Yes | Fully represented | Title retained; authors are Luoxi Meng, Henry Feng, Ilia Shumailov, Earlence Fernandes. p. 1 identifies arXiv:2512.12594v2, cs.CR, 4 Mar 2026. No conference venue is established. |
+| Abstract | Yes | Yes | Represented in compressed form | Problem, HTTP approach, extension, attack blocking, and overhead retained. |
+| §1 Introduction | Yes | Yes | Fully represented | Motivation, ambient authority, semantic gap, policy creation, complementary defenses. |
+| §2 Background and Motivation | Yes; p. 3 text only | Yes | Fully represented | Agent loop, injection, prior system defenses, low-level tool problem. |
+| §3 CELLMATE Design | Yes | Yes | Fully represented | General browser enforcement framing. |
+| §3.1 Threat Model and System Assumptions | Yes; p. 3 text only | Yes | Fully represented | Attacker capabilities, non-goals, trusted browser, confinement, developer assumptions. |
+| §3.2 Challenges in Sandboxing BUAs | Yes | Yes | Fully represented | Private-email example, bypass, permission-authoring problem. |
+| §3.3 Overview and three phases | Yes | Yes | Fully represented | Registration, instantiation, enforcement. |
+| §3.3.1 HTTP-layer sandboxing | Yes | Yes | Fully represented | Semantic boundary and HTTP/WebSocket qualification. |
+| §3.3.2 Agent Sitemap | Yes | Yes | Fully represented | Request mappings, semantic identifiers, stakeholders. |
+| §3.3.3 Permission Design | Yes | Yes | Fully represented | Trusted library, selector, fail-closed ambiguity, consent. |
+| §4 Workflow and Chrome Instantiation | Yes | Yes | Fully represented | Workflow and implementation connected. |
+| §4.1 Registration and security analysis | Yes | Yes | Fully represented | 51 APIs, manual construction, maintenance, policy schemas and ordering. |
+| §4.2 Policy Selection and security analysis | Yes | Yes | Fully represented | Two predictions, allowlist, consent, trusted input. |
+| §4.3 Interception mechanisms | Yes | Yes | Represented in compressed form | OS/network, browser-core, extension/CDP tradeoffs retained. |
+| §4.3 Fast lookup and dynamic policies | Yes | Yes | Fully represented | Compilation, functions, content scripts, cached arguments. |
+| §4.3 Stateful policies and freshness | Yes | Yes | Fully represented | Counters, repetition risk, stale values, sequential execution, throttling. |
+| §4.3 Security analysis | Yes | Yes | Fully represented | Frozen privileges, default deny, permitted-action caveats, privileged-component assumption. |
+| §5 Evaluation framing | Yes | Yes | Fully represented | Three major evaluation branches distinguished. |
+| §5.1 Policy Selection and Instantiation | Yes | Yes | Fully represented | Domain, policy, and argument stages distinguished. |
+| §5.1.1 Benchmark Design | Yes | Yes | Fully represented | Minimality, realism, transformation, two labelers, categories, metrics. |
+| §5.1.2 Domain Prediction / X1 | Yes | Yes | Fully represented with uncertainty | All T1 cells retained; sample inconsistency unresolved. |
+| §5.1.3 Policy Selection / X2 | Yes | Yes | Fully represented | All accuracies and three error types. |
+| §5.1.4 Argument Extraction / X3 | Yes | Yes | Fully represented | Fixed types, subset denominators, intermediate-argument example. |
+| §5.2 GitLab case study / X4 | Yes; p. 12 text only | Yes | Fully represented | Strong-attacker scripts, two tasks, 12 goals, allowed-action exclusion. |
+| §5.3 Overhead / X5 | Yes; p. 12 text only | Yes | Fully represented with uncertainty | Workload, trials, sizes, means, percentages, memory and discrepancy. |
+| §6 Related Work | Yes; p. 12 text only | Yes | Represented in compressed form | Defense families, Chrome origin permissions, benchmarks, permission prediction, llms.txt. |
+| §7 Discussion and Limitations | Yes | Yes | Fully represented | Automation, WebSockets, MCP tradeoff. |
+| §8 Conclusion | Yes | Yes | Fully represented with qualifications | Main conclusions separated from empirical scope. |
+| Explicit design questions RQ1–RQ3 | Yes | Yes | Fully represented | Analyst identifiers preserve author question meanings. |
+| Formal hypotheses | Checked | Yes, absence noted | No formal hypotheses identified | None manufactured. |
+| X0 preliminary bypass | Yes | Yes | Fully represented | Qualitative illustration, not quantified study. |
+| F1 and F2 | Yes, visually | Yes | Fully represented with readability limit | Tiny screenshot payload/log text not exhaustively transcribed. |
+| F3 | Yes, visually | Yes | Fully represented | Components and directional flows explained. |
+| F4a, F4b, F4c | Yes, visually | Yes | Fully represented | Sitemap, policies, composite policy individually covered. |
+| F5 and F6 | Yes, visually | Yes | Fully represented | Schema fields and example meanings retained; listings compressed. |
+| F7a and F7b | Yes, visually | Yes | Fully represented | Parameters, runtime argument, type rejection and <= check. |
+| F8 | Yes, visually | Yes | Fully represented | Two policies, maxAmount 50, listed external domains. |
+| F9 | Yes, visually | Yes | Fully represented | Setup/runtime, lookup, monitoring and function decision. |
+| F10 and F11 | Yes, visually | Yes | Fully represented in compressed form | Prompt requirements and meaningful examples, not exhaustive line repetition. |
+| T1 and T2 | Yes, visually and text | Yes | Fully represented | Every result cell reproduced; notes and discrepancies preserved. |
+| Major equations / theorems | Checked | Yes, absence noted | No numbered objects identified | Inequality, set ordering, accuracy and derived checks explained. |
+| Algorithm / code content | Yes | Yes | Fully represented | No formal algorithm block; conditional JavaScript explained. |
+| Major contributions | Yes | Yes | Fully represented | Conceptual, method, system, benchmark, empirical contributions. |
+| Author-stated limitations | Yes | Yes | Fully represented | Distributed limitations consolidated without relabeling analyst concerns. |
+| Acknowledgements | Yes | Yes | Represented in compressed form | Thanks to Prashant Kulkarni and Deian Stefan; no research result. |
+| Ethical stakeholder analysis | Yes; continuation p. 14 text only | Yes | Represented in compressed form | Vendor, model creator, standards/interest, regulatory/public-interest, research-community groups. |
+| Ethical research impact and positive impact | Yes | Yes | Represented in compressed form | Authors report defensive work, no new attacks or personally identifiable human-subject data, and benefit of external enforcement. |
+| Ethical negative impact and mitigations | Yes, p. 14 text only | Yes | Represented in compressed form | Policy/standards maintenance burden, extension deployment, familiar policy syntax. |
+| Dataset ethics and publication justification | Yes, p. 14 text only | Yes | Represented in compressed form | Authors report no personally identifiable information in reviewed WebBench contents; benefit/burden judgment attributed to authors. |
+| Research-team/community statement | Yes, p. 14 text only | Yes | Inspected but compressed as secondary | Consensus author ordering and claimed community benefit retained here. |
+| References [1]–[72] | Yes; pp. 14 and 16 text only | Yes, categories and key dependencies | Represented in compressed form | Bibliographic list not duplicated; cited works not independently read or verified. |
+| Appendix task transformations | Yes, visually and text | Yes | Represented in compressed form | Details accounted for below. |
+| Appendix prompt templates | Yes | Yes | Fully represented in compressed form | F10/F11 and main-text connection covered. |
+| Separate supplementary material | Not supplied | Absence disclosed | Missing from supplied material | No separate supplement inferred or claimed reviewed. |
+| Open-source project and underlying artifacts | Not supplied as inspectable contents | Absence disclosed | Inaccessible within source boundary | Availability claim retained; implementation/dataset files not reviewed. |
+
+### Appendix and ethical details compressed in the main narrative
+
+The appendix's first transformation replaces a vague Shein clothing task with a specified product, size small, and checkout only if the total is less than 50 dollars. The second replaces selection of several unspecified Costco products with a named SafeRacks Storage Bin Rack, 5 Tote Capacity, NSF Certified, while retaining availability checking near zip code 10001. These examples demonstrate added task specificity and natural domain naming; they do not prove successful execution or product availability. [A; p. 17]
+
+The ethics discussion identifies browser-agent vendors, foundation-model creators, standards and interest groups, regulators/public-interest bodies, and the research/security community. The authors frame their work as defensive, state that they did not experiment with new attacks or personally identifiable human-subject data, and report that their review of WebBench found no personally identifiable information. They acknowledge extra policy and standards-maintenance work, propose familiar syntax and extension deployment as mitigations, and judge the benefits to outweigh those burdens. These are author statements, not independent ethics or dataset audits. [A; pp. 13–14]
+
+### Missing or inaccessible material
+
+No main-text page from the supplied 1–19 sequence is missing. Visual renderings for pp. 3, 12, 14, and 16 are not supplied; those pages were reviewed through text only. Underlying project code, curated datasets, raw trial logs, model API records, original WASP/WebBench files, and referenced external works were not supplied as contents and were not inspected. No separate supplement was provided. The failed local-image message at the placeholder path does not invalidate the 15 visible page renderings; it supplies no additional inspectable artifact.
+
+### Uncertain interpretations and inconsistencies
+
+1. The p. 10 domain-dataset prose gives 132 zero-domain tasks, while p. 11 T1 uses a denominator of 136. Totals of 747 and 751 follow from those different operands; the intended count cannot be determined.
+2. The p. 12 mean of 15.35 s against 13.93 s implies approximately 10.19% from rounded values, while the paper reports 10.10%. Unreported precision is possible but unconfirmed.
+3. T2 prints 99.32% beside 148/149, whose conventional two-decimal rounding is 99.33%. The displayed value is preserved.
+4. Motivating phrases less than or under a spending cap differ at equality from the explicit <= function. The executable example is non-strict.
+5. Figure 10 combines explicit-domain language and a hostname-only guideline with an example deriving amazon.com from the named service Amazon. Natural naming is intended by the curation description, but the precise normalization convention is not fully formalized.
+6. Tiny payload/log text in F1/F2 is not transcribed beyond confidently readable surrounding evidence. No concealed screenshot detail is used as an additional result.
+7. The broad complete-mediation and UI-attack claims remain bounded by HTTP coverage, correct metadata, trusted interception, conditional-value freshness, and the explicit WebSocket/allowed-action limitations.
+
+### Deliberately compressed material
+
+The bibliography is compressed to relevant categories and dependencies rather than 72 reproduced entries. Repeated shopping-budget illustrations are combined while retaining their threshold distinction. JSON/code listings are explained by fields, inputs, decisions, and meaningful example values instead of copied line by line. Prompt templates are summarized with their operative rules and examples. Acknowledgements, stakeholder examples, author-order discussion, and publication justification are compressed as secondary contextual material. Decorative rules, icons, line numbers, typography, and page whitespace are not treated as scientific findings.
+
+### Potential omissions
+
+Every substantive item identified in the supplied inventory has a representation above or an explicit compression/accessibility status. This is coverage of the supplied paper evidence, not a claim of exhaustive verification of its implementation, external references, or all possible security consequences. Unknown contents of unavailable artifacts remain potential omissions outside the accessible inventory. The unresolved numerical and wording issues are retained rather than repaired.

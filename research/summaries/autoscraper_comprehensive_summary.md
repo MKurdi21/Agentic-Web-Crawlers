@@ -1,0 +1,596 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is **AUTOSCRAPER: A Progressive Understanding Web Agent for Web Scraper Generation**, not a paper titled *Why Are Web AI Agents More Vulnerable Than Standalone LLMs? A Security Analysis*. The latter is the user's research question. This distinction controls the analysis: the paper evaluates extraction accuracy, scraper reusability, and efficiency; it does not experimentally compare the security of web agents and standalone large language models.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document available | Yes: extracted text for physical PDF pages 1–19. |
+| Accessible page count | 19; proceedings pages 2371–2389. |
+| Apparently missing document pages | None within the supplied 1–19 text sequence. This establishes continuity of the supplied document, not independent verification of its original PDF. |
+| Visually inspected pages | 1–8, 12–16, 18–19: 15 supplied page images. |
+| Text-only pages | 9–11 and 17. Their text was inspected, but their original visual layout was not. |
+| Figures | Figures 1–4 are visually available and inspected. |
+| Tables | Tables 1–18 are available in extracted text and visually rendered pages; small typography limits confidence in some cells, so extracted values are used with visual cross-checking where readable. |
+| Equations | Equations (1)–(6) are available in text and images. Subscripts and fraction structure are interpreted from both. |
+| Appendices | A–D are supplied. Appendix A begins on physical page 12, despite the supplied accessibility metadata's appendix-page detection listing page 6. |
+| Supplementary material | No separate supplementary file is supplied. Embedded-file count is reported as zero. |
+| Referenced external artifacts | A GitHub repository and linked documentation are mentioned but were not opened or reviewed. |
+| OCR | Not necessary: native extracted text is supplied. Extraction remains an aid, especially for dense tables and pseudocode. |
+| Other limitations | A local-image error for a path named '-' does not prevent reading the 15 images actually displayed. No tools, browsing, external verification, or repository inspection were performed. |
+
+**Evidence labels:** [A] author-reported; [B] directly observable in supplied visuals; [C] analyst-derived from supplied operands; [D] analyst interpretation. No [E] external information is introduced. Confidence is HIGH for clearly readable source facts, MEDIUM for interpretations or incompletely specified procedures, LOW for weakly constrained inferences, and UNKNOWN where the work provides no evidence. Physical PDF page numbers are used throughout; add 2370 to obtain the printed proceedings page number.
+
+### Inventory established before synthesis
+
+This is a mixed **AI algorithm, system, and empirical benchmark-evaluation paper**. Its main objects are: Abstract; §1 Introduction; §2 Related Work; §3 Preliminaries with §§3.1–3.3; §4 AUTOSCRAPER with §§4.1–4.3; §5 Experiment with §§5.1–5.4; §6 Discussion with §§6.1–6.4; §7 Conclusion; Acknowledgement; Limitation; Ethic statement; References; Appendix A with A.1–A.3; Appendix B with B.1–B.2; Appendix C; Appendix D with D.1–D.2; Figures F1–F4; Tables T1–T18; Equations E1–E6; Algorithm ALG1; three explicit research questions RQ1–RQ3; and the distinct analyses X1–X10 registered below. No formal hypothesis, theorem, lemma, or proposition is presented. No separate keyword list is visible.
+
+## 1. Plain-language orientation
+
+[A] Web scraping means automatically extracting requested information from websites. A conventional scraper uses rules that identify where a value appears in a page. Such rules can run repeatedly and cheaply, but creating them for unfamiliar website structures often requires human effort. A language model can instead read each page and answer a request directly, but repeatedly invoking that model can be slow and expensive.
+
+[A] AUTOSCRAPER tries to combine these advantages. A large language model, or **LLM**, studies a few pages and generates a reusable sequence of extraction instructions. These instructions use **XPath**, the expression language used here to select parts of an HTML document. The resulting scraper can then run on other pages from the same website without asking the model to interpret every page again.
+
+[A] The central method has two phases. **Progressive generation** repeatedly narrows the page's hierarchical structure and steps back when it has narrowed incorrectly. **Synthesis** runs candidate instruction sequences across several seed pages and asks an LLM to select the candidate that appears most reusable. Although synthesis sounds like combining programs, the supplied method describes selecting one candidate sequence, not constructing a merged program.
+
+[A/B] Results are strongest for GPT-4-Turbo on the sampled Structured Web Data Extraction benchmark, SWDE: AUTOSCRAPER obtains 88.69 macro-F1, compared with 82.40 for Reflexion and 76.95 for Chain-of-Thought. Its strict Correct rate is 71.56%, and its Un-executable rate is 4.06%. However, these results do not establish universal dominance. Other datasets contain exceptions, and seven of eight models perform better with direct extraction than with AUTOSCRAPER on SWDE.
+
+[D] For the user's security question, this paper is useful as an architectural case study: website content affects generated executable extraction rules, execution results feed back into model reasoning, and selected rules are reused. These are potential locations for a future security analysis. The paper itself supplies no attack experiment, malicious-page condition, prompt-injection evaluation, or standalone-LLM security baseline. Security relevance is therefore inferential, with MEDIUM confidence for identifying architectural interfaces and UNKNOWN confidence for any comparative vulnerability claim.
+
+## 2. Document roadmap
+
+[A] Pages 1–2 introduce the problem, proposed solution, and broad claims. Related work spans pages 2–3, contrasting wrappers, general language agents, and interactive web agents. Page 3 formulates the scraper-generation task and describes datasets; page 4 introduces the evaluation categories. Pages 4–5 show and explain the architecture.
+
+[A] Pages 5–7 report the experimental setup, main results, synthesis ablation, and seed-page experiment. Pages 7–9 discuss direct extraction, supervised comparisons, runtime, and failure modes. Page 9 contains the conclusion, explicit limitations, ethics statement, and the beginning of the bibliography. Pages 10–11 continue references.
+
+[A] Appendix A, pages 12–14, supplies Extended SWDE and DS1 conditions, a golden-label experiment, and detailed results. Appendix B, pages 12–16, explains baseline differences, action-sequence lengths, and XPath fragility. Appendix C identifies detailed dataset inventories in Tables 15–17. Appendix D supplies task and module prompts on pages 14–19.
+
+[D] The appendices materially qualify the introduction: DS1 omits synthesis, the golden-label results expose remaining structural difficulty, and detailed tables reveal counterexamples to broad performance claims. They are therefore part of the substantive evidence, not optional background.
+
+## 3. Background and context
+
+[A] **HyperText Markup Language, HTML**, contains structured elements such as tags and attributes alongside textual content. The paper treats its hierarchy as a **Document Object Model, DOM, tree**: a root contains nested nodes, and an extraction rule follows or selects parts of that hierarchy. The supplied work does not give a formal DOM specification.
+
+[A] A **wrapper** is a reusable extraction procedure tailored to website structure. An **XPath expression** selects nodes or text. AUTOSCRAPER's **action sequence** contains several XPath expressions: intermediate expressions prune the page, while the final expression extracts a value. **Pruning** means retaining a smaller relevant portion of the page rather than giving the LLM the entire original page at every step.
+
+[A] **Information extraction, IE**, is the broader task of extracting target information. **Open information extraction, OpenIE**, is distinguished in Appendix A because the relation itself is expected to be extracted; the authors convert Extended SWDE relations into predefined attributes for this experiment.
+
+[A] **Chain-of-Thought, COT**, is the one-turn prompting baseline in this paper. **Reflexion** iteratively reflects on failed execution and regenerates a rule. AUTOSCRAPER also uses iterative feedback, but explicitly reduces the DOM context through top-down and step-back operations. These descriptions concern the authors' implementations and comparisons; the source does not establish every possible configuration of either baseline.
+
+[A] **Precision** measures the accuracy of extracted instances; **recall** measures recovery of relevant instances. The paper reports mean per-case precision, recall, and macro-F1. Its separate **executability evaluation** classifies a website-and-instruction case according to the extraction outcome across its page collection. Importantly, Un-executable is defined through recall equaling zero, so it is not simply a programming-language syntax-error count.
+
+[A] Related work groups prior methods into rule-based wrappers, learned wrappers, heuristic approaches, and neural extraction models. The authors say these require annotation, feature engineering, heuristic scoring, or prior knowledge. General language agents exploit reasoning and reflection but, in the authors' account, do not adequately simplify failed web contexts or exploit structural similarity across repeated pages. These are author-positioning statements, not independently validated judgments of the cited literature.
+
+## 4. Research problem and gap
+
+[A] **Existing problem:** building reliable extractors for diverse websites is costly, while invoking an LLM on every page creates repeated computational and financial expense. The introduction motivates scraping through market research, competitive analysis, and real-time monitoring; those applications are motivations, not evaluated workloads.
+
+[A] **Shortcomings attributed to previous approaches:** wrappers reuse well within stable layouts but require substantial work for unfamiliar structures; language-agent methods adapt to content but repeatedly depend on powerful API-based models. The authors also argue that long HTML combines structural and textual difficulty and that page-specific rules may fail on other pages.
+
+[A] **Research gap:** a scraper-generation framework should produce executable, reusable rules while exploiting both LLM reasoning and HTML structure. Evaluation should capture successful reuse across a collection of pages, rather than merely rewarding the accuracy of a small subset of extracted values.
+
+[A] **Scope:** semi-structured, domain-oriented detail pages and predefined target attributes. Generated rules are reused within the same website. The formal task is not unrestricted browser navigation, arbitrary shopping workflows, or autonomous operation across unrelated sites.
+
+[D] The paper's error analysis concerns reliability under ordinary page variation. It does not establish whether variation was adversarial. Turning these failures into security claims would require additional evidence about attacker control, intent, exploitability, and consequences.
+
+## 5. Research questions, objectives, and hypotheses
+
+[A] Section 5, physical page 5, explicitly asks:
+
+1. **RQ1:** Can AUTOSCRAPER outperform state-of-the-art scraper-generation methods?
+2. **RQ2:** How does the AUTOSCRAPER framework improve scraper-generation performance?
+3. **RQ3:** Does AUTOSCRAPER meet web-scraping requirements, specifically accuracy and efficiency?
+
+[A] The practical objectives are to generate executable action sequences, improve reuse across pages, reduce repeated LLM dependence, and introduce an evaluation metric better aligned with scraper usefulness. The paper does not state formal statistical hypotheses or null hypotheses.
+
+[D] The user's separate question—why web AI agents are more vulnerable than standalone LLMs—is not one of these RQs. This work can describe an agent's content-to-rule workflow, but cannot establish the proposed security comparison. A standalone model reading webpage HTML for direct extraction is still exposed to webpage content, and Table 4 evaluates extraction performance rather than adversarial vulnerability.
+
+## 6. Assumptions / Threat Model
+
+[A] The system assumes a case consists of pages from one website plus an extraction instruction. It assumes sufficient structural similarity for a rule generated on seed pages to transfer to other pages. Target attributes are predefined. The LLM identifies an expected value and generates an XPath; parser execution provides a result that can be compared with that expected value.
+
+[A] Preprocessing removes script and style nodes and all node attributes except class. The authors treat class information as useful for stable matching within a site. They also normalize annotation escape characters to align labels with page content. The source does not specify a security rationale for these operations.
+
+[D] **No explicit security threat model is provided.** The work does not define attacker-controlled pages, adversarial instructions, protected assets, privileged operations, exfiltration destinations, trust boundaries, or adversary knowledge. It provides no malicious-versus-benign experimental split.
+
+[D] Architectural interfaces potentially relevant to security include HTML supplied to the LLM, extracted results and reasoning history, generated XPath supplied to a parser, and candidate sequences supplied to a selection model. These are observable workflow interfaces, not demonstrated attack vectors. XPath execution here is not evidence that the system executes arbitrary shell commands or unrestricted generated code.
+
+[D] Trust in the LLM's expected-value judgment is a methodological dependency: agreement between its predicted value and parser output need not prove agreement with ground truth. This is a reliability observation. The supplied paper does not test whether a malicious page could manipulate that agreement.
+
+## 7. Methodology
+
+### Study design and task definition
+
+[A] This is an empirical comparison of prompting frameworks over three transformed extraction datasets and eight LLMs, supplemented by ablations and diagnostic analyses. A case comprises a website-specific page collection and an instruction specifying a target attribute of the subject entity. The desired output is an executable rule or action sequence that extracts that information from all pages in the case (§3.1, page 3).
+
+### Progressive generation
+
+[A] Begin with the current HTML context. The LLM proposes a target value and XPath. A parser executes the XPath and returns extracted text. If the result matches the value identified by the LLM, the method treats that step as successful. Otherwise, it steps upward through ancestors until the retained HTML includes the expected information, then continues generation on the smaller context. Top-down selection reduces irrelevant context; stepping back recovers context lost through a mistaken selection (§4.2, page 5; ALG1, page 12).
+
+[A] The final action sequence is an ordered list of XPath expressions. Every expression except the last prunes the page; the last extracts the element value (§4.1). This differs from asking the model to generate one complete XPath in a single turn.
+
+[D] ALG1 is an incomplete operational specification. It breaks when the extracted result equals the recognized value, but the displayed pseudocode does not append that successful final XPath before returning. It also returns a sequence after the retry guard without an explicit success flag. These omissions must be preserved rather than silently repaired from the prose.
+
+### Synthesis
+
+[A] Randomly choose n_s seed pages. Generate one candidate sequence from each. Execute candidates on seed pages, collect their results, and choose the candidate expected to work best across the website (§4.3). The synthesis prompt asks for a zero-based candidate number and a thought. It specifies output 0 when none qualifies, even though 0 also identifies the first candidate. The source does not clarify a separate no-valid-candidate signal.
+
+### Data and preprocessing
+
+[A] Original SWDE contains 124,291 pages from 80 sites in eight domains. The transformed benchmark reports 320 cases, 32 distinct extraction tasks, and 32,000 page instances. Extended SWDE is described as fine-grained manual annotation of 21 sites in three domains; its original description contrasts approximately 4,480 triples for three predicates per SWDE site with 41K triples for 36 predicates per Extended SWDE site. The transformed version reports 294 cases, 221 tasks, and 29,400 page instances (Table 1).
+
+[A] DS1 is described as 166 annotated pages from 30 websites, while Table 1 reports 83 cases, 11 tasks, and 186 pages. Appendix A.2 says one page is used for inference and another for evaluation, with synthesis omitted. These counts are inconsistent or insufficiently explained; no reconciliation is assumed.
+
+[A] For the large datasets, the authors sample 100 pages per website and design domain-and-attribute instructions. Intermediate and final extraction rules operate on BeautifulSoup-preprocessed HTML. Script and style elements are removed, attributes other than class are deleted, and annotation escape characters are replaced. Appendix D's top-down prompt mentions postprocessing redundant separators, but the full postprocessing implementation is not supplied.
+
+[D] The 32,000 and 29,400 totals should not automatically be interpreted as distinct downloaded pages: pages can be reused in several attribute cases. The paper does not clearly distinguish unique documents from task-conditioned page instances.
+
+### Models, parameters, and implementation reporting
+
+[A] Closed-source models: GPT-3.5-Turbo, Gemini Pro, GPT-4-o-mini, and GPT-4-Turbo. Open-source models: Phi-3-medium, CodeLlama-34B, Mixtral 8×7B, and Deepseek-Coder-33B. COT, Reflexion, and AUTOSCRAPER are evaluated with each model. The source uses the spelling GPT-4-o-mini; it is preserved here.
+
+[A] All main experiments are described as zero-shot because of context-length constraints. This does not mean no pages are examined: seed pages and instructions are provided. n_s = 3 for SWDE and Extended SWDE, n_s = 1 for DS1, and d_max = 5. Runtime measurements use GPT-4-Turbo, three AUTOSCRAPER repetitions, and ten direct-extraction pages per selected site.
+
+[A] Computation uses Fudan University's CFFF platform, according to the acknowledgement. Hardware specifications, library versions, model revision identifiers, decoding temperature, token budgets, random seeds, API pricing, and main accuracy-run repetitions are not specified in the supplied work.
+
+### Metrics and statistical methods
+
+[A] Six case categories are defined: Correct when precision, recall, and F1 all equal 1; Precision when only precision equals 1; Recall when only recall equals 1; Un-executable when recall equals 0; Over-estimate when precision equals 0 and the ground truth is empty but extraction occurs; Else for remaining outcomes. Category ratios use Equation (1). Higher Correct and lower Un-executable are preferred.
+
+[D] Empty-set conventions and category precedence are not fully specified. Recall-zero and precision-zero conditions can be ambiguous without those conventions, despite the authors stating that categories are mutually exclusive. The source reports descriptive percentages and averages, without confidence intervals, accuracy significance tests, or dispersion estimates.
+
+## 8. Experiments / Analyses
+
+| ID | Purpose and conditions | Evidence and principal outcome | Qualification |
+|---|---|---|---|
+| X1 Main framework comparison | RQ1/RQ3; eight models × three frameworks; three datasets; seed counts 3/3/1. | T2, T7, T8: large improvements in many settings; GPT-4-Turbo reaches SWDE F1 88.69. | Extended SWDE contains framework/model exceptions. |
+| X2 Synthesis ablation | RQ2; SWDE; GPT-3.5-Turbo, Gemini Pro, GPT-4-Turbo; full methods versus minus synthesis. | T3: GPT-4-Turbo AUTOSCRAPER Correct 71.56 versus 65.31; F1 88.69 versus 80.41. | Gemini AUTOSCRAPER F1 and Un-executable worsen with synthesis. |
+| X3 Seed-count variation | RQ2; SWDE; GPT-4-Turbo and GPT-3.5-Turbo; one to five seed pages. | F3: Correct rises and Un-executable falls, with diminishing gains. | Plotted values are not all numerically labeled; no error bars. |
+| X4 Direct extraction | RQ3 accuracy; SWDE; eight models; zero-shot extraction versus generated scraper. | T4: GPT-4-Turbo 78.56 direct versus 88.69 AUTOSCRAPER. | Seven other models favor direct extraction. |
+| X5 Supervised comparison | RQ1; SWDE; five supervised baselines trained on one seed site. | T5: best listed supervised F1 86.58; AUTOSCRAPER 88.69. | Different training and inference regimes; authors call comparison unfair. |
+| X6 Runtime amortization | RQ3 efficiency; GPT-4-Turbo; sampled SWDE sites; three repetitions. | T6/E3–E6: listed page thresholds 10–30, author mean 19.5. | Eight listed domains versus prose stating ten; no timing spread. |
+| X7 Qualitative error analysis | Explain remaining failures; GPT-4-Turbo action sequences. | §6.4: exceptional DOM placement and missed multi-valued targets. | No counts by failure mode. |
+| X8 Golden-label generation | Separate content recognition from rule generation; SWDE; eight models. | T9: GPT-4-Turbo AUTOSCRAPER Correct 75.31, Un-executable 4.06. | Not a security test; sample denominators remain unclear. |
+| X9 Action-length analysis | Probe relation between model and number of steps; three datasets. | T10–T12: SWDE GPT-4-Turbo average 1.57 versus Phi-3-medium 3.62. | Stronger-model/shorter-sequence pattern is not universal across datasets. |
+| X10 XPath fragility | Assess text-predicate reuse; manual bad-case proportions. | T13/T14: GPT4 contains 0.61%, equality 2.90%; literal-value example fails transfer. | Predicate denominators and a consistent model inventory are absent. |
+
+[A] No security experiment appears among these analyses. No statistical hypothesis test accompanies X1–X10. Except for runtime repetitions, the supplied text does not state repeated-run uncertainty measures.
+
+## 9. Results
+
+### Main performance, with conditions preserved
+
+[A/B] For GPT-4-Turbo on SWDE, COT / Reflexion / AUTOSCRAPER respectively obtain Correct 61.88 / 67.50 / 71.56%, Un-executable 14.37 / 10.94 / 4.06%, and macro-F1 76.95 / 82.40 / 88.69 (T2). [C] Against Reflexion, AUTOSCRAPER raises Correct by 71.56 − 67.50 = **4.06 percentage points**, lowers Un-executable by 10.94 − 4.06 = **6.88 percentage points**, and raises F1 by 88.69 − 82.40 = **6.29 score points**. These are absolute differences, not relative percent improvements.
+
+[A/B] Across all eight SWDE models, AUTOSCRAPER exceeds both prompting baselines on Correct and F1 and lowers Un-executable. However, model quality remains important: AUTOSCRAPER SWDE F1 spans 28.41 for CodeLlama to 88.69 for GPT-4-Turbo. Phi-3-medium's 85.07 precision coexists with only 34.93 F1 and 52.19% Un-executable. High precision alone therefore does not mean that the scraper works broadly.
+
+[A/B] Extended SWDE qualifies the headline. GPT-4-Turbo AUTOSCRAPER has Correct 64.11 versus Reflexion 64.81, but lower Un-executable, 15.33 versus 19.51, and slightly higher F1, 76.21 versus 75.85. CodeLlama AUTOSCRAPER has F1 12.52 versus Reflexion 16.01, and Un-executable 85.84 versus 80.26. Deepseek-coder AUTOSCRAPER F1 44.33 is below COT 44.80. The paper's claim of consistent superiority over all baselines is therefore stronger than these table entries support.
+
+[A/B] On DS1, AUTOSCRAPER has the highest Correct and F1 and lowest Un-executable within each model's three-method comparison. GPT-4-Turbo reaches Correct 57.83%, Un-executable 16.87%, and F1 75.52. This condition uses one inference page and omits synthesis; its result cannot be attributed to the complete two-phase method.
+
+### Component and comparative results
+
+[A/B] GPT-4-Turbo's synthesis ablation supports the second phase: full AUTOSCRAPER F1 88.69 versus 80.41 without synthesis. [C] The difference is 8.28 score points. Gemini Pro is a counterexample: full F1 54.91 versus 56.48 without synthesis, and full Un-executable 34.38 versus 31.56 without synthesis. [C] Synthesis raises Gemini's Correct by 42.81 − 39.46 = 3.35 percentage points but lowers F1 by 1.57 points and raises Un-executable by 2.82 percentage points.
+
+[A/B] Direct extraction beats AUTOSCRAPER for seven models. Phi-3-medium scores 71.73 direct versus 34.93 AUTOSCRAPER, illustrating a large gap between recognizing page content and generating transferable rules. GPT-4-Turbo is the sole reverse case, 78.56 versus 88.69. [D] This supports a task-dependent structural-generation bottleneck, not an inference that direct extraction is more secure.
+
+[A/B] The supervised comparison lists WebFormer at 86.58 F1 and AUTOSCRAPER with GPT-4-Turbo at 88.69. [C] The difference is 2.11 score points. The source explicitly notes different supervision conditions; this result is narrower than proof that LLM-based scraping generally surpasses supervised learning.
+
+### Efficiency and remaining failures
+
+[A] The runtime argument is amortization: upfront generation and synthesis can be offset by faster rule execution on many pages. Table 6's listed thresholds average 19.5 pages. [C] From the listed integers, (30 + 18 + 18 + 18 + 19 + 23 + 20 + 10) / 8 = 19.5. These are eight rows, despite nearby text saying ten domains.
+
+[A] Remaining errors include a company value placed in an exceptional DOM node, missed values distributed across several locations, ambiguous instructions, and predicates tied to a seed page's literal value. These failures limit reuse even without any adversarial behavior.
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Motivation and paradigm comparison, page 1
+
+[B] This is a conceptual diagram with three horizontal method regions. The upper regions contrast wrapper-based extraction with LLM-based extraction for questions about basketball players. The bottom region depicts AUTOSCRAPER using an LLM to create a reusable intermediate extraction procedure. Arrows connect pages, questions, wrappers or agents, and responses. Warning labels attribute heavy manual effort to wrappers and heavy time/financial consumption to language agents; the hybrid is labeled highly reusable with great performance.
+
+[D] These labels summarize the authors' argument. They are not measured values, and the figure has no quantitative axes, units, confidence intervals, or statistical markers. Player images and robot icons identify actors and examples; their decorative details carry no additional experimental evidence.
+
+### Figure 2 — Two-phase architecture, page 4
+
+[B] A top workflow sends seed webpages through progressive generation to a set of action sequences, then through synthesis to a final sequence. The detailed left panel shows a basketball page, a target instruction, successive top-down / step-back / top-down operations, and a smaller HTML context. Parser extraction first yields 16.6, judged wrong; a later extraction yields 5.1. The right panel executes candidates across three pages and selects Action Sequence 1, whose displayed outputs are 6.7, 4.7, and 2.9.
+
+[B/D] The diagram illustrates control feedback and candidate comparison. It does not report an aggregate experiment. There is a visible consistency problem: the instruction asks about average rebound, yet displayed selector text uses PPG, while the illustrated recovered statistic is 5.1. The source does not explain this mismatch. Therefore the intended architectural process can be explained, but the literal XPath example should not be treated as a verified correct implementation.
+
+### Figure 3 — Seed-count sensitivity, page 7
+
+[B] This is a line plot. The horizontal axis is Number of Seed Websites, numbered 1–5; the surrounding method describes seed webpages. The vertical axis is Executable Metric (%), with a linear 0–100 range. Blue denotes GPT-4-Turbo and orange GPT-3.5-Turbo; circular markers identify Correct and triangular markers identify Unexecutable. Correct curves rise; Unexecutable curves fall; both changes flatten as seed count increases. No error bars, uncertainty bands, or significance annotations are shown.
+
+[B] Approximate visual estimates: GPT-4-Turbo Correct is roughly 65% at one seed and around 74% at five; GPT-3.5-Turbo roughly 44% to 57%. Unexecutable falls approximately from 12% to 4% for GPT-4-Turbo and 29% to 16% for GPT-3.5-Turbo. These are **APPROXIMATE VISUAL ESTIMATES**, not exact data points. T3's no-synthesis rows should not be silently equated with every one-seed plot value.
+
+[A/D] The authors interpret diminishing gains as an upper limit to improvement from additional seed pages. The five-point plot establishes diminishing gains over the tested range; it does not identify a mathematical ceiling or prove that larger or more diverse seed sets cannot help.
+
+### Figure 4 — Baseline behavior example, page 15
+
+[B] Three labeled regions compare COT, Reflexion, and AUTOSCRAPER for an instruction asking average points for James Harden. COT chooses an APG-related selector and extracts 5.1, marked wrong. Reflexion first makes the same mistake, then uses a PTS-related selector yielding 19, still marked wrong. AUTOSCRAPER begins with the wrong 5.1 extraction, obtains a smaller relevant context, then selects a PPG-related value of 17.1 with a check mark.
+
+[A/B] The figure supports Appendix B.1's distinction: reflection alone changes the proposed rule, whereas AUTOSCRAPER also simplifies the page context. It is one illustrative trajectory, not a measured failure-rate comparison. The pictured HTML and icons are schematic, and exact executable syntax should be interpreted through the method rather than assumed from every tiny diagram label.
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Transformed benchmark sizes, page 3
+
+[A/B] Rows are SWDE, Extended SWDE, and DS1. Columns count cases, distinct tasks, and webpages. Values are 320 / 32 / 32,000; 294 / 221 / 29,400; and 83 / 11 / 186. A case means a site-and-instruction page collection. DS1's 186 conflicts with the 166-page descriptions. The table supplies no exclusions or uncertainty intervals.
+
+### Table 2 — Main comparison, page 6
+
+[A/B] Each of eight models has COT, Reflexion, and AUTOSCRAPER rows. SWDE includes all six category ratios and mean precision, recall, and F1; the other datasets show Correct, Un-executable, and F1. Boldface marks preferred entries. This typography does not indicate statistical significance. Principal results and exceptions are preserved in §9 and §20; the remaining cells are deliberately compressed. Correct and Un-executable are percentages, while precision/recall/F1 are reported on a 0–100 score scale.
+
+### Table 3 — Synthesis ablation, page 7
+
+[A/B] Three model groups compare each method with its minus-synthesis version on SWDE. Columns are Correct, Un-executable, and F1. GPT-3.5-Turbo AUTOSCRAPER full versus minus-synthesis is 54.84 / 19.35 / 69.20 versus 44.52 / 29.33 / 58.44. GPT-4-Turbo is 71.56 / 4.06 / 88.69 versus 65.31 / 11.87 / 80.41. Gemini is 42.81 / 34.38 / 54.91 versus 39.46 / 31.56 / 56.48. Thus synthesis improves many outcomes but not every metric. The text's broad improvement statement needs this qualification.
+
+### Table 4 — Direct extraction versus AUTOSCRAPER, page 7
+
+[A/B] Eight rows list Direct Extraction / AUTOSCRAPER: GPT-3.5-Turbo 75.76 / 69.20; Gemini Pro 76.62 / 54.91; GPT-4-o-mini 79.93 / 76.97; GPT-4-Turbo 78.56 / 88.69; Phi-3-medium 71.73 / 34.93; CodeLlama 47.38 / 28.41; Mixtral 73.45 / 59.75; Deepseek-coder 61.96 / 49.68. The numeric columns are not explicitly headed F1, but the AUTOSCRAPER entries match T2's SWDE F1 and the discussion compares extraction performance. Interpreting the table as the corresponding F1 comparison has HIGH confidence, while this header omission is disclosed.
+
+### Table 5 — Supervised baselines, page 8
+
+[A/B] F1 values: Render-Full 84.30; FreeDOM 82.32; SimpDOM 83.06; MarkupLMBASE 84.31; WebFormer 86.58; Reflexion + GPT-4-Turbo 82.40; AUTOSCRAPER + GPT-4-Turbo 88.69. The caption says supervised values use one seed training site. AUTOSCRAPER is highest among listed values, FreeDOM lowest. No uncertainty or significance is given. Training on seed sites differs from inference using seed pages.
+
+### Table 6 — Runtime and break-even thresholds, page 8
+
+[A/B] Rows report domain, direct time T_d, upfront generation/synthesis n_sT_g + T_s, execution T_e, and listed threshold N_W. Auto: 8.27 s / 238.4 s / 0.30 s / 30; Book: 10.20 / 176.4 / 0.51 / 18; Camera: 6.59 / 107.1 / 0.31 / 18; Job: 7.42 / 123.5 / 0.21 / 18; Movie: 7.47 / 133.2 / 0.21 / 19; NBAPlayer: 8.32 / 179.4 / 0.45 / 23; Restaurant: 8.87 / 160.8 / 0.54 / 20; University: 14.26 / 134.7 / 0.32 / 10. Generation costs dominate a single page, but execution is much faster. Some listed integer thresholds do not equal the strict ceiling calculated from displayed rounded operands; see §13.
+
+### Table 7 — Detailed Extended SWDE results, page 13
+
+[A/B] This expands T2 to six executability categories plus precision, recall, and F1. Eight models appear, although the caption says six, comprising three closed and three open models. GPT-4-Turbo AUTOSCRAPER has the largest listed F1, 76.21, but Reflexion has the larger Correct rate for that model. CodeLlama and Deepseek-coder expose exceptions discussed in §9. No statistical measures are shown. The mismatch in caption model count is unresolved.
+
+### Table 8 — Detailed DS1 results, page 14
+
+[A/B] Eight models and three methods appear with all category and IE columns. GPT-4-Turbo AUTOSCRAPER has the highest listed F1, 75.52. CodeLlama AUTOSCRAPER reaches only 17.39 F1 and 81.08% Un-executable. All Over-estimate entries are zero. This does not establish general absence of false positives: other outcome categories can include incorrect extraction, and this is a particular dataset condition. DS1 omits synthesis.
+
+### Table 9 — Golden-label experiment, page 14
+
+[A/B] Eight models receive known extraction targets while generating rules. Despite a caption mentioning executable and IE evaluation, only the six executable categories are displayed. AUTOSCRAPER Correct rates are GPT-3.5 56.89; Gemini 45.31; GPT-4-o-mini 67.20; GPT-4-Turbo 75.31; Phi-3 27.27; CodeLlama 26.20; Mixtral 45.62; Deepseek 38.44. Deepseek Reflexion is slightly higher at 38.75. Some golden-label results decline relative to ordinary generation: Mixtral Correct 45.62 versus T2's 46.88, for example. Providing the value does not guarantee better transferable rules.
+
+### Table 10 — SWDE action lengths, page 14
+
+[A/B] Columns 1–5 count sequences by length; Avg. reports mean steps. Averages are GPT-4-Turbo 1.57; GPT-4-o-mini 2.12; GPT-3.5 2.56; Gemini 2.99; Mixtral 3.00; Phi-3 3.62; Deepseek 2.14; CodeLlama 2.97. GPT-4-Turbo counts are 214, 61, 13, 18, 10; Phi-3 counts are 47, 52, 28, 26, 155. Counts do not uniformly sum to 320. Their relation to retries, omitted cases, and successes is not explained. The reported averages are retained rather than recomputed as unquestioned ground truth.
+
+### Table 11 — DS1 action lengths, page 14
+
+[A/B] Reported averages are GPT-4-Turbo 2.29; GPT-4-o-mini 2.06; GPT-3.5 2.48; Gemini 2.82; Mixtral 3.32; Phi-3 3.61; Deepseek 2.11; CodeLlama 3.46. GPT-3.5 counts total only 40, while some other models total 82 or 83. The caption supplies no denominator explanation. This matters when comparing step lengths between models.
+
+### Table 12 — Extended SWDE action lengths, page 15
+
+[A/B] Reported averages are GPT-4-Turbo 3.15; GPT-4-o-mini 2.65; GPT-3.5 3.02; Gemini 3.45; Mixtral 3.59; Phi-3 3.66; Deepseek 2.14; CodeLlama 2.06. CodeLlama's shorter sequences do not imply better extraction: its Extended SWDE F1 is only 12.52. Sequence length is therefore not a sufficient quality measure. Row totals vary substantially and are not explained.
+
+### Table 13 — Fragile text predicates, page 15
+
+[A/B] Contains / Equal bad-case percentages: GPT4 0.61 / 2.90; GPT-3.5 9.33 / 9.78; Gemini 10.62 / 14.29; Mixtral 12.88 / 8.55; Deepseek 11.63 / 7.55; CodeLlama 18.75 / 14.29; Mistral 7B 18.18 / 33.33. GPT4 has the lowest listed ratio for both predicate forms. Equality is not uniformly worse than contains. The GPT4 label is less specific than the surrounding GPT-4-Turbo discussion, and Mistral 7B is not in the main eight-model inventory. Predicate sample sizes, uncertainty, and annotation agreement are unspecified.
+
+### Table 14 — Good and bad XPath examples, page 16
+
+[B] The good example anchors on the shared field label Height: and extracts following-sibling text; green highlighting marks the reusable label. The bad example anchors on the specific phone number 703-528-7809; red highlighting marks a seed-specific value. This is qualitative evidence of the difference between matching a field's role and matching its current answer. It gives two examples, not a controlled aggregate comparison.
+
+### Table 15 — Original SWDE inventory, page 16
+
+[A/B] Eight domains each list ten websites, target attributes, and original page counts. Attribute counts are Auto 4, Book 5, Camera 3, Job 4, Movie 4, NBAPlayer 4, Restaurant 4, University 4. [C] Their sum is 32, matching T1's task count. Counts range from 220 for Camera/newegg to many 2,000-page sites. NBAPlayer sites range from 420 to 515. The original inventory is distinct from the 100-page-per-site transformed evaluation. Site names and every repeated 2,000 entry are deliberately compressed, while domains, attributes, and important count variation are retained.
+
+### Table 16 — Extended SWDE inventory, page 18
+
+[A/B] Movie sites have attribute counts 20, 13, 12, 8, 34, 17, 10, 10; NBAPlayer 10, 14, 10, 12, 12, 12, 5, 9; University 18, 14, 23, 15, 19. [C] Domain sums are 124, 84, and 89; total 297. This differs from the 294 transformed cases reported in T1 and A.1. Filtering unusual relations could be relevant, but the source does not explicitly connect these three omitted counts. The discrepancy remains unresolved.
+
+### Table 17 — DS1 inventory, page 18
+
+[A/B] Book has title/author/price over seven sites; E-commerce title/price over seven; Hotel address/price/title over eight; Movie actor/genre/title over eight. [C] Site counts sum to 30 and domain-attribute counts to 11, matching the respective descriptive claims. The table does not provide page counts or resolve 166 versus 186 pages. Repeated website listings are compressed.
+
+### Table 18 — SWDE extraction prompts, page 19
+
+[A/B] Each domain supplies a page-description prompt and attribute instructions. Requests cover vehicle model/price/engine/fuel efficiency; book title/author/ISBN/publisher/date; camera name/price/manufacturer; job title/company/location/date; movie title/director/genre/rating; player name/team/height/weight; restaurant name/address/phone/cuisine; university name/phone/website/type. These prompts operationalize the 32 target tasks. They are analyzed as source evidence and were not followed as instructions to this analyst.
+
+## 12. Diagram / Architecture Interpretation
+
+[A/B] The architecture's **input path** begins with an extraction instruction and preprocessed seed HTML. The **generation path** passes current HTML to an LLM, obtains a value and selector, then supplies the selector to a parser. The **feedback path** compares extracted output with the LLM-recognized value and records reasoning/extraction history. A failed selection triggers ancestor expansion and another top-down proposal. Intermediate selections define the sequence of retained page regions.
+
+[A/B] The **candidate-selection path** gathers sequences generated from different seed pages, executes them across seed contexts, and supplies sequences plus outputs to the synthesis prompt. Its output is a candidate index. The **deployment path within the task** executes the selected XPath sequence across other pages of the same site. Figures 1, 2, and 4 visualize different levels of this architecture; their details are represented in §10 rather than duplicated here.
+
+[D] For security research, the architecture gives a concrete content-to-action chain: page text and structure influence model output; that output controls parser selection; outputs influence subsequent model decisions; and a selected procedure is reused. A potential consequence of a bad rule is repeated erroneous extraction. Whether an attacker can induce such a rule, whether privileged data can be accessed, and whether controls prevent abuse are all untested. Reuse could reduce later LLM exposure or propagate a bad selection; the supplied work does not measure either security effect.
+
+## 13. Equations and mathematical concepts
+
+### Equation (1), page 4 — Category ratio
+
+[A] **M_R = number of cases in a situation / total number of cases.** The numerator counts cases classified as Correct, Precision, Recall, Un-executable, Over-estimate, or Else. The denominator is the evaluated case count. The result is a fraction, displayed as a percentage in result tables. This is a descriptive evaluation ratio, not a loss function. Its interpretation depends on consistent case definitions and empty-result conventions.
+
+### Equation (2), page 5 — Ordered action sequence
+
+[A] **A_seq = [XPath_1, XPath_2, …, XPath_n].** A_seq is a list, and n is its length. The expressions execute in order. Intermediate expressions prune the current context; the last extracts the value. The brackets express order, not a sum. No optimization objective or proof of correctness accompanies this representation.
+
+### Equation (3), page 8 — AUTOSCRAPER total time
+
+[A] **T_1 = T_G + T_E = (n_s T_g + T_s) + N_W T_e.** n_s is the seed-page count; T_g the time to generate one wrapper; T_s synthesis time; N_W the number of pages processed on the site; T_e wrapper extraction time per page. T_G groups upfront generation/synthesis time, and T_E groups extraction time. Inputs are measured or estimated times and workload size; output is modeled total runtime. The multiplication assumes representative per-page costs and linear scaling.
+
+### Equation (4), page 8 — Direct extraction total time
+
+[A] **T_2 = N_W T_d.** T_d is direct LLM extraction time per page. The model assumes that time repeats across pages. It does not include monetary prices, accuracy penalties, changes in page size, or explicit concurrency.
+
+### Equation (5), page 8 — Runtime comparison
+
+[A] **(n_s T_g + T_s) + N_W T_e ≤ N_W T_d.** This is the condition under which AUTOSCRAPER is no slower than repeated direct extraction. It compares the same modeled page workload. A faster method is not necessarily more accurate for every backbone model, as T4 demonstrates.
+
+### Equation (6), page 8 — Break-even workload
+
+[A] **N_W ≥ (n_s T_g + T_s) / (T_d − T_e).** The denominator is the per-page time saved by wrapper execution. [D] The stated inequality requires T_d > T_e to yield a positive meaningful threshold in this form. If savings are zero or negative, the source's amortization argument does not apply in the same way. A discrete page count normally requires an integer ceiling, but Table 6's rounding rule is not stated.
+
+[C] Using displayed Auto operands gives 238.4 / (8.27 − 0.30) = 238.4 / 7.97 ≈ 29.91, consistent with a listed threshold of 30. For Camera, 107.1 / (6.59 − 0.31) ≈ 17.05, whose ceiling is 18, also consistent. For Restaurant, 160.8 / (8.87 − 0.54) = 160.8 / 8.33 ≈ 19.30, consistent with 20. However, Job gives 123.5 / 7.21 ≈ 17.13, ceiling 18, while Book gives 176.4 / 9.69 ≈ 18.20, ceiling 19 rather than the listed 18. These are analyst calculations from rounded reported operands; hidden measurement precision or another rounding convention may matter, but the paper does not explain the mismatch.
+
+### Algorithm 1 and notation caveats
+
+[A] Inputs are initial HTML h_0, instruction I, and maximum retries d_max. Variables h_k, k, value, xpath, and result track the current context, iteration, recognized value, selector, and extracted text. LLM_g denotes generation; Parser_text extracts text; Parser_node returns a selected node/context. Appending /.. moves selection toward an ancestor.
+
+[D] The inner condition uses h without a clearly specified subscript. The guard is k > d_max rather than k ≥ d_max. The final successful selector is not visibly appended, and a retry exit lacks an explicit failure state. These are pseudocode ambiguities, not verified implementation defects. No repository execution was undertaken to resolve them.
+
+## 14. Interpretation and discussion
+
+[A/D] **RQ1:** the evidence supports substantial improvement over the chosen prompting baselines, especially on SWDE and DS1. It does not support an unqualified statement that every backbone, metric, and dataset improves. Extended SWDE has specific exceptions, and the supervised comparison involves different regimes.
+
+[A/D] **RQ2:** progressive DOM reduction and cross-seed selection plausibly contribute to performance. The ablation provides direct component evidence for many conditions, while Gemini demonstrates that selection can trade one metric against another. More seeds help in the plotted range, but the experiment does not separate seed diversity from seed count.
+
+[A/D] **RQ3:** accuracy depends strongly on the backbone and the comparison. GPT-4-Turbo generated scraping performs well, whereas direct extraction is more accurate for seven other models in T4. The runtime analysis supports an upfront-cost/repeated-execution trade-off on the measured workload, with unresolved domain-count and rounding details.
+
+[D] The structural-understanding interpretation is supported by direct-extraction gaps, golden-label tests, and action-length analysis, but not cleanly isolated as a single causal mechanism. Models differ in many unspecified properties, and short sequences sometimes coexist with poor extraction. The paper's model-size explanation is an interpretation, not a controlled parameter-scaling experiment.
+
+### Cross-reference and consistency register
+
+| Issue | Supplied sides | Assessment |
+|---|---|---|
+| Universal superiority | Page 2 says consistently outperforms all baselines; T2/T7 contain exceptions. | Preserve the broad author claim and narrower observed result separately. |
+| DS1 pages | Pages 3/12 say 166; T1 says 186. | Unresolved. |
+| DS1 two-page description | A.2 says two pages per website; 30 sites and 166 pages are also reported. | Mapping from sites, page pairs, and cases is unclear. |
+| Extended case count | T16 sums to 297 site-attributes; T1/A.1 use 294. | Filtering is mentioned but exact reconciliation absent. |
+| Runtime domains | Page 8 says ten domains; SWDE description and T6 list eight. | Eight-row mean is reproducible; claimed ten-site setup uncertain. |
+| Appendix result references | Page 6 points to T16/T17 for detailed experimental results. | Those tables contain dataset inventories; result tables are T7/T8. |
+| T7 caption | Says six models; eight model groups are visible. | Caption mismatch. |
+| Seed terminology | §5.4 and F3 say websites; §4.3 specifies pages within a case. | Interpret method as seed webpages and disclose wording shift. |
+| Synthesis claim | Text says synthesis improves methods; Gemini T3 worsens F1 and Un-executable. | Improvement is metric- and condition-dependent. |
+| Fig. 2 example | Rebound instruction with PPG selector labels. | Literal example consistency uncertain. |
+| T9 caption | Mentions IE evaluation, but visible columns are executable categories. | Do not invent unshown F1 results. |
+| T13 model list | GPT4 and Mistral 7B differ from main naming/inventory. | Preserve labels; exact correspondence unresolved. |
+| Action-length denominators | T10–T12 totals vary by model. | No documented normalization or inclusion explanation. |
+
+[D] None of these discrepancies can be repaired from external sources under closed-document mode. They affect precision of methodological claims more than the existence of the reported extraction improvements.
+
+## 15. Contributions and novelty
+
+[A] **Conceptual contribution:** formulate scraper generation as a way to combine LLM adaptability with reusable extraction procedures. **Algorithmic contribution:** use a sequence of XPath-based pruning and extraction actions, generated through top-down and step-back interaction. **Methodological contribution:** select a reusable sequence using outcomes across multiple seed pages. **Evaluation contribution:** distinguish strict successful reuse and other extraction outcomes through six case categories. **Empirical contribution:** evaluate three transformed datasets, eight LLMs, baseline comparisons, ablations, and diagnostic analyses.
+
+[A] **Implementation contribution:** the authors say the work is open-source and give a repository address. The supplied repository was not inspected, so implementation availability is author-reported rather than independently verified.
+
+[D] These are the contributions claimed and instantiated in this paper. The supplied evidence does not establish priority over all prior literature, and no security-specific novelty, defense, attack, or vulnerability taxonomy is proposed.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+[A] The explicit Limitation section, page 9, restricts the framework to information extraction on vertical web pages and says it can hardly transfer to environments such as Mind2Web and WebArena. It also states that performance relies on the backbone LLM and proposes improving HTML understanding through corpus collection and training strategy.
+
+[A] Other acknowledged limitations appear in the discussion and appendices: non-generalizability across exceptional page structures; incomplete extraction of multi-valued attributes; ambiguous task descriptions; difficulty generating executable paths for weaker models; and XPath fragility even with the strongest model tested. These are distributed caveats, not all part of the formally titled Limitation section.
+
+### Additional evidence-based analyst observations
+
+[D] There is no security evaluation, no malicious-content condition, and no comparison of attack success against standalone models. Accuracy statistics lack reported uncertainty. Dataset and caption discrepancies leave some denominators unclear. Model versions and generation settings are insufficiently specified for exact reproduction. The sampling description does not clearly state whether seed pages are excluded from the large-dataset evaluation aggregate. The golden-label condition changes information availability and should not be conflated with ordinary zero-shot deployment.
+
+[D] Preprocessing excludes script/style content and most attributes, so evidence concerns the resulting simplified HTML representation. It does not establish behavior on full live websites with navigation, authentication, dynamically produced content, or adversarial markup. The source does not report sandboxing, parser permissions, privacy boundaries, or runtime access controls; absence of reporting is not evidence that these controls are absent in an implementation.
+
+## 17. Threats to validity
+
+The following labels are **analyst observations [D]**, not terminology the authors explicitly adopt.
+
+**Internal validity:** component comparisons support some causal attribution to synthesis, but missing decoding settings, sample exclusions, and repeated-run descriptions complicate isolation of framework effects. The LLM both recognizes a target value and generates a rule, creating a coupled judgment loop. ALG1 ambiguities prevent full reconstruction from pseudocode alone.
+
+**Construct validity:** Correct is stricter than a partial-extraction score and better matches the stated goal of case-level reuse. Yet Un-executable means zero recall rather than necessarily invalid executable syntax. Empty-ground-truth conventions and category precedence are unclear. Action length is not a reliable stand-in for extraction quality, and extraction F1 is not a security metric.
+
+**External validity:** results concern selected domain-specific pages from the supplied benchmarks and models available in the authors' study. The explicit limitations caution against transfer to broad interactive agents. Results cannot establish live-web attack resistance or the security of agents with tools beyond an XPath parser.
+
+**Statistical conclusion validity:** percentages, means, and plot trends are reported without confidence intervals, significance tests, or main-result variances. Small differences such as Extended SWDE F1 76.21 versus 75.85 cannot be characterized as statistically significant from the supplied evidence.
+
+**Ecological validity:** simplified stored HTML and fixed attributes may differ from operational scraping conditions. The runtime model omits explicit concurrency, network variability, failures, maintenance, and monetary cost. Those omissions bound its interpretation; they are not measured disadvantages.
+
+**Reproducibility and generalizability:** prompts, broad datasets, main seed counts, and retries are supplied, which helps reconstruction. Exact model revisions, random seeds, hardware specifications, preprocessing details, and denominator accounting remain incomplete. Repository claims were not checked. For the security question, comparative generalizability is UNKNOWN because no relevant experiment exists.
+
+## 18. Future work and open questions
+
+### A. Explicit author-proposed future work
+
+[A] Page 9 proposes enhancing LLM HTML understanding, including corpus collection and training strategy. Page 7 anticipates better, more stable extraction as LLM capability improves. The seed-count discussion suggests more seeds can improve performance over the tested range, with diminishing gains; it does not supply a separate validated training method.
+
+### B. Additional open questions remaining from this study
+
+[D] How should candidate selection handle the case where none works? Can multi-valued extraction avoid the prompt's preference against nodes with different values? How do exceptional templates affect success as page counts grow? Does seed diversity matter more than count? What precisely determines differing case denominators? How do costs and uncertainty change across model revisions and concurrent execution?
+
+[D] For the user's research question: can malicious HTML alter the generated XPath, expected-value judgment, step-back decision, or synthesis selection? Does reuse amplify a poisoned seed decision, or reduce exposure by avoiding later model calls? How does a fair comparison hold model, page access, target task, and attacker capability constant between direct extraction and an agent? These are proposed questions, not findings. They require experiments outside the supplied paper and therefore remain unanswered here.
+
+## 19. Terminology and notation glossary
+
+| Term or symbol | Meaning in this work |
+|---|---|
+| LLM | Large language model used to interpret instructions and generate/select extraction rules. |
+| HTML | HyperText Markup Language: nested page structure plus textual content. |
+| DOM | Document Object Model tree: hierarchy used for pruning and ancestor traversal. |
+| XPath | Expressions selecting nodes or text within the page hierarchy. |
+| Wrapper / scraper | Reusable extraction procedure. |
+| Progressive generation | Iterative rule generation using top-down selection and step-back recovery. |
+| Synthesis | Selection of a candidate action sequence using cross-seed results. |
+| Seed webpage | Page examined to generate or assess a candidate sequence. |
+| Case | Website-specific page collection paired with one extraction instruction. |
+| Target attribute | Requested field, such as player height or university phone number. |
+| IE / OpenIE | Information extraction / open information extraction; the latter also extracts relations before the study's attribute mapping. |
+| COT | Chain-of-Thought, the one-turn baseline described here. |
+| Reflexion | Iterative reflection-and-regeneration baseline. |
+| SWDE | Structured Web Data Extraction benchmark. |
+| DS1 | Dataset identifier; no expanded name is provided. |
+| Precision / recall | Accuracy of returned instances / recovery of relevant instances. |
+| Macro-F1 | Mean of per-case F1 scores, as reported by the paper. |
+| Correct | Case outcome with precision, recall, and F1 all equal to 1. |
+| Unex. | Un-executable category, operationally defined by recall equaling zero. |
+| Over. | Extraction when the ground truth is empty, as described in §3.3. |
+| A_seq, n | Ordered XPath sequence and its length. |
+| n_s, d_max | Number of seed pages and maximum retry parameter. |
+| h_0, h_k, I | Initial HTML, current HTML at step k, and extraction instruction. |
+| T_g, T_s, T_e, T_d | Per-seed generation, synthesis, per-page wrapper extraction, and per-page direct extraction times. |
+| N_W | Page workload size or runtime threshold, depending on context. |
+| M_R | Fraction of cases assigned to a particular evaluation situation. |
+| w, W, s, r, R, o | Page and page set, subject entity, target attribute and attribute set, extracted information in §3.1. The formal relationship among website and page notation is described informally. |
+| Predicate | XPath condition such as a class constraint, text equality, or contains test. |
+| Golden label | Known target value supplied in the diagnostic generation condition. |
+| Vertical web pages | Authors' term for the domain-oriented extraction scope; no formal definition is supplied. |
+
+## 20. Key numerical results
+
+The table preserves reported precision. Score values use the paper's 0–100 presentation; category proportions are percentages. Derived differences explicitly show operands.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Original SWDE size | 124,291 | pages | 80 sites, eight domains | Author-reported | p3 §3.2 |
+| Transformed SWDE | 320 / 32 / 32,000 | cases / tasks / page instances | Sampled benchmark | Author-reported | p3 T1 |
+| Transformed Extended SWDE | 294 / 221 / 29,400 | cases / tasks / page instances | Mapped attributes | Author-reported | p3 T1 |
+| DS1 original description | 166 | pages | 30 sites | Author-reported | p3 §3.2; p12 A.2 |
+| DS1 transformed table | 83 / 11 / 186 | cases / tasks / pages | Unresolved page-count discrepancy | Author-reported | p3 T1 |
+| Seed counts | 3 / 3 / 1 | pages | SWDE / Extended / DS1 | Author-reported | p6 §5.1 |
+| Maximum retry parameter | 5 | retries | Main experiments | Author-reported | p6 §5.1 |
+| SWDE GPT-4-Turbo AUTOSCRAPER | 71.56 / 4.06 / 88.69 | Correct % / Unex. % / F1 | Three seeds | Author-reported | p6 T2 |
+| SWDE GPT-4-Turbo Reflexion | 67.50 / 10.94 / 82.40 | Correct % / Unex. % / F1 | Main baseline | Author-reported | p6 T2 |
+| SWDE GPT-4-Turbo COT | 61.88 / 14.37 / 76.95 | Correct % / Unex. % / F1 | Main baseline | Author-reported | p6 T2 |
+| F1 gain over Reflexion | 88.69 − 82.40 = 6.29 | score points | SWDE GPT-4-Turbo | Analyst-derived | p6 T2 |
+| Extended GPT-4-Turbo AUTOSCRAPER | 64.11 / 15.33 / 76.21 | Correct % / Unex. % / F1 | Three seeds | Author-reported | p13 T7 |
+| Extended GPT-4-Turbo Reflexion | 64.81 / 19.51 / 75.85 | Correct % / Unex. % / F1 | Correct counterexample | Author-reported | p13 T7 |
+| Extended CodeLlama F1 | 12.52 versus 16.01 | score | AUTOSCRAPER versus Reflexion | Author-reported | p13 T7 |
+| DS1 GPT-4-Turbo AUTOSCRAPER | 57.83 / 16.87 / 75.52 | Correct % / Unex. % / F1 | One seed; no synthesis | Author-reported | p14 T8 |
+| GPT-4-Turbo without synthesis | 65.31 / 11.87 / 80.41 | Correct % / Unex. % / F1 | SWDE ablation | Author-reported | p7 T3 |
+| Gemini synthesis F1 | 54.91 versus 56.48 | score | Full versus minus synthesis | Author-reported | p7 T3 |
+| GPT-4-Turbo direct extraction | 78.56 | extraction score | SWDE; T4 header omits metric name | Author-reported | p7 T4 |
+| Phi-3 direct / AUTOSCRAPER | 71.73 / 34.93 | extraction score | SWDE | Author-reported | p7 T4 |
+| WebFormer / AUTOSCRAPER | 86.58 / 88.69 | F1 | Different supervision regimes | Author-reported | p8 T5 |
+| Runtime listed thresholds | 10–30 | pages | Eight T6 domains | Visually readable | p8 T6 |
+| Mean threshold | 19.5 | pages | Author mean; reproducible from eight integers | Author-reported | p8 §6.3 |
+| Mean threshold check | 156 / 8 = 19.5 | pages | Sum of T6 thresholds | Analyst-derived | p8 T6 |
+| GPT-4-Turbo golden-label Correct | 75.31 | % | SWDE known-target condition | Author-reported | p14 T9 |
+| SWDE mean steps | 1.57 versus 3.62 | steps | GPT-4-Turbo versus Phi-3 | Author-reported | p14 T10 |
+| GPT4 fragile predicates | 0.61 / 2.90 | % bad cases | Contains / equality; denominators absent | Author-reported | p15 T13 |
+| Extended inventory total | 124 + 84 + 89 = 297 | site-attributes | T16 versus 294 transformed cases | Analyst-derived | p18 T16 |
+| Seed-plot GPT-4 Correct endpoints | about 65 / 74 | % | One / five seeds | Approximate visual estimate | p7 F3 |
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence strength |
+|---|---|---|---|---|
+| Generated reusable rules combine LLM adaptation with repeated extraction. | Two-phase architecture and action-sequence definition. | F2, E2, ALG1 | pp4–5, p12 | HIGH for described method; not a general optimality proof. |
+| DOM-aware iteration distinguishes AUTOSCRAPER from Reflexion. | Top-down/step-back pruning; illustrated feedback trajectory. | F4, X2 | p5 §4.2; p12 B.1; p15 F4 | HIGH for design; causal isolation incomplete. |
+| SWDE performance improves over prompting baselines. | GPT-4-Turbo F1 88.69 versus 82.40 and 76.95; other model rows improve. | T2, X1 | p6 | HIGH for reported descriptive results; no significance testing. |
+| Improvement is not universal across all datasets. | Extended CodeLlama and Deepseek exceptions; GPT-4 Correct exception. | T7, X1 | p13 | HIGH direct counterexamples to broad wording. |
+| Synthesis often improves reuse. | GPT-4 ablation gains; rising Correct with seed count. | T3, F3, X2/X3 | p7 | HIGH for tested results; Gemini metric exceptions. |
+| Generating rules is harder than direct extraction for many backbones. | Seven of eight T4 comparisons favor direct extraction. | T4, X4 | p7 | HIGH descriptive comparison; not a security comparison. |
+| Upfront generation can amortize over repeated pages. | Runtime equations and measured times. | T6, E3–E6, X6 | p8 | MEDIUM generalization; domain and rounding discrepancies. |
+| Known targets do not eliminate structural-generation difficulty. | Golden-label failures and mixed improvements. | T9, X8 | pp12/14 | HIGH for results; bottleneck interpretation is author reasoning. |
+| XPath literal-value dependence can impair reuse. | Bad phone-number example and predicate bad-case ratios. | T13/T14, X10 | pp15–16 | HIGH for examples; aggregate denominators missing. |
+| Scope excludes demonstrated transfer to broad interactive environments. | Explicit limitation about vertical pages and existing web environments. | Limitation | p9 | HIGH author-stated boundary. |
+| Architecture is relevant to security analysis. | HTML → model → selector → parser → feedback → reuse. | F2, ALG1, prompts | pp4–5,12,17–18 | MEDIUM analyst inference; no attacks tested. |
+| Comparative agent vulnerability remains unanswered. | Study questions and experiments address scraping, not adversarial security. | RQ1–RQ3; X1–X10 | pp5–9,12–18 | HIGH for absence in supplied study; vulnerability magnitude UNKNOWN. |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine asking a computer to collect the height of every basketball player listed on one website. One option is to ask an AI to read every page separately. Another is to write a rule saying where the height appears and reuse that rule. The first option can understand flexible wording, but repeats a lot of work. The second is quick once the rule works, but designing the rule can be difficult.
+
+AUTOSCRAPER asks the AI to help write the reusable rule. If it selects the wrong part of the page, it steps back and tries again with a more useful piece of the page. It then tests rules made from several example pages and chooses one that seems likely to work on other pages from that website.
+
+The approach works well with the strongest model tested, and repeated rule execution can eventually save time. But it is not automatically best: weaker models often read an answer more successfully than they write a reliable rule. A page with an unusual layout, several answers in different places, or a rule tied to one person's exact phone number can still cause failures.
+
+For the security question, this paper shows where a web agent makes decisions from page content and turns those decisions into extraction actions. It does not show that an attacker can exploit those decisions, or that such an agent is more vulnerable than an AI answering directly. Those are important questions left for a separate security experiment.
+
+## Completeness Audit
+
+The denominator is the supplied inventory, not narrative length. All 19 supplied text pages were inspected; only the 15 listed rendered pages were visually inspected. Major results were checked against their supplied table rows and conditions, including exceptions to the prose. Small-cell transcription relies partly on the provided extracted text rather than pretending every dense value is independently legible at image resolution.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, venue | Yes | Yes | Represented in compressed form | Title preserved; authors and publication details recorded below. |
+| Abstract | Yes | Yes | Fully represented | Problem, two phases, metric, evaluation, availability claim. |
+| §1 Introduction | Yes | Yes | Fully represented | Motivation, paradigms, challenges, scope. |
+| §2 Related Work | Yes | Yes | Represented in compressed form | Categories and positioning retained; citation-by-citation bibliography omitted. |
+| §3.1 Task Formulation | Yes | Yes | Fully represented | Case, entity, attribute, executable sequence. |
+| §3.2 Datasets | Yes | Yes | Fully represented | Sizes, transformation, preprocessing, discrepancies. |
+| §3.3 Evaluation Metrics | Yes | Yes | Fully represented | Six categories and E1; ambiguity disclosed. |
+| §4.1 Modeling | Yes | Yes | Fully represented | Ordered sequence and extraction/pruning roles. |
+| §4.2 Progressive Generation | Yes | Yes | Fully represented | Top-down, step-back, feedback, ALG1 caveats. |
+| §4.3 Synthesis | Yes | Yes | Fully represented | Cross-seed execution and candidate selection. |
+| §5.1 Settings | Yes | Yes | Fully represented | Models, seeds, retries, zero-shot, metrics, reporting gaps. |
+| §5.2 Main Results | Yes | Yes | Fully represented | Major improvements and contradictory table conditions. |
+| §5.3 Ablation | Yes | Yes | Fully represented | Full/minus comparisons and Gemini exception. |
+| §5.4 Seed Websites | Yes | Yes | Fully represented | One-to-five range, terminology mismatch, approximate plot values. |
+| §6.1 Direct Extraction | Yes | Yes | Fully represented | All eight comparison pairs. |
+| §6.2 Supervised Baselines | Yes | Yes | Fully represented | All seven F1 entries and regime qualification. |
+| §6.3 Efficiency | Yes | Yes | Fully represented | All T6 rows, equations, repetitions, discrepancies. |
+| §6.4 Error Analysis | Yes | Yes | Fully represented | Page 8 visually inspected; continuation on page 9 text-only. |
+| §7 Conclusion | Yes | Yes | Represented in compressed form | Contribution and claim scope retained. |
+| Limitation section | Yes, text | Yes | Fully represented | Both explicit limitations preserved. |
+| Ethic statement | Yes, text | Yes | Represented in compressed form | Consent, remuneration, public/anonymized data, toxic-language caveat below. |
+| Acknowledgement | Yes, text | Yes | Represented in compressed form | CFFF platform retained; funding recorded below. |
+| References, pp9–11 | Yes, text | Partly | Inspected but deliberately omitted as repetitive/non-substantive | Bibliographic entries not reproduced or externally validated. |
+| RQ1–RQ3 | Yes | Yes | Fully represented | Explicit questions and evidence mapping. |
+| Formal hypotheses | Not present | Absence stated | Fully represented | None manufactured. |
+| X1–X10 analyses | Yes | Yes | Fully represented | Register plus detailed results; raw cells compressed. |
+| F1 | Yes, visual | Yes | Fully represented | Conceptual comparison; no quantitative measurement. |
+| F2 | Yes, visual | Yes | Fully represented | Architecture and literal-label inconsistency. |
+| F3 | Yes, visual | Yes | Fully represented | Axes, encoding, estimates, missing uncertainty. |
+| F4 | Yes, visual | Yes | Fully represented | Three trajectories and illustrative status. |
+| T1 | Yes, text/visual | Yes | Fully represented | All benchmark counts. |
+| T2 | Yes, text/visual | Yes | Represented in compressed form | Main conditions and exceptions; not every category cell repeated. |
+| T3 | Yes, text/visual | Yes | Fully represented | Key ablations and counterexample retained. |
+| T4 | Yes, text/visual | Yes | Fully represented | All eight result pairs. |
+| T5 | Yes, text/visual | Yes | Fully represented | All values retained. |
+| T6 | Yes, text/visual | Yes | Fully represented | All rows and modeling caveats. |
+| T7 | Yes, text/visual | Yes | Represented in compressed form | Extended details, counterexamples, caption mismatch. |
+| T8 | Yes, text/visual | Yes | Represented in compressed form | DS1 conditions, top/weak results, zero Over. |
+| T9 | Yes, text/visual | Yes | Represented in compressed form | All AUTOSCRAPER Correct values, key exceptions. |
+| T10 | Yes, text/visual | Yes | Represented in compressed form | All reported averages; representative counts; denominator caveat. |
+| T11 | Yes, text/visual | Yes | Represented in compressed form | All averages and inconsistent totals. |
+| T12 | Yes, text/visual | Yes | Represented in compressed form | All averages; short/poor-performance counterexample. |
+| T13 | Yes, text/visual | Yes | Fully represented | All seven predicate pairs and model-label caveats. |
+| T14 | Yes, text/visual | Yes | Fully represented | Both examples and color meanings. |
+| T15 | Yes, text/visual | Yes | Represented in compressed form | Domains, attributes, count range; repeated site rows compressed. |
+| T16 | Yes, text/visual | Yes | Fully represented | Attribute-count lists and derived 297 total. |
+| T17 | Yes, text/visual | Yes | Represented in compressed form | Domains, fields, site counts; repeated names compressed. |
+| T18 | Yes, text/visual | Yes | Represented in compressed form | All task families; repetitive sentence templates compressed. |
+| E1–E6 | Yes, text/visual | Yes | Fully represented | Symbols, roles, assumptions, threshold examples. |
+| ALG1 | Yes, text/visual | Yes | Fully represented | Steps and unresolved operational omissions. |
+| A.1 Extended SWDE | Yes | Yes | Fully represented | Mapping, filtering, ambiguity, results. |
+| A.2 DS1 | Yes | Yes | Fully represented | One inference/one evaluation page, no synthesis, count issues. |
+| A.3 Golden Label | Yes | Yes | Fully represented | Purpose, outcomes, exceptions. |
+| B.1 Baseline Comparison | Yes | Yes | Fully represented | One-turn versus iterative methods and DOM simplification. |
+| B.2 Further Study | Yes | Yes | Fully represented | Length and fragility analyses. |
+| C Dataset Statistic | Yes | Yes | Represented in compressed form | All three inventory tables assessed. |
+| D.1 Task Prompt | Yes | Yes | Represented in compressed form | All target families represented. |
+| D.2 Module Prompt | Yes | Yes | Represented in compressed form | Top-down and step-back text-only on p17; synthesis visual/text on p18. |
+| Major contributions | Yes | Yes | Fully represented | Concept, method, evaluation, empirical and implementation claims. |
+| Author-stated limitations | Yes | Yes | Fully represented | Formal and distributed caveats distinguished. |
+| Separate supplementary files | Not supplied | Absence stated | Missing from supplied material | No such file claimed reviewed. |
+| Referenced repository/docs | Not inspected | Boundary stated | Inaccessible within authorized analysis | No browsing/tools used. |
+
+### Ancillary inventory details
+
+[A] Authors: Wenhao Huang, Zhouhong Gu, Chenghao Peng, Zhixu Li, Jiaqing Liang, Yanghua Xiao, Liqian Wen, and Zulong Chen. The paper identifies Fudan University and Alibaba affiliations; Jiaqing Liang and Yanghua Xiao are corresponding authors. Publication: Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing, pages 2371–2389, November 12–16, 2024, Association for Computational Linguistics.
+
+[A] Acknowledgement names National Natural Science Foundation of China grant 62102095, the CFFF platform, and Alibaba support. The ethics statement says authors adhere to the ACL Code of Ethics; early methodological human annotators consented and were paid according to local standards; human annotations were not employed during evaluation of the method. This last statement does not erase the earlier description of annotated benchmark datasets; its exact intended distinction is not explained. The authors report public-source and anonymized datasets and acknowledge they cannot guarantee absence of socially harmful or toxic language. These statements are not a prompt-injection or security evaluation.
+
+[A] Module-prompt details deliberately compressed in the main explanation: top-down generation receives instruction, thought/extraction history, and current HTML; asks for thought, consistent, value, and xpath fields; warns against exact-answer selectors, irrelevant results, and empty returns; prefers class and positional information; and allows blank XPath when suitable information is absent. Step-back receives instruction, recognized value, and HTML and returns thought/judgement. Synthesis receives candidate sequences/results and returns thought/number. The prompts' field structures are represented; their complete wording is not duplicated.
+
+### Missing or inaccessible material
+
+No supplied document-text page is missing. Visual renderings of pages 9–11 and 17 were not provided. The original PDF binary, repository implementation, linked documentation, separate supplementary files, detailed run logs, and raw plot data were not inspected. Source hash and accessibility metadata are user-provided identifiers, not independently recomputed evidence.
+
+### Uncertain interpretations
+
+Unresolved matters include DS1 166 versus 186 pages and page-pair accounting; 297 versus 294 Extended site-attributes; eight versus ten runtime domains; Table 7's six-versus-eight model caption; action-length denominators and some reported means; Table 4's unlabeled metric header; Figure 2's rebound/PPG mismatch; ALG1's successful-final-selector omission and retry semantics; category precedence and empty-set conventions; synthesis's ambiguous zero fallback; exact GPT4 identity in T13; and appearance of Mistral 7B outside the main model inventory. No uncertain plot estimate is presented as an exact reported value.
+
+### Deliberately compressed material
+
+Repeated bibliography details, author contact addresses, decorative player/robot artwork, repeated prompt sentence frames, full site-name lists, repeated original page-count rows, and secondary cells in T2/T7/T8/T9/T10–T12 are compressed. Their objects, purposes, main numerical conditions, exceptions, and relevant caveats remain represented. This report is not a cell-by-cell transcription of every results table.
+
+### Potential omissions
+
+No known substantive object from the supplied inventory is left wholly unrepresented. Coverage is nevertheless bounded by text-only pages, unresolved source inconsistencies, and disclosed compression. The analysis does not claim that every word, every table cell, or absent external artifact has been preserved. Most importantly, the requested comparative security explanation remains unsupported by this paper: architectural relevance is labeled analyst inference, and comparative vulnerability confidence is UNKNOWN.

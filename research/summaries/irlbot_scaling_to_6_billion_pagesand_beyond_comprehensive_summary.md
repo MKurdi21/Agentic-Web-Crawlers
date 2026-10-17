@@ -1,0 +1,561 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is **IRLbot: Scaling to 6 Billion Pages and Beyond**, a 34-page article. The complete main-document text is supplied with explicit physical PDF page delimiters, pp. 1–34. Its opening abstract, numbered sections, conclusion, acknowledgments, references, and publication-history line are accessible. This establishes coverage of the supplied 34-page article; it does not establish availability of every implementation artifact mentioned by the article.
+
+Directly supplied visual renderings cover physical pages **1, 4, 6, 10, 11, 12, 13, 15, 19, 20, 21, 22, 23, 24, 26, 27, 28, and 34**. These images were visually inspected. The other 16 pages were inspected through the supplied extracted text only. All seven numbered figures are visible in these renderings. Tables I, IV, VIII, and IX were inspected visually and through text; Tables II, III, V, VI, and VII were inspected through text only. No additional local files were opened, and no tools, browsing, outside sources, or external verification were used.
+
+The rendered prose and diagrams are generally readable. Plot trends, axis labels, and diagram connections are readable, but individual fluctuations in the time-series plots are not exact numeric observations. Mathematical extraction contains damaged characters, including Greek letters, ceiling notation, summation formatting, and asymptotic notation. Rendered pp. 12–13 resolve several DRUM-model symbols; formulas on unrendered pages remain text-only. Where a formula can be reconstructed directly from its surrounding supplied definitions, that reconstruction is identified. One budget-proof line remains potentially inconsistent and is flagged rather than silently repaired.
+
+No appendix appears in the supplied article. The accessibility metadata reports no embedded supplementary files and no detected supplementary references. The paper mentions a project website, a crawl trace, custom pay-level-domain rules, omitted simulations, and collected data, but these underlying artifacts are not supplied for inspection. OCR was not needed because extracted text and selected rendered pages were supplied. The failed local-image message referring to `-` does not identify an additional usable page and was not treated as evidence.
+
+**Evidence convention:** [A] author-reported; [B] directly observable in a supplied visual; [C] analyst-derived from supplied operands; [D] analyst interpretation. No [E] external information is used. Confidence is HIGH for clear statements and readable values, MEDIUM for bounded interpretations or approximate graphical descriptions, LOW for unresolved mathematical transcription, and UNKNOWN for unavailable evidence. Page references below are physical PDF pages, not the journal's article-number prefix `8:`.
+
+## 1. Plain-Language Orientation
+
+A Web crawler repeatedly downloads a page, extracts its links, and decides which linked pages to download next. At billions of pages, the difficulty is not simply downloading quickly. Every newly discovered address must be checked against previously discovered addresses; website exclusion rules must be respected; domain names must be resolved; and access must be slow enough to avoid overwhelming individual servers. Meanwhile, one website can generate an effectively endless stream of new addresses.
+
+The authors investigate how to keep such a crawler fast using a single server with bounded CPU and memory resources. Their three connected solutions are **Disk Repository with Update Management (DRUM)** for large disk-resident state, **Spam Tracking and Avoidance through Reputation (STAR)** for domain-level crawling budgets, and **Budget Enforcement with Anti-Spam Tactics (BEAST)** for scheduling backlogged addresses without repeatedly scanning an ever-growing failed queue. [A; pp. 3–4, 10–13, 21–26]
+
+Their deployed system downloaded **6,380,051,942 successful HTML responses** during **41.27 active days**, averaging **1,789 pages/s** and **319 mb/s**, on one quad-CPU server. It discovered **41,502,195,631 unique URL identifiers**, which is a much larger set than the pages actually downloaded. The article combines mathematical performance models, cache measurements and simulations, and one large live-Web deployment. Trillion-page results are model projections, not observed trillion-page crawls. [A; pp. 14–19, 26–27]
+
+The requested research question concerns why Web AI agents might be more vulnerable than standalone large language models. This paper supplies evidence about the hazards of interacting repeatedly with a Web-controlled environment: malicious branching, DNS and HTTP delays, resource exhaustion, and misleading domain structure. **It does not study LLMs, prompt injection, or a controlled comparison between Web AI agents and standalone LLMs.** Its relevance is an analyst inference about environment-induced operational exposure, not direct evidence of comparative AI vulnerability. [D; grounded in pp. 2–4, 20–24]
+
+## 2. Document Roadmap
+
+The article's organization follows the problems encountered in building IRLbot:
+
+| Original section | Pages | Function |
+|---|---|---|
+| Abstract and §1 Introduction | 1–4, continuing on 5 | Establish scalability, reputation/spam, and politeness problems; introduce contributions |
+| §2 Related Work | 5 | Position previous crawler implementations and reported scales |
+| §3 Objectives and Classification | 5–7 | Define crawler scope, basic operation, and storage categories |
+| §4 Scalability of Disk Methods | 7–15 | Analyze existing checks, describe DRUM, derive overhead, compare projected performance |
+| §5 Caching | 15–19 | Connect hit rates, CPU costs, memory allocation, and disk-limited speed |
+| §6 Spam and Reputation | 19–22 | Explain branching traps and STAR's pay-level-domain budgets |
+| §7 Politeness and Budgets | 22–26 | Couple access delays to budgets and derive BEAST's bounded I/O requirement |
+| §8 Experiments | 26–28 | Report deployment statistics, uniqueness evolution, and domain allocation |
+| §9 Caveats | 28–32 | Discuss distribution, duplicate content, collisions, sorting, robots expiration, and caching |
+| §10 Conclusion | 32 | Summarize the integrated design and future work |
+| Acknowledgments and References | 32–34 | Identify support and cited literature |
+
+The mathematical sections explain why older approaches become expensive; the architectural sections show the replacements; the deployment provides practical scale evidence. The caveats materially constrain the meaning of success, especially because unique URLs are not necessarily unique contents and the anti-spam ranking is deliberately coarse.
+
+## 3. Background and Context
+
+**Uniform Resource Locator (URL):** the address represented in the crawler's pending queue. The paper distinguishes the URL's text from its compact hash, a numerical identifier used to test whether an address has already appeared. **URLseen** is the collection of encountered URL hashes; it is not merely a list of successfully downloaded pages. [A; pp. 6, 11, 27]
+
+**Breadth-first search (BFS):** the paper's baseline traversal order follows the expanding link graph. The authors report that a rapidly branching site can dominate the queue after three or four levels, making an apparently straightforward traversal operationally unsafe or inefficient. This can happen with spam or with legitimate automatically generated structures. [A; p. 20]
+
+**robots.txt** supplies site exclusion rules. IRLbot stores these rules with host information in **RobotsCache**, requests missing rules through **RobotsRequested**, and revisits outdated records. **Domain Name System (DNS)** lookups map hostnames to network addresses. The crawler must manage these activities at a scale where hundreds of millions of hostnames may appear. [A; pp. 6, 11–12, 27]
+
+A **host/site** means a fully qualified domain name, such as the paper's example `motors.ebay.com`. A **server** means the physical machine accepting connections. Many hosts can share one server. A **pay-level domain (PLD)** is a domain requiring payment at a registrar; it usually sits below a top-level domain but exceptions require custom identification rules. These distinctions explain why a limit per hostname alone can still overload a shared physical server. [A; pp. 21–23]
+
+**In-degree** counts incoming connections in a graph. STAR uses incoming links from other PLDs, and stores incoming-neighbor hashes, to assign a domain's crawling budget. This is a domain-level resource-allocation signal, not a direct assessment of every page's usefulness or safety. [A; pp. 21–22]
+
+**Input/output (I/O)** is disk traffic. A **cache** keeps some recently useful information in memory. **Least recently used (LRU)** and **CLOCK** are cache policies discussed in the supplied work. Memory caching can reduce disk checks but also consume CPU and memory needed elsewhere. A high hit rate therefore does not automatically improve the whole crawler. [A; pp. 16–19]
+
+## 4. Research Problem and Gap
+
+The authors separate three problems. First, URL uniqueness and related state become increasingly expensive as a crawl grows. Seeking on disk for each URL is too slow; repeatedly merging batches with a growing disk file generates superlinear traffic. Second, a site's generated pages or hostnames can consume a disproportionate share of queue, DNS, and bandwidth resources. Third, politeness limits leave many addresses waiting, and repeatedly reconsidering over-budget addresses can consume the crawler's resources without useful progress. [A; pp. 2–4]
+
+Their claimed gap is a design that combines large crawl scope, thousands of pages per second, and fixed CPU/RAM resources. They attribute to prior literature designs that achieve only some of these goals, insufficient analysis at very large scale, no documented spam-avoidance behavior in the relevant crawlers, and insufficient treatment of rate-limited queues that outgrow RAM. These are the authors' assessments of the cited literature; the cited works were not independently reviewed here. [A; pp. 2–3, 5–7]
+
+The scope is crawler design, not the downstream data miner that ranks documents or answers user queries. The crawler may change download order to obtain useful coverage in finite time. The authors reject universal fixed caps on pages per host or hosts per domain because such caps would also truncate legitimate massive sites. Their target is bounded-resource scheduling with sufficient storage and connectivity, rather than a proof that every encountered address deserves retrieval. [A; pp. 2, 5–6]
+
+For the user's security question, the narrow usable observation is that Web interaction creates operational hazards beyond processing a fixed supplied text. A remote environment can keep introducing work and can control response delays. Translating that observation into an AI-agent comparison would require additional evidence that this paper does not provide. [D]
+
+## 5. Research Questions / Objectives / Hypotheses
+
+The article does not formulate numbered formal research questions or statistical hypotheses. The following identifiers organize its stated objectives without converting them into author-authored questions:
+
+| ID | Author-stated objective | Evidence location |
+|---|---|---|
+| O1 | Sustain a fixed rate of several thousand pages/s while downloading billions of pages on one server | §1.4, p. 3 |
+| O2 | Make URL uniqueness and other checks efficient as disk-resident state grows | §§4.1–4.5, pp. 7–15 |
+| O3 | Compute low-overhead reputation during the crawl to control highly branching domains | §§1.2 and 6, pp. 2–3, 19–22 |
+| O4 | Respect host/server limits while managing a backlog that exceeds RAM | §§1.3 and 7.1, pp. 3, 22–23 |
+| O5 | Enforce changing budgets without failed-queue rescanning costs growing without bound | §7.2, pp. 23–26 |
+| O6 | Determine when memory caching helps and how to choose its size | §5, pp. 15–19 |
+
+Several mathematical results test consequences of explicit assumptions, but these are theorems, not statistical hypotheses. The live crawl demonstrates feasibility for one configuration and one policy; it does not independently randomize or isolate all three new components.
+
+## 6. Assumptions / Threat Model
+
+This is a systems paper with adversarial-environment observations, not a formally specified security study. The reported hazards include server-side scripts producing effectively infinite structures, link farms, unlimited hostnames, and deliberate HTTP/DNS delay attacks against requests from the crawler's IP address. The threatened resources include pending queues, DNS resolution capacity, RAM, disk throughput, crawling progress, and bandwidth. [A; pp. 2–4, 20–21]
+
+STAR's rationale is that a spammer can cheaply grow pages and hostnames but must pay for PLDs or IP addresses. The implementation chooses PLD-based incoming links because the authors report undesirable behavior with IP-based classification: large subnets can receive excessive credit, while independent sites sharing an IP can be discounted. Payment is a cost-based heuristic, not a stated impossibility of manipulation. [A; p. 21]
+
+The disk models assume a steady-state uniqueness probability, average links per page and URL size, allocated memory, and specified disk behavior. DRUM's bucket sorting benefits from uniform keys. The memory model must fund two per-bucket file buffers and a processing buffer; sufficient disk space and efficient sequential access are also assumed. [A; pp. 8, 10–14, 31–32]
+
+Cache-speed analysis assumes cache throughput scales linearly with available CPU capacity. The relevant inverse functions require monotonic behavior. The BEAST model assumes finite expected domain budget and treats the number of PLDs in a queue pass as fixed for its asymptotic result. The collision model approximates hash occupancies by Poisson variables and neglects mild dependencies. These assumptions define mathematical applicability, rather than guarantees for every workload. [A; pp. 17–19, 23–26, 30]
+
+Distributed scaling is discussed under adequate bandwidth and URL/state partitioning. No multi-server deployment is demonstrated. There is no LLM trust model, tool-permission model, prompt-injection model, credential model, or measured data-exfiltration attack in the supplied work.
+
+## 7. Methodology
+
+### Integrated system design
+
+IRLbot first sends extracted URLs to DRUM's URLseen check-and-update operation. Duplicate addresses are discarded. New addresses receive domain-budget information from STAR and are scheduled through BEAST. Passing addresses reach a robots-check queue. Matching exclusion rules classify an address as allowed or disallowed; allowed addresses enter the ready queue for crawling. Missing or expired host records trigger DNS/robots retrieval and later reconsideration. All major queues shown in Figure 2 are disk-resident. [A/B; pp. 11–12]
+
+### DRUM
+
+DRUM accepts tuples consisting of a key, an optional value, and auxiliary data. A key is commonly a hash; auxiliary data commonly contains a URL string. It supports checking whether keys exist, updating stored values, and doing both in one disk pass. Incoming pairs are partitioned into hash-prefix buckets. Each bucket has a small memory buffer and two associated disk streams: key/value data and auxiliary data kept in matching first-in-first-out order. Files are preallocated to support sequential I/O. [A/B; p. 10]
+
+When the largest bucket reaches the processing size, DRUM sorts each bucket's keys, compares them with the persistent disk collection, merges updates, restores the original order of selected items, and retrieves their auxiliary strings. The important efficiency statement is that all buckets collectively require one pass through the persistent disk file, rather than one whole-file pass for each bucket. [A; p. 11]
+
+URLseen stores 8-byte URL hashes with no attached value. RobotsCache stores host-related values, including exclusion rules and IP information, and supports asynchronous checks and updates. RobotsRequested prevents duplicate requests for host rules. The paper notes that bucket sort itself is established; its contribution is applying it to these crawler operations and providing the associated performance model. [A; p. 11 and footnote 2]
+
+### STAR
+
+Crawling threads aggregate PLD-to-PLD links. A DRUM collection stores each domain's hash, in-degree, budget, and hashes of incoming neighbors. New unique URLs obtain the current budget. The function F(d_x) maps domain in-degree to resource allocation, enabling different policies. The deployment gives moderate preference to highly ranked domains while retaining a nonzero default for other domains. [A/B; pp. 21–22, 28]
+
+### BEAST
+
+BEAST delays URLs that exceed current budgets instead of permanently deleting them. It spreads addresses across multiple queues, giving a domain successive budget-sized allocations to later queues. After the active queues have been processed, the overflow queue is redistributed and the number of regular queues doubles. Strongly over-budget domains therefore move farther back and are rescanned less frequently. This permits later changes in reputation while preventing repeated full scans from dominating progress. [A/B; pp. 23–26]
+
+### Politeness and implementation
+
+The crawler uses an IP heap for server delays and a host heap for hostname delays, with addresses stored in a searchable tree connected to both heaps. Low-ranked domains receive a 40-second host delay and a default one-second server delay. Delays are reduced for higher budgets down to minimum values whose numbers are not supplied. Robots/DNS threads use the IP limit; the authors say a site cannot simultaneously be visited while its robots file is being fetched. [A; p. 23]
+
+The actual machine had four AMD Opteron CPUs at 2.6 GHz, 16GB RAM, and a 24-disk RAID-5 array. Its university connection was 1gb/s, with lower day/night policy limits. Software versions, seeds, a full executable configuration, and the domain-identification rule list are not supplied. There are no training/validation/test splits: this is a crawl and systems analysis, not a predictive-model training experiment. [A; pp. 21, 26]
+
+## 8. Experiments / Analyses
+
+| ID | Analysis | Setup and evidence | Result and qualification |
+|---|---|---|---|
+| X1 | Existing disk-check cost | Theorem 1; Mercator-B and Polybot under shared parameters | Both have quadratic leading byte-overhead terms at fixed RAM; this is analytical comparison, not a trillion-page benchmark |
+| X2 | DRUM overhead and projected speed | Theorems 2–3; Tables III–IV | Large reduction in overhead under stated RAM/disk conditions; 8-trillion-page rates are projections |
+| X3 | LRU hit-rate simulation | Crawl traces beginning after 1B or 4B pages; next 10E URLs for a cache of E entries | Sharp improvement between 4M and 8M entries; trace-based simulation, not a universal hit-rate law |
+| X4 | In-memory structure throughput | Four structures with E=16M; Table VI | CLOCK processes 2M URLs/s; model gives 3,577 pages/s under S_max=4,000 |
+| X5 | Hybrid optimization | Theorems 4–5; stepwise miss-rate approximation; Tables VII–VIII and Figure 3 | Best cache choice balances disk savings, lost buffer memory, and CPU costs; figure is hypothetical |
+| X6 | Budget-queue overhead | Theorems 6–7; common S, b, L, expected budget, and domain count | Naive rescans grow with crawl size; BEAST's required I/O has a fixed upper bound under the model |
+| X7 | Live-Web deployment | June 9–August 3, 2007; one server; 41.27 active days | 6.38B successful HTML responses, average 1,789 pages/s; pauses and bandwidth limits affect observed rates |
+| X8 | Domain allocation and ranking | Figure 7b, Table IX, manual top-1000 review | Download allocation rises with PLD in-degree; qualitative legitimacy review lacks a quantified classification protocol |
+| X9 | Hash-collision approximation | 64-bit hash space; Poisson approximation | Small expected omissions at 6.3B, rapidly increasing with scale; actual omitted URLs are not measured |
+
+X3 uses two trace positions, not two independent live deployments. X4 reports structure insertion throughput and then a model-based crawler limit. X5's rates can exceed the machine's assumed CPU ceiling because Table VIII reports the hybrid disk constraint, which must subsequently be coupled with cache CPU performance. X7 is the central empirical feasibility result; the other analyses explain mechanisms and projected scaling.
+
+No confidence intervals, hypothesis-test p-values, randomized controls, component ablations, or repeated full-scale runs are reported. This does not erase the deployment evidence, but it limits attribution of an exact speed improvement to any one component.
+
+## 9. Results
+
+**Large live crawl:** The server attempted 7,606,109,371 connections and received 7,437,281,300 valid HTTP replies. After excluding non-HTML content and errors/redirects, it retained 6,380,051,942 status-200 `text/html` responses. The authors describe these as unique pages in introductory language, but §9.2 explains that content-duplicate prevention was not enabled. The safe interpretation is successful HTML retrievals with URL-level uniqueness, not a content-distinct corpus. [A; pp. 4, 26, 29–30]
+
+**Link discovery:** The parser extracted 394,619,023,142 links. After invalid addresses and known non-HTML extensions were removed, 374,707,295,503 candidate links underwent uniqueness checking. URLseen contained 41,502,195,631 unique addresses associated with 641,982,061 sites. These are discovered identifiers, not 41.5 billion validated successful downloads. [A; p. 27]
+
+**Throughput and workload:** Mean download rates were 319 mb/s and 1,789 pages/s; peak 10-minute means were 470 mb/s and 3,134 pages/s. It received 143TB, including 254GB of robots files, and sent 1.8TB of HTTP requests. Parsing processed 161TB of HTML after decompression. The gzip library handled 1,050,955,245 pages, reported as 16% of the total, with a mean 1:5 compression ratio. [A; pp. 26–27]
+
+**Modeled disk scaling:** With 8GB RAM allocated under Table IV's model and N=8T, DRUM's overhead multiplier is 3.7, while Mercator-B's is 11,444. Under effective disk bandwidth W=101.25MB/s, the authors project 4,192 pages/s for DRUM, 1.4 for Mercator-B, and 0.2 for Polybot. These numbers apply to the URL-check disk portion and specified average link/URL sizes; they are not complete-system observations at 8T. [A; p. 15]
+
+**Cache costs:** For 16M entries, measured throughput ranges from 113K URLs/s for a balanced tree of strings to 2M URLs/s for CLOCK. The corresponding model-based maximum crawler rates range from 1,295 to 3,577 pages/s under a 4,000-pages/s CPU ceiling. The deployed IRLbot did not use URL RAM caching because DRUM's disk speed already exceeded the observed crawl peak. [A; pp. 17, 32]
+
+**Budget scheduling:** The naive queue model requires about 826MB/s at N=80B under the supplied example parameters. The BEAST bound is at most 8.2MB/s for those parameters, independently of N, with the final stage needing 128 regular queues at 80B. The bound depends on the model's fixed workload averages and domain/budget assumptions. [A; pp. 24–26]
+
+**Domain allocation:** There were successful responses from 117,576,295 sites within 33,755,361 PLDs. Ninety percent of visited domains contributed fewer than 586 pages; 99% contributed fewer than 3,044. Blogspot supplied the largest PLD contribution, 347,613 pages. The evidence demonstrates allocation according to a chosen policy, not an independently measured spam-detection accuracy. [A; pp. 27–28]
+
+## 10. Figure-by-Figure Interpretation
+
+### Figure 1 — Operation of DRUM
+
+This is a component diagram on p. 10, directly visually inspected. A stream of key/value/auxiliary tuples enters RAM. Separate key/value and auxiliary buffers feed paired disk queues for each bucket. A bucket buffer and a block-sized transfer buffer interact with persistent disk cache Z. Dashed boxes distinguish RAM from disk. Cylinders represent disk collections; arrows show data movement, not measured throughput. The figure supports the separation of compact sortable identifiers from longer payload strings. Sequential paired streams preserve the mapping needed to recover unique URLs after sorting.
+
+### Figure 2 — High-level organization of IRLbot
+
+The p. 12 diagram shows a loop from crawling threads through DRUM URLseen, STAR budget checking, BEAST budget enforcement, robots checking, and the ready queue back to crawling. A separate robots/DNS loop requests missing host information and updates RobotsCache. Failing exclusion checks leave through a discard path; unavailable records cause reconsideration. The diagram has no numeric axes or timing scale. It makes visible that uniqueness, budget eligibility, and robots permission are separate decisions, each with separate state. [B; pp. 11–12]
+
+### Figure 3 — Optimal cache size and crawling speed
+
+The two p. 20 panels are hypothetical explanatory curves, as the adjacent p. 19 text explicitly states. Horizontal axes are cache allocation c, running toward total RAM R. Vertical axes are supported speeds. The left panel compares a declining cache/CPU constraint with a potentially nonmonotonic hybrid disk constraint. The right panel plots their minimum and marks an optimum at c_opt and S_opt. No numerical optimum or uncertainty interval is supplied. The figure illustrates a bottleneck optimization: improving one subsystem beyond the other does not raise total throughput. Its shapes must not be read as measured IRLbot traces.
+
+### Figure 4 — Operation of STAR
+
+The p. 22 diagram receives newly extracted URLs and PLD-to-PLD link information from crawling threads. URLseen provides unique addresses; PLDindegree receives graph updates and answers budget checks. Addresses with attached budgets pass to BEAST; budget-passing addresses continue toward robots checking. The dashed STAR boundary groups reputation-related operations. The graph stream updates resource policy while the URL stream consumes that policy. The figure does not show a page-content classifier or semantic safety filter.
+
+### Figure 5 — Operation of BEAST
+
+The p. 24 diagram shows unique URLs receiving STAR budgets, entering a queue shuffler, and being spread across Q1, Q2, additional Qi queues, and overflow Q_F. Passing-budget output goes toward the robots-check queue. The queue labels are scheduling positions, not different content classes. The drawing compresses the iterative doubling procedure described on p. 25; it does not alone specify every temporal transition. It supports the central idea that deferred work is distributed across time rather than repeatedly examined at a constant frequency.
+
+### Figure 6 — Download rates during the experiment
+
+The two p. 26 panels plot crawl duration in days on linear horizontal axes, approximately 0–42. Panel a shows crawl rate in pages/s on a linear axis reaching 3,500; panel b shows receiving rate in mb/s on a linear axis reaching 500. Both are jagged time series of 10-minute averages, with recurring variation and pronounced changes near the end. The caption and text attribute fluctuations to university day/night limits. No error bars or statistical intervals appear. The exact mean and peak values come from the prose, not from measuring the drawn line. The paper's mean rates are 1,789 pages/s and 319 mb/s, and peak 10-minute rates are 3,134 pages/s and 470 mb/s. [A/B]
+
+### Figure 7 — Uniqueness evolution and STAR allocation
+
+Panel a, p. 27, plots pages crawled in billions against uniqueness probability p. Both axes are linear; the visible probability range is about 0–0.25. The curve initially falls and then stays near 0.11 through much of the crawl. The exact statement that stabilization occurs after the first billion pages comes from the prose. Panel b plots PLD in-degree against URLs crawled per PLD, with logarithmic tick progressions on both axes. The curve rises strongly with in-degree. Exact examples—1.2 pages at in-degree 1, 68 at in-degree 2, and 43K for in-degree at least 512K—are prose values on p. 28, not estimates taken from the line. Neither panel reports error bars, sample counts per bin, or a fitted uncertainty model. Panel b supports successful policy-driven allocation, rather than proving that higher allocation independently measures content quality.
+
+## 11. Table-by-Table Interpretation
+
+### Table I — Prior crawler data structures
+
+On p. 6, this visually inspected table compares seven implementations: WebCrawler, Internet Archive, Mercator-A, Mercator-B, Polybot, WebBase, and UbiCrawler. Columns identify year and storage choices for URLseen, RobotsCache, DNS cache, and pending queue. URLseen strategies include a database, site-based memory, LRU plus seek/batch disk operations, and tree plus batch processing. It establishes the categories analyzed later. Dashes indicate absent or unspecified entries in the authors' comparison; they should not be interpreted as independent proof that the original systems had no such functionality.
+
+### Table II — Model parameters
+
+The p. 8 text-only table defines N, p, U, R, l, n, q, b, H, and P. It distinguishes crawl size from links needing checks and URL strings from hashes. This table is foundational because different sections reuse some letters in other roles. No measured result or ranking appears here.
+
+### Table III — Fixed-resource disk overhead
+
+The p. 14 text-only table fixes R=1GB and D=4.39TB. For N=800M, 8B, 80B, 800B, and 8T, Mercator-B overhead is respectively 11.6, 93, 917, 9,156, and 91,541; Polybot is 69, 663, 6,610, 66,082, and 660,802; DRUM is 2.26, 2.35, 3.3, 12.5, and 104. These are dimensionless I/O multipliers. DRUM is best across all listed conditions but its own overhead eventually grows. The common example uses p=1/9, U=100M, b=110 bytes, and l=59 links/page. No uncertainty or significance test is reported.
+
+### Table IV — Disk space scaled with workload
+
+The p. 15 visually inspected table uses D(n)=max(pHn,10^12) and compares Mercator-B with DRUM for R=4GB and 8GB. At 4GB, the five Mercator-B values are 4.48, 25, 231, 2,290, 22,887; DRUM values are 2.30, 2.7, 3.3, 3.3, 8.1. At 8GB, Mercator-B values are 3.29, 13.5, 116, 1,146, 11,444; DRUM values are 2.30, 2.7, 3.3, 3.3, 3.7. The result is conditional on additional disk allocation; it is not a fixed-storage theorem of constant overhead for arbitrarily large crawls.
+
+### Table V — LRU cache hit rates
+
+The p. 16 text-only table compares trace segments beginning at 1B and 4B crawled pages. For cache sizes 256K, 4M, 8M, 16M, 64M, and 512M elements, hit rates at 1B are 19%, 26%, 68%, 71%, 73%, 80%; at 4B they are 16%, 22%, 59%, 67%, 73%, 78%. The jump between 4M and 8M is central. The 64M-entry conditions tie at 73%. These simulations use the next 10E extracted URLs; they are not full-crawl average hit rates for every possible crawl speed.
+
+### Table VI — Cache implementation speed
+
+The p. 17 text-only table uses 16M entries. Balanced trees of strings process 113K URLs/s using 2.2GB and yield model speed 1,295 pages/s. Tree-based LRU on 8-byte integers processes 185K with 1.6GB and yields 1,757. Balanced trees of 8-byte integers process 416K with 768MB and yield 2,552. CLOCK processes 2M with 320MB and yields 3,577. The model assumes S_max=4,000 pages/s. CLOCK is fastest and smallest among these listed configurations. No variability across repeated measurements is supplied.
+
+### Table VII — Hybrid overhead example
+
+The p. 18 text-only table fixes miss rate π=0.33 and cache allocation c=320MB, with scaled disk space. Across the same five crawl sizes, Mercator-B overhead at 4GB is 3.02, 10.4, 84, 823, 8,211; DRUM is 2.27, 2.4, 3.3, 3.3, 4.5. At 8GB, Mercator-B is 2.54, 6.1, 41, 395, 3,935; DRUM is 2.27, 2.4, 3.3, 3.3, 3.3. These α values apply to missed URLs; total traffic also includes the factor π in Equation 23. Reading α alone as total traffic reduction would miss that distinction.
+
+### Table VIII — Maximum hybrid disk-supported rates
+
+The p. 19 visually inspected table optimizes the hybrid disk constraint over cache size. For 4GB, Mercator-B supports 18,051, 6,438, 1,165, 136, 13.9 pages/s across the five sizes; DRUM supports 26,433, 25,261, 18,023, 18,023, 11,641. For 8GB, Mercator-B gives 23,242, 10,742, 2,262, 274, 27.9; DRUM gives 26,433, 25,261, 18,023, 18,023, 18,023. These values use a stepwise miss-rate approximation and are not achieved whole-server rates. Equation 26 subsequently adds the cache CPU constraint.
+
+### Table IX — High-ranked domains
+
+The p. 28 visually inspected table lists domain in-degree, main-page Google Toolbar PageRank, and downloaded pages. Microsoft has in-degree 2,948,085 and 37,755 pages; Google 2,224,297 and 18,878; Yahoo 1,998,266 and 70,143; Adobe 1,287,798 and 13,160; Blogspot 1,195,991 and 347,613; Wikipedia 1,032,881 and 76,322; W3 933,720 and 9,817; Geocities 932,987 and 26,673; MSN 804,494 and 10,802; Amazon 745,763 and 13,157. PageRank values range from 8 to 10. The rank column labels Wikipedia 7 and W3 6 despite their displayed in-degree ordering; both visual and text show this mismatch. It is unresolved. Counts also depend on link structure and politeness, so they are not a direct transformation of ranking alone.
+
+## 12. Diagram / Architecture Interpretation
+
+The architecture has three different feedback mechanisms. First, successful downloads generate new URLs, making the crawl recursively expand. URLseen prevents the same identifier from repeatedly reentering that expansion. Second, observed cross-domain links update reputation, which changes future budgets. Third, missing or expired robots/DNS information causes an address to wait while host records are refreshed. These loops operate on different types of state and must not be collapsed into one generic queue. [A/B; Figures 1–2 and 4–5]
+
+DRUM is a reusable state engine rather than the complete scheduler. STAR answers how much work a domain deserves under the chosen policy. BEAST answers when deferred work will be reconsidered. Host/IP heaps enforce when actual network requests may occur. RobotsCache answers whether a specific address may be retrieved under current exclusion rules. A URL can therefore be new but over budget, within budget but awaiting host information, or within budget but forbidden by exclusion rules.
+
+For security relevance, the architecture illustrates a separation between environmental data and operational eligibility. That is an analyst interpretation about this crawler's engineering structure. The paper does not claim that these stages prevent malicious instructions in page content, and it does not provide an AI-agent instruction hierarchy. Its demonstrated controls address workload expansion, scheduling, and responsible access.
+
+## 13. Equations and Mathematical Concepts
+
+### Notation and model boundaries
+
+In the URL-check model, N is downloaded-page scope, l is candidate links per page, n=lN is links requiring checks, p is uniqueness probability, U is initial URLseen entries, R is allocated RAM, b is average queued URL bytes, H is hash bytes, P is pointer bytes, and q is URL compression ratio. Overhead ω is total read/write bytes; α is a dimensionless multiplier with ω=αbn. In DRUM, M denotes a per-file memory buffer, k buckets, r a bucket's hash-byte size, Δ a minimum efficient block size, D available bucket storage, and Z the persistent collection. Later M is reused for a discovered-page count and then hash-space size; these meanings are not interchangeable. [A; pp. 8, 10–14, 27, 30]
+
+### Theorem 1 and Equations 1–7 — Existing batch checks
+
+Equation 1 gives Mercator-B α = 2(2UH+pHn)(H+P)/(bR)+2+p. Equation 2 gives Polybot α = 2(2Ubq+pbqn)(b+4P)/(bR)+p. Both calculate disk bytes per unit of incoming URL text under the stated double-buffer and steady-state assumptions. Larger n enlarges the growing-file merge term; larger RAM reduces the frequency of whole-file processing. [A; p. 8]
+
+Equations 3–4 sum per-batch disk costs and recover those formulas. The double buffers avoid stopping incoming URL production during a check. Equations 5–6 isolate quadratic leading terms: Mercator-B approximately 2(H+P)pH n²/R; Polybot approximately 2(b+4P)pbq n²/R. Equation 7 gives their ratio, (H+P)H/[bq(b+4P)]. With H=8, P=4, b=110, and compressed URL size bq=5.5 bytes, the authors report Mercator-B about 7.2 times faster asymptotically. This is a modeled comparison using an optimistic compression assumption, not a measured content-compression ratio. [A; p. 9]
+
+The lower bound for storing URL text before checking is α_min=2+p: one write, one read, and a write of the unique fraction. Keeping text in RAM gives an ideal lower bound p. These bounds are not claimed achievable in practice. [A; pp. 9–10]
+
+### Theorem 2 and Equations 8–18 — DRUM
+
+The rendered p. 12 identifies Equation 8's threshold as Λ=8MD(H+P)/(H+b). DRUM α is 8M(H+P)(2UH+pHn)/(bR²)+2+p+2H/b when R²<Λ; otherwise it is (H+b)(2UH+pHn)/(bD)+2+p+2H/b. The condition is R≥2Δ(H+P)/H, with M=256KB and minimum r≥Δ=32MB. The formula distinguishes insufficient RAM to exploit all proposed disk space from a regime in which the disk allocation is usable. [A/B; p. 12]
+
+Equation 9, r=(R−2Mk)H/(H+P), allocates RAM between open-file buffers and the sortable hash bucket, whose in-memory pointers increase its size. Equation 10, kr+krb/H=D, accounts for all bucket hashes and matching text. It yields the quadratic constraint 2Mk²−Rk+A=0, with A=(H+P)D/(H+b). [A/B; pp. 12–13]
+
+Equation 11 bounds bucket count so r remains at least Δ. When full D is infeasible, k0=R/(4M) maximizes usable bucket capacity. Equations 12–13 solve the quadratic and choose the smaller root k1=(R−√(R²−8MA))/(4M), reducing open handles and fragmentation. Equation 14 states an additional buffer-feasibility condition. Its detailed algebra is compressed; the controlling assumptions and allocation meaning are retained. [A/B; p. 13]
+
+Equation 15 sums temporary hash/text traffic, persistent-file traffic, and unique output. Equations 16–17 substitute the two feasible capacity regimes. Equation 18 gives D_opt=R²(H+b)/[8M(H+P)], matching disk allocation to RAM. The reported examples are 4.39TB for R=1GB and 17TB for R=2GB. At this operating point k_opt=R/(4M), and r_opt≈0.33R under the specified sizes. The leading quadratic term is reduced by factors 1,000 at 1GB and 8,000 at 8GB relative to Mercator-B. These are conditional asymptotic factors. DRUM's ideal multiplier for disk-stored text and hashes is 2+p+2H/b. [A; p. 14]
+
+### Theorem 3 and Equation 19 — Disk-supported rate
+
+S_disk=W/(αbl), where W is usable disk bytes/s. Each downloaded page generates l links of b bytes, multiplied by the disk-overhead factor α. Equating production time with checking time gives the rate ceiling. The example assumes 1GB/s reads, 350MB/s writes, a stated average of 675MB/s, and 15% allocated to URL checks: W=101.25MB/s. The exact averaging assumption is the authors' model, not an independent mixed-I/O benchmark. [A; p. 15]
+
+### Theorems 4–5 and Equations 20–26 — Caching
+
+Let c be cache bytes, γ bytes per entry, E=c/γ entries, π(c,S) miss probability, μ(c) unloaded cache throughput in URLs/s, and φ(S) CPU fraction used for crawling. Equation 20 gives S_cache=g⁻¹(μ(c)), with g(x)=lx/[1−φ(x)]. Equation 21, lS=μ(c)[1−φ(S)], expresses that the cache must process links as quickly as the crawl produces them. Under φ(S)=S/S_max, Equation 22 is S_cache=μ(c)S_max/[lS_max+μ(c)]. [A; pp. 16–17]
+
+Equation 23 gives hybrid total I/O: ω=α(πn,R−c)bπn. Cache misses reduce checked URLs, but cache memory subtracts from disk-batch memory. Equations 24–25 define S_hybrid implicitly through S=W/[α(π(c,S)n,R−c)bπ(c,S)l], using a monotonic inverse h. Because faster crawling can change misses, one cannot simply apply a fixed speedup without solving this dependence. [A; p. 18]
+
+Equation 26 chooses c_opt=arg max over c∈[0,R] of min(S_cache(c),S_hybrid(c)). The smaller subsystem limit controls throughput. The paper says to enable caching only if this optimum exceeds the no-cache disk limit. Figure 3 illustrates the optimization with hypothetical curves. The printed step-function intervals on p. 19 are shorthand sequential ranges; interpreting every less-than condition independently would overlap them. [A; p. 19]
+
+### Theorems 6–7 and Equations 27–33 — Budget scheduling
+
+Here S is pages/s, b queued bytes per URL, L unique URLs generated per downloaded page, V domains encountered in one overflow pass, and E[B_x] their finite expected budget. Equation 28 defines α_N=max(1,N/[E[B_x]V]); this differs from URL-check α. Equation 27 gives the naive queue's minimum I/O speed λ=2Sb(L−1)α_N. Repeatedly reading and rewriting accumulated failed addresses makes required bandwidth grow with N. [A; pp. 23–24]
+
+Equation 29 gives BEAST λ=2Sb{[2α_N/(1+α_N)](L−1)+1}≤2Sb(2L−1). Its upper bound is independent of crawl size under fixed workload parameters. Equations 30–32 provide the queue-doubling proof and connect iteration count to N. **Uncertainty:** the supplied Equation 30 numerator appears as `2TS(L−1)+jE[B_x]V`, while Equation 31 and the explanation of reading/writing regular queues suggest a possible missing factor on that regular-queue contribution. No rendered p. 25 is supplied to resolve this. The theorem and final bound are accurately reported as author results; the intermediate proof line is not silently corrected. [A; p. 25]
+
+Equation 33, visually resolved on p. 26, gives j=2^(ceil(log2(α_N+1))−1) regular queues in the last stage. The authors report 16 queues at 8B and 128 at 80B under the example parameters. The corresponding λ bound is 8.2MB/s. This is bounded processing bandwidth, not bounded total storage of all discovered URLs. [A/B; p. 26]
+
+### Equation 34 — Hash collisions
+
+In §9.3, M=2^64 is hash-space size and λ=N/M is expected occupancy per hash. Equation 34 states P(V_i≥2)=1−e^(−λ)−λe^(−λ)=λ²/2+O(λ³). Summing over bins gives expected collision events E[V]≈N²/(2M). For N=6.3B the authors report 1.075 missed pages/crawl, about 0.34 probability of no collision, and about 0.995 probability of at most four. These are approximate probabilistic calculations, not an observed list of omitted pages. [A; p. 30]
+
+The approximation assumes sparse, approximately Poisson occupancy. The paper does not demonstrate a collision-resistant adversarial hash construction. Its probability model should not be extended into a claim about resistance to deliberately chosen colliding URLs. [D]
+
+## 14. Interpretation and Discussion
+
+The paper's strongest empirical conclusion is feasibility: an integrated crawler on the specified machine completed a 6.38B-successful-HTML-response workload at sustained high throughput while using the authors' scheduling and politeness policies. The mathematical work explains why sequential batching and progressively deferred queues improve operational scaling. It does not show that a single machine physically downloaded trillions of pages or that all resources remain constant regardless of storage requirements. [A/D; pp. 14–15, 24–27, 31–32]
+
+The objectives connect to evidence as follows: O1 is supported by the deployment; O2 by DRUM's design, models, and integrated execution; O3 by policy-driven domain allocation and qualitative manual review; O4 by host/IP limits and disk queues; O5 by BEAST's theorem and reported experience with the naive implementation; O6 by trace simulations, insertion measurements, and coupled performance equations. Support is uneven: operational scale is measured directly, whereas complete spam exclusion and universal scheduling fairness are not established.
+
+Several consistency distinctions matter. The introductory 41-day and 6.3B descriptions are rounded summaries of 41.27 active days and 6,380,051,942 responses. The 117.6M responding sites are distinct from 642M sites appearing in discovered URLs. The 33.8M responding PLDs differ from 89.7M graph nodes, and responding IPs differ from all resolved IPs. These differences reflect different populations rather than obvious contradictions. [A; pp. 4, 26–27]
+
+The paper's approximately 0.11 uniqueness probability supports continued discovery under its traversal. The authors interpret this as discovery of only a small fraction of the Web, while admitting that useful-content fraction and unseen-page count are unknown. The analysis should preserve that qualification: sustained discovery is not a direct estimate of useful Web completeness. [A; p. 27]
+
+Two unresolved presentation issues remain: Table IX's swapped-looking rank labels and Equation 30's potentially inconsistent intermediate factor. A third wording issue occurs on p. 23: the text says the rate admitted into RAM is 'no less than' crawl rate while linking that relation to no backlog. As an analyst observation, that inequality alone does not establish no growth of waiting work; other coupling details or a reversed comparison may be intended. The report preserves the source wording and does not claim a formal backlog proof from it.
+
+## 15. Contributions and Novelty
+
+**Systems contribution:** an integrated single-server crawler combining disk-resident state, reputation budgeting, backlog scheduling, robots management, and host/server limits. The live run supplies substantial scale evidence. [A; pp. 3–4, 26–28]
+
+**Algorithmic contribution:** DRUM applies bucket-based disk processing to check/update operations; STAR assigns PLD-level budgets from incoming-domain links; BEAST schedules over-budget work using increasing numbers of queues. The article explicitly distinguishes established bucket sorting from its crawler-specific application. [A; pp. 10–11, 21–25]
+
+**Theoretical contribution:** models for batch-check overhead, DRUM allocation, disk-supported crawling rates, cache CPU and hybrid constraints, and naive versus improved budget enforcement. These formulas make assumptions and resource trade-offs explicit. [A; pp. 8–19, 24–26]
+
+**Empirical contribution:** reported crawl volumes, trace-based cache hit rates, memory-structure insertion rates, uniqueness evolution, and domain allocation. The discovered graph is large, but the supplied article does not establish a released dataset or reproduceable benchmark package. [A; pp. 16–17, 26–28]
+
+**Research-question relevance, analyst inference:** the work illustrates how repeated Web interaction exposes an automated system to resource-control and scheduling hazards originating outside its own implementation. It supplies an operational mechanism for a broader agent-security discussion, but no contribution about LLM cognition, instruction following, or comparative AI attack success.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+The reputation mechanism limits entire PLDs and may need finer host/subdirectory classification. PLD-level ranking alone is explicitly said to be insufficient against all spam. The budget function is conservative and limits coverage of highly linked large sites; exact coverage also depends on link structure and politeness. [A; pp. 21, 28]
+
+The deployed crawler does not prevent duplicate page contents. Duplicate-reduction methods have overhead and uncertain false-positive/bandwidth trade-offs, so this feature is deferred. Consequently, unique URLs do not guarantee distinct documents. [A; pp. 29–30]
+
+Eight-byte hashes can omit pages through collisions. Expected collisions grow quadratically, and the authors plan larger hashes at sufficiently high scale. DRUM also eventually has quadratic overhead with fixed RAM because bucket counts cannot grow without bound; its favorable behavior is argued for the practical range up to several trillion pages. [A; pp. 30–31]
+
+Distribution is potential functionality rather than a demonstrated deployment. Exact comparisons between recursive bucket sorting and merge sorting are beyond scope. Useful-content proportions and the number of unseen pages remain unknown. Caching was unnecessary for this run but may be required in faster crawls. [A; pp. 27, 29, 31–32]
+
+### Additional evidence-based analyst observations
+
+The live evaluation is one integrated run without reported component ablations or randomized comparisons. The top-1000-domain review is described qualitatively, without labeling criteria, annotator agreement, or a measured false-positive/false-negative rate. Domain popularity is therefore an allocation proxy, not demonstrated ground truth for legitimacy. [D]
+
+The raw traces, full configuration, rule list, and executable implementation are not supplied here. The article reports scalar averages and peaks but not repeat-run dispersion. The collision analysis is probabilistic rather than an adversarial attack evaluation. For the user's research question, the absence of LLM systems and standalone comparisons is a decisive scope limitation, not a negative experimental result about those systems.
+
+## 17. Threats to Validity
+
+These categories are analyst interpretations; the paper does not present a formal validity taxonomy.
+
+**Internal validity:** several components change together, so deployment success does not isolate each component's causal contribution. Maintenance, upgrades, and changing bandwidth caps further affect observed throughput. The model comparisons clarify mechanisms but are not randomized live comparisons. [D; pp. 24, 26]
+
+**Construct validity:** 'unique pages' primarily reflects distinct URL identifiers, while useful content, semantic distinctness, and spam status are different constructs. PLD in-degree approximates reputation, and downloaded pages per domain measure allocation, not attack-blocking accuracy. [D; pp. 21, 27–30]
+
+**External validity:** the evidence comes from the 2007 Web, one server configuration, one institutional link, and one budget policy. Generalization to a different environment, workload, or faster agent must retain the paper's resource and behavior assumptions. No current-Web claim is independently verified here. [D]
+
+**Statistical conclusion validity:** no reported confidence intervals or independent repetitions quantify uncertainty around throughput or legitimacy assessment. Collision probabilities are calculated under a model; they are not empirical confidence intervals. [D]
+
+**Ecological validity:** a live Web deployment has substantial real-environment value, including politeness and network constraints that simulations can miss. However, it is a crawler workload, not an interactive LLM-agent workload. [D]
+
+**Reproducibility:** equations and major hardware details are supplied, but complete code, data, seed list, domain rules, and intermediate measurement artifacts are not included. Reported feasibility can be understood; exact reproduction cannot be completed from this supplied material alone. [D]
+
+## 18. Future Work and Open Questions
+
+### A. Future work explicitly proposed by the authors
+
+Refine and assess reputation algorithms, mine the collected data, add finer-grained spam classification within domains and subdirectories, examine content-duplicate reduction, increase hashes at much larger scales, and study sorting trade-offs outside the present analysis. Faster crawls may need caching for major DRUM collections. Distributed deployment is discussed as possible, with PLD-based partitioning and localized budget queues. [A; pp. 28–32]
+
+### B. Additional open questions logically remaining
+
+How much useful content is delayed by conservative domain budgets? How well does domain in-degree resist a coordinated collection of paid domains? How should a new but useful low-in-degree domain gain allocation? What happens when workload averages or the number of domains change rapidly? How much throughput is attributable individually to DRUM, STAR, and BEAST? These are analyst questions arising from supplied design choices, not measured answers. [D]
+
+For the target security question, the missing study would have to compare a standalone LLM with an otherwise comparable Web-connected agent under defined attacks and outcomes. This paper does not supply that comparison. Its operational hazards can motivate candidate measurements—resource consumption, progress loss, queue expansion, and delay—but cannot establish comparative vulnerability or semantic attack rates. [D]
+
+## 19. Terminology and Notation Glossary
+
+| Term/symbol | Beginner-friendly meaning and caution |
+|---|---|
+| IRLbot | The authors' implemented crawler; the supplied text does not expand the name |
+| DRUM | Disk Repository with Update Management; reusable disk-backed checking and updating |
+| STAR | Spam Tracking and Avoidance through Reputation; domain-budget assignment |
+| BEAST | Budget Enforcement with Anti-Spam Tactics; deferred-work scheduling |
+| BFS | Breadth-first search; an expanding traversal order vulnerable to queue domination |
+| URLseen | Encountered URL identifiers, including addresses not ultimately downloaded |
+| RobotsCache | Stored exclusion rules and host data |
+| RobotsRequested | Host identifiers used to coordinate requests for robots information |
+| FQDN | Fully qualified domain name; the paper's host/site identifier |
+| PLD | Pay-level domain; STAR's coarse budgeting unit |
+| TLD / cc-TLD | Top-level domain / country-code top-level domain |
+| DNS | Domain Name System; resolves hostnames to addresses |
+| HTTP | Hypertext Transfer Protocol; the request/reply traffic reported by the paper |
+| HTML | Hypertext Markup Language; the page-content category retained in the main count |
+| LRU / CLOCK | Memory-cache replacement policies considered in §5 |
+| FIFO | First-in-first-out ordering, used to match auxiliary strings to identifiers |
+| RAID-5 | The reported 24-disk storage configuration; its internal design is not explained by this paper |
+| N | Downloaded-page scope in most models; collision section uses URL population under analysis |
+| n / l | Checked links / average checked links per downloaded page; n=lN |
+| L | Unique discovered URLs per downloaded page; differs from l, which includes duplicates |
+| p | Probability that an encountered URL is new |
+| b / H / P | Queued URL bytes / hash bytes / pointer bytes |
+| R / c / D | Allocated RAM / cache RAM / disk space used in the relevant model |
+| M | Reused notation: per-file buffer, discovered-address count, or hash-space size, depending on section |
+| α / ω | Dimensionless URL-check overhead multiplier / total disk bytes |
+| B_x / d_x / F | Domain budget / PLD in-degree / function mapping in-degree to budget |
+| τ_h / τ_s | Per-host / per-server access delays |
+| π / μ / φ | Cache miss probability / cache throughput / crawling CPU fraction |
+| λ | Budget I/O requirement in §7; hash occupancy in §9.3; meanings differ |
+| Frontier | Discovered addresses waiting to be crawled |
+| mb/s / MB/s | The paper distinguishes network-rate notation from disk-byte-rate notation; preserve case and context |
+
+## 20. Key Numerical Results
+
+Values below retain the paper's representation. Model outputs are author-reported calculations, not analyst-derived deployment measurements.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Active crawl | 41.27 | days | Pauses excluded | Author-reported | p. 26, §8.1 |
+| Connection attempts | 7,606,109,371 | connections | Live run | Author-reported | p. 26 |
+| HTTP replies | 7,437,281,300 | replies | Live run | Author-reported | p. 26 |
+| Successful HTML | 6,380,051,942 | responses | Status 200, text/html | Author-reported | p. 26 |
+| Mean download rate | 319; 1,789 | mb/s; pages/s | Active run | Author-reported | p. 26 |
+| Peak 10-minute mean | 470; 3,134 | mb/s; pages/s | Peak averaging window | Author-reported | p. 26 |
+| Received data | 143 | TB | Includes robots traffic | Author-reported | pp. 26–27 |
+| Robots data | 254 | GB | Part of received data | Author-reported | pp. 26–27 |
+| Sent HTTP requests | 1.8 | TB | Live run | Author-reported | p. 27 |
+| Parsed HTML | 161 | TB | Uncompressed processing | Author-reported | p. 27 |
+| Gzip-handled pages | 1,050,955,245 | pages | Reported as 16% | Author-reported | p. 27 |
+| Parsed links | 394,619,023,142 | links | Before filtering | Author-reported | p. 27 |
+| Checked candidate links | 374,707,295,503 | links | After invalid/non-HTML filtering | Author-reported | p. 27 |
+| Discovered unique addresses | 41,502,195,631 | URLs | URLseen | Author-reported | p. 27 |
+| Discovered sites | 641,982,061 | sites | Associated with URLseen | Author-reported | p. 27 |
+| Responding sites | 117,576,295 | sites | HTTP responses received | Author-reported | p. 27 |
+| Responding PLDs | 33,755,361 | PLDs | Responding-site population | Author-reported | p. 27 |
+| Responding-site IPs | 4,260,532 | IPs | Hosting responding sites | Author-reported | p. 27 |
+| PLD graph | 89,652,630; 1,832,325,052 | nodes; edges | Discovered graph | Author-reported | p. 27 |
+| DNS workload | 260,113,628 | lookups | Live run | Author-reported | p. 27 |
+| Resolved IPs | 5,517,743 | IPs | DNS lookup population | Author-reported | p. 27 |
+| Candidate links/page | ≈59 | links/page | K/N | Author-reported | p. 27 |
+| Unique URLs/page | ≈6.5 | URLs/page | Discovered count/N | Author-reported | p. 27 |
+| Mean URL text / queue record | 70.6; ≈110 | bytes | Text excludes http://; record includes metadata | Author-reported | p. 27 |
+| URLseen size | 332 | GB | Hash collection on disk | Author-reported | p. 27 |
+| Later uniqueness probability | ≈0.11 | probability | After first billion downloads | Author-reported | p. 27, Fig. 7a |
+| Low-ranked host/server delay | 40; 1 | seconds | Before budget-based reductions | Author-reported | p. 23 |
+| Default budget | 10 | pages | Non-top-10K PLDs | Author-reported | p. 28 |
+| Preferred-domain budget range | 10–10K | pages | Top-10K ranked PLDs | Author-reported | p. 28 |
+| Maximum PLD contribution | 347,613 | pages | Blogspot | Author-reported | p. 28 |
+| Domain contribution thresholds | <586; <3,044 | pages | 90%; 99% of visited domains | Author-reported | p. 28 |
+| DRUM projected disk rate | 4,192 | pages/s | N=8T, R=8GB, W=101.25MB/s | Author-reported model | p. 15 |
+| Mercator-B / Polybot projected rate | 1.4; 0.2 | pages/s | Same modeled scale | Author-reported model | p. 15 |
+| BEAST I/O bound | ≤8.2 | MB/s | Example workload, independent of N | Author-reported model | p. 26 |
+| Naive budget I/O | 826 | MB/s | N=80B, example workload | Author-reported model | p. 24 |
+| Final regular queues | 16; 128 | queues | N=8B; N=80B | Author-reported model | p. 26 |
+| Expected hash omissions | 1.075 | pages/crawl | N=6.3B, 64-bit approximation | Author-reported model | p. 30 |
+
+## 21. Claim–Evidence Map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence Strength |
+|---|---|---|---|---|
+| One server sustained a billion-scale crawl | 6.38B successful HTML responses, 41.27 active days | X7; Fig. 6 | p. 26 | HIGH for reported run; content uniqueness not established |
+| Existing batch checks scale poorly at fixed RAM | Quadratic leading terms and overhead tables | X1; Theorem 1; Tables III–IV | pp. 8–9, 14–15 | HIGH conditional mathematical evidence |
+| DRUM reduces repeated disk scanning | Hash buckets, paired streams, one collective persistent-file pass | X2; Figs. 1–2; Theorem 2 | pp. 10–14 | HIGH for design; extreme-scale speed remains modeled |
+| Memory caching may reduce total speed | Measured insertion rates and coupled limits | X3–X5; Tables V–VIII; Fig. 3 | pp. 16–19 | HIGH conditional; graphical curves hypothetical |
+| Highly branching sites can dominate BFS | Authors' early crawl observations | §6.1 | p. 20 | HIGH for attribution; no detailed attack experiment supplied |
+| STAR allocates domain-level budgets | PLD graph state and in-degree-based budget function | X8; Fig. 4 | pp. 21–22, 28 | HIGH for mechanism; legitimacy remains a proxy |
+| BEAST prevents growing rescan bandwidth | Queue doubling and fixed λ upper bound | X6; Fig. 5; Theorem 7 | pp. 25–26 | HIGH for stated result; intermediate Eq. 30 uncertainty retained |
+| PLD ranking is incomplete spam protection | Explicit acknowledgment of finer-grained needs | §8.2 | p. 28 | HIGH author-stated limitation |
+| URL uniqueness is not content uniqueness | Duplicate prevention not enabled | §9.2 | pp. 29–30 | HIGH scope qualification |
+| Fixed-RAM DRUM is not asymptotically linear forever | Bounded bucket count and quadratic term | §9.4 | p. 31 | HIGH author-stated boundary |
+| Web interaction creates operational attack exposure | Delay, branching, DNS, and backlog mechanisms | §§1.2, 6–7 | pp. 3, 20–24 | MEDIUM analyst inference for AI-agent research relevance |
+| The paper does not establish agents-versus-LLMs vulnerability | Study scope is crawler design and deployment | Entire supplied inventory | pp. 1–34 | HIGH scope observation; no comparative AI experiment |
+
+## 22. Very Simple Explanation
+
+Imagine a robot librarian following every reference in an enormous library. Each book points to more books. Before adding a reference to its to-do list, the robot must check whether it has already seen it. It must also obey each room's visiting rules. Some rooms contain useful collections; others keep printing new references forever. A few deliberately make every visit extremely slow.
+
+IRLbot handles the huge to-do list with three ideas. DRUM checks many references together using organized disk storage. STAR gives each domain a changing allowance based on links from other domains. BEAST places excess work farther into the future, so the robot does not repeatedly spend all its time reconsidering the same overwhelming pile. It still limits visits to individual hosts and shared servers.
+
+The researchers used these ideas to download about 6.38 billion successful HTML pages on one server. That is a substantial practical result. But a new address is not necessarily new content, a popular domain is not necessarily free of spam, and a formula predicting trillion-page performance is not the same as actually running that crawl.
+
+For Web AI agents, the useful lesson is about the environment: an automated system that keeps interacting with websites can be led into endless work, delays, and overloaded queues. This paper shows those hazards for a crawler. It does not test whether a Web AI agent follows malicious instructions or whether it is more vulnerable than an LLM that does not browse.
+
+## Completeness Audit
+
+This audit uses the supplied document inventory as its denominator. 'Represented in compressed form' means the substantive role, evidence, conditions, and limitations are retained while repeated prose, intermediate algebra, or bibliographic detail is reduced. It does not mean that every original sentence is reproduced.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, venue, abstract | Yes, text and p. 1 visual | Yes | Fully represented | Authors: Hsin-Tsang Lee, Derek Leonard, Xiaoming Wang, Dmitri Loguinov; Texas A&M; ACM Transactions on the Web 3(3), Article 8, June 2009; DOI 10.1145/1541822.1541823 |
+| §1 Introduction | Yes | Yes | Represented in compressed form | Framing and contribution overview retained |
+| §1.1 Scalability | Yes, text | Yes | Fully represented | Three-way scope/speed/resource objective |
+| §1.2 Reputation and Spam | Yes, text | Yes | Fully represented | Branching, DNS, and delay hazards |
+| §1.3 Politeness | Yes, text | Yes | Fully represented | Backlog and responsible-access tension |
+| §1.4 Contributions | Yes | Yes | Fully represented | DRUM, STAR, BEAST, deployment |
+| §2 Related Work | Yes, text | Yes | Represented in compressed form | Prior crawler categories retained; historical records summarized below |
+| §3 Objectives and Classification | Yes | Yes | Fully represented | Scope and operation |
+| §3.1 Crawler Objectives | Yes | Yes | Fully represented | Seed-reachable scope, useful subset, single-server rationale |
+| §3.2 Crawler Operation | Yes, text and visual | Yes | Fully represented | Five phases and state collections |
+| §4 Scalability of Disk Methods | Yes | Yes | Fully represented | Algorithms, models, comparison |
+| §4.1 Algorithms | Yes, text | Yes | Represented in compressed form | Seek and batch mechanisms retained |
+| §4.2 Modeling Prior Methods | Yes, text | Yes | Represented in compressed form | Theorem 1, Eqs. 1–7; proof summations compressed |
+| §4.3 DRUM | Yes, text and visual | Yes | Fully represented | Streams, buckets, operations, crawler objects |
+| §4.4 DRUM Model | Yes, mixed visual/text | Yes | Represented in compressed form | Theorem 2, Eqs. 8–18; feasibility algebra compressed |
+| §4.5 Comparison | Yes, mixed visual/text | Yes | Fully represented | Tables III–IV and Theorem 3 conditions |
+| §5 Caching | Yes | Yes | Fully represented | Hit rate, speed, hybrid constraints |
+| §5.1 Cache Hit Rate | Yes, text | Yes | Fully represented | Trace positions and 10E simulation length |
+| §5.2 Cache Speed | Yes, text | Yes | Fully represented | Measurements and Theorem 4 |
+| §5.3 Hybrid Performance | Yes, mixed visual/text | Yes | Fully represented | Theorem 5 and optimum rule |
+| §6 Spam and Reputation | Yes | Yes | Fully represented | Mechanism and scope |
+| §6.1 BFS Problems | Yes, visual/text | Yes | Fully represented | Legitimate and malicious branching distinguished |
+| §6.2 Massive-Site Control | Yes, visual/text | Yes | Fully represented | PLD definitions, resource proxy, STAR |
+| §7 Politeness and Budgets | Yes | Yes | Fully represented | Network delays and scheduling |
+| §7.1 Rate Limiting | Yes, visual/text | Yes | Fully represented | Host/IP heaps and unspecified minimum delays |
+| §7.2 Budget Checks | Yes, mixed visual/text | Yes | Represented in compressed form | Naive design, queue doubling, Theorems 6–7 |
+| §8 Experiments | Yes, visual/text | Yes | Fully represented | Main deployment and domain analysis |
+| §8.1 Summary | Yes, visual/text | Yes | Fully represented | Hardware, workload, filtering, rates, discovery |
+| §8.2 Domain Reputation | Yes, visual/text | Yes | Fully represented | Policy, graph, allocation, review limits |
+| §9 Caveats | Yes, text | Yes | Fully represented | All six subsections included |
+| §9.1 Distributed Operation | Yes, text | Yes | Represented in compressed form | Proposed localization; no deployment |
+| §9.2 Duplicate Pages | Yes, text | Yes | Fully represented | Disabled content deduplication and trade-offs |
+| §9.3 Hash Collisions | Yes, text | Yes | Represented in compressed form | Eq. 34, approximations, scale boundary |
+| §9.4 Disk-Sort Optimality | Yes, text | Yes | Represented in compressed form | Fixed-RAM quadratic boundary and recursive alternative |
+| §9.5 Robot Expiration | Yes, text | Yes | Represented in compressed form | Details added below |
+| §9.6 Caching | Yes, text | Yes | Fully represented | Actual no-cache configuration |
+| §10 Conclusion | Yes, text | Yes | Fully represented | Integrated conclusion and future work |
+| Figures 1, 2, 4, 5 | Yes, direct vision and text | Yes | Fully represented | Architecture and data/control flow |
+| Figure 3, both panels | Yes, direct vision and text | Yes | Fully represented | Hypothetical, no numeric optimum |
+| Figure 6, both panels | Yes, direct vision and text | Yes | Fully represented | Exact results from text, trends from plot |
+| Figure 7, both panels | Yes, direct vision and text | Yes | Fully represented | Uniqueness and allocation, logarithmic panel b |
+| Tables I, IV, VIII, IX | Yes, direct vision and text | Yes | Fully represented | Table IX rank discrepancy flagged |
+| Tables II, III, V, VI, VII | Yes, text only | Yes | Fully represented | No claim of visual inspection |
+| Theorems 1–7 | Yes | Yes | Represented in compressed form | Assumptions, consequences, linked equations retained |
+| Equations 1–7 | Yes, text | Yes | Represented in compressed form | Existing-check derivation |
+| Equations 8–15 | Yes, visual/text | Yes | Represented in compressed form | DRUM allocation and feasibility |
+| Equations 16–19 | Yes, text; p. 15 visual | Yes | Represented in compressed form | Allocation substitution and disk rate |
+| Equations 20–26 | Yes, text | Yes | Represented in compressed form | Cache and hybrid models |
+| Equations 27–29 | Yes, visual/text | Yes | Fully represented | Naive and BEAST bounds |
+| Equations 30–32 | Yes, text | Yes | Uncertain | Proof compressed; Eq. 30 transcription/factor unresolved |
+| Equation 33 | Yes, visual/text | Yes | Fully represented | Ceiling resolved from rendered p. 26 |
+| Equation 34 | Yes, text | Yes | Represented in compressed form | Collision approximation |
+| Algorithms | Yes | Yes | Fully represented | Narrative procedures; no numbered pseudocode blocks supplied |
+| Objectives O1–O6 | Yes | Yes | Fully represented | Organizer IDs, not invented formal author questions |
+| Formal hypotheses | Assessed | Yes | Not present | No hypothesis-test framework supplied |
+| Analyses X1–X9 | Yes | Yes | Fully represented | Analytical, simulated, measured, and deployed evidence separated |
+| Major contributions | Yes | Yes | Fully represented | System, algorithms, theory, empirical evidence |
+| Author-stated limitations | Yes | Yes | Fully represented | Coarse reputation, duplicates, hashes, asymptotics, scope |
+| Footnote 1, historical Web-size estimates | Yes, text | Yes | Represented in compressed form | Historical author context, not current verified facts |
+| Footnote 2, bucket-sort novelty | Yes, visual/text | Yes | Fully represented | Established technique versus application |
+| Footnote 3, other disk demands | Yes, visual/text | Yes | Fully represented | URL checks use only allocated bandwidth |
+| Footnote 4, bandwidth caps | Yes, visual/text | Yes | Fully represented | Exact values added below |
+| Acknowledgments and rights/publication notices | Yes | Yes | Inspected but compressed as non-substantive | Not methodological evidence |
+| References | Yes, pp. 33–34 text and p. 34 visual | Yes | Represented in compressed form | Bibliography inspected; cited works not independently reviewed |
+| Appendices | Assessed | Yes | Not present in supplied article | No appendix claimed reviewed |
+| Supplementary files | Assessed | Yes | Not supplied | No detected supplied supplement |
+| Trace, implementation, custom PLD rules, collected corpus | No | Yes, absence disclosed | Missing from supplied material | Mentioned artifacts cannot be independently assessed |
+
+### Secondary details retained for coverage
+
+The related-work section reports Mercator's prior fully disclosed crawl as 721M pages over 17 days, including 473M HTML pages; a separately cited fastest crawler is described as 816 pages/s over 25M pages. The cited AltaVista graph is described as 1.4B pages and 6.6B links. These are historical author-reported literature summaries, not independent replications or directly comparable controlled benchmarks. [A; p. 5]
+
+The introduction's footnote estimates January 2008 Google and Yahoo indexes as 30B and 37B pages using site queries, and reports a cited Google statement about links to more than one trillion unique pages. These estimates are contextual and historically dated. They are not externally verified here or used as current measurements. [A; p. 2]
+
+For robots expiration, IRLbot begins with one day, doubles the interval when the file is unchanged up to seven days, and resets to one day on change. It honors crawl-delay and wildcards, and supplies a user-agent project page and manual/email exclusion route. The authors report conflicting webmaster expectations and describe the schedule as a compromise. [A; p. 32]
+
+The day bandwidth limit is 250mb/s on days 5–32 and 200mb/s otherwise; the night limit is 500mb/s. The live hardware link's nominal 1gb/s capacity therefore does not imply permission to consume that capacity continuously. [A; p. 26, footnote 4]
+
+Distributed-operation estimates are over 97% local URL-hash hits, about 3% requiring transmission, and over 80% of parsed URLs staying on the same server for crawling. PLD edges have a stated 16-byte footprint. These are estimates/discussion for a proposed distribution strategy, not observed multi-server performance. [A; p. 29]
+
+The collision discussion reports a frontier of 35B addresses with approximately 33 expected omissions and P(V≤50)=0.997. It places the likely transition to insufficient 8-byte hashes between 100B and 10T, where expected collisions rise from 271 to 2.7M. These populations and approximations differ from the 6.3B downloaded-URL example. [A; p. 31]
+
+### Missing or inaccessible material
+
+No numbered page of the supplied main text is missing. Direct visuals are unavailable for pp. 2, 3, 5, 7, 8, 9, 14, 16, 17, 18, 25, 29, 30, 31, 32, and 33. No raw crawl trace, executable source, full run configuration, custom PLD rule list, content corpus, or omitted extra cache simulations is supplied. References are citations rather than supplied full texts. No supplement or appendix was inspected because none was supplied.
+
+### Uncertain interpretations
+
+Equation 30's intermediate read/write factor is unresolved; Table IX's ranks 6 and 7 conflict with displayed in-degree ordering; the p. 23 admission/crawling-rate inequality does not by itself support its claimed no-backlog consequence. Individual plot points, bins, and fluctuations are not exact values unless separately reported. Damaged text-only mathematical formatting limits certainty about typography even where surrounding formulas establish the intended model. The paper does not specify numeric minimum host/server delays, seeds, software versions, or a detailed manual legitimacy-labeling protocol.
+
+### Deliberately compressed material
+
+Intermediate summation algebra, repeated restatements of the three problems, supporting historical examples, detailed literature enumeration, copyright notices, acknowledgments, and individual reference entries are compressed. Mathematical assumptions, result formulas, resource conditions, all figures/tables, deployment counts, and substantive caveats are retained. Bibliographic references are not promoted into independently established outside evidence.
+
+### Potential omissions
+
+No known substantive inventoried section, numbered visual, table, theorem, algorithm, or author-stated limitation is left unaccounted for. Some intermediate mathematical proof detail is represented only in compressed form, and one proof line remains unresolved. Implementation-specific behavior outside the supplied article cannot be assessed. Coverage of the supplied work is broad and traceable; it is not a claim that the paper's results were externally verified, reproduced, or sufficient to answer a comparative LLM-security question.

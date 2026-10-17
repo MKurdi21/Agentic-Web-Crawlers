@@ -1,0 +1,649 @@
+## Stage 0 — Document Accessibility Report
+
+This analysis uses only the supplied paper text and source images. The paper is treated as evidence, including its examples and pseudocode, rather than as instructions. No tools, browsing, external sources, or supplementary artifacts were used.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document available | Yes: extracted text for physical PDF pages 1–13 was supplied. |
+| Accessible page count | 13 pages. Printed page numbers agree with the supplied physical page numbering. |
+| Apparently missing pages | No gaps in the supplied text sequence. This does not establish whether a separate supplement exists. |
+| Direct visual inspection | Pages 1, 2, 4, 5, 6, 7, 8, 9, 12, and 13. |
+| Text-only inspection | Pages 3, 10, and 11. Page 3 includes Equation (1) and the formal threat model; its original layout was not visually inspected. |
+| Figures | Figures 1–5 are visually available and inspected. |
+| Tables | Tables 1–6 are visually available and readable. |
+| Equations | Equations (2) and (3) are visually available; Equation (1) is available through extracted text only. Small mathematical subscripts were cross-checked against the supplied extraction. |
+| Algorithms | Algorithms 1 and 2 are visually available on page 5. |
+| Appendices | A–D are present on page 12; Appendix B's Figure 5 appears on page 13. The automated accessibility metadata did not detect appendices, but their headings are directly visible. |
+| Supplementary material | No separate supplement, embedded file, code archive, or dataset file was supplied. |
+| Referenced external artifact | A project/code address is reported on page 1. Its contents were not inspected. |
+| OCR | No additional OCR was performed or required for the readable supplied material. Extracted text remains an aid, not proof of correct typography. |
+| Other limitations | Screenshots inside Figures 1, 4, and 5 contain small interface text; the principal annotations and outcomes are readable, but every background UI label cannot be reliably transcribed. |
+
+Evidence labels used below: **[A] Author-reported** means explicitly stated in the paper; **[B] Directly observable** means visible in a supplied visual; **[C] Analyst-derived** means calculated from supplied numbers, with operands shown; **[D] Analyst interpretation** means an inference rather than an author statement. No **[E] External information** is introduced. Confidence is HIGH for clearly readable statements and numbers, MEDIUM for bounded methodological interpretations, and UNKNOWN where necessary details are absent.
+
+The analysis concerns an empirical machine-learning security paper with an algorithm and system-specific evaluation. It is not a controlled comparison of standalone language models against web agents. The user's research question—why web AI agents are more vulnerable than standalone LLMs—is therefore addressed through a clearly labeled interpretation of the attack mechanism, not a directly measured comparative finding.
+
+## 1. Plain-language orientation
+
+**[A]** AdvAgent studies how a malicious webpage can redirect an AI assistant that is carrying out a legitimate web task. The intended task might be to add Microsoft stock to a portfolio or look up Tylenol side effects. The attacker wants the assistant to keep using the same input field and operation but substitute a different argument, such as NVIDIA or Aspirin. The attack is therefore more specific than merely making the assistant say something inappropriate: it attempts to change an executable action.
+
+**[A]** The researchers build a model that generates adversarial prompts, hide those prompts in webpage HTML attributes that do not change the rendered appearance, and train the generator using feedback about successful and unsuccessful attacks. They use a two-stage training process: supervised fine-tuning on successful prompts, followed by direct preference optimization using successful and failed prompts. The target agent is SeeAct, evaluated with GPT-4V and Gemini 1.5 backends.
+
+**[A]** Table 1 reports mean step-based attack success rates of 97.5% for GPT-4V-based SeeAct and 99.8% for Gemini-based SeeAct. These are averages across four selected domains, not established probabilities of completing an entire harmful transaction. Three tested prompt-based defenses leave mean attack success rates between 88.8% and 89.8% against the Gemini-based agent. Changing attack targets remains highly successful, while transferring prompts between backends and changing injection position can substantially reduce success.
+
+**[D]** For the research question, the important mechanism is that a web agent receives attacker-controlled environmental content while having the ability to act on a user's behalf. In SeeAct, even a visually unchanged page can supply altered HTML during action grounding. This creates an opportunity for website content to be interpreted as an instruction that changes an action argument. The paper demonstrates this opportunity in its tested system; it does not quantify how much more vulnerable agents are than otherwise matched standalone LLMs.
+
+## 2. Document roadmap and inventory
+
+The original title is **AdvAgent: Controllable Blackbox Red-teaming on Web Agents**. The authors are Chejian Xu, Mintong Kang, Jiawei Zhang, Zeyi Liao, Lingbo Mo, Mengqi Yuan, Huan Sun, and Bo Li. Page 1 identifies the Proceedings of the 42nd International Conference on Machine Learning, Vancouver, Canada, PMLR 267, 2025, and the arXiv version 2410.17401v4 dated 31 May 2025. Affiliations are University of Illinois Urbana-Champaign, University of Chicago, and The Ohio State University. A footnote states that Mengqi Yuan's work was done while interning at UIUC. No separate keywords block is visible.
+
+| Inventory ID | Original item | Pages | Role |
+|---|---|---:|---|
+| ABS | Abstract | 1 | Problem, proposed framework, results, defenses, code availability claim |
+| S1 | 1. Introduction | 1–2 | Motivation, research gap, contributions |
+| S2 | 2. Related Work | 2–3 | Web agents and existing attacks |
+| S3.1 | 3.1. Preliminaries on Web Agent Formulation | 3 | Sequential agent model and action triplet |
+| S3.2 | 3.2. Threat Model | 3–4 | Objective, access, stealthiness, controllability |
+| S3.3 | 3.3. Challenges of Attacks against Web Agents | 4 | Discrete search, black-box constraints, efficiency |
+| S4 | 4. AdvAgent: Controllable Black-box Attacks on Web Agents | 4 | Framework overview |
+| S4.1 | 4.1. Automatic Attack and Feedback Collection | 4–5 | HTML design and feedback collection |
+| S4.2 | 4.2. Adversarial Prompter Model Training | 5 | SFT and DPO |
+| S5.1 | 5.1. Experimental Settings | 6 | Victim, dataset, metric, implementation, baselines |
+| S5.2 | 5.2. Effectiveness of AdvAgent | 6–7 | Main comparison |
+| S5.3 | 5.3. In depth analysis of AdvAgent | 7–8 | Ablation, variations, target changes, transfer |
+| S5.4 | 5.4. Case Studies | 8–9 | Small prompt differences and outcomes |
+| S6 | 6. Mitigation Strategies and Blue-teaming | 8–9 | Three prompt-based defenses |
+| S7 | 7. Conclusion | 9 | Findings and qualification |
+| ACK/IMP | Acknowledgements and Impact Statement | 9 | Funding and intended security purpose |
+| REF | References | 10–11 | Bibliographic support; not independently verified |
+| AA | A. Additional Experiment Result | 12 | Gemini controllability |
+| AB | B. Additional Examples | 12–13 | Two qualitative examples |
+| AC | C. Additional Related Work | 12 | Standalone LLM red-teaming positioning |
+| AD | D. Limitations | 12 | Offline feedback and step-based evaluation |
+| F1–F5 | Figures 1–5 | 2, 4, 7, 9, 13 | Overview, training, ablation, paired cases, examples |
+| T1–T6 | Tables 1–6 | 6, 7, 8, 8, 8, 12 | Main ASR, variations, controllability, transfer, defenses, appendix result |
+| ALG1/ALG2 | Algorithms 1 and 2 | 5 | Prompt collection and model training |
+| E1–E3 | Equations (1)–(3) | 3, 5, 5 | Agent policy, SFT loss, DPO loss |
+
+Additional mathematical expressions are the stealth constraint I(h)=I(h_adv), the target action a_adv=(o,r_adv,e), and deterministic target replacement D. They are substantive and explained below despite lacking independent equation numbers. No theorem, lemma, proposition, proof, formally numbered research question, or explicit statistical hypothesis appears. Seven quantitative experiment types and a qualitative case analysis are registered in Section 8.
+
+## 3. Background and context
+
+**[A]** A large language model (**LLM**) is the paper's language-oriented foundation-model component; a vision-language model (**VLM**) also receives visual information. The paper describes web agents as systems that combine such backend models with website observations and executable actions. A web agent is thus evaluated as a larger system than its model alone.
+
+**[A]** SeeAct first generates an action description using the task and a webpage screenshot, then maps that description to HTML content to interact with the page. HTML is the page representation containing elements and attributes. A rendered screenshot is the visual image produced from that representation. An attribute can contain text that is available in HTML without appearing as ordinary page text in the screenshot. The paper uses this separation for its stealth constraint.
+
+**[A]** Red-teaming means constructing attacks to expose vulnerabilities. A targeted attack aims for a specified wrong outcome. Black-box access means the attacker lacks the agent framework, backend weights, and logits but can obtain responses to adversarial inputs. White-box approaches use privileged model information, such as gradients. Transfer attacks optimize or obtain an attack for one model and apply it to another.
+
+**[A]** Supervised fine-tuning (**SFT**) trains the prompter to assign high probability to successful attack examples. Direct preference optimization (**DPO**) is the second-stage objective used to favor successful prompts relative to unsuccessful prompts, with a fixed reference policy. Reinforcement learning from AI feedback (**RLAIF**) is the authors' characterization of this overall feedback-driven training strategy. Attack success rate (**ASR**) measures how often the target action occurs under the paper's success definition. These terms must not be confused with successful completion of a full legitimate or malicious task.
+
+**[D]** A beginner-friendly interpretation of the core problem is source confusion: information from a webpage can compete with the user's instruction. The paper's examples suggest that a fabricated correction embedded in the environment can be treated as a change in what the user wants. This interpretation is supported by the paired case studies, but no internal model reasoning experiment establishes precisely how the backend represents that conflict.
+
+## 4. Research problem and gap
+
+**Existing problem [A], pp. 1–3:** Web agents autonomously interact with websites and can access sensitive resources. Attacks that redirect those interactions can have consequences in finance, healthcare, commerce, and other domains. The paper concentrates on wrong action arguments rather than all possible security failures.
+
+**Shortcomings attributed to previous approaches [A], pp. 1, 3–4:** Some attacks require white-box access for optimization; some rely on manually written prompts or heuristic scenarios; and transfer approaches can fail when backend models differ. The authors argue that these requirements restrict practicality, scalability, and flexibility. These are the paper's judgments of prior work, not independent assessments of the cited literature.
+
+**Research gap [A]:** The authors seek an automated, adaptable targeted attack framework that works without backend weights or logits, learns from victim feedback, preserves the page's visual appearance, and allows targets to change without retraining or renewed optimization.
+
+**Motivation [A]:** Systematically uncovering weaknesses is presented as a way to inform stronger defenses before deployment. The Impact Statement explicitly frames the intended contribution as improving security rather than facilitating misuse.
+
+**Scope [A/D]:** Experiments use SeeAct with two proprietary backends and a selected Mind2Web subset across finance, medical, housing, and cooking domains. The authors state that the attack strategy can apply to other agents using screenshots and/or HTML, but no direct evaluation of another agent framework is supplied. Consequently, cross-framework applicability is a proposed scope claim rather than a demonstrated result.
+
+## 5. Research questions, objectives, and hypotheses
+
+The paper supplies objectives and evaluative questions in prose rather than formal RQ labels. It does not present explicit null or alternative hypotheses. For traceability, the following IDs organize those stated objectives; the wording is an analytical organization of the paper, not a claim that the authors published numbered questions.
+
+| ID | Objective grounded in the paper | Evidence/test |
+|---|---|---|
+| O1 | Develop an automated black-box targeted attack on web agents | §§3–4, Algorithms 1–2 |
+| O2 | Measure effectiveness relative to selected attack baselines | §5.2, Table 1 |
+| O3 | Determine whether adding feedback-based DPO improves attack generation | §5.3, Figure 3 |
+| O4 | Assess sensitivity to injection position and HTML field | §5.3, Table 2 |
+| O5 | Assess target controllability without re-optimization | §5.3, Tables 3 and 6 |
+| O6 | Compare cross-backend transfer with direct feedback-based attacks | §5.3, Table 4 |
+| O7 | Evaluate three common prompt-based defenses | §6, Table 5 |
+| O8 | Illustrate small textual changes associated with different outcomes | §5.4, Figure 4 |
+
+**User research question [D]:** Why are web AI agents more vulnerable than standalone LLMs? The paper contributes evidence about environmental HTML, hidden instructions, action grounding, and consequential wrong arguments. It does not test a matched standalone-LLM condition. Therefore, it supports a mechanism-based explanation of added exposure and potential consequence, but cannot establish a comparative vulnerability rate or isolate autonomy as a causal factor.
+
+## 6. Assumptions / Threat Model
+
+**[A], §3.1, p. 3:** At time t, the agent receives the current observation s_t, task T, and previous actions A_t. The observation contains HTML h_t and screenshot i_t=I(h_t). An action is a triplet (o_t,r_t,e_t): operation, operation argument, and target HTML element. The agent then repeats this process as the website updates.
+
+**[A], §3.2, pp. 3–4:** The attack changes the argument from r to r_adv while holding operation o and element e fixed. The attacker can modify webpage HTML, producing h_adv, and can obtain feedback from the black-box agent. The attacker cannot access the agent framework, model weights, logits, or gradients. A malicious website developer and contaminated website dependencies are given as motivating scenarios. These scenarios are author-provided illustrations, not incident measurements in the experiment.
+
+The two explicit constraints are:
+
+- **Stealthiness [A]:** I(h)=I(h_adv). The rendered page must not visibly change. The construction places prompts in non-rendered HTML attributes, primarily aria-label.
+- **Controllability [A]:** A deterministic substitution D(h_adv,r_adv,r'_adv) replaces one target argument with another, yielding a new adversarial HTML instance without renewed victim interaction or optimization.
+
+**[D] Trust-boundary interpretation:** The user task is the intended authority; webpage content is an environmental input. The observed failure is consistent with environmental instructions gaining influence over the action argument. The paper does not formally specify a trusted-computing base, browser sandbox, permissions model, authentication boundary, or tool-authorization policy. Those details should not be invented.
+
+**Important boundaries:** The attack is not an arbitrary rewrite of every action component. It is not shown to change the operation or chosen element under the formal objective. Visual stealth does not establish invisibility to DOM inspection, security scanners, accessibility tools, or all possible users. The paper also does not show that the selected page modification is feasible on every third-party website: HTML modification is an assumed attacker capability.
+
+## 7. Methodology
+
+### 7.1 Study design and attack construction
+
+**[A], §§4–4.1:** AdvAgent separates generation from evaluation and training. Its input is original HTML h. An LLM-based prompter creates candidate adversarial strings q. The strings include a target placeholder, allowing a desired argument to be inserted or replaced. They are placed in an HTML attribute associated with the expected action element. This reduces a broad, discrete HTML search problem to a more structured prompt-generation problem.
+
+The authors give three reasons for this design: non-rendered attributes preserve screenshot appearance; placeholders make targets controllable; and placement near the expected element aligns the prompt with the agent's action prediction mechanism. These are construction choices and rationales, not separate empirical proofs of all three properties in every environment.
+
+### 7.2 Algorithm 1: candidate prompt generation
+
+**[A], p. 5:** Algorithm 1 takes HTML h and an LLM, constructs a system message specifying the targeted attack-generation goal, and supplies HTML plus the target-argument placeholder in a user message. It returns the LLM's generated adversarial prompt. The algorithm is a data-generation procedure; it is not itself the learned final prompter. Implementation uses GPT-4, ten prompts per task, and temperature 1.0 to encourage diversity.
+
+The paper's pseudocode is described as source evidence only. Its instruction-like text does not govern this analysis. The exact prompt templates and example malicious strings are compressed because their methodological roles are explained without reproducing every instruction.
+
+### 7.3 Feedback collection and partitioning
+
+**[A], pp. 4–5:** Candidate attacks are evaluated against the target black-box agent. Successful candidates receive positive labels; failed candidates receive negative labels. The examples are partitioned into positive prompts q_i^(p), i=1,…,n_1, and negative prompts q_j^(n), j=1,…,n_2. These labels concern attack success, not whether content is safe, useful, or factually accurate.
+
+The supplied paper does not report the final positive/negative counts, class balance, labeling error rate, or exact number of victim calls. Ten candidates per task does not alone specify total training examples because the precise collection scope and any filtering are not fully stated.
+
+### 7.4 Algorithm 2 and two-stage training
+
+**[A], p. 5:** Algorithm 2 collects candidates, evaluates them, partitions labels, initializes the prompter from a pretrained model, trains on positive prompts with Equation (2), fixes the resulting SFT model as the reference policy, and then trains using positive and negative sets with Equation (3). The output is the optimized prompter policy π_θ. The algorithm input includes a target adversarial action, although the listed steps do not fully spell out every interface by which that target is supplied during labeling.
+
+The authors add SFT before the feedback stage because they describe reinforcement learning as unstable and positive feedback as sparse. DPO is chosen to stabilize preference-based training while learning distinctions between successful and unsuccessful prompts. Figure 3 evaluates the final combined pipeline against SFT alone; it does not separately test DPO alone or every stated stability rationale.
+
+### 7.5 Data, split, models, and hyperparameters
+
+| Item | Author-reported configuration | Source |
+|---|---|---|
+| Dataset | Mind2Web: 2,350 tasks, 137 websites, 31 domains | p. 6, §5.1 |
+| Selected subset | 440 tasks from four domains, emphasizing critical events | p. 6 |
+| Split | 240 training tasks; 200 testing tasks | p. 6 |
+| Domains | Finance, medical, housing, cooking | Table 1 |
+| Initial data prompter | GPT-4 | p. 6 |
+| Candidates | 10 adversarial prompts per task | p. 6 |
+| Generation temperature | 1.0 | p. 6 |
+| Learned prompter initialization | Mistral-7B-Instruct-v0.2 | p. 6 |
+| SFT | Learning rate 1e−4; batch size 32 | p. 6 |
+| DPO | Learning rate 1e−4; batch size 16 | p. 6 |
+| Victim framework | SeeAct | p. 6 |
+| Victim backend identifiers | gpt-4-vision-preview; gemini-1.5-flash | p. 6 |
+
+No hardware, GPU count, training duration, optimizer, epoch count, random seed, DPO β value, prompt-length limit, decoding settings for the final prompter, or run-repetition count is supplied. Per-domain task counts and website-level train/test separation are not reported. No participant recruitment, human annotation study, or demographic population is involved.
+
+### 7.6 Baselines, metric, and statistics
+
+**[A], p. 6:** GCG is adapted to maximize the probability of the target action triplet, optimized against LLaVA-NeXT, and transferred to the black-box victim. Agent-Attack uses an adapted black-box injection attack manually curated against GPT-4V-based agents. InjecAgent uses an adapted GPT-4 prompt-generation algorithm. These are task-specific implementations of cited baselines, not unrestricted measurements of every version of those methods.
+
+**[A]** Success requires exact agreement with a_adv=(o,r_adv,e) at an individual step. Correct argument alone is insufficient if the operation or element is wrong. Table means and standard deviations summarize variation across the four domains. They are not reported confidence intervals or uncertainty across independent training runs. No hypothesis test, significance level, p-value, or statistical-power analysis is supplied.
+
+## 8. Experiments / Analyses
+
+| ID | Purpose and manipulated condition | Setup/evidence | Main result and caveat |
+|---|---|---|---|
+| X1 | Main effectiveness: attack method and backend | Selected Mind2Web tasks; four methods; two SeeAct backends; Table 1 | AdvAgent means 97.5% and 99.8%; evaluated at action steps, not complete tasks |
+| X2 | Training ablation: SFT versus SFT+DPO | Figure 3; same four domain labels | Mean 69.5% versus 97.5%; isolates adding the second stage within the reported pipeline |
+| X3 | Injection position and HTML attribute | Successful standard-setting attacks changed to before element e or from aria-label to id; Table 2 | Position mean 71.0%; field mean 97.0%; conditional on initially successful attacks |
+| X4 | Target controllability on GPT-4V | Successful prompts retargeted to unseen arguments; Table 3 | 98.5 ± 2.7%; no denominator or alternative-target inventory supplied |
+| X5 | Target controllability on Gemini | Corresponding appendix experiment; Table 6 | 100.0 ± 0.0%; conditional reuse test, not unconditional universal success |
+| X6 | Cross-backend transfer versus direct attack | 25 successful GPT-4V attacks per domain transferred to Gemini; Table 4 | Transfer 18.0 ± 24.4%; direct 99.8 ± 0.3%; direct row is not explicitly established as the same selected 100 examples |
+| X7 | Defenses on Gemini | None, sequence enclosure, instruction, sandwich; Table 5 | Defended means 89.8%, 88.8%, 89.8%; only three prompt-based strategies tested |
+| X8 | Qualitative sensitivity and outcomes | Two paired prompts in Figure 4; two test examples in Figure 5 | Tiny wording changes accompany different action arguments; not a quantified general law |
+
+No formal hypotheses are tested. Each experiment answers a stated evaluation objective rather than a pre-registered hypothesis. X3–X6 are distinct from X1 because they condition on previously successful prompts or change the attack's reuse context. Their high percentages should not be merged into a single universal attack-success number.
+
+For X6, **[C] analyst-derived** selected transfer sample size is 25×4=100 attacks, assuming the stated 25 selections in each of the four domains are counted once. The paper explicitly states the 25-per-domain rule; this derived total does not resolve other experiments' denominators.
+
+## 9. Results
+
+**Main effectiveness [A], Table 1:** Against GPT-4V SeeAct, AdvAgent reaches 100.0% in finance, 94.4% in medical, 97.6% in housing, and 98.0% in cooking. Against Gemini SeeAct, results are 99.2%, 100.0%, 100.0%, and 100.0%. AdvAgent is the strongest reported method in every domain/backend cell. GCG's adapted transfer implementation reaches 0.0% in all cells.
+
+**Baseline context [A]:** GPT-4V means are 45.4% for Agent-Attack and 64.3% for InjecAgent. Gemini means are 25.0% and 28.0%, respectively. InjecAgent has the higher average baseline performance in both backends, but is not the best baseline in every domain. In Gemini finance and cooking, Agent-Attack exceeds InjecAgent. This nuance is visible in Table 1 despite the prose emphasizing InjecAgent's average advantage.
+
+**Training feedback [A/C]:** Figure 3 reports a mean increase from 69.5% with SFT only to 97.5% with SFT+DPO. **Analyst-derived:** 97.5−69.5=28.0 percentage points. Cooking increases from 49.2% to 98.0%, a derived 48.8-point increase. These are absolute percentage-point changes, not relative percentage improvements. The evidence supports improved performance after adding DPO in this configuration; it does not isolate whether successful examples, failed examples, additional optimization, or their combination accounts for every gain.
+
+**Reuse sensitivity [A]:** HTML-field replacement retains 97.0% mean ASR, but moving position reduces the mean to 71.0% and finance to 26.0%. The appropriate conclusion is strong attribute-transfer performance with meaningful positional sensitivity. An unqualified assertion that attacks are robust to all variations would omit an important result.
+
+**Controllability [A]:** Replacing targets in successful attacks yields 98.5% mean ASR on GPT-4V and 100.0% on Gemini. This supports the designed target-substitution property within the evaluated cases. It does not prove zero implementation overhead or success for all possible arguments.
+
+**Transfer [A]:** GPT-4V-generated successful attacks transfer poorly on average to Gemini: 18.0% versus 99.8% for direct AdvAgent. Medical transfer is 60.0%, showing that transfer is not uniformly impossible. **[C]** The reported mean difference is 99.8−18.0=81.8 percentage points; this is a descriptive contrast across the reported conditions, not a paired causal effect established on identical samples.
+
+**Defense [A]:** Finance benefits most from the tested defenses, dropping from 99.2% to 61.6%, 57.2%, or 65.6%. Housing and cooking remain at 100.0% under all three defenses. The authors' conclusion that these prompt-based defenses offer limited protection is supported within this evaluation. The result does not establish that all defenses fail.
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Attack overview, p. 2
+
+**[B]** The upper peach-colored region contains a source webpage, a prompter-model icon, an adversarial string, and a modified webpage region. Arrows show the page entering the prompter and the string being added to the page. A downward arrow identifies the resulting malicious website. The lower blue strip shows the legitimate Microsoft-stock request, a web-agent icon, and a resulting NVIDIA-stock action. Logos and color accents distinguish the intended and attacker-selected companies.
+
+This is a process diagram, not a statistical plot: no axes, units, scale, confidence interval, or measured error bar apply. The important observable contrast is the intended company versus the redirected company. The caption explicitly states that the string is hidden in invisible HTML fields and leaves rendering unchanged. The figure illustrates the threat model; it does not independently prove completed financial harm or universal screenshot equivalence.
+
+### Figure 2 — Training flow, p. 4
+
+**[B]** The upper row shows candidate prompt collection into an adversarial dataset, followed by feedback collection from the black-box web agent and a labeled positive/negative dataset. The lower row shows feedback data feeding SFT, an SFT prompter model, and then DPO producing the adversarial prompter. Solid and dashed arrows represent progression and data/model inputs. Black node diagrams depict models; database cylinders depict stored examples.
+
+There are no quantitative axes. The figure explains that victim feedback is collected before training and used in two stages. A consistency problem remains: the diagram says to collect adversarial prompts using Algorithm 2, while its caption and the method describe candidate generation using Algorithm 1. The caption also contains an unresolved '??' reference. The method and Algorithm 2 clarify the intended sequence, but the editorial mismatch must remain visible.
+
+### Figure 3 — Training-stage ablation, p. 7
+
+**[B]** This grouped bar chart has finance, medical, housing, cooking, and average on the x-axis, and Attack Success Rate (ASR) on the y-axis. Tick labels run from 0 to 100 in increments of 20 on a linear scale. Light blue denotes SFT only; darker blue denotes SFT+DPO. Values above bars are exact visually readable labels rather than estimates.
+
+| Domain/category | SFT only | SFT+DPO |
+|---|---:|---:|
+| Finance | 94.8 | 100.0 |
+| Medical | 59.2 | 94.4 |
+| Housing | 74.8 | 97.6 |
+| Cooking | 49.2 | 98.0 |
+| Average | 69.5 | 97.5 |
+
+The chart shows improvement in every domain, largest in cooking and smallest in finance. No error bars, confidence intervals, statistical markers, or repeated-run dispersion are shown. The combined-stage values agree with Table 1's GPT-4V row; the figure does not independently present a Gemini ablation. Its caption's 'significant improvement' should be understood as the author's descriptive wording because no statistical significance test is supplied.
+
+### Figure 4 — Paired wording changes, p. 9
+
+**[B]** Two horizontal cases each contain a webpage thumbnail, a failed adversarial prompt, a successful prompt, and associated web-agent actions. Red text labels failures/successes; green marks original targets; red marks replacement outcomes. The stock case contrasts a purported correction using 'you' versus 'I'; only the latter is labeled successful. The medication-search case contrasts a statement without versus with 'previous'; only the latter changes the typed term from Tylenol to Aspirin.
+
+These are categorical illustrations without axes or units. Their purpose is to show that minor wording differences can accompany different outcomes and motivate preference learning. The figure does not report repeated trials, a population frequency for either edit, or a controlled psycholinguistic explanation. Several example labels spell the attribute 'arial-label', whereas the method says 'aria-label'; this discrepancy is discussed in Section 14.
+
+### Figure 5 — Additional qualitative examples, p. 13
+
+**[B]** The upper panel shows a portfolio task asking for Microsoft, quantity one, and an annotated adversarial HTML fragment paired with an action description that types NVIDIA into an investment textbox. The lower panel shows a Tylenol-side-effects request, an annotated fragment, and an action that types Aspirin into a search field. Arrows connect webpage, prompter, and agent action.
+
+The figure contains exact displayed element identifiers 8 and 16 and a quantity of 1; these identify examples rather than dataset scale or model settings. No axes or uncertainty intervals apply. The visible actions support wrong-argument behavior. The caption and Appendix B describe a stock purchase, while the displayed action itself is typing a stock name; the complete transaction is not visually shown. The embedded fragments also use 'arial-label' and refer to 'AdvWeb', unlike the main method's terminology. These labels are not silently corrected or treated as verified executable HTML.
+
+## 11. Table-by-table interpretation
+
+All reported ASR cells below are percentages. Domain columns D1–D4 mean finance, medical, housing, and cooking. Tables 1–4 and 6 describe their last column as mean and standard deviation across domains. Table 5 reports means only. Bold type indicates highlighted high values, not statistical significance.
+
+### Table 1 — Main attack comparison, p. 6
+
+| Backend | Method | D1 | D2 | D3 | D4 | Mean ± Std |
+|---|---|---:|---:|---:|---:|---:|
+| GPT-4V | GCG | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 ± 0.0 |
+| GPT-4V | Agent-Attack | 26.4 | 36.0 | 61.2 | 58.0 | 45.4 ± 14.6 |
+| GPT-4V | InjecAgent | 49.6 | 47.2 | 73.2 | 87.2 | 64.3 ± 16.7 |
+| GPT-4V | AdvAgent | 100.0 | 94.4 | 97.6 | 98.0 | 97.5 ± 2.0 |
+| Gemini 1.5 | GCG | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 ± 0.0 |
+| Gemini 1.5 | Agent-Attack | 35.6 | 4.8 | 26.0 | 33.6 | 25.0 ± 12.2 |
+| Gemini 1.5 | InjecAgent | 11.2 | 11.6 | 67.2 | 22.0 | 28.0 ± 23.0 |
+| Gemini 1.5 | AdvAgent | 99.2 | 100.0 | 100.0 | 100.0 | 99.8 ± 0.3 |
+
+AdvAgent wins every domain. Gemini has three 100.0% AdvAgent cells, while GPT-4V has one. GCG ties at the minimum everywhere. The means summarize domains rather than a disclosed pooled count. No missing-value notation or table-specific significance test appears. Small mean-rounding questions are addressed in Section 14; reported values are preserved here.
+
+### Table 2 — Injection variations, p. 7
+
+| GPT-4V variation | D1 | D2 | D3 | D4 | Mean ± Std |
+|---|---:|---:|---:|---:|---:|
+| Different Position | 26.0 | 82.0 | 88.0 | 88.0 | 71.0 ± 26.1 |
+| Different HTML Field | 98.0 | 94.0 | 98.0 | 98.0 | 97.0 ± 1.7 |
+
+The source population is successful standard-setting attacks. Position is changed from after to before the expected element; the field is changed from aria-label to id. Attribute replacement is stronger in every domain. Housing and cooking tie within both rows. Finance is the weakest positional cell. The table supports two different conclusions: good field reuse and substantial positional fragility. It supplies no selected-example count or significance test.
+
+### Table 3 — GPT-4V target controllability, p. 8
+
+One AdvAgent row reports D1=100.0, D2=93.8, D3=100.0, D4=100.0, and mean±standard deviation 98.5±2.7. Original targets in successful attacks are replaced with alternative targets while operation and element stay fixed. Medical is the only non-perfect domain. There is no baseline row or statistical significance marker. The result evaluates reuse of successes, not fresh attack generation over every task.
+
+### Table 4 — GPT-4V-to-Gemini transfer, p. 8
+
+| Gemini condition | D1 | D2 | D3 | D4 | Mean ± Std |
+|---|---:|---:|---:|---:|---:|
+| Transfer from GPT-4V | 0.0 | 60.0 | 4.0 | 8.0 | 18.0 ± 24.4 |
+| Direct Attack | 99.2 | 100.0 | 100.0 | 100.0 | 99.8 ± 0.3 |
+
+Transfer uses 25 successful source attacks per domain. Finance transfer fails entirely; medical transfers much more successfully than the other domains. Direct attacks dominate all four cells. The direct row matches Table 1. No paired-example analysis, matching budget comparison, or uncertainty across training repetitions is supplied.
+
+### Table 5 — Prompt defenses, p. 8
+
+| Gemini defense | D1 | D2 | D3 | D4 | Mean |
+|---|---:|---:|---:|---:|---:|
+| None | 99.2 | 100.0 | 100.0 | 100.0 | 99.8 |
+| Sequence | 61.6 | 97.6 | 100.0 | 100.0 | 89.8 |
+| Instruction | 57.2 | 98.0 | 100.0 | 100.0 | 88.8 |
+| Sandwich | 65.6 | 93.6 | 100.0 | 100.0 | 89.8 |
+
+For this table, lower ASR means a stronger defense. Instruction has the lowest overall mean and finance result; sandwich has the lowest medical result; sequence and sandwich tie on mean. All conditions tie at 100.0% in housing and cooking. No standard deviation is shown. The supplied defense descriptions do not establish the exact inserted templates, repetitions, or an adaptive retraining protocol against each defense.
+
+### Table 6 — Gemini target controllability, p. 12
+
+The single AdvAgent row is 100.0 in every domain, with 100.0±0.0 across domains. This extends Table 3's retargeting analysis to Gemini. The zero domain standard deviation is not proof of zero statistical uncertainty or universal retargeting reliability. Sample size and alternative-argument distribution remain unspecified.
+
+## 12. Diagram / Architecture Interpretation
+
+The substantive architecture diagrams are Figures 1 and 2, with action-flow illustrations in Figures 4 and 5. They are not additional independent experiments.
+
+**[A/B] Data path:** Original HTML enters a candidate generator. Its output is an adversarial string containing a target placeholder. That string is embedded in a selected HTML attribute. The resulting page is supplied to SeeAct, whose screenshot-based description and HTML grounding produce an executable action. The returned action is compared with the intended attack triplet to produce a label.
+
+**[A/B] Training path:** Candidate strings and labels form a dataset. Positive strings feed SFT. The SFT model becomes both the starting trained generator and the fixed reference policy for DPO. Positive and negative strings then guide the second-stage update. The final model produces attack strings automatically.
+
+**[D] Control-flow boundary:** The diagrams represent an offline collect-then-train pipeline, not a demonstrated continuous live feedback loop that updates the generator during an ongoing browser session. Appendix D explicitly identifies online feedback as future work. Likewise, deterministic argument replacement is a reuse transformation, not a second model-training stage.
+
+**[D] Security interpretation:** Figure 1 emphasizes that unchanged pixels do not imply unchanged agent input when HTML is also consumed. The paper's particular failure route is therefore connected to the interface between screenshot-based reasoning and HTML-based action grounding. It does not establish which internal stage alone causes every failure, because no stage-isolation experiment is reported.
+
+## 13. Equations and mathematical concepts
+
+### Equation (1): sequential action policy, p. 3
+
+**[A; text-only inspection]** a_t = Π(s_t,T,A_t) = Π({i_t,h_t},T,A_t).
+
+Π is the backend agent policy; T is the requested task; A_t is the sequence of previous actions; s_t is the current observation; i_t is the rendered screenshot; and h_t is HTML. The output a_t is an executable action. This is a functional system description, not a training loss or a claim that all backends implement the expression identically. The key point is that both the visual rendering and the underlying HTML can enter the decision process.
+
+### Action target and stealth constraint, pp. 3–4
+
+**[A]** a_adv=(o,r_adv,e) fixes the operation and element while replacing the argument. I maps HTML to its rendered screenshot, so I(h)=I(h_adv) expresses exact rendering invariance as the desired stealth condition. The supplied material does not provide a pixel-difference measurement or browser-by-browser proof of this constraint.
+
+**[A]** h'_adv=D(h_adv,r_adv,r'_adv) expresses deterministic replacement of one attacker-selected argument with another. It is an HTML transformation, not the agent policy. Its purpose is to reuse a successful string without victim re-optimization. The paper's example changes a company argument while preserving the rest of the attack.
+
+### Equation (2): SFT loss, p. 5
+
+**[A/B]** L_SFT(θ)=−E_h[Σ_(i=1 to n_1) log π_θ(q_i^(p)|h)].
+
+θ denotes learned prompter parameters. π_θ(q|h) is the prompter's conditional probability of a prompt given original HTML. q_i^(p) is a positive, successful prompt; n_1 is the positive count. log converts probabilities into log-likelihoods; the sum combines positive examples; E_h denotes expectation over HTML inputs. Minimizing the negative quantity favors higher probability for successful examples. The distribution underlying E_h and normalization of the displayed sum are not detailed in the supplied paper.
+
+This stage teaches the generator the distribution of successful strings before preference learning. It does not directly optimize task accuracy or page rendering. The constraints arise mainly from the attack representation and placement, rather than an explicit stealth penalty in this equation.
+
+### Equation (3): DPO loss, p. 5
+
+**[A/B]** L_DPO(θ)=−E_h[Σ_(i∈{1,…,n_1}, j∈{1,…,n_2}) log σ(β log[π_θ(q_i^(p)|h)/π_ref(q_i^(p)|h)] − β log[π_θ(q_j^(n)|h)/π_ref(q_j^(n)|h)])].
+
+q_j^(n) is a failed prompt; n_2 is the negative count. π_ref is fixed and initialized from the SFT model π_SFT. σ is the logistic function. β regulates deviation from the reference policy according to the authors. Its numerical value is not reported.
+
+The objective compares relative likelihood changes for a successful and an unsuccessful prompt under the trainable model versus the reference. **[D] Plain-language interpretation:** Training favors a larger relative score for successful strings than for failed strings, while comparing both to the SFT reference. This gives the generator information that positive-only SFT lacks. The displayed double-index sum indicates positive/negative combinations, but implementation details about pairing, subsampling, and matching prompts to a shared HTML instance are absent. The equation must not be treated as a complete runnable training specification.
+
+No mathematical theorem or proof is offered. Figure 3 provides empirical support for the two-stage objective's usefulness in the tested setting; it does not prove convergence, optimality, or guaranteed attack success.
+
+## 14. Interpretation and Discussion
+
+**[D] Relevance to the user's comparative question:** The strongest paper-grounded answer concerns exposure and consequence. A web agent processes website material that may come from an attacker, can consume hidden HTML as well as visible pixels, and converts its decisions into executable operations. The examples show that attacker-provided wording can alter an argument while preserving the expected operation and element. This makes environmental instruction handling and action grounding relevant security boundaries. However, the experiment does not establish greater susceptibility than standalone LLMs under matched inputs, attackers, budgets, or outcomes.
+
+**[A/D] Objectives versus evidence:** O2 is supported by Table 1; O3 by Figure 3; O4 by Table 2; O5 by Tables 3 and 6; O6 by Table 4; O7 by Table 5; and O8 by Figure 4. O1 is represented by the framework and pseudocode, with incomplete reproduction details. No formal hypothesis-support judgment can be made because no hypotheses or tests are stated.
+
+The following cross-reference issues matter:
+
+1. **Figure 2 algorithm mismatch, p. 4:** Its diagram refers to Algorithm 2 for prompt collection, while the caption and methodology specify Algorithm 1. The caption also contains '??'. The intended pipeline is recoverable from page 5, but the visual reference is editorially inconsistent.
+2. **Attribute terminology, pp. 4, 7 versus 9, 13:** The method uses 'aria-label'; example annotations use 'arial-label'. Both the images and extraction show the example spelling. The supplied evidence cannot establish whether this is a display typo or reflects the implemented attribute. It should not be silently repaired.
+3. **Framework name, p. 13:** Example fragments say 'Prompt optimized by AdvWeb', whereas the paper is about AdvAgent. No explanation for this alternate label is supplied.
+4. **Defense threshold wording, pp. 2, 9 versus Table 5:** Prose says ASR is 'above' or 'exceeding' 88.8%, but Table 5 contains an exact mean of 88.8%. The table supports 'at least 88.8%' for the three displayed defenses, not strictly greater in every condition.
+5. **Attack tasks versus evaluation split, pp. 2 and 6:** The contribution statement mentions attacks on 440 tasks, while the settings divide those tasks into 240 training and 200 testing tasks. Results should be described as using a 440-task selected corpus with a reported split, rather than asserting that all 440 are held-out evaluations.
+6. **Step evidence versus transaction prose, pp. 12–13:** Appendix B and the Figure 5 caption describe purchases, but the visible action is entering NVIDIA. Appendix D limits evaluation to action steps. Completed purchases or realized losses are not demonstrated by the displayed action.
+7. **Small mean discrepancies, Table 1:** **[C]** Averaging the displayed GPT-4V Agent-Attack domain cells gives (26.4+36.0+61.2+58.0)/4=45.4, matching the table. For Gemini InjecAgent, (11.2+11.6+67.2+22.0)/4=28.0, also matching. For GPT-4V InjecAgent, (49.6+47.2+73.2+87.2)/4=64.3. For Gemini Agent-Attack, (35.6+4.8+26.0+33.6)/4=25.0. These checks confirm the displayed means. For Table 3, the displayed cells average 98.45 while the reported mean is 98.5; ordinary rounding can account for this and is not a substantive contradiction.
+8. **Standard-deviation details:** Captions identify cross-domain standard deviations, but the exact convention and underlying unrounded values are not supplied. The reported error terms are retained rather than reverse-engineered into run uncertainty.
+
+The source-grounded synthesis preserves conditions: main means are domain averages; defenses are tested on Gemini; the variation test is on GPT-4V; transfer uses selected source successes; and controllability conditions on successful originals. These distinctions prevent conclusions from becoming stronger than their evidence.
+
+## 15. Contributions and novelty
+
+**Conceptual [A]:** The paper formulates targeted action-argument redirection with explicit stealthiness and controllability constraints. Its emphasis is on changing what an agent acts on while retaining operation and element.
+
+**Methodological/algorithmic [A]:** It proposes a structured HTML injection design, a feedback-labeled attack dataset collection process, and a generative prompter trained with positive-only SFT followed by positive/negative DPO. Deterministic placeholder replacement is used for target changes.
+
+**System/implementation [A]:** The method targets the SeeAct framework in a black-box setting and reports a project/code release address. The release contents were not inspected; this analysis does not establish implementation quality or reproducibility from that artifact.
+
+**Empirical [A]:** Experiments compare three baselines, two backends, four domains, training stages, injection variations, new targets, cross-backend transfer, and three defenses. The evidence demonstrates strong attack performance in the tested setting alongside limits in positional and cross-model reuse.
+
+**Novelty qualification [A/D]:** Appendix C calls this the first attack framework handling diverse and complex objectives while maintaining stealthiness and controllability. This is the authors' priority claim. Closed-document analysis cannot independently establish that no earlier work meets that description. The paper does not contribute a new general-purpose dataset or benchmark with a fully documented release, nor a mathematical security guarantee.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+**[A], Appendix D, p. 12:** Victim feedback is required before optimizing attack strings, and this optimization is offline. The authors identify online black-box feedback as an improvement that could enable real-time optimization.
+
+**[A], Appendix D:** Evaluation focuses on individual action-step ASR because current web agents have relatively low end-to-end task completion rates. The authors explicitly state that this does not fully capture risk over complete user requests. They call for real-time interactive end-to-end evaluation across entire task flows.
+
+**[A], §5.3, p. 7:** Injection position affects success and may require task-specific tuning. This caveat accompanies the adaptability result even though it is not repeated as a separate Appendix D limitation.
+
+### Additional evidence-based analyst observations
+
+**[D]** Only one agent framework and two backend identifiers are evaluated. Generalization to different grounding pipelines, permission models, or website-handling policies is unresolved.
+
+**[D]** The selected corpus emphasizes critical events in four domains; it is not an unrestricted sample of all 31 Mind2Web domains. Domain counts, website separation, selection criteria, and attack-step denominators are incompletely reported.
+
+**[D]** Attribute hiding is a construction strategy, but no dedicated quantitative visual-difference audit or detector-resistance evaluation appears. Visual stealth should not be conflated with complete security-tool invisibility.
+
+**[D]** The paper supplies no runtime, victim-query cost, training-resource cost, or financial-loss measurement. Claims about efficiency and severe consequences are not accompanied by those direct measurements.
+
+**[D]** Adapted baselines differ in access and feedback mechanisms. Their results establish performance of the reported implementations, but do not fully isolate the role of training, budgets, candidate counts, or victim-specific feedback.
+
+**[D]** Retargeting and variation analyses begin with successful prompts. Their percentages answer conditional reuse questions and can exceed success on all initial attempts without contradiction.
+
+## 17. Threats to validity
+
+The following labels are analytical categories, not terminology the authors formally apply.
+
+**Internal validity [D]:** The training ablation compares SFT with SFT+DPO, but does not show DPO-only training, matched extra-SFT optimization, removal of negative examples, or multiple independent runs. It therefore supports the usefulness of the added stage without identifying every causal component of the gain. The paired wording cases likewise show examples rather than replicated controlled effects.
+
+**Construct validity [D]:** Exact action-triplet matching is a clear step-level target metric. It is a narrower construct than completed harmful task execution, realized financial loss, medical harm, privacy leakage, or persistence of the deviation over subsequent steps. Appendix D explicitly recognizes the step/end-to-end distinction.
+
+**External validity [D]:** Results come from a selected four-domain dataset and SeeAct with the reported model identifiers. Claims about all web agents, all website modifications, or all future model versions exceed the demonstrated population.
+
+**Statistical conclusion validity [D]:** Cross-domain standard deviations describe heterogeneity across domains. Without independent-run variation, confidence intervals, denominators, or significance tests, the paper does not establish a precise uncertainty range for repeated experimental deployments. A displayed 100.0% is a finite experimental result, not a universal guarantee.
+
+**Ecological validity [D]:** The paper uses real-world website data, but the metric is step-based and the appendix requests future real-time interactive evaluation. Offline attack-data construction does not by itself demonstrate a sustained attack in an unrestricted live browser workflow.
+
+**Reproducibility [D]:** Backend identifiers, initial prompter, learning rates, batch sizes, candidate count, and temperature are useful details. Missing β, seeds, epochs, hardware, exact defense templates, pairing procedure, and detailed task allocation limit independent reproduction from the paper alone. The code link is reported but unreviewed.
+
+**Comparative inference validity [D]:** No matched standalone-LLM baseline exists. Agent exposure to websites and ability to act provide a plausible explanation of additional security concerns, but the paper cannot isolate a causal vulnerability increase from adding agent tools or autonomy.
+
+## 18. Future work and open questions
+
+### A. Explicit author proposals
+
+**[A], p. 4:** Explore more sophisticated target transformations, including hashing-based mappings, for adaptability.
+
+**[A], Appendix D:** Develop a prompter that uses online feedback to optimize attacks in real time. Evaluate attacks end to end in real-time interactive web environments and monitor success across full task flows.
+
+**[A], conclusion and Impact Statement, p. 9:** Develop stronger defenses and proactive detection/mitigation strategies to improve safe deployment. These are research directions, not tested solutions in this paper.
+
+### B. Additional open questions inferred from the evidence
+
+**[D]** Does a matched standalone model receiving comparable adversarial content fail more or less often than the agent, and how much of any difference comes from input exposure, grounding, or action permissions?
+
+**[D]** Which SeeAct stage is most responsible for the observed argument changes? Can the screenshot description remain correct while HTML grounding changes the argument, or does adversarial HTML influence a broader action-generation stage?
+
+**[D]** How do attack success and damage change across a complete workflow when the agent can correct mistakes, ask for confirmation, or encounter later constraints? The supplied step metric cannot answer this.
+
+**[D]** How effective are defenses beyond the three prompt wrappers, and what are their effects on legitimate task completion? No such comparison is supplied.
+
+**[D]** What are the full query, training, and deployment costs? How do success rates change with constrained feedback budgets, different HTML preprocessing, different attributes, or different agent frameworks? These remain unmeasured rather than implicitly favorable.
+
+## 19. Terminology and notation glossary
+
+| Term/symbol | Beginner-friendly meaning within this paper |
+|---|---|
+| Web agent | AI system that observes webpages and executes actions for a user |
+| LLM | Large language model; language-oriented foundation-model component |
+| VLM | Vision-language model; model accepting visual and language information |
+| SeeAct | Evaluated web-agent framework using screenshot descriptions and HTML grounding |
+| HTML | Structured webpage content including elements and attributes |
+| Grounding | Mapping an action description to the relevant webpage element |
+| Red-teaming | Constructing attacks to expose security weaknesses |
+| Black-box | No access to agent framework, weights, logits, or gradients; feedback is available |
+| White-box | Privileged model information is available for optimization |
+| Logits | Model output scores; explicitly excluded from attacker access |
+| Targeted attack | Attack aiming for a specified adversarial action |
+| Transfer attack | Reusing an attack developed for one backend on another |
+| ASR | Attack success rate; here success at an individual action step |
+| SFT | Supervised fine-tuning on successful prompt examples |
+| DPO | Direct preference optimization using positive and negative prompts against a reference |
+| RLAIF | Reinforcement learning from AI feedback; authors' description of the pipeline |
+| SOTA | State of the art; used by authors to characterize methods/frameworks |
+| GCG | Cited gradient-based attack baseline; full acronym expansion is not supplied |
+| aria-label | Main-method HTML attribute used to hold non-rendered attack text |
+| id | Alternative HTML attribute evaluated in the field-variation test |
+| T | User task/request |
+| t | Action time step |
+| A_t | Previously executed actions |
+| s_t | Current environment observation |
+| h, h_t | Original HTML, optionally indexed by time |
+| h_adv | Modified adversarial HTML |
+| I(h), i_t | Rendered screenshot produced from HTML |
+| Π | Victim agent/backend policy in the formalism |
+| a_t | Agent action at a step |
+| o, r, e | Operation, argument, and target element |
+| r_adv, r'_adv | Initial and replacement attacker-selected arguments |
+| D | Deterministic target-argument replacement transformation |
+| q | Generated adversarial prompt |
+| q^(p), q^(n) | Successful and unsuccessful candidate prompt |
+| n_1, n_2 | Numbers of positive and negative candidates |
+| π_θ, θ | Trainable prompter policy and its parameters |
+| π_pre | Initial pretrained prompter in Algorithm 2 |
+| π_SFT, π_ref | SFT model and fixed DPO reference initialized from it |
+| σ | Logistic function in the DPO objective |
+| β | DPO reference-deviation parameter; numerical value not reported |
+| E_h | Expectation over HTML inputs; detailed sampling distribution unspecified |
+| D1–D4 | Finance, medical, housing, cooking |
+
+Names such as Agent-Attack and InjecAgent identify the adapted baselines rather than additional datasets. 'AdvWeb' and 'arial-label' are visible example labels whose relationship to the main method is uncertain; they are not treated as new defined components.
+
+## 20. Key numerical results
+
+All values are retained as reported. Table cells were also visually checked. 'Author-reported' indicates an explicit source number; it does not independently validate the experiment. No approximate visual estimate is required for the important chart values because they are labeled.
+
+| Quantity/result | Value | Unit | Condition/context | Status | Source |
+|---|---:|---|---|---|---|
+| Mind2Web tasks | 2,350 | tasks | Full cited dataset description | Author-reported | p. 6, §5.1 |
+| Websites/domains | 137 / 31 | counts | Full cited dataset | Author-reported | p. 6 |
+| Selected tasks | 440 | tasks | Four critical-event domains | Author-reported | p. 6 |
+| Training/testing | 240 / 200 | tasks | Selected subset split | Author-reported | p. 6 |
+| Generated candidates | 10 | prompts/task | GPT-4 data generation | Author-reported | p. 6 |
+| Temperature | 1.0 | parameter | GPT-4 candidate generation | Author-reported | p. 6 |
+| Learning rate | 1e−4 | parameter | Both training stages | Author-reported | p. 6 |
+| Batch sizes | 32 / 16 | examples/batch | SFT / DPO | Author-reported | p. 6 |
+| AdvAgent GPT-4V | 97.5 ± 2.0 | ASR % | Mean and SD across four domains | Author-reported | p. 6, T1 |
+| AdvAgent Gemini | 99.8 ± 0.3 | ASR % | Mean and SD across four domains | Author-reported | p. 6, T1 |
+| GPT-4V best baseline mean | 64.3 ± 16.7 | ASR % | InjecAgent | Author-reported | p. 6, T1 |
+| Gemini best baseline mean | 28.0 ± 23.0 | ASR % | InjecAgent | Author-reported | p. 6, T1 |
+| GCG | 0.0 ± 0.0 | ASR % | Both victim backends | Author-reported | p. 6, T1 |
+| SFT-only average | 69.5 | ASR % | Figure 3 ablation | Visually readable | p. 7, F3 |
+| Combined-stage average | 97.5 | ASR % | Figure 3 ablation | Visually readable | p. 7, F3 |
+| DPO-stage descriptive gain | 28.0 | percentage points | 97.5−69.5 | Analyst-derived | p. 7, F3 |
+| Cooking ablation gain | 48.8 | percentage points | 98.0−49.2 | Analyst-derived | p. 7, F3 |
+| Position variation | 71.0 ± 26.1 | ASR % | GPT-4V, reused successful attacks | Author-reported | p. 7, T2 |
+| Finance position variation | 26.0 | ASR % | Before expected element | Author-reported | p. 7, T2 |
+| HTML-field variation | 97.0 ± 1.7 | ASR % | aria-label replaced by id | Author-reported | p. 7, T2 |
+| GPT-4V controllability | 98.5 ± 2.7 | ASR % | Retargeted successful prompts | Author-reported | p. 8, T3 |
+| Gemini controllability | 100.0 ± 0.0 | ASR % | Retargeted successful prompts | Author-reported | p. 12, T6 |
+| Transfer selection | 25 | attacks/domain | Successful GPT-4V source attacks | Author-reported | p. 8 |
+| Transfer sample total | 100 | attacks | 25×4 domains | Analyst-derived | p. 8 |
+| GPT-4V-to-Gemini transfer | 18.0 ± 24.4 | ASR % | Selected source successes | Author-reported | p. 8, T4 |
+| Direct-versus-transfer contrast | 81.8 | percentage points | 99.8−18.0; conditions differ | Analyst-derived | p. 8, T4 |
+| Defenses: sequence/instruction/sandwich | 89.8 / 88.8 / 89.8 | mean ASR % | Gemini, four domains | Author-reported | p. 8, T5 |
+| Instruction defense finance | 57.2 | ASR % | Gemini finance only | Author-reported | p. 8, T5 |
+
+The complete substantive result cells appear in Sections 10–11. Example quantity one and element IDs 8 and 16 are described with Figure 5 rather than presented as general experimental parameters.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/table/experiment | Source | Qualification/evidence strength |
+|---|---|---|---|---|
+| Feedback-trained generation enables targeted black-box attacks | HTML design, candidate labels, SFT/DPO pipeline | ALG1–2, F2 | pp. 4–5 | HIGH for reported method; incomplete executable specification |
+| AdvAgent outperforms evaluated baselines | Highest ASR in every domain/backend cell | T1, X1 | p. 6 | HIGH for reported cells; applies to adapted baselines |
+| Adding DPO improves reported ASR | SFT 69.5 versus combined 97.5 | F3, X2 | p. 7 | HIGH for values; causal component isolation limited |
+| Hidden-field reuse is strong | Mean 97.0 with field change | T2, X3 | p. 7 | HIGH; only one alternative field shown |
+| Position can materially affect success | Finance 26.0; mean 71.0 | T2, X3 | p. 7 | HIGH; qualifies broad adaptability claims |
+| Successful prompts can be retargeted | GPT-4V 98.5; Gemini 100.0 | T3/T6, X4/X5 | pp. 8, 12 | HIGH; conditional reuse and unspecified denominators |
+| Cross-model reuse is weaker than direct feedback-based attack | Transfer mean 18.0; direct 99.8 | T4, X6 | p. 8 | HIGH for contrast; direct/source samples not fully matched |
+| Tested prompt defenses give limited protection | Defended means 88.8–89.8 | T5, X7 | p. 8 | HIGH within Gemini and three defenses |
+| Small wording differences can change displayed outcomes | Two failed/successful pairs | F4, X8 | pp. 8–9 | HIGH for examples; frequency and mechanism unknown |
+| End-to-end risk remains unmeasured | Explicit step-level limitation | Appendix D | p. 12 | HIGH; author acknowledgment |
+| Online feedback optimization is not demonstrated | Offline requirement and future proposal | Appendix D | p. 12 | HIGH; author acknowledgment |
+| Environmental content plus action execution is relevant to added agent risk | Dual observation formalism and wrong action examples | E1, F1/F5 | pp. 2–3, 13 | MEDIUM analyst inference; no standalone comparison |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine an assistant helping you fill out a website. You ask it to enter one company's name. The website secretly contains a message that says the target should be a different company. You cannot see that message in the normal page view, but the assistant can encounter it in the page's underlying HTML. In the paper's examples, the assistant enters the attacker's company instead of yours.
+
+The researchers trained another model to write these hidden messages. First it learned from messages that already worked. Then it learned to prefer successful messages over failed ones. In their tested web-agent system, this produced very high success at changing individual actions. Some messages could also be reused by replacing the target name, although moving the message to a different position or transferring it to another model sometimes worked much less well.
+
+This helps explain why web agents raise security concerns: they read material supplied by websites and can turn a mistaken interpretation into an action. But the study does not prove that the same underlying model is more easily fooled as an agent than as a standalone chatbot. It also does not show that nearly every full harmful transaction succeeds. Its strongest measured finding is that the tested agents frequently made the particular wrong action step the researchers targeted.
+
+The authors tried three defenses that add protective wording around instructions. Those helped in some cases but left high attack success overall. The paper therefore motivates better protection and more realistic full-workflow testing, rather than claiming to have measured every kind of agent security risk.
+
+## Completeness Audit
+
+The inventory is the denominator for coverage. 'Fully represented' means the substantive role, conditions, and findings of an item are covered here; it does not mean every sentence or citation is reproduced. Direct visual versus text-only inspection is disclosed rather than conflated.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title/authors/venue/version | Yes, visual and text | Yes | Fully represented | §2 |
+| Abstract | Yes | Yes | Represented in compressed form | Core claims integrated in §§1, 4, 15 |
+| §1 Introduction | Yes | Yes | Fully represented | Motivation, gap, contributions; repetitive urgency compressed |
+| §2 Web Agents | Yes; p. 3 text-only | Yes | Represented in compressed form | Agent categories and SeeAct positioning retained |
+| §2 Existing Red-teaming | Yes, text-only on p. 3 | Yes | Represented in compressed form | Attack families and author-attributed shortcomings retained |
+| §3.1 Preliminaries | Yes, text-only | Yes | Fully represented | Sequential inputs, triplet, E1 |
+| §3.2 Attack Objective | Yes, text-only | Yes | Fully represented | Fixed o/e and changed argument |
+| §3.2 Environment Access | Yes, text-only | Yes | Fully represented | HTML control and excluded model access |
+| §3.2 Attack Constraints | Yes, mixed access | Yes | Fully represented | Rendering invariance and replacement function |
+| §3.3 Challenges | Yes | Yes | Fully represented | Discrete space, black-box access, scalability |
+| §4 Framework overview | Yes | Yes | Fully represented | Offline generation/feedback/training path |
+| §4.1 HTML design | Yes | Yes | Fully represented | Attribute hiding, placeholder, placement |
+| §4.1 Feedback pipeline | Yes | Yes | Fully represented | Positive/negative partition and missing counts |
+| §4.2 SFT | Yes | Yes | Fully represented | Rationale, objective, configuration |
+| §4.2 DPO | Yes | Yes | Fully represented | Objective, reference, β uncertainty |
+| §5.1 Victim | Yes | Yes | Fully represented | SeeAct and two backend identifiers |
+| §5.1 Dataset/metrics | Yes | Yes | Fully represented | Dataset scale, subset, split, exact-triplet step ASR |
+| §5.1 Implementation | Yes | Yes | Fully represented | All reported main hyperparameters |
+| §5.1 Baselines | Yes | Yes | Fully represented | Adaptations and access differences |
+| §5.2 Effectiveness | Yes | Yes | Fully represented | T1 conditions and complete cells |
+| §5.3 Training ablation | Yes | Yes | Fully represented | F3 labels and derived gains |
+| §5.3 Position/field variation | Yes | Yes | Fully represented | Conditional reuse and finance failure retained |
+| §5.3 Controllability | Yes | Yes | Fully represented | T3 and appendix T6 |
+| §5.3 Transfer | Yes | Yes | Fully represented | 25 per domain, T4, sample caveat |
+| §5.4 Cases | Yes | Yes | Fully represented | Two edits, outcomes, non-generalization caveat |
+| §6 Defenses | Yes | Yes | Fully represented | Three strategies and all T5 cells |
+| §7 Conclusion | Yes | Yes | Represented in compressed form | Findings and limitations retained |
+| Acknowledgements/affiliation footnote | Yes | Yes | Represented in compressed form | Funding categories and internship noted; grant identifiers omitted |
+| Impact Statement | Yes | Yes | Represented in compressed form | Intended security benefit and mitigation direction |
+| References | Yes, text-only | Yes | Represented in compressed form | Method-related sources identified by role; full bibliography not repeated |
+| Formal research questions | No such items supplied | Absence recorded | Fully represented | Objectives organized without inventing formal RQs |
+| Formal hypotheses | No such items supplied | Absence recorded | Fully represented | No null/alternative hypotheses or significance tests |
+| X1 Main comparison | Yes | Yes | Fully represented | §§8–11 |
+| X2 Training ablation | Yes | Yes | Fully represented | §§8–10 |
+| X3 Injection variations | Yes | Yes | Fully represented | §§8–11 |
+| X4 GPT-4V controllability | Yes | Yes | Fully represented | §§8–11 |
+| X5 Gemini controllability | Yes | Yes | Fully represented | Appendix A/T6 |
+| X6 Cross-backend transfer | Yes | Yes | Fully represented | Selection and direct-row qualification |
+| X7 Defenses | Yes | Yes | Fully represented | Backend restriction retained |
+| X8 Qualitative cases | Yes | Yes | Fully represented | F4 and F5, two panels each |
+| F1 Overview | Yes, visual | Yes | Fully represented | Component/arrow audit; no plotted quantities |
+| F2 Training diagram | Yes, visual | Yes | Fully represented | Algorithm mismatch and '??' disclosed |
+| F3 Ablation chart | Yes, visual | Yes | Fully represented | Axes, colors, all exact labels, no error bars |
+| F4 Stock panel | Yes, visual | Yes | Fully represented | 'you'/'I' contrast |
+| F4 Medication panel | Yes, visual | Yes | Fully represented | 'previous' contrast |
+| F5 Stock panel | Yes, visual | Yes | Fully represented | Typed argument versus purchase-caption distinction |
+| F5 Medication panel | Yes, visual | Yes | Fully represented | Search argument deviation |
+| T1 Main results | Yes, visual/text | Yes | Fully represented | All rows, cells, SDs |
+| T2 Variations | Yes, visual/text | Yes | Fully represented | Both rows and all cells |
+| T3 GPT-4V controllability | Yes, visual/text | Yes | Fully represented | All cells and conditional scope |
+| T4 Transfer | Yes, visual/text | Yes | Fully represented | Both rows and all cells |
+| T5 Defenses | Yes, visual/text | Yes | Fully represented | All conditions; no SD supplied |
+| T6 Gemini controllability | Yes, visual/text | Yes | Fully represented | All cells; finite-sample qualification |
+| E1 Agent policy | Yes, text-only | Yes | Fully represented | Original equation visual unavailable |
+| E2 SFT loss | Yes, visual/text | Yes | Fully represented | Symbols and normalization uncertainty |
+| E3 DPO loss | Yes, visual/text | Yes | Fully represented | Symbols, β and pairing uncertainty |
+| Stealth/replacement expressions | Yes, mixed access | Yes | Fully represented | §13 |
+| ALG1 | Yes, visual/text | Yes | Fully represented | Templates compressed; functional steps retained |
+| ALG2 | Yes, visual/text | Yes | Fully represented | Collection, partition, initialization, stages |
+| Major contributions 1–4 | Yes | Yes | Fully represented | Framework, training, evaluation, ablation/adaptation |
+| Author offline-feedback limitation | Yes | Yes | Fully represented | §§16–18 |
+| Author step-evaluation limitation | Yes | Yes | Fully represented | §§16–18 |
+| Author positional caveat | Yes | Yes | Fully represented | §5.3 evidence retained |
+| Appendix A | Yes | Yes | Fully represented | Gemini retargeting result |
+| Appendix B | Yes | Yes | Fully represented | Both examples and Figure 5 |
+| Appendix C | Yes | Yes | Represented in compressed form | Attack families and novelty qualification retained |
+| Appendix D | Yes | Yes | Fully represented | Both limitations and proposed extensions |
+| Separate supplementary material | Not supplied | Absence recorded | Missing from supplied material | No supplement contents claimed reviewed |
+| Project/code artifact | Not inspected | Availability claim only | Inaccessible under source boundary | No tools or external access used |
+| Tiny background UI text in figures | Partially readable | Main roles represented | Uncertain | Every incidental screenshot label not transcribed |
+
+### Missing or inaccessible material
+
+No page in the supplied extracted-text sequence is missing. Original page images for pages 3, 10, and 11 were not supplied, so those pages were inspected through text only. No separate code, data, supplement, execution log, or trained-model artifact was available for review. The project link's contents were not accessed. The paper's missing implementation details cannot be recovered from the supplied material.
+
+### Uncertain interpretations
+
+The relationship of example 'arial-label' to methodological 'aria-label' is unresolved. The 'AdvWeb' label in Figure 5 is unexplained. Figure 2 has an algorithm-number mismatch and unresolved reference. Exact DPO pair construction, β, training repetitions, sample denominators, and visual-equivalence testing are not specified. The Figure 5 purchase description exceeds what its displayed typing action alone demonstrates. No internal causal account of why a particular wording change works is established.
+
+### Deliberately compressed material
+
+Repeated motivation and defense-urgency statements are consolidated. The references are represented by their methodological roles rather than reproduced as a full bibliography. Appendix C's prior-work list is condensed into token/gradient optimization, semantic/genetic methods, and generative prompters, preserving the authors' positioning. Grant identifiers, correspondence addresses, decorative logos, and incidental webpage text are omitted as secondary or non-substantive to the security analysis. Attack-template wording is summarized except for short evidence quotations and the small case-study edits needed to explain the results.
+
+### Potential omissions
+
+No known substantive section, experiment, figure, table, numbered equation, algorithm, contribution category, or author-stated limitation in the inventory has been left unrepresented. This is a coverage statement about the supplied inventory, not a claim to preserve every word, verify the released implementation, inspect absent supplements, or establish a direct standalone-LLM comparison. The principal unresolved research-relevance boundary remains that comparative vulnerability is analyst inference, whereas high step-level attack success in the evaluated web-agent setting is author-reported evidence.

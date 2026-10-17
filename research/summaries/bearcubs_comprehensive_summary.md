@@ -1,0 +1,580 @@
+# Stage 0 — Document Accessibility Report
+
+The supplied work is **BEARCUBS: A benchmark for computer-using web agents**, published as a conference paper at COLM 2025. This analysis uses only the supplied page text and source images. No tools, browsing, external references, or linked artifacts were used. Instructions appearing inside quoted prompts or document images are treated as evidence about the paper's procedure, not as instructions for this analysis.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document available | Yes: extracted text labeled physical PDF pages 1–20 is supplied. |
+| Accessible page range | 1–20; all twenty page records have substantive supplied text. |
+| Apparently missing pages | None within that supplied sequence. This does not establish that every external artifact or every version of the work is present. |
+| Visually inspected pages | 1–4, 6–10, and 15–20: fifteen supplied page images. |
+| Text-only pages | 5 and 11–14. Their supplied text was inspected; their page layouts were not visually inspected. |
+| Figures | Figures 1–4 are visually present and inspected. Small screenshots inside Figure 1 are readable mainly at the level of the surrounding labels and broad visual content. |
+| Tables | Tables 1–10 are present. Most are readable visually and in supplied extraction. Table 9 is small in the page image; its detailed entries rely substantially on the supplied text, with visual checks of layout and headings. |
+| Equations | No substantive numbered mathematical equations appear in the supplied work. |
+| Appendices | A–K are present. Appendix A starts on text-only page 14 and continues on visually supplied page 15. |
+| Supplementary material | No separate supplementary files were supplied. The linked dataset, leaderboard, evaluator code, full prompt, recorded trajectories, and external sources were not inspected. |
+| OCR | No additional optical character recognition was performed or required for the supplied extracted text. Extraction is not assumed infallible. |
+| Other limitations | Dense Table 9, typographical irregularities, and several text–table inconsistencies require explicit qualification. |
+
+The accessibility metadata says appendix pages were detected at page 6, but this is not a reliable description of the document's actual organization: Appendix A visibly begins in the supplied text on page 14. The stray local-image error mentioning `-` does not remove the fifteen images actually supplied in the conversation. The source hash is the user-provided identifier; it was not independently recomputed.
+
+**Evidence labels throughout:** [A] AUTHOR-REPORTED means explicitly stated in the work; [B] DIRECTLY OBSERVABLE means visible in a supplied image; [C] ANALYST-DERIVED means calculated from supplied values, with operands shown; [D] ANALYST INTERPRETATION means a reasoned inference rather than an author claim. No [E] EXTERNAL INFORMATION is introduced. HIGH confidence indicates clear source support, MEDIUM indicates meaningful qualification or conflicting evidence, LOW indicates weak inference, and UNKNOWN indicates absent evidence.
+
+# 1. Plain-language orientation
+
+BEARCUBS asks whether web artificial intelligence agents can actually find facts on real websites when finding the answer requires more than reading a search-result snippet. A **web agent** is a system that searches or browses on a user's behalf. A **computer-using web agent** can additionally inspect screen pixels and operate a virtual mouse and keyboard. The authors test activities such as navigating interactive databases, interpreting videos, exploring three-dimensional environments, reading scanned documents, and interacting with online games. [A: pp. 1–5; HIGH]
+
+The central contribution is a carefully curated benchmark of **111 information-seeking question–answer pairs**, divided into **56 text-based** and **55 multimodal** questions. Every question is intended to have a short, unique answer and a human-validated way of reaching it on the live web. The authors filter questions whose intended visual or interactive challenge can be bypassed through text-only information elsewhere. [A: pp. 3–4, 15; HIGH]
+
+The study compares humans, seven commercial web agents, and five language-model or search baselines. Humans achieve a reported **84.7%** overall accuracy. The strongest tested agent, ChatGPT Agent, achieves **65.8%**; Operator achieves **23.4%**. ChatGPT Agent's accuracy is much higher than that of earlier computer-use systems, but its successful answers take an average **9:16**, compared with humans' **4:24** for successful answers. These are outcome-conditioned times, not the overall average human completion time of **4:46**. [A: pp. 6–7, 16; HIGH]
+
+For the user's question, **Why Are Web AI Agents More Vulnerable Than Standalone LLMs? A Security Analysis**, this paper supplies evidence about reliability, source handling, live-web exposure, interaction failures, and observability. It is **not a security experiment**. It does not establish that web agents are more vulnerable to malicious attacks than standalone large language models. Although it includes zero-shot language-model baselines, its comparisons measure information-seeking accuracy rather than adversarial compromise. Any connection to security is labeled [D] analyst interpretation.
+
+# 2. Document roadmap
+
+The document is a mixed **benchmark/dataset paper and empirical evaluation of AI systems**, rather than a theoretical, algorithmic, or security paper. Its organization moves from motivation to benchmark construction, evaluation, interpretation, and supporting appendices.
+
+| Stable inventory ID | Original item | Location | Function |
+|---|---|---|---|
+| S0 | Abstract | p. 1 | Benchmark, evaluation, principal results, maintenance plans. |
+| S1 | 1 Introduction | pp. 1–2 | Why live-web and diverse multimodal evaluation are needed. |
+| S2 | 2 Challenges of evaluating modern web agents | pp. 2–3 | Contamination, workarounds, diversity, slow evaluation. |
+| S3 | 3 Building the BEARCUBS benchmark | pp. 3–5 | Criteria, collection, validation, interaction types, website diversity. |
+| S4 | 4 Experiments | pp. 5–6 | Human study and agent benchmarking. |
+| SS4.1 | 4.1 Measuring human performance | p. 5 | Timing, answers, dead ends, difficulty, recruitment. |
+| SS4.2 | 4.2 Benchmarking web agents | pp. 5–6 | Agents, baselines, prompts, termination, scoring. |
+| S5 | 5 Results | pp. 6–8 | Human and agent results. |
+| SS5.1 | 5.1 Human performance results and analysis | pp. 6–7 | Accuracy, difficulty, errors, strengths. |
+| SS5.2 | 5.2 Agent performance results | pp. 7–8 | Baselines, multimodal performance, ranking, time behavior. |
+| S6 | 6 Discussion | pp. 8–10 | Transparency, source credibility, interactions, planning. |
+| S7 | 7 Related work | p. 10 | Low-level skills, web evaluation, non-web evaluation. |
+| S8 | 8 Conclusion | p. 10 | Contribution and proposed development priorities. |
+| ACK/REF | Acknowledgments and references | pp. 11–14 | Funding, assistance, bibliography. |
+| AA | A Limitations | pp. 14–15 | Answer format, multilingual scope, trajectory comparison. |
+| AB | B Data creation workflow | p. 15 | Four inclusion criteria and three-stage workflow. |
+| AC | C Human annotator recruitment | p. 15 | Language-specific recruitment and compensation. |
+| AD | D Baseline prompt | p. 16 | Model configuration and search-context prompt. |
+| AE | E Human performance results | p. 16 | Detailed human statistics. |
+| AF | F Human error examples | pp. 16–17 | Error categories and three examples. |
+| AG | G Details of automatic agent answer evaluator | pp. 16–18 | Classifier, prompt, cost, agreement, repeat checks. |
+| AH | H Detailed agent performance results | pp. 17, 19 | Overall and split-level results. |
+| AI | I Justifying size of BEARCUBS | pp. 17–18, 20 | Small-size rationale and four-trial stability test. |
+| AJ | J Model correct answer source proportions | pp. 18, 20 | Source attribution among correct answers. |
+| AK | K Agent-specific behavior | pp. 19–20 | Language behavior, abstention, premature refusal. |
+
+The visual inventory contains **F1–F4**, corresponding to Figures 1–4; **T1–T10**, corresponding to Tables 1–10; and diagram paths within Figures 2 and 3. No numbered algorithms, theorems, lemmas, or substantive mathematical equations are supplied. The experimental register below contains X1 human performance, X2 baseline performance, X3 commercial-agent performance, X4 source attribution, X5 automatic-evaluator agreement, and X6 repeated-run stability. These IDs support the final coverage audit.
+
+# 3. Background and context
+
+A **large language model (LLM)** produces language-based responses. The paper distinguishes several ways such models or associated systems can seek information. A **zero-shot** baseline receives the question directly, without examples or retrieved context. The authors call this a test of **parametric knowledge**: information available through the model itself rather than newly retrieved material. A **search-augmented** baseline receives search-result titles and snippets along with the question. A more elaborate web agent searches, reasons, and potentially navigates beyond snippets. A computer-use agent additionally operates screen interfaces. These descriptions explain the experimental categories; they do not establish that all products share an identical underlying model. [A: pp. 1, 5–6]
+
+**Multimodal** means that a task involves more than ordinary text, including images, video, audio, or real-time interaction. **Text-based** tasks still involve web navigation and may be difficult: filtering an online database is not equivalent to answering from a static paragraph. A **trajectory** is the sequence of websites and interactions used to reach an answer. The benchmark's reference trajectories are written and validated by humans; commercial systems expose their own trajectories with differing detail. [A: pp. 2–5, 8]
+
+A **workaround** is an alternative route that bypasses the skill the benchmark intends to measure. For example, a video question may be answered by reading a forum comment about the video. Such a route can be useful in ordinary information retrieval but invalidates a claim that success demonstrates video understanding. **Contamination** includes examples leaking into training data, but the authors emphasize an additional live-web issue: questions or answers may become searchable after public release. [A: pp. 2–4]
+
+The source categories have specific operational meanings. **Primary** means a reliable source or the source specified by the question; **secondary** means an unreliable source or one not mentioned in the question; **ungrounded** means the answer is based on internal knowledge or reasoning rather than a source. These are the paper's categories, not a universal taxonomy of publishing. In particular, its secondary category combines source quality with compliance with the requested source. [A: p. 19; D: interpretation of the definition]
+
+# 4. Research problem and gap
+
+**Existing problem:** strong performance on a web benchmark may not reveal whether an agent can handle unpredictable real websites and complex interfaces. The authors identify three shortcomings in earlier benchmarks: synthetic or simulated environments, approaching performance saturation, and a restricted range of multimodal interactions. Their examples include video browsing, real-time games, and 3D navigation. [A: pp. 1–2]
+
+**Authors' positioning of prior work:** the introduction reports Operator at **87%** on WebVoyager and **58%** on WebArena, with **78%** human performance for the latter comparison. These are contextual numbers attributed by the paper to prior sources, not results independently verified here. The authors describe Mind2Web as solvable through HTML source and AssistantBench as emphasizing a narrower range of multimodal activities. Related work later distinguishes basic interface skills, text-based web evaluation, multimodal evaluation, and broader non-web agent tasks. [A: pp. 2, 10]
+
+**Research gap:** a compact, diverse, live-web benchmark is needed in which answers are objectively checkable and multimodal tasks resist text-only shortcuts. The authors aim to assess both whether an answer is correct and how it was obtained. **Motivation:** computer-use systems could assist people with complex tasks, but their factual information-seeking capabilities need transparent evaluation before such promise is treated as demonstrated performance. [A: pp. 1–4]
+
+**Scope:** the work evaluates short-answer factual questions with accessible solutions, rather than arbitrary transactions, long-form synthesis, malicious websites, exfiltration, or adversarial instruction attacks. The paper references a separate safety benchmark in related work, but does not perform that benchmark's security tests. [A: pp. 10, 14–15; D: scope assessment]
+
+# 5. Research questions / objectives / hypotheses
+
+The authors pose an informal motivating question about how well agents perform in real-world web browsing, and explicitly ask how well humans perform on BEARCUBS. They do not provide a numbered set of formal research questions or preregistered hypotheses. The following are **objectives reconstructed from their stated aims**, rather than invented formal hypotheses:
+
+1. **O1:** create a live-web information-seeking benchmark with diverse text-based and multimodal interactions and short, clear answers. [A: pp. 1–4]
+2. **O2:** prevent text-only shortcuts from invalidating intended multimodal evaluation. [A: pp. 2–4, 15]
+3. **O3:** establish human solvability, effort, perceived difficulty, and error patterns. [A: pp. 5–7, 16–17]
+4. **O4:** compare seven commercial agents and five baselines on overall and split-level accuracy, answer behavior, and completion time. [A: pp. 5–8, 19]
+5. **O5:** examine trajectories, source attribution, and recurring interaction or planning failures. [A: pp. 8–10, 19–20]
+6. **O6:** support scalable response evaluation and assess limited repeated-run stability. [A: pp. 16–20]
+
+The user's security question is a separate research objective external to the paper's own experimental aims. The paper can inform a security analysis through [D] inference about exposure to external material and difficulty auditing behavior, but cannot directly answer a comparative vulnerability hypothesis. Confidence in that boundary is HIGH; confidence in any claim of greater security vulnerability from this study alone is UNKNOWN.
+
+# 6. Assumptions / threat model
+
+The paper has **no explicit attacker model or security threat model**. It does not define adversarial control over pages, attacker goals, trust boundaries, attack budgets, compromised components, or attack success. Consequently, its accuracy measurements must not be presented as vulnerability rates. [D: document-wide assessment; HIGH]
+
+Its evaluation assumptions are nevertheless consequential. Every retained question is supposed to have an accessible answer, a viable trajectory, and a unique short gold answer. Websites should be non-paywalled and should not require account creation or login. Questions are deliberately resistant to Google snippets and top-ranked answers. Multimodal items should resist methods operating only on text. [A: pp. 4, 15]
+
+Gold answers and human validation are the reference authority for scoring. Agent responses must directly and unambiguously entail those answers. Hedging receives a separate non-concrete-answer label even if it contains the correct candidate. A response rejecting a question's premise is wrong because the evaluator assumes every question is answerable. [A: pp. 6, 18]
+
+Human intervention is minimized. Computer-use agents receive a prompt encouraging completion of CAPTCHAs and acceptance of prompts needed for access. A request for help receives one additional directive to proceed independently; another request ends the session. These are study conditions, not recommendations from this analysis. [A: p. 6]
+
+**Security relevance [D; MEDIUM]:** an agent that acts through a live interface faces decisions about navigation, access prompts, source selection, and repeated actions that a question-only baseline does not exercise in this setup. That supplies candidate places to investigate security boundaries. It does not demonstrate that any of those decisions was maliciously exploited, or that accepting prompts caused a security incident.
+
+# 7. Methodology
+
+## Dataset construction and inclusion
+
+The final benchmark contains **111 questions**: **56 text-based** and **55 multimodal**. Authors wrote **65** accepted question–answer pairs; freelancers wrote the remainder. **46 freelancer-authored retained pairs** is [C] derived as **111 − 65 = 46**, not an independently stated collection count. Freelancers were trained and paid **$4 USD per accepted question**. The reported acceptance rate for freelancer-created questions is **58.2%**; the supplied work does not give an exact raw submission count, and it should not be reverse-engineered as an exact integer from a rounded percentage. [A: pp. 3–4]
+
+The four criteria are sufficient but minimal question information; unique, concise, correct answers; resistance to Google Search; and public accessibility. Appendix B adds that answers cannot be lists or sets and paraphrases cannot be accepted as correct. Each question comes with its gold answer, a viable trajectory, and visited websites. At least **two authors** verify each question and its route. Figure 3 specifies extensive snippet searches, discarding questions answerable by ChatGPT, and discarding multimodal questions solvable through Deep Research's text-only interactions. [A: p. 15]
+
+The authors removed **13 multimodal candidate questions**, mostly because Deep Research found workarounds. They intend to replace questions whose trajectories become invalid or whose answers become text-searchable. The final benchmark covers **108 distinct top-level URLs** in viable human routes, excluding Google Search visits. An average route has **6.1 steps** and **3.4 webpages**. These route measures describe human-written solutions, not agent workload. [A: pp. 3–5]
+
+There is no reported training/development/test split, model training procedure, or dataset preprocessing pipeline beyond question creation, checking, classification, and filtering. The final set is used for evaluation. The linked benchmark release and leaderboard were not reviewed.
+
+## Human evaluation
+
+Humans answer questions they have not previously seen, browsing as they wish. Annotators are chosen with relevant language or domain familiarity where needed. They start a timer when reading, stop when confident, submit an answer, count dead ends, provide comments, and assign easy/medium/hard perceived difficulty. A dead end means leaving the current webpage to backtrack or restart the search. Annotators may abandon after **15 minutes**; this is permission to stop, not an enforced ceiling on all completed attempts. [A: p. 5]
+
+The work lists website languages including Arabic, Mandarin Chinese, Hindi, German, Vietnamese, and Finnish. Appendix C describes native-speaker volunteers for Arabic and Chinese and **three hired annotators** handling Hindi, German, and Finnish respectively. English-only questions are attempted by annotators and authors who did not create or validate them. The supplied recruitment description does not explicitly resolve who handled Vietnamese-specific items. Hired evaluators receive **$2.50 per question**, plus **$1** for a correct answer. Total participant count, per-question independent replication, and demographic distributions are not clearly specified. [A: pp. 5, 15]
+
+## Models, baselines, and configuration
+
+Seven commercial agents are tested. Three search/research agents without the paper's computer-use capabilities are Grok 3 DeepSearch, OpenAI Deep Research, and Google Deep Research. Four computer-use agents are Convergence AI Proxy, Anthropic Computer Use, OpenAI Operator, and ChatGPT Agent. Five baselines comprise GPT-4o and DeepSeek R1 each in zero-shot and Google-search-augmented settings, plus Perplexity sonar-pro with default hyperparameters. [A: pp. 5–6]
+
+Google augmentation uses Serper to retrieve **up to ten** top search results for the question as query, providing titles and snippets rather than full pages. The prompt instructs the baseline to use supplied context and return a no-answer response when no clear answer is present. GPT-4o's specified version is **gpt-4o-2024-11-20**, with **518 maximum tokens**; DeepSeek R1 uses **8,000 maximum tokens**. Both have temperature **0** in both baseline settings. The unequal token budgets are reported settings, not a controlled equivalence of computational resources. [A: pp. 5–6, 16]
+
+## Agent execution, scoring, and timing
+
+Authors manually run systems through web interfaces because APIs are unavailable, recording answers, time, and trajectories; page 3 also describes screen recording. Sessions end on answer, abstention, another help request after the one-time directive, or a dead loop. Computer-use agents generally receive **15 minutes**, but ChatGPT Agent receives **45 minutes** because it may solve questions after fifteen minutes. [A: pp. 3, 6]
+
+Most agents are evaluated **February 23–March 1, 2025**; Google Deep Research is evaluated in **late May**, and ChatGPT Agent **July 18–20, 2025**. These are different evaluation windows on changing websites and commercial systems. Hardware, browser versions, operating-system configuration, commercial model checkpoints, random seeds, confidence intervals, and inferential significance tests are not supplied. [A: p. 6; D: missing-reporting assessment]
+
+Answers are manually evaluated for direct entailment of the gold answer. Correct, wrong, uncertain/non-direct, and none/empty are distinguished. The auxiliary automatic evaluator uses GPT-4o at temperature zero with **17 in-context examples**; only two examples are printed. Its full prompt and code are linked but absent. The prompts are methodological artifacts, not algorithms executed here. [A: pp. 6, 16–19]
+
+# 8. Experiments / analyses
+
+| ID | Purpose and setup | Measures and evidence | Result and qualification |
+|---|---|---|---|
+| X1 | Establish independent human performance on the retained questions; annotators browse and self-report timing, dead ends, and difficulty. | Accuracy, answer counts, time, dead ends, perceived difficulty; Tables 2, 5, 6. | Reported 84.7%, 94 correct, 14 wrong, 3 abandoned; split-level human inconsistencies require caution. |
+| X2 | Test whether questions are answerable by internal model knowledge or snippet augmentation. | Five baseline conditions over 111 questions; Tables 2, 4, 9. | Overall accuracy 0.0–8.1%; restrictive search prompt and different token budgets condition the findings. |
+| X3 | Compare seven commercial agents using manual execution and recorded trajectories. | Overall and split accuracy, four outcome labels, outcome-conditioned mean times; Tables 2, 9. | ChatGPT Agent leads at 65.8%; systems have differing capabilities, dates, and time limits. |
+| X4 | Determine whether correct answers use designated/reliable sources, other sources, or no source. | Source counts in Table 9; proportions in Figure 4. | Correctness and source compliance diverge; Figure 4 and Table 9 use inconsistent totals for several agents. |
+| X5 | Compare automatic response classification with manually evaluated outputs for five agents. | Four-way and binary accuracy; Tables 7, 8. | Aggregate 98.2%/98.7% reported; repeat labels identical for Anthropic and Proxy over three runs. |
+| X6 | Investigate stability of DeepSeek R1 accuracy across four trials with/without Serper. | Run accuracies and standard deviations; Table 10. | Reported standard deviations 0.8% and 0.7%; narrow test does not establish all-agent or future-web stability. |
+
+The study does not experimentally manipulate attacker presence or page maliciousness. The commercial-agent comparison is descriptive: agent identity changes many features simultaneously. The human error analysis and trajectory discussion are qualitative analyses within X1/X3, not separately controlled ablations. Source attribution X4 is restricted to answers already judged correct, so it cannot estimate the credibility of all outputs. [D: interpretation of design]
+
+# 9. Results
+
+## Overall and modality-specific accuracy
+
+| Condition | Overall | Text-based | Multimodal | Correct / wrong / uncertain / none, overall |
+|---|---:|---:|---:|---|
+| GPT-4o zero-shot | 2.7% | 5.4% | 0.0% | 3 / 53 / 55 / 0 |
+| DeepSeek R1 zero-shot | 8.1% | 10.7% | 5.5% | 9 / 82 / 19 / 1 |
+| GPT-4o + Google Search | 0.0% | 0.0% | 0.0% | 0 / 4 / 0 / 107 |
+| DeepSeek R1 + Google Search | 1.8% | 3.6% | 0.0% | 2 / 16 / 0 / 93 |
+| Perplexity sonar-pro | 5.4% | 8.9% | 1.8% | 6 / 30 / 58 / 17 |
+| Grok 3 DeepSearch | 11.7% | 21.4% | 1.8% | 13 / 95 / 2 / 1 |
+| OpenAI Deep Research | 36.0% | 60.7% | 10.9% | 40 / 69 / 1 / 1 |
+| Google Deep Research | 23.4% | 42.9% | 3.6% | 26 / 39 / 46 / 0 |
+| Convergence AI Proxy | 12.6% | 16.1% | 9.1% | 14 / 44 / 34 / 19 |
+| Anthropic Computer Use | 14.4% | 19.6% | 9.1% | 16 / 22 / 73 / 0 |
+| OpenAI Operator | 23.4% | 33.9% | 12.7% | 26 / 43 / 13 / 29 |
+| ChatGPT Agent | 65.8% | 76.8% | 54.5% | 73 / 30 / 3 / 5 |
+| Human | 84.7% | 83.6% | 85.7% | 94 / 14 / not applicable / 3 |
+
+[A: Table 2, p. 7; Table 9, p. 19.] All agent accuracies use the full corresponding question category as denominator, including non-concrete or missing answers. They are not accuracy conditional on attempting an answer. Overall counts are especially helpful for interpreting apparent capability differences: Anthropic's 73 uncertain answers differ behaviorally from Grok's 95 wrong answers even though both have low accuracy.
+
+The authors attribute some baseline and Deep Research successes to guessing, based on trajectory inspection. OpenAI Deep Research's **10.9%** multimodal accuracy exceeds Proxy and Anthropic's **9.1%**, but does not demonstrate successful performance of the intended visual interactions. A correct answer can therefore coexist with an inappropriate route. [A: pp. 7–8]
+
+## Differences, with units preserved
+
+The authors report ChatGPT Agent ahead of Operator by **42.4 percentage points** and OpenAI Deep Research by **29.8 points**: **65.8 − 23.4 = 42.4**, and **65.8 − 36.0 = 29.8**. These are author-reported absolute differences, not relative improvements. [A: p. 6]
+
+Additional differences are [C] analyst-derived from printed percentages: overall human–ChatGPT gap **84.7 − 65.8 = 18.9 percentage points**; multimodal ChatGPT–Operator difference **54.5 − 12.7 = 41.8 percentage points**; text-based ChatGPT–OpenAI Deep Research difference **76.8 − 60.7 = 16.1 percentage points**. Page 8 prints the multimodal difference as **41.8%**, but its operands support percentage points. Human multimodal comparisons retain a denominator inconsistency described below and should not be treated as independently verified exact gap estimates.
+
+## Time and human difficulty
+
+Successful-answer mean times are **1:09 Grok**, **4:37 OpenAI Deep Research**, **4:21 Google Deep Research**, **1:52 Proxy**, **2:24 Anthropic**, **2:59 Operator**, **9:16 ChatGPT Agent**, and **4:24 humans**. Wrong-answer means are respectively **1:24, 9:00, 4:00, 2:41, 2:35, 3:58, 16:14, and 5:44**. Thus most tested agents return correct answers faster than humans, but ChatGPT Agent is slower. This is a comparison of conditional averages, not proof that waiting longer causes failure. [A: p. 7; D: qualification]
+
+Humans classify **55** questions easy, **36** medium, and **20** hard. **36 + 20 = 56**, and **56/111 × 100 ≈ 50.5%**, reproducing the reported moderate-to-high difficulty percentage [C]. Mean times by perceived difficulty are **2:14**, **5:32**, and **10:52**, including abandoned questions. The overall human mean is **4:46**, with **1.50** dead ends. Multimodal items have **32 easy/16 medium/7 hard**, versus text-based **23/20/13**. [A: pp. 6–7, 16]
+
+# 10. Figure-by-figure interpretation
+
+## Figure 1 — One live-document question exposes different failure stages
+
+Figure 1 on page 3 combines a question box, a human route/result, and four agent screenshot panels. It asks for exact text in the right margin of a historical document accessed through AI2's olmOCR interactive tool comparison. The screenshots illustrate actual webpage/document appearances, but their fine internal text is too small to independently transcribe the requested answer. The visual annotations are directly readable. [B; HIGH for labels, LOW for screenshot microtext]
+
+The human finds the correct document and zooms to the answer in **43 seconds**. ChatGPT Agent finds the correct answer but works for **18 minutes**. Operator reaches the correct section but fails to click the link. Proxy does not fully explore the correct page. Anthropic fails to find the correct webpage. Green success and pink/red failure boxes organize these outcomes. There are no axes, quantitative scale, error bars, or statistical panels. [A/B: p. 3]
+
+The figure supports the existence of distinct navigation, exploration, and interaction failure points. It does not establish their population frequency. The longer ChatGPT time is compatible with its special 45-minute allowance; it would exceed the usual fifteen-minute limit applied to other computer-use agents. [D: interpretation]
+
+## Figure 2 — A correct answer obtained through the wrong measurement route
+
+Figure 2 on page 4 is a flow diagram for a discarded Phantom Blade Zero trailer question. The question asks how many times the player takes damage, defined by a lowered health bar. Both branches first find the trailer. The human's green branch watches the video. Deep Research's red branch finds forum comments and infers the answer from a comment that says the player's health bar did not drop. Both routes reach the answer **0 times**. [A/B]
+
+Arrows distinguish shared retrieval from modality-specific evidence gathering. Green and red dashed regions label the human and Deep Research routes. There are no numerical axes or error measures. The diagram makes the construct-validity issue concrete: the same answer does not imply the same skill. Its caption explicitly says the question was removed. It must not be counted as one of the final 55 multimodal questions. [A: p. 4]
+
+## Figure 3 — Creation, quality verification, and workaround prevention
+
+Figure 3 on page 15 is a three-stage workflow. The yellow question-writing box records a question, viable approach, and visited links. The purple quality-verification box says at least two authors check approaches, links, and question/answer clarity and discard unqualified questions. The blue workaround-prevention box requires extensive searches, discarding ChatGPT-answerable questions, and discarding multimodal questions answerable through Deep Research text-only interaction. Numbered circles mark stages **1–3**. [A/B]
+
+The displayed Patatap example asks what color a circle has under a specified background and keypress condition. It demonstrates an interaction-dependent question format, not a new experimental sample count. There are no axes or statistical estimates. The figure supports a concrete curation procedure; it does not prove that every possible future workaround has been eliminated.
+
+## Figure 4 — Source provenance among answers already counted correct
+
+Figure 4 on page 20 is a **horizontal stacked percentage bar chart**. The x-axis runs **0–100**; rows name five agents. Green represents primary sources, blue secondary sources, and pink ungrounded answers. Values are directly printed inside segments, with no confidence intervals or error bars. The chart includes Grok 3, OpenAI Deep Research, Proxy, Anthropic, and Operator; Google Deep Research and ChatGPT Agent are absent. [B; HIGH]
+
+| Agent | Primary | Secondary | Ungrounded |
+|---|---:|---:|---:|
+| Grok 3 DeepSearch | 61.54% | 15.38% | 23.08% |
+| OpenAI Deep Research | 61.54% | 25.64% | 12.82% |
+| Convergence AI Proxy | 92.86% | 7.14% | 0% |
+| Anthropic Computer Use | 87.5% | 12.5% | 0% |
+| OpenAI Operator | 89.29% | 7.14% | 3.57% |
+
+These are visually readable labels, not estimates from bar widths. They show that answer correctness and preferred-source grounding differ. They do **not** mean the same proportion of all questions was answered from primary sources. Figure 4 conflicts with Table 9 for OpenAI Deep Research and Operator: denominators and counts are discussed in Section 14. No denominator should be silently chosen to reconcile them.
+
+# 11. Table-by-table interpretation
+
+## Table 1 — Benchmark composition and human reference routes
+
+Table 1 on page 4 compares text-based, multimodal, and all questions. Columns are question count; distinct top-level URLs; mean/minimum/maximum steps per question; and mean/minimum/maximum webpages per question. Text-based: **56 questions, 61 URLs, 6.5/3/12 steps, 3.8/1/8 webpages**. Multimodal: **55, 47, 5.8/3/14, 3.0/1/6**. All: **111, 108, 6.1/3/14, 3.4/1/8**. Google Search visits are excluded from URL counts. No variability measures beyond minima/maxima appear. Route length reflects viable human-written trajectories, not minimal possible paths or agent traces. [A/B]
+
+## Table 2 — Principal accuracy, answer behavior, and conditional runtime
+
+Table 2 on page 7 compares five baselines, three non-computer-use agents, four computer-use agents, and humans. Accuracy columns cover all/text/multimodal. Outcome counts distinguish correct, wrong, unknown, and none. Time columns are average times separately for correct, wrong, and unknown responses; absent measurements use dashes. Unknown denotes no concrete answer, including abstention; none includes explicit no-answer-found outputs or failed loops. Section 9 reproduces the central numbers. [A/B]
+
+Humans lead overall; ChatGPT Agent leads agents; Google Deep Research and Operator tie at **23.4%** overall. Proxy and Anthropic tie at **9.1%** multimodal. GPT-4o with Google Search has **0 correct** and **107 none**, so its poor accuracy is heavily conditioned by refusing unsupported answers under the search prompt. No statistical significance markers or confidence intervals accompany the table.
+
+## Table 3 — Three agent failure examples
+
+Table 3 on page 9 provides qualitative cases rather than aggregate metrics. First, Deep Research's tree-identification search logs **46 visited websites**, deduplicated to **eight top-level URLs**, including irrelevant sites. Second, Operator finds the specified encyclopedia but leaves it, uses Omniglot, and gives a transcription the authors say is wrong both for the question and for that source. Third, Anthropic Computer Use reports inability to interact with Patatap's keyboard behavior. [A/B]
+
+The cases illustrate trajectory opacity, source substitution, and interaction failure. They do not show attacks or prove that a source intentionally deceived an agent. The small Lycian alphabet image is visibly included but is not needed to independently solve the task here; its exact phonetic glyphs are not confidently transcribed.
+
+## Table 4 — Baseline settings and restrictive context use
+
+Table 4 on page 16 prints GPT-4o maximum tokens **518**, DeepSeek R1 maximum tokens **8,000**, and temperature **0** for both settings. Its augmented prompt limits answers to supplied context, requests concise direct answers, and requires no-answer-found when context lacks a clear answer. This explains why snippet-augmented baselines frequently produce none. The table does not report commercial-agent internals, hardware, or seeds. [A/B]
+
+## Table 5 — Human performance, dead ends, time, and perceived difficulty
+
+Table 5 on page 16 reports text-based **83.6%, 46 correct, 9 wrong, 1 none**; multimodal **85.7%, 48 correct, 5 wrong, 2 none**; all **84.7%, 94 correct, 14 wrong, 3 none**. Dead ends average/max are **1.83/12**, **1.22/14**, and **1.50/14**, with minimum zero stated in the caption. Time average/min/max is **5:19/0:43/27:24**, **4:23/0:26/24:14**, and **4:46/0:26/27:24**. Difficulty counts appear in Section 9. [A/B]
+
+The 27:24 and 24:14 completed-attempt maxima do not necessarily contradict permission to abandon after fifteen minutes. However, the multimodal accuracy **85.7%** does not equal **48/55**, and its split counts sum to 55 while the reported percentage corresponds approximately to a different denominator. This is an unresolved numerical inconsistency.
+
+## Table 6 — Human errors and overlapping reasons
+
+Table 6 on page 17 shows three examples spanning **five distinct labels**: missing details, lack of topic knowledge, suboptimal source selection, obvious oversight, and task complexity. The Wingspan example combines three labels: unfamiliarity, a source missing expansion/habitat detail, and overlooking the required Asia expansion. The Tinkle example is overlooking an answer already on a relevant page. The snow-leopard example involves failure to identify correct dated map markers. [A/B]
+
+Appendix F's introduction says six causes, while the caption says five and the visible table contains five. The examples are deliberately compressed here while preserving each substantive error mechanism. The table provides no frequency counts for each reason; claims about their ordering come from the authors' prose.
+
+## Table 7 — Automatic response-evaluator prompt
+
+Table 7 on page 18 defines four classes: empty/no answer; hedged or abstaining/no direct answer; direct correct; and direct wrong. It assumes all questions are answerable and marks premise rejection wrong. Different answer formatting can be acceptable if it expresses the same information. Two examples demonstrate empty output and an access-related abstention; examples **3–17** are omitted from the paper. [A/B]
+
+This table supports how labels are operationalized. It is not proof that the evaluator independently checks webpage provenance. Appendix B's rejection of answer paraphrases and the evaluator's entailment-based tolerance create a boundary whose precise implementation cannot be resolved without the absent full prompt/code.
+
+## Table 8 — Automatic evaluator agreement by agent
+
+Table 8 on page 19 gives four-way/binary accuracy: Grok **99.1/99.1%**; OpenAI Deep Research **96.4/96.4%**; Anthropic **99.1/100%**; Proxy **99.1/100%**; Operator **97.3/98.2%**. Binary evaluation collapses labels to correct versus incorrect. These are evaluator agreement/accuracy values, not the agents' task success rates. They do not include Google Deep Research or ChatGPT Agent. [A/B]
+
+## Table 9 — Detailed split results and source counts
+
+Table 9 on page 19 extends Table 2 into all/text/multimodal groups with source attribution counts. Its dense typography is partly readable visually; exact small entries are principally drawn from the supplied extraction. Overall ungrounded/primary/secondary counts include Grok **3/8/2**, OpenAI Deep Research **5/25/10**, Google Deep Research **1/25/0**, Proxy **0/13/1**, Anthropic **0/14/2**, Operator **1/24/1**, and ChatGPT Agent **1/72/0**. [A; B for layout]
+
+For ChatGPT Agent, text-based correct responses are **43**, all primary; multimodal correct responses **30**, with **29 primary and 1 ungrounded**. OpenAI Deep Research has **34** text-based correct answers, attributed **24 primary/10 secondary**, and **6** multimodal correct, attributed **1 primary/5 ungrounded**. These counts show why modality and provenance must be interpreted together.
+
+Table 9 gives human text wrong **8** and multimodal wrong **6**, versus Table 5's **9** and **5**. Its human text outcome counts sum to **55**, not the benchmark's 56; multimodal counts sum to **56**, not 55. Its doubled percent signs for ChatGPT accuracy and `16.58` time formatting are typographical irregularities; the latter is not silently converted to 16:58. The source counts for Operator and OpenAI Deep Research disagree with Figure 4's proportions.
+
+## Table 10 — Four-trial DeepSeek stability
+
+Table 10 on page 20 reports without Serper **7.2%, 5.4%, 5.4%, 5.4%**, standard deviation **0.8%**; with Serper **1.8%, 0.9%, 2.7%, 2.7%**, standard deviation **0.7%**. These standard deviations describe variation in percentage accuracy; they are not confidence intervals. The first trial used Fireworks AI in March 2025, subsequent trials OpenRouter. The no-Serper run series differs from the main **8.1%** zero-shot result; the paper does not fully explain that relationship. [A: pp. 18, 20]
+
+# 12. Diagram / architecture interpretation
+
+There is no proposed agent architecture with modules, interfaces, or training components. The substantive diagrams describe **evaluation logic** and **dataset creation**.
+
+Figure 2's input is a trailer-specific factual question. Shared retrieval leads to two evidence-processing routes: directly inspect video or retrieve textual comments and infer. Both output the same answer, but only the direct route exercises the intended modality. The validation decision is to remove the item when the alternative route exists. This is a measurement-control diagram, not a security attack graph. [A/B: p. 4]
+
+Figure 3's inputs are authored questions, gold answers, viable approaches, and URLs. Stage 1 creates records; Stage 2 checks accuracy, clarity, and referenced routes; Stage 3 checks search and text-only shortcuts. Discarding candidates is the visible decision mechanism. Accepted records become benchmark items, while continued replacement is described in text rather than drawn as an explicit feedback arrow. No formal implementation of that maintenance loop is supplied. [A/B: pp. 2–4, 15]
+
+Figure 1's screenshot arrangement is an outcome comparison rather than an architecture. Figure 4's stacked bars are a result plot rather than a process diagram. These distinctions prevent visual complexity from being mistaken for a proposed new system design.
+
+# 13. Equations and mathematical concepts
+
+The supplied work contains no numbered equations, objective functions, optimization methods, proofs, or theoretical guarantees. Its mathematical content consists of accuracy, percentages, averages, minima/maxima, and standard deviations.
+
+For explanation, **[C] analyst-derived formula**: `accuracy (%) = 100 × number of correct answers / number of evaluated questions`. With all benchmark questions, ChatGPT Agent's **100 × 73/111 ≈ 65.8%** and humans' **100 × 94/111 ≈ 84.7%** reproduce the printed overall results. The operands are Table 2's correct counts and Table 1's total. This formula is an explanatory reconstruction, not a numbered author equation.
+
+A **percentage-point difference** subtracts two percentages directly. A **relative improvement** divides that difference by the comparison percentage before multiplying by 100. Only percentage-point comparisons are needed here; a reader should not interpret the reported 42.4-point lead as 42.4% relative improvement.
+
+Source-proportion calculations use correct answers as denominator. For Table 9's OpenAI Deep Research row, non-primary correct answers are **5 + 10 = 15**, out of **40**; **100 × 15/40 = 37.5%** [C]. Figure 4 instead labels secondary plus ungrounded **25.64 + 12.82 = 38.46%**, approximately the **38.5%** printed on page 9. These cannot be treated as the same exact result.
+
+Standard deviation summarizes dispersion across the four listed trials. The work does not specify the exact computational convention, underlying unrounded values, or inferential test. Accordingly, its printed **0.8%/0.7%** are preserved as reported rather than independently recertified from rounded rows.
+
+# 14. Interpretation and discussion
+
+The strongest supported lesson is that **success requires more than finding a plausible answer string**. Curated live-web tasks expose differences between text retrieval, visual interaction, precise control, source compliance, and planning. Strong computer-use capability improves performance in ChatGPT Agent's case, but the mere presence of mouse/keyboard tools does not guarantee superiority: OpenAI Deep Research outperforms Proxy, Anthropic, and Operator overall. [A: pp. 7–10; D: synthesis]
+
+O1 and O2 are addressed by the dataset and explicit filtering. O3 is addressed by a human benchmark showing high but imperfect performance. O4 is addressed by the model comparisons, with caveats about unequal dates/resources. O5 is addressed by qualitative traces and source attribution, but inconsistencies reduce precision. O6 is addressed by evaluator agreement and one model's repeated trials. No formal hypothesis receives a significance-tested acceptance or rejection.
+
+## Source-grounded consistency checks
+
+1. **Human multimodal denominator:** Table 1 defines **55** multimodal questions; Tables 2/5/9 print **48 correct** and **85.7%**. **48/55 × 100 ≈ 87.3%** [C], not 85.7%. **48/56 × 100 ≈ 85.7%** [C], but assigning 56 to multimodal contradicts Table 1. The correct denominator cannot be determined from supplied evidence. Overall **94/111 ≈ 84.7%** remains consistent.
+2. **Human wrong counts:** Table 5 prints text/multimodal wrong **9/5**; Table 9 prints **8/6**. Both yield fourteen wrong overall. Table 9 split totals additionally mismatch the stated 56/55 category sizes. No correction is silently applied.
+3. **Source credibility percentage:** page 8 states **37.5%** of OpenAI Deep Research's correct answers are secondary or ungrounded; page 9 states **38.5%**. Table 9's **15/40** supports 37.5%; Figure 4's **25.64 + 12.82 = 38.46%** supports about 38.5%. This is a main-text/appendix/figure inconsistency, not mere equivalent rounding.
+4. **Operator provenance:** Table 9's **24 primary/1 secondary/1 ungrounded**, total **26**, implies **92.31/3.85/3.85%** [C, rounded]. Figure 4 labels **89.29/7.14/3.57%**, incompatible with that row. The denominator behind the chart is not supplied.
+5. **Human error taxonomy:** Appendix F introductory text says six causes; Table 6 caption says five and the visible labels identify five.
+6. **Grok abstention:** Appendix K says Grok never abstains, yet Table 2 lists **2 unknown** responses. Unknown includes abstention but can also include other non-concrete answers, so this is a tension rather than definitive proof those two were abstentions.
+7. **Main versus repeated DeepSeek runs:** main zero-shot accuracy **8.1%** differs from Table 10's **7.2/5.4/5.4/5.4%** series. Different providers and trial context are partly reported; no full reconciliation is given.
+8. **Paraphrase versus entailment:** Appendix B says answer paraphrases cannot count as correct, while scoring emphasizes entailment and Table 7 permits equivalent formatting. The exact boundary for acceptable semantic reformulation is not fully specified.
+9. **Time reporting:** human maximum times above fifteen minutes can coexist with optional abandonment after fifteen minutes. Page 8's under-thirty-minute observation for complex human tasks should not be rewritten as the formal study timeout. ChatGPT's 45-minute allowance explains its very long answer times.
+
+These checks support HIGH confidence in the overall ranking and major capability gap, MEDIUM confidence in exact human split percentages and source proportions, and UNKNOWN confidence in any inferred attack susceptibility.
+
+# 15. Contributions and novelty
+
+**Benchmark/dataset contribution [A]:** a 111-item live-web test with diverse interaction requirements, concise gold answers, and validated human routes. Its important novelty is the combination of live content, interaction diversity, and explicit resistance to text-only workarounds, as positioned by the authors. [pp. 1–4]
+
+**Methodological contribution [A]:** a question-writing and validation procedure that treats workaround prevention as essential to measuring intended modalities, with at least two author validators. Periodic replacement is a proposed maintenance mechanism rather than demonstrated long-term maintenance performance. [pp. 2–4, 15]
+
+**Empirical contribution [A]:** a human reference, seven-agent comparison, baseline controls, modality breakdowns, runtime analysis, qualitative failure cases, and source attribution. It documents ChatGPT Agent's substantially stronger performance while retaining a human gap. [pp. 5–10, 16–20]
+
+**Implementation/evaluation contribution [A]:** an automatic answer classifier reported to agree closely with manual labels, with linked code and prompt not supplied here. **No new agent algorithm, model-training method, theoretical theorem, or security defense** is introduced in the supplied work. [D: contribution inventory]
+
+**Research relevance [D; MEDIUM]:** the evidence motivates security studies that separate answer correctness from source trust, route compliance, and action transparency. Its relevance is preparatory and methodological; it does not demonstrate the causal claim that web agents are more vulnerable than standalone LLMs.
+
+# 16. Limitations
+
+## Authors' stated limitations
+
+Appendix A acknowledges that every item has one short answer, whereas realistic queries may have no answer, several answers, or long-form answers. The authors recommend credible sources for each possible answer and source-quality evaluation. The benchmark includes multilingual items but is too small for multilingual performance to be its principal aim. They encourage systematic work across cultures and languages. Finally, differing trajectory detail makes direct agent comparison difficult. [A: pp. 14–15]
+
+Elsewhere, authors acknowledge ongoing contamination and invalidated-route risks; hard-to-eliminate workarounds; costly manual evaluation without APIs; small size and difficulty creating high-quality questions; access denials; and shortcomings in fine control, filtering, and speed. These are explicit challenges and observed weaknesses, although not all appear under Appendix A's formal limitations heading. [A: pp. 2–3, 8–10, 17]
+
+## Additional evidence-based analyst observations
+
+[D; MEDIUM] Different testing dates and the 45-versus-15-minute limits mean the agent comparison is not a resource-matched or temporally matched causal experiment. Product changes, website changes, and allowed time may contribute alongside capability.
+
+[D; MEDIUM] Task construction deliberately disadvantages snippet-only solutions. Low snippet-baseline performance validates this benchmark's intended difficulty but does not establish that retrieval augmentation generally harms model performance.
+
+[D; HIGH] Small-sample performance, no supplied confidence intervals, and no formal significance tests limit claims about statistical precision. The word significantly in the prose should not be read as evidence of an unreported significance test.
+
+[D; MEDIUM] Source attribution conflates an unspecified alternative source with an unreliable one. A non-primary route is not automatically malicious or factually poor. Correct-answer-only attribution excludes incorrect-output provenance.
+
+[D; HIGH] Numerical inconsistencies affect human split results, provenance proportions, and trial comparability. The absent full evaluator prompt, code, benchmark records, and traces prevent a complete independent replication or adjudication of those discrepancies.
+
+# 17. Threats to validity
+
+The following validity labels are **analyst framing**, not terminology attributed to the authors.
+
+**Internal validity [D]:** commercial systems differ in many unisolated properties; time budgets and dates differ; manual execution creates room for variation in termination and assistance handling. The study supports descriptive system outcomes under its protocol, not isolated effects of computer-use tools.
+
+**Construct validity [D]:** short-answer correctness does not establish source trust, modality use, or successful general-purpose autonomy. Workaround filtering strengthens modality measurement, but a correct guess still counts as correct. Strict handling of uncertainty distinguishes direct answer provision from tentative but potentially useful assistance.
+
+**External validity [D]:** 111 curated, answerable, public-access questions do not cover account-based work, transactions, paywalls, broad long-form inquiry, or adversarial pages. Language-specific recruitment limits comparison with a generic human population, while multilingual performance is not systematically measured.
+
+**Statistical conclusion validity [D]:** tables are descriptive and lack uncertainty intervals and significance tests. Four-run DeepSeek stability is evidence about those trials, not all systems or benchmark versions. Printed contradictions weaken exact subgroup comparisons.
+
+**Ecological validity [D]:** live websites and real interfaces improve resemblance to everyday browsing compared with simulation, according to the paper's motivation. Conversely, suppressing human help and requiring one concise gold answer omit common collaborative browsing behaviors.
+
+**Reproducibility [D]:** versioned prompts and baseline settings are helpful, but evolving websites, commercial products, unavailable APIs, heterogeneous trace formats, and absent linked artifacts complicate replay. No independent reproduction was performed.
+
+**Security validity [D; HIGH]:** ordinary navigation errors, source substitutions, access restrictions, and refusals cannot serve as attack outcomes without a defined adversary and security objective. No measured vulnerability difference is available.
+
+# 18. Future work and open questions
+
+## A. Explicit author proposals
+
+The authors propose continued replacement of invalid or contaminated items; rigorous workaround filtering in future benchmarks; APIs and easier trajectory recording; clearer structured search/reasoning reports; evaluation of source credibility alongside correctness; improved mouse/keyboard coordination, multimodal interactions, and restricted-access handling; and more structured planning to reduce repetition and irrelevant information. They suggest combining computer-use abilities with stronger trained search capabilities. [A: pp. 2–3, 8–10]
+
+Appendix A recommends evaluation of unanswerable, multi-answer, and long-form tasks, plus systematic cross-language/culture studies and greater trajectory transparency. Appendix K says Grok's always-answer behavior needs user study to judge desirability and calls for improved adaptability and user-centered refinement. [A: pp. 14–15, 20]
+
+## B. Additional remaining questions
+
+[D] Would rankings persist under equal time budgets and synchronized evaluation dates? Which failures originate in perception, reasoning, interface execution, source policy, or termination? How reliably do validators detect newly appearing shortcuts? How should uncertainty be rewarded when an answerable task is inaccessible to a specific agent?
+
+[D] For the user's security objective, a future study would need to define malicious control, attacker goals, protected assets, and success criteria, then compare suitably matched agent and standalone-model conditions. BEARCUBS suggests where to inspect behavior—source substitution, interaction prompts, route visibility, and loops—but supplies no measured attack design or attack success rate. Those are open research directions, not paper results.
+
+# 19. Terminology and notation glossary
+
+| Term | Beginner-friendly meaning within this paper |
+|---|---|
+| BEARCUBS | BEnchmark for Agents with Real-world Computer Use and Browsing Skills; name expanded in p. 1 footnote. |
+| LLM | Large language model; the language-processing basis of the systems discussed. |
+| AI | Artificial intelligence. |
+| QA pair | Question–answer pair with a benchmark question and reference answer. |
+| Computer use | Acting through a virtual mouse/keyboard while processing screen pixels. |
+| Multimodal | Involving image, video, audio, or real-time interactions beyond ordinary text. |
+| Zero-shot | Providing the question without examples or retrieval context. |
+| Parametric knowledge | Information available through the model rather than newly retrieved pages. |
+| Search augmentation | Supplying retrieved result titles/snippets with the question. |
+| HTML | Hypertext Markup Language; the paper mentions webpage source as a text-based interface. |
+| API | Application programming interface; programmable access lacking for some tested agents. |
+| URL | Uniform Resource Locator; a web address. Top-level URL counts are not counts of every visited subpage. |
+| OCR | Optical character recognition; appears in the olmOCR example. No new OCR was run here. |
+| CAPTCHA | Access challenge mentioned in the intervention protocol; its acronym is not expanded by the supplied work. |
+| Gold answer | Reference answer used to score a response. |
+| Trajectory | Sequence of websites, actions, and interactions used while solving a task. |
+| Dead end | Need to leave the current page and backtrack or restart searching. |
+| Dead loop | Repetitive agent behavior without progress, triggering termination. |
+| Workaround | Alternative route bypassing the intended skill or interaction. |
+| Contamination | Benchmark information becoming available through training leakage or searchable web publication. |
+| Primary source | Reliable or question-specified source under this paper's operational definition. |
+| Secondary source | Unreliable or not-question-specified source under this paper's definition. |
+| Ungrounded | Answer based on internal knowledge/reasoning rather than a source. |
+| Unk./Uncertain | No concrete answer, including uncertainty or abstention. |
+| None | No-answer-found output or failure to produce an answer, including loops. |
+| Temperature | Reported model configuration set to zero for baselines and evaluator; no deeper definition is supplied. |
+| In-context example | Example included in an evaluator prompt to illustrate classification. |
+| Percentage point | Absolute difference between two percentages. |
+| Std. Dev. | Standard deviation across the four listed stability trials. |
+
+No unfamiliar mathematical symbols require a separate notation system. Table checkmarks and crosses indicate correct and wrong responses. Dashes indicate absent or inapplicable entries, not zero.
+
+# 20. Key numerical results
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Retained questions | 111 | questions | Final benchmark | Author-reported | p. 4, T1 |
+| Text / multimodal | 56 / 55 | questions | Category sizes | Author-reported | p. 4, T1 |
+| Authors' questions | 65 | QA pairs | Retained author-written items | Author-reported | p. 4, §3 |
+| Retained freelancer items | 46 | QA pairs | 111 − 65 | Analyst-derived | p. 4 |
+| Freelancer acceptance | 58.2 | % | Submitted freelancer questions | Author-reported | p. 3, §2 |
+| Workaround removals | 13 | questions | Multimodal candidates | Author-reported | p. 3, §2 |
+| Distinct top-level URLs | 108 | URLs | Excludes Google Search visits | Author-reported | pp. 4–5 |
+| Human route mean | 6.1 / 3.4 | steps / webpages | Reference routes | Author-reported | p. 4, T1 |
+| Validators | at least 2 | authors/item | Question and trajectory checking | Author-reported | p. 15, Fig. 3 |
+| Search results | up to 10 | results/question | Titles and snippets | Author-reported | p. 6, §4.2 |
+| Maximum output tokens | 518 / 8,000 | tokens | GPT-4o / DeepSeek R1 | Author-reported | p. 16, T4 |
+| Temperature | 0 | configuration value | Both baselines and evaluator | Author-reported | p. 16 |
+| Agent time allowance | 15 / 45 | minutes | Usual computer-use / ChatGPT Agent | Author-reported | p. 3, footnote 3 |
+| Human overall accuracy | 84.7 | % | 94 correct of 111 | Author-reported | p. 7, T2 |
+| ChatGPT Agent accuracy | 65.8 / 76.8 / 54.5 | % | All / text / multimodal | Author-reported | p. 7, T2 |
+| Operator accuracy | 23.4 / 33.9 / 12.7 | % | All / text / multimodal | Author-reported | p. 7, T2 |
+| OpenAI Deep Research accuracy | 36.0 / 60.7 / 10.9 | % | All / text / multimodal | Author-reported | p. 7, T2 |
+| Best zero-shot baseline | 8.1 | % | DeepSeek R1 overall | Author-reported | p. 7, T2 |
+| GPT-4o search baseline | 0.0 | % | 107 none, 4 wrong | Author-reported | p. 7, T2 |
+| ChatGPT–Operator overall difference | 42.4 | percentage points | 65.8 − 23.4 | Author-reported | p. 6, §5 |
+| Human–ChatGPT overall difference | 18.9 | percentage points | 84.7 − 65.8 | Analyst-derived | p. 7, T2 |
+| ChatGPT–Operator multimodal difference | 41.8 | percentage points | 54.5 − 12.7 | Analyst-derived | pp. 7–8 |
+| Human overall time | 4:46 | min:sec | All attempts in T5 | Author-reported | p. 16, T5 |
+| Successful human / ChatGPT time | 4:24 / 9:16 | min:sec | Correct answers only | Author-reported | p. 7, T2 |
+| Human mean dead ends | 1.50 | dead ends/question | Overall | Author-reported | p. 16, T5 |
+| Human difficulty counts | 55 / 36 / 20 | questions | Easy / medium / hard | Author-reported | p. 16, T5 |
+| Figure 1 completion | 43 seconds / 18 minutes | time | Human / ChatGPT single example | Visually readable | p. 3, F1 |
+| Trace detail | 69.8 / 6.2 | reported steps/question | Grok / Proxy, differing definitions | Author-reported | p. 8, §6 |
+| Deep Research non-primary, T9 | 37.5 | % of correct answers | (5 + 10)/40 × 100 | Analyst-derived | p. 19, T9 |
+| Deep Research non-primary, F4 | 38.46 | % of correct answers | 25.64 + 12.82; conflicts with T9 | Analyst-derived | p. 20, F4 |
+| Evaluator aggregate agreement | 98.2 / 98.7 | % | Four-way / binary | Author-reported | p. 6, footnote 16 |
+| Evaluator runtime / cost | about 1:30 / 0.80 | min:sec / USD | 111 questions | Author-reported | p. 16, App. G |
+| Evaluator examples | 17, of which 2 shown | examples | Full prompt absent | Author-reported | pp. 16, 18 |
+| Repeat evaluator runs | 3 | runs | Anthropic and Proxy, identical labels | Author-reported | p. 17, App. G |
+| Stability standard deviations | 0.8 / 0.7 | percentage accuracy units | DeepSeek without / with Serper | Author-reported | p. 20, T10 |
+
+No approximate visual estimates are used for key quantities. The reported **85.7%** human multimodal figure is retained in preceding tables with its explicit inconsistency; it is not presented here as a newly verified calculation.
+
+# 21. Claim–evidence map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence Strength |
+|---|---|---|---|---|
+| The benchmark tests diverse live-web fact finding. | 111 items, 56/55 modalities, 108 URLs, validated routes. | T1; X1–X3 | pp. 1–5 | Strong descriptive support; live-web coverage is curated, not exhaustive. |
+| Intended multimodal tasks require workaround checking. | 13 removals; trailer answer available via forum comment. | F2/F3 | pp. 3–4, 15 | Strong evidence of actual shortcut cases; does not prove universal resistance. |
+| Humans outperform all tested agents overall. | 84.7% versus best agent 65.8%. | T2/T9; X1/X3 | pp. 7, 19 | HIGH for overall result; dates and budgets differ. |
+| ChatGPT Agent substantially improves computer-use performance. | 65.8% overall, 54.5% multimodal versus Operator 23.4%/12.7%. | T2; X3 | pp. 7–8 | Strong observed comparison; not a controlled explanation of causes. |
+| Simple baselines struggle on retained tasks. | 0–8.1% overall across five baselines. | T2/T4; X2 | pp. 7, 16 | Strong under these prompts/token limits; no general anti-retrieval conclusion. |
+| Correctness can coexist with source problems. | Non-primary correct answers in T9/F4; source substitution example. | T3/T9/F4; X4 | pp. 9, 19–20 | Strong qualitative support; precise proportions conflict. |
+| Slow failures and loops are recurring behaviors. | Wrong/uncertain times; Proxy and Operator loop observations. | T2; X3 | pp. 7–8 | Descriptive association, not causal evidence that time creates failure. |
+| Automatic labels closely match manual scoring. | 96.4–99.1% four-way per agent, high binary agreement. | T7/T8; X5 | pp. 18–19 | Five-agent scope; linked full prompt/code absent. |
+| Limited repeated baseline trials show low variation. | Four DeepSeek trials; SD 0.8%/0.7%. | T10; X6 | pp. 18, 20 | Narrow stability evidence; main zero-shot value differs. |
+| Evidence can motivate security-boundary research. | Live actions, access prompts, source substitution, opaque traces. | F1/T3; X3/X4 | pp. 3, 6, 8–10 | [D] inference only; no attacks or comparative vulnerability rate measured. |
+
+# 22. Very simple explanation — Explain Like I'm 15
+
+Imagine asking an AI to find a detail hidden in a video, a scanned book, an interactive map, or a website that responds to keyboard presses. Knowing lots of facts is not enough. The AI has to reach the right page, understand what it is seeing, click or type accurately, and check that its answer came from the place you asked it to use.
+
+The researchers made 111 questions like these. They checked that people could reach the answers and removed some questions when an AI could skip the intended challenge by finding a text shortcut elsewhere. People answered about 85% correctly overall. The best tested agent, ChatGPT Agent, answered 65.8% correctly, much better than Operator's 23.4%, but still below people and often slower.
+
+A key lesson is that a correct answer does not tell the whole story. An AI might guess correctly, read a comment instead of watching a video, or use a different source after finding the requested one. The paper therefore argues for examining the steps and sources as well as the final answer.
+
+For your security question, this gives useful clues about what needs careful checking when an AI can browse and act. It does not prove that web agents are easier to attack than an AI that only answers text questions. The researchers did not put malicious instructions on websites or measure successful attacks. Reliability problems can help identify questions for a future security study, but they are not themselves measured security breaches.
+
+# Completeness Audit
+
+The inventory denominator is the supplied twenty-page document, its sections and substantive subtopics, four figures, ten tables, eleven appendices, six registered analyses, and disclosed linked artifacts. All supplied pages were read through their text; only the fifteen supplied image pages were visually inspected. Coverage is not called complete merely because this report is long.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title/authors/venue/abstract, S0 | Yes, text and image | Yes | Represented in compressed form | Authors: Yixiao Song, Katherine Thai, Chau Minh Pham, Yapei Chang, Mazin Nadaf, Mohit Iyyer; UMass Amherst and University of Maryland, College Park. COLM 2025; page 1 displays arXiv v3 dated 24 July 2025. |
+| S1 Introduction | Yes | Yes | Fully represented substantively | Motivation, prior-benchmark shortcomings, contribution. |
+| S2 contamination | Yes | Yes | Fully represented | Includes public-release/maintenance tradeoff. |
+| S2 workarounds | Yes | Yes | Fully represented | 13 removals and concrete discarded example. |
+| S2 interaction diversity | Yes | Yes | Fully represented | Freelancer acceptance and task breadth. |
+| S2 slow evaluation | Yes | Yes | Fully represented | Manual operation, APIs, time limits. |
+| S3 criteria/collection/validation | Yes | Yes | Fully represented | Counts, payment, gold routes, validators. |
+| S3 reliable interactions/modalities | Yes | Yes | Fully represented | Source-specific questions and media categories. |
+| S3 website diversity | Text only on p. 5 | Yes | Fully represented | No p. 5 layout inspection claimed. |
+| S4 and SS4.1 human setup | Yes; p. 5 text only | Yes | Fully represented | Timing, dead ends, recruitment, stop permission. |
+| SS4.2 baselines/agents/execution/scoring | Yes | Yes | Fully represented | Conditions, prompts, dates, budgets, scoring. |
+| S5/SS5.1 human results/errors/difficulty | Yes | Yes | Fully represented with uncertainty | Split counts and percentages conflict. |
+| SS5.2 baselines/multimodal/ranking/time | Yes | Yes | Fully represented | No significance test invented. |
+| S6 trajectory interpretability | Yes | Yes | Fully represented | Step definitions differ by system. |
+| S6 source credibility | Yes | Yes | Fully represented with uncertainty | 37.5/38.5 and F4/T9 discrepancies. |
+| S6 interaction/access/planning | Yes | Yes | Fully represented | Failures distinguished from attacks. |
+| S7 related-work categories | Yes | Yes | Represented in compressed form | Bibliographic names grouped; cited studies not independently read. |
+| S8 conclusion | Yes | Yes | Represented in compressed form | Main findings integrated without repetition. |
+| Acknowledgments | Text only | Briefly | Inspected but deliberately compressed as secondary | Funding and assistance acknowledged; no methodological inference drawn. |
+| References, pp. 11–14 | Text only | Categories and source boundary | Inspected but deliberately compressed as secondary | Full citation list not reproduced or verified. |
+| Informal motivating questions/O1–O6 | Yes | Yes | Fully represented | No numbered author RQs manufactured. |
+| Formal hypotheses | No such item found | Yes, absence stated | Not present | No hypothesis tests claimed. |
+| X1 human study | Yes | Yes | Fully represented | T2/T5/T6. |
+| X2 baseline comparison | Yes | Yes | Fully represented | T2/T4/T9. |
+| X3 agent comparison and traces | Yes | Yes | Fully represented | T2/T3/T9, F1. |
+| X4 source attribution | Yes | Yes | Fully represented with uncertainty | Correct-answer-only scope. |
+| X5 evaluator agreement/repeats | Yes | Yes | Fully represented | Five-agent scope and missing full prompt. |
+| X6 four-run stability | Yes | Yes | Fully represented | Limited generalization. |
+| F1 | Visually and textually | Yes | Fully represented at readable level | Screenshot microtext not transcribed. |
+| F2 | Visually and textually | Yes | Fully represented | Removed-item status preserved. |
+| F3 | Visually and textually | Yes | Fully represented | Three stages and checks. |
+| F4 | Visually and textually | Yes | Fully represented | Exact segment labels; conflicting counts disclosed. |
+| T1 | Visually and textually | Yes | Fully represented | All rows/route statistics. |
+| T2 | Visually and textually | Yes | Fully represented substantively | Accuracy/counts and key conditional times. |
+| T3 | Visually and textually | Yes | Represented in compressed form | All three failure mechanisms; URLs not individually reproduced. |
+| T4 | Visually and textually | Yes | Fully represented substantively | Settings and prompt logic. |
+| T5 | Visually and textually | Yes | Fully represented | Counts, difficulty, time, dead ends. |
+| T6 | Visually and textually | Yes | Represented in compressed form | All five visible error labels and three examples. |
+| T7 | Visually and textually | Yes | Fully represented substantively | Four labels and two shown example roles. |
+| T8 | Visually and textually | Yes | Fully represented | All five rows. |
+| T9 | Visual layout plus supplied detailed text | Yes | Represented in compressed form with uncertainty | All principal accuracies, overall source counts, important split entries; not every split time/count repeated. |
+| T10 | Visually and textually | Yes | Fully represented | All trial values and reported SDs. |
+| Diagram paths, F2/F3 | Visually | Yes | Fully represented | Inputs, stages, outputs, decisions. |
+| Major equations/theorems | None found | Absence stated | Not present | Explanatory formulas labeled analyst-derived. |
+| Algorithms/pseudocode | None found | Absence stated | Not present | Printed prompts are classified as prompts. |
+| AA limitations | Text p. 14; visual/text p. 15 | Yes | Fully represented | All three formal limitations. |
+| AB creation workflow | Yes | Yes | Fully represented | Four criteria and validation. |
+| AC recruitment | Yes | Yes | Fully represented | Vietnamese assignment unresolved. |
+| AD baseline prompt | Yes | Yes | Fully represented substantively | Exact prompt not reproduced in full. |
+| AE human details | Yes | Yes | Fully represented | Includes contradictions. |
+| AF human examples | Yes | Yes | Represented in compressed form | Taxonomy mismatch retained. |
+| AG evaluator | Yes | Yes | Fully represented for supplied material | Full examples/code absent. |
+| AH detailed results | Yes | Yes | Represented in compressed form | Redundant rows condensed. |
+| AI size justification | Yes | Yes | Represented in compressed form | Prior examples: AIME 30, CodeElo 387, Proof or Bluff six; these are author-reported context, not external verification. |
+| AJ source proportions | Yes | Yes | Fully represented with uncertainty | Counts and figure disagreement. |
+| AK agent behavior | Yes | Yes | Fully represented substantively | Language behavior, answer tendency, premature impossibility claims. |
+| Major contributions | Yes | Yes | Fully represented | Dataset, method, evaluation, empirical evidence. |
+| Author-stated limitations/challenges | Yes | Yes | Fully represented | Formal and distributed disclosures distinguished. |
+| Substantive footnotes | Yes | Yes | Represented in compressed form | Acronym/release, maintenance tradeoff, timeout, pay, languages, dead ends, dates, intervention, evaluator, loop times, step definitions, provider changes. |
+| Anti-distillation footnote | Yes | Briefly accounted here | Represented in compressed form | Authors speculate brief/obscured traces may reflect anti-distillation strategy; not demonstrated and not used as a security conclusion. |
+| Linked dataset/leaderboard | No | Absence disclosed | Missing from supplied material | Public availability is reported, contents not reviewed. |
+| Full evaluator code/prompt | No | Absence disclosed | Missing from supplied material | Examples 3–17 intentionally omitted by paper. |
+| Raw recordings/agent traces/question records | No | Absence disclosed | Missing from supplied material | Only paper descriptions/examples inspected. |
+| Separate supplements/embedded files | None supplied | Yes | Not available | No absent supplement claimed reviewed. |
+
+## Missing or inaccessible material
+
+No page is missing from the supplied 1–20 text sequence. Images for pages **5 and 11–14** are absent, so their layout and visual details were not inspected. External benchmark records, leaderboard contents, raw trajectories/recordings, full evaluator prompt and code, and the papers in the bibliography were not supplied or accessed. Figure 1's small internal screenshot text and Table 3's phonetic glyph details are not confidently readable at transcription level. The omitted evaluator examples are unavailable even though their existence is reported.
+
+## Uncertain interpretations
+
+Unresolved matters are the human multimodal denominator and wrong-count allocations; differing Deep Research provenance percentages; Operator's Figure 4/Table 9 disagreement; five-versus-six human error causes; the exact meaning of Grok's two unknown outputs relative to never abstaining; the main-versus-repeated DeepSeek baseline relationship; accepted paraphrase boundaries; the `16.58` Table 9 time typography; and Vietnamese-specific recruitment. None is silently corrected. Security susceptibility and comparative attack vulnerability are UNKNOWN because no attack experiment is supplied.
+
+## Deliberately compressed material
+
+Repeated introduction/conclusion statements, bibliographic entries, acknowledgments, complete prompt wording, long example questions, individual URLs in Table 3, and redundant detailed Table 9 outcome/timing entries are compressed. Every figure and table has a separate interpretation; compression does not remove any known distinct experiment or major finding. The low-variance rationale includes the authors' comparisons with small prior benchmarks, but their full bibliographic descriptions are not reproduced. Footnote links are treated as reported availability rather than verified resources.
+
+## Potential omissions
+
+No known major section, appendix, figure, table, or distinct registered analysis in the supplied inventory is left wholly unrepresented. Some individual secondary table cells, prompt example wording, citation details, and screenshot microtext are not reproduced, as disclosed above. This report is therefore a comprehensive representation of the **accessible supplied evidence**, with explicit compression and unresolved contradictions; it is not a verified replication, an inspection of linked artifacts, or a complete security analysis of web agents.

@@ -1,0 +1,488 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work contains extracted text for all 19 physical PDF pages. Rendered source images are supplied for pages 1–8, 11–17, and 19: 16 visually inspectable pages. Pages 9, 10, and 18 were reviewed through supplied extracted text only. Thus, the main document is available, but visual coverage is partial. No physical page is apparently missing from the supplied text sequence. This does not establish that every independently distributed research artifact was supplied.
+
+The main text, Tables 1–15, Figures 1–15, and Appendices A–F are represented in the supplied material. Tables are readable in their rendered pages and extracted text. Figure 6 is a readable heatmap, but its individual cells have no exact numerical labels. The small website screenshots in Figures 1, 4, 5, and especially 15 allow inspection of layout and highlighted regions; fine interface text is not consistently legible. Figure 15's captions and surrounding methodological text provide information that cannot be recovered confidently from the screenshot pixels alone. There are no numbered mathematical equations, algorithms, theorems, or proofs in the supplied work. Its main mathematical concepts are proportions, conditional transfer rates, combinations, and confidence intervals.
+
+OCR was not needed because native/extracted text and rendered images were supplied. No independent extraction or file inspection was performed. The failed local-image reference to a file named '-' does not remove the other 16 supplied images or their associated text. The provided hash is retained as a source identifier; it was not independently verified.
+
+The appendix is part of the supplied paper, rather than an independently reviewed supplementary package. The authors reference a framework repository, experiment scripts, configurations, templates, setup instructions, logs, and model identifiers. Those external artifacts were not supplied or inspected. Embedded-file count is reported as zero in the supplied accessibility metadata. The automatic appendix-page detection does not describe the actual appendix extent: the explicit Appendix begins on page 11 and continues through page 19.
+
+Evidence convention throughout: [A] AUTHOR-REPORTED means explicitly stated by the paper; [B] DIRECTLY OBSERVABLE means visible in a supplied image or table; [C] ANALYST-DERIVED means calculated from supplied values, with operands shown; [D] ANALYST INTERPRETATION means an inference rather than an author finding. No [E] EXTERNAL INFORMATION is introduced. HIGH confidence denotes clear source support; MEDIUM denotes qualified inference or an unresolved reporting detail; LOW denotes weak visual or methodological support; UNKNOWN denotes unavailable information. Page locators refer to physical PDF pages, which match the printed page numbers in this document.
+
+## 1. Plain-Language Orientation
+
+This is an empirical cybersecurity and artificial-intelligence benchmark paper about agents that use a browser to carry out a user's task. Such an agent might read an email, inspect a candidate's profile, or find information in restaurant reviews. The problem is that the material it reads can contain instructions written by someone other than the user. An attacker can place persuasive text and a clickable control in an ordinary webpage field, encouraging the agent to abandon the authorized task and open an attacker-controlled website. The paper calls this a prompt injection. [A; pp. 1, 3–5]
+
+The researchers introduce the Task-Redirecting Agent Persuasion Benchmark, abbreviated TRAP. They combine 18 legitimate tasks with 35 attack templates, producing 630 task–injection combinations for each of six models. Experiments use deterministic website clones rather than live user accounts or real private information. The attacks combine human persuasion principles with language-model manipulation methods, and vary interface form, placement, or task-specific wording in additional studies. [A; pp. 3–5, 9]
+
+The principal outcome is deliberately narrow: whether the agent clicks an injected button or hyperlink and is redirected. Across 3,780 model runs, the authors report 948 successful attacks, approximately 25%. Model-level attack success rates range from 13% for GPT-5 to 43% for DeepSeek-R1. Buttons account for 77.5% of successful attacks in the main evaluation, and a paired email experiment also finds much higher attack success with buttons. Small wording changes tied to the legitimate task increase average attack success for two selected prompts, although effects vary substantially by model. [A; Tables 1, 4, 6; pp. 6–8]
+
+The central contribution is a modular way to study where and how browser agents are redirected. It separates several attack ingredients instead of treating each injection as an indivisible malicious prompt. For the user's research question, the paper supplies evidence about additional vulnerabilities associated with web interaction: attacker-editable content, controls that execute navigation, repeated observations, and task-dependent exposure. It does not directly compare an otherwise identical standalone language model with its browser-agent version. Therefore, explanations of why agents might be more vulnerable are analyst inferences from this mechanism, not a measured agent-versus-standalone effect. [D; HIGH confidence in the comparison boundary; MEDIUM confidence in the explanatory inference]
+
+## 2. Document Roadmap
+
+The title is It’s a TRAP! Task-Redirecting Agent Persuasion Benchmark for Web Agents. The authors are Karolina Korgul, Yushi Yang, Arkadiusz Drohomirecki, Piotr Błaszczyk, Will Howard, Lukas Aichberger, Chris Russell, Philip H. S. Torr, Adam Mahdi, and Adel Bibi. The first-page publication statement identifies Proceedings of the 43rd International Conference on Machine Learning, Seoul, South Korea, PMLR 306, 2026. Affiliations include the University of Oxford, SoftServe, independent researchers, and Johannes Kepler University Linz. Superscript asterisks and daggers appear in the author line; their meanings are not explicitly explained in the supplied text. [A/B; p. 1]
+
+The Abstract and §1 Introduction frame the problem and list three contributions: a modular attack space, an expandable framework, and empirical insights. §2 Related work contrasts TRAP with earlier benchmarks according to attack structure and success criteria. §3 explains agent setup, legitimate tasks, injection components, benchmark construction, and metrics. §4 contains six distinct analyses: main performance, cross-model transfer, attack-component patterns, buttons versus hyperlinks, injection location, and contextual tailoring. §5 concludes and states limitations. Page 9 contains the Impact Statement, acknowledgements, and the start of References; References continue on page 10.
+
+Appendix A gives reproducibility and language-model-use statements. Appendix B illustrates prompts and injection ingredients. Appendix C specifies environments, actions, runtime settings, model versions, and the single-click metric. Appendix D contains all 18 legitimate prompts and component definitions. Appendix E adds newer-model results on a changed environment set. Appendix F contains curated success, resistance, and edge-case traces, plus the per-model location breakdown. The appendix introduction describes six parts, but its brief roadmap mentions only A–E; F is nevertheless supplied and substantive. [A; pp. 11–19]
+
+Inventory: 15 numbered figures; 15 numbered tables; six principal experiments/analyses X1–X6 corresponding to §§4.1–4.6; an additional evaluation X7 in Appendix E.1; and a qualitative trace analysis X8 in Appendix F. No keywords, formal hypotheses, numbered equations, pseudocode, or formal propositions are supplied. The explanatory subsections below retain original figure/table numbering and page locators.
+
+## 3. Background and Context
+
+A large language model, or LLM, generates language or action descriptions from its input. In the paper's agent architecture, the LLM repeatedly receives the task, history, browser state, and page content, then returns an executable browser action. This observation–action loop gives generated decisions consequences in the browser. An observation is the information supplied about the current environment; an action changes the environment and determines what the agent sees next. [A; p. 3]
+
+Prompt injection here means adversarial instructions embedded in material the agent encounters while performing another task. The legitimate user instruction and an attacker-controlled webpage field have different sources, even though both become input to the model. A successful TRAP injection causes the agent to click an inserted control and navigate to the designated malicious destination. It is not defined as merely producing an unsafe textual answer. [A; pp. 3, 5, 13]
+
+REAL is the named simulation framework on which TRAP is built. The supplied paper does not expand REAL as an acronym. It provides deterministic replicas of websites. TRAP uses GoCalendar for Google Calendar, GoMail for Gmail, Omnizon/OmniZon for Amazon, NetworkIn for LinkedIn, DashDish for DoorDash, and TopWork for Upwork. These are controlled clones, not evidence that the experiments ran on the original commercial services. [A; Tables 7 and 10]
+
+An accessibility tree, abbreviated AXTree, is the structured page-observation representation used in the reported main setup. The paper contrasts it with screenshots and the full HTML page representation, called the Document Object Model or DOM. It reports small differences when these modalities were tested alone or together, but supplies no quantitative modality-comparison table. AXTree was selected for model coverage and cost-effectiveness. Playwright is the browser automation interface through which the agent's action strings are executed. OpenRouter supplies access to the models. [A; pp. 3, 13]
+
+Human persuasion principles are categories such as authority, social proof, and reciprocity. In TRAP they organize the wording of attacks; their names do not establish that an artificial agent experiences human emotions or social obligations. Chain-of-Thought, abbreviated CoT, injection presents externally supplied reasoning steps as a plan for the agent to follow. Many-shot/many-turn conditioning supplies repeated apparent examples. Adversarial suffixes use a fixed appended token template. Role-play/storytelling changes the assistant's portrayed role. Override/ignore instructions explicitly tell it to discard earlier constraints. [A; Tables 12–13; D for the caution about psychological interpretation]
+
+## 4. Research Problem and Gap
+
+Existing problem: browser agents consume dynamically changing content that an attacker may partially control. Harmful instructions can be hidden in ordinary posts, reviews, biographies, email text, or event fields. The authors connect this to redirection, information leakage, and financial or reputational harm. Their experiments directly measure redirection; the wider harms are motivation and possible downstream consequences. [A; pp. 1, 3, 5]
+
+Authors' assessment of previous approaches: benchmarks can be static, monolithic, or based on simplified environments. They often ask only whether an attack succeeds, without isolating which ingredient matters. Multi-step outcomes assessed by LLM judges can confuse refusal with inability to complete a malicious task. The paper's discussion of earlier work is source positioning rather than an independently validated literature review. [A; pp. 1–2]
+
+Research gap: a controlled, expandable benchmark that decomposes persuasion and interface factors while measuring a concrete interaction boundary. TRAP defines success at a single browser action transferring the agent into attacker-controlled context. This differs from completing an entire malicious program or judging a long harmful sequence. [A; p. 2]
+
+Motivation: identify shared and model-specific weaknesses, make comparisons reproducible, and allow new attack types to be integrated. Scope: textual injections in six website clones, six principal models, 18 legitimate tasks, and a single-click redirection outcome. Image attacks, comprehensive defenses, broad task distributions, and quantified downstream harm are outside the principal evaluation. [A; pp. 3–8]
+
+Research relevance [D]: these design choices help explain how a web environment can add opportunities for an attacker to influence an LLM-backed system. They do not establish the magnitude of vulnerability added by agentization, because no matched standalone condition is evaluated. The cited title Refusal-trained LLMs are easily jailbroken as browser agents is part of the paper's bibliography, not an experiment reproduced or independently assessed here.
+
+## 5. Research Questions
+
+The paper states objectives and question-like subsection headings, rather than a separately numbered formal research-question framework. Its overarching objective is systematic evaluation of persuasion-driven prompt injections against web agents using realistic clones and modular attacks. [A; pp. 1–2, 8]
+
+The empirical questions are: X1, how capable and vulnerable are the evaluated agents under the benchmark; X2, how often does an injection successful on one model transfer to another; X3, which text-injection components and pairings are most represented among successes; X4, are button-based injections more effective than hyperlinks; X5, does injection location matter, including whether the user explicitly directs attention to the About section; and X6, are task-tailored injections more effective than generic wording. These correspond to §§4.1–4.6. [A; pp. 6–8]
+
+Additional objectives include supporting extension of the framework and controlled cross-model comparisons. X7 reports an updated model set under a changed environment set. X8 uses curated traces to illustrate success, resistance, and behavioral edge cases. [A; pp. 11, 17–19]
+
+No formal null or alternative hypotheses, preregistered predictions, or hypothesis-testing plan are visible in the supplied work. It would be inaccurate to invent them. The user's question, Why Are Web AI Agents More Vulnerable Than Standalone LLMs? A Security Analysis, is an external organizing research question supplied by the user, not the paper's title or a directly tested comparative hypothesis.
+
+## 6. Assumptions / Threat Model
+
+The legitimate user provides a task such as finding a deadline or reviewing a profile. The agent can inspect and act on the cloned website. The attacker can replace content in a selected user-editable field and include a button or hyperlink with persuasive instructions. The framework technically allows replacement of any website text, but the evaluation selects locations intended to represent realistically modifiable user content. [A; pp. 3–5]
+
+The attacker controls the injected text, its manipulation and persuasion ingredients, and the selected clickable redirection mechanism. The principal dataset fixes placement within each environment/task suite and alternates interface forms. Separate experiments change location, interface form under paired conditions, or lexical tailoring. Once redirected, the attacker is assumed to control the subsequent website content. This enlarges the opportunity for additional injections, credential harvesting, or exfiltration; those possibilities are not all quantitatively measured. [A; pp. 5, 13]
+
+Trusted-versus-untrusted distinction [D]: the authorized task comes from the user; the webpage contribution may come from an adversary. The tested failure is an agent treating that contribution as a reason to take an unauthorized navigation action. The paper does not provide a complete formal privilege model, an exact system-prompt hierarchy, or an enumerated set of trust-enforcement controls in the supplied text. Those details should not be inferred from the benchmark's use of browser automation.
+
+The main attacks are textual. The framework supports image injection, but images are excluded from this study because the authors describe scalable image generation as lacking and evaluation cost as higher. The experiments do not require that an attacker control the LLM provider, browser execution system, original user instruction, or entire initial website. No evaluated attack capability to modify model weights is reported. [A; p. 3]
+
+The target destination is described as the same pornographic site across attacks, selected as a clear policy-violating target. This characterizes the benchmark destination; it does not mean that sexual content is the only possible consequence of redirection. Experiments use cloned websites with synthetic data and no real users or private information. [A; pp. 3, 9]
+
+## 7. Methodology
+
+TRAP extends REAL with three modules: adversarial-content injection; simulation logging; and model access through OpenRouter. Logged material includes timestamps, agent reasoning and actions, screenshots, accessibility trees, and attack outcomes. Runtime and token costs are also logged, but numerical runtime or cost results are not supplied in the paper. [A; pp. 3, 13]
+
+At each step the agent observes the environment, generates a browser action, and receives the next state. Every observation includes the user task description, chat history, open-page URLs, active-page index, and current URL. The main reported setup uses AXTree page observations. Initial modality tests are described qualitatively, without a visible sample size, model-specific comparison, or uncertainty estimate. [A; pp. 3, 13]
+
+There are 18 benign tasks, three for each clone. They are adapted from REAL and include information extraction, edits, comparison, review synthesis, and candidate assessment. All prompts are supplied in Table 10. The paper reports no machine-learning train/validation/test split, model fine-tuning procedure, human-participant sample, or learned attack-training process. The benchmark's data are task–template combinations rather than a model-training dataset. Synthetic data are stated in the Impact Statement. [A; pp. 3, 9, 15]
+
+Each attack combines one of seven human persuasion principles and one of five LLM manipulation methods. This gives 7 × 5 = 35 templates. For the principal dataset, 18 tasks × 35 templates = 630 combinations. These calculations reproduce the authors' construction rather than introducing a different dataset size. The framework has five conceptual dimensions, but all five are not independently crossed in the main dataset: tailoring is off, placement is fixed per environment/task suite, and one interface form is assigned to a combination. Therefore 630 is not a complete 18 × 7 × 5 × 2 × locations × tailoring factorial design. [A; p. 5; C/D for the explicit distinction]
+
+Injection lengths average 787 characters, with standard deviation 98 characters, approximately 12% of the mean. The paper uses this to describe length control and lack of extreme outliers. No minimum, maximum, histogram, character-count definition, or length-based causal ablation is supplied. [A; p. 5]
+
+Principal models: GPT-5, Claude Sonnet 3.7, Gemini 2.5 Flash, GPT-OSS-120B, DeepSeek-R1, and LLaMA 4 Maverick. Appendix C states three closed-source and three open-source models. Table 9 records release dates and the model names; DeepSeek is R1 0528 and Maverick is identified as 17B Instruct (128E). The paper says exact provider identifiers are in the repository, which is not reviewed here. [A; pp. 6, 11, 13]
+
+Runtime settings: temperature 0.0; maximum 35 steps; 30-second timeout for general task operations; 10 seconds for navigation; and a 1-second inter-action delay for traceability. Actions include element interactions, navigation, tab management, communication with the user, and low-level inputs. Hardware, operating system, browser version, library versions, exact seeds, full system prompts, and provider routing details are not specified in the supplied paper. [A; Table 8 and p. 13]
+
+Benign task completion is measured without attacks. Attack success rate, ASR, is measured across the whole attacked task dataset, separately from benign completion. A low ASR is consequently not sufficient evidence of a capable secure agent: an agent can fail to perform the legitimate task as well. The main ASR error margins are identified as 95% binomial confidence intervals. The paper does not name their computational formula, give benign-utility confidence intervals, or report formal significance tests for the component comparisons. [A; pp. 5–6; D for the capability caution]
+
+## 8. Experiments / Analyses
+
+X1 — Principal model evaluation, §4.1, Table 1, page 6. Purpose: measure legitimate-task capability and susceptibility to injected redirection. Setup: six models, 630 attacked task–template combinations per model, 3,780 attacked runs in total. Legitimate utility is separately evaluated without attacks. Results: GPT-5 89% utility and 13% ASR ±2.6; Claude Sonnet 3.7 83% and 20% ±3.1; Gemini 2.5 Flash 61% and 30% ±3.6; GPT-OSS-120B 61% and 27% ±3.5; DeepSeek-R1 67% and 43% ±3.9; LLaMA 4 Maverick 22% and 17% ±2.9. ASR margins are 95% binomial intervals expressed alongside percentages. The authors report 948 successes and 639 runs reaching the 35-step cap. The benign-evaluation repetition count is not sufficiently specified to recover its denominators confidently.
+
+X2 — Cross-model transfer, §4.2, Table 2, pages 6–7. Purpose: determine whether the same task–injection combination that succeeds on a source model also succeeds on a target. Denominator: successful attacks on the source model, not all 630 attacks and not successes on the target. GPT-5-source successes transfer at an author-reported average 82.5%; DeepSeek-R1-source successes average 39.1%. Directional examples: GPT-5 → Claude 90.0%, Claude → GPT-5 56.2%; GPT-5 → DeepSeek 88.8%, DeepSeek → GPT-5 26.0%. The matrix supports asymmetry. The authors interpret stronger-model-breaking attacks as an approximate subset of weaker-model-breaking attacks. This is not a perfect nesting claim, and no source–target significance analysis is supplied.
+
+X3 — Component and pairing analysis, §4.3, Table 3 and Figure 6, pages 6–7. Purpose: examine persuasion categories, manipulation categories, and pairings. Data: the 948 successful attacks from X1. Social Proof contributes 172 successes, 18.1%; Consistency 170, 17.9%; Unity 99, 10.4%. Adversarial Suffixes contribute 232, 24.5%; CoT and Many-shot/Many-turn each contribute 226, 23.8%; Override/Ignore contributes 110, 11.6%. These are shares of observed successes, not the probability that an arbitrary attack in that category succeeds. Figure 6 visualizes combination-level success patterns; no exact cell labels are supplied. Model-specific narratives are given without a complete model-by-component numerical table.
+
+X4 — Buttons versus hyperlinks, §4.4 and Table 4, page 7. The principal dataset contains 735 button successes and 213 hyperlink successes: 77.5% and 22.5% of 948. These shares alone are not interface-specific ASRs because the main table does not provide attempted-attack denominators by form. The paper also conducts a more controlled experiment on the first GoMail prompt using 35 paired injections and three models tested twice. GPT-OSS-120B obtains 46% with buttons versus 6% with hyperlinks; Gemini 2.5 Flash 66% versus 9%; Claude Sonnet 3.7 46% versus 6%. The wording suggests repeat testing, but the table does not explicitly spell out pooling or per-repeat aggregation. This controlled evidence is restricted to one prompt, one clone, and three models.
+
+X5 — Location and task targeting, §4.5, Tables 5 and 15, pages 8 and 19. Setup: NetworkIn, three open-source models, four placement regions, and targeted versus non-targeted user prompts. Targeted prompts direct the agent to the profile About section; the alternative gives the goal without specifying that region. Main Table 5 reports targeted/non-targeted values: random post 1%/4%, target's post 7%/9%, About 59%/52%, recommendation 20%/29%. Table 15 reports substantially different per-model values and does not reproduce those aggregates straightforwardly. This is an unresolved main-text–appendix inconsistency, detailed in §14. The qualitative observation that About is especially vulnerable is supported by the per-model table. Exact aggregate magnitudes are less secure.
+
+X6 — Light contextual tailoring, §4.6 and Table 6, page 8. Setup: two selected vulnerable benign prompts, GoCalendar and DashDish; six models; 35 attack suites for each selected prompt/model condition. The authors describe changing no more than 20% of the text, replacing generic access wording with task-specific wording. GoCalendar average ASR rises from 3.3% to 18.6%; DashDish from 6.7% to 16.7%. Reported success counts rise 7 → 39 and 14 → 35, respectively. The GoCalendar gain is described as 5.6× and DashDish as 2.5×. Effects are heterogeneous: GPT-5's DashDish ASR stays 0.0%; Claude's stays 2.9%; DeepSeek's decreases from 22.9% to 20.0%. Selected prompts and small sample size limit generalization.
+
+X7 — Updated-model evaluation, Appendix E.1, Table 14, page 17. Claude Sonnet 4.6: ASR 3%, maximum-step rate 22%; Gemini 3.1 Pro: 13%, 6%; GPT-5.4: 16%, 1%. This uses five environments because Omnizon was taken down by the provider. Authors explicitly state that these results are not directly comparable with Table 1. Run counts, confidence intervals, benign utility, and per-environment results are not supplied for this updated set.
+
+X8 — Curated traces, Appendix F.1–F.3, pages 17–18. Purpose: illustrate behavioral mechanisms rather than estimate their prevalence. Examples include accepting a fake policy gate, clicking without visible reasoning, interpreting a button as a content-reveal mechanism, explicit detection/reporting, silently ignoring injection text, opposite outcomes across two Gemini runs, framing-dependent Claude behavior, and GPT-OSS hallucinating ten reviews before clicking. These are author-selected examples; their selection procedure and representativeness are not established.
+
+## 9. Results
+
+The broad vulnerability result is 948 successful redirections across 3,780 attacked runs. [C] 948 ÷ 3,780 × 100 = 25.079365…%, which matches the authors' approximate 25% description. This is pooled attack success across the evaluated agents and combinations; it is not a population estimate for every web agent or a rate of completed exfiltration. [A/C; p. 6]
+
+GPT-5 has the highest reported benign utility, 89%, and the lowest principal ASR, 13%. DeepSeek-R1 has 67% utility and the highest ASR, 43%. LLaMA 4 Maverick combines low utility, 22%, with 17% ASR. The authors suggest an association between alignment/robustness, task fidelity, and reduced exploitability. [D] The data do not isolate alignment as a causal variable, and the low-utility Maverick result cautions against equating low attack success with high overall quality. [A; Table 1]
+
+Step-limit behavior is substantial: 639 attacked runs reach 35 steps. [C] 639 ÷ 3,780 × 100 = 16.904761…%. This is an aggregate rate of capped runs. The supplied evidence does not specify whether it overlaps with successful redirections, so it must not be added to 25% as a disjoint failure category. The authors interpret these capped runs as looping without completing the task; no full trajectory distribution is supplied. [A/C; p. 6]
+
+Transfer is directional. A successful GPT-5-source injection is more likely to also break DeepSeek than a successful DeepSeek-source injection is to break GPT-5: 88.8% versus 26.0%, with different conditional denominators. These percentages should not be subtracted as if they were independently randomized treatment groups. They demonstrate different overlap fractions between success sets. [A; Table 2]
+
+Component rankings show Social Proof and Consistency largest by successful-case share, and Adversarial Suffixes, CoT, and Many-shot/Many-turn largest among manipulation categories. The table alone does not separate the effect of persuasion wording from interacting manipulation, placement, and form. The authors report effective pairings such as Social Proof or Consistency with suffixes or CoT, and Social Proof with Many-shot, each contributing approximately 4–5% of successes. [A; pp. 6–7]
+
+Interface form matters in the supplied controlled condition. [C] Button-minus-hyperlink ASR differences are 46 − 6 = 40 percentage points for GPT-OSS and Claude, and 66 − 9 = 57 percentage points for Gemini. Ratios based on the rounded rates are 46 ÷ 6 ≈ 7.67 and 66 ÷ 9 ≈ 7.33. These are derived descriptions of the paired GoMail results, not the paper's main-dataset 3.5× success-count ratio. [A/C; p. 7]
+
+Tailoring changes aggregate success sharply but not universally. [C] GoCalendar increases 18.6 − 3.3 = 15.3 percentage points; DashDish increases 16.7 − 6.7 = 10.0 percentage points, using the displayed rounded means. From reported counts, 39 ÷ 7 ≈ 5.57 and 35 ÷ 14 = 2.5. Table 6's caption calls the gains over 15% and 10%; percentage points more precisely describes subtraction of ASRs. [A/C; p. 8]
+
+The location study's reliable qualitative result is that the About region has the highest per-model values in both prompt conditions. Its aggregate values and aggregation method remain inconsistent across Tables 5 and 15. The updated-model results show additional variation but cannot support direct generational improvement claims because the environment set changed. [A/B/D; pp. 8, 17, 19]
+
+## 10. Figure-by-Figure
+
+Figure 1 — Six environments, page 2. Visually inspected. Six screenshot panels show GoCalendar, Omnizon, TopWork, NetworkIn, DashDish, and GoMail, with original-site identities under the clone names. Red/pink highlighted regions identify editable content selected for insertion. There are no axes, scales, units, statistical markers, or numerical outcomes. It demonstrates the breadth and visual resemblance of the controlled interfaces, rather than proving equivalence to live services. Fine screenshot text is only partially readable; platform names and region organization are clear. [A/B; HIGH for panel identities, MEDIUM for fine interface details]
+
+Figure 2 — Injection pipeline, page 3. Visually inspected. The upper-left attacker places an invitation containing an injection; the user requests event details; the agent begins the legitimate task. A central calendar screenshot represents the malicious content appearing in an event field. Lower boxes progress from receiving a task to reading an AXTree page observation and deciding on an action. The flow branches to a red successful-redirection outcome and a green ignore-and-continue outcome. A thought bubble illustrates interpreting a policy note as a reason to click. Arrows encode sequence and the decision boundary, not quantitative transition probabilities. [A/B]
+
+Figure 3 — Five attack components, page 4. Visually inspected. Purple encodes location; pink interface vector; beige human persuasion; blue LLM manipulation; teal tailoring. Boxes enumerate hyperlink/button, seven persuasion principles, five manipulation methods, and tailored/not-tailored settings. Connections show modular combinations. Bottom brackets group location and vector as Interface, and persuasion, manipulation, and tailoring as Persuasion. It is a design-space diagram, not a report that every depicted cross-product was executed. The location stack suggests extensibility; no exact total number of locations is plotted. [A/B]
+
+Figure 4 — Calendar injection example, page 4. Visually inspected. A Dinner and Movie event contains highlighted replacement text and an Open link control. The color scheme identifies authority wording, staged reasoning, location, and hyperlink form; the caption specifies no tailoring. This connects the abstract component taxonomy to a concrete event field. It is not a result plot, and the screenshot alone does not prove the agent followed the attack. Fine wording is better supported by Figures 8–10 and their text. [A/B]
+
+Figure 5 — NetworkIn locations, page 5. Visually inspected. Numbered markers identify a random feed post, the target's feed post, the target's About section, and a recommendation. Highlighted text appears in those content regions. The arrangement helps explain why a task focused on a candidate profile may expose the agent differently to each insertion site. There are no plotted rates; those are in Tables 5 and 15. Tiny attack strings and suffix characters are not confidently readable from this screenshot. [A/B]
+
+Figure 6 — Cross-layer heatmap, page 6. Visually inspected. Rows are Social Proof, Consistency, Reciprocity, Authority, Scarcity/FOMO, Liking, and Unity. Columns are Adversarial Suffixes, Many-shot/Many-turn Conditioning, Chain-of-Thought Injection, Role-play/Storytelling, and Override/Ignore previous instructions. A light-to-dark orange/brown scale represents higher hijack rate with darker cells. The colorbar is labeled Hijack rate (scaled), with displayed ticks spanning 0.00 through 0.35. Exact cell values and the scaling operation are not supplied. Social Proof and Consistency have broadly dark rows across several methods; some override and liking combinations are much lighter, while Liking with Override is visibly dark. No uncertainty bars or significance markers appear. The caption says Social Proof and Consistency are most universally successful across models, but the single aggregate heatmap cannot by itself establish identical rankings for each model. [A/B; HIGH for labels, MEDIUM for qualitative pattern, UNKNOWN for exact cells]
+
+Figure 7 — Legitimate calendar prompt, page 11. Visually inspected text box. The user requests Dinner & Movie details, the room number, and then event deletion. It illustrates a multi-action legitimate task with an information need that leads the agent toward the attacked event content. No axes or numerical performance appear. [A/B]
+
+Figure 8 — Hyperlink interface, page 11. Visually inspected text box. A replacement payload claims an administrative requirement and embeds a highlighted HTML hyperlink. The visible example is abbreviated with an ellipsis. It demonstrates packaging, not a fully supplied executable benchmark artifact or a measured success. The adversarial instructions are analyzed as untrusted evidence. [A/B]
+
+Figure 9 — Authority ingredient, page 12. Visually inspected text box. Beige highlighting isolates the fake administrative and legal-obligation language. It supports the definition of authority framing, not a causal estimate of authority's independent effect. Other ingredients remain in the same example. [A/B]
+
+Figure 10 — CoT ingredient, page 12. Visually inspected text box. Blue highlighting marks a sequence of alleged reasoning steps, including navigation and further confirmation steps. It illustrates how attacker-provided instructions masquerade as a plan. The existence of numbered steps does not establish that the model's private computation exactly follows them. [A/B; D for that distinction]
+
+Figure 11 — Replacement location, page 12. Visually inspected. A purple-highlighted targetText field gives Restaurant & Local Cinema. The surrounding description says event location, while the caption calls it text in an event description and names a different event from the Dinner & Movie example. This is a location/event-label inconsistency; no silent reconciliation is made. [A/B]
+
+Figure 12 — Tailoring, page 12. Visually inspected. Generic access wording is struck out and task-specific event-details wording is highlighted in teal. Extracted text concatenates the removed and added phrases; the rendered visual clarifies that it is an edit illustration. It shows lexical tailoring, not a second complete payload or independent experimental result. [A/B]
+
+Figure 13 — Targeted NetworkIn prompt, page 12. Visually inspected text box. The legitimate task asks about work authorization and explicitly directs the agent to the About section. This is the targeting manipulation in X5, separate from tailoring the malicious text in X6. [A/B]
+
+Figure 14 — Non-targeted NetworkIn prompt, page 12. Visually inspected text box. The task still asks about work authorization but asks the agent to inspect the profile without naming the About section. It supplies the comparison condition for Figure 13. The prompts are not reproduced in full here because their substantive distinction is preserved. [A/B]
+
+Figure 15 — Chained attack illustration, page 14. Visually inspected two-panel screenshot. Panel (a) shows an initial interface redirection; panel (b) shows an attacker-controlled page with further interaction. Captions state that subsequent instructions trigger unintended actions. The screenshot's embedded terminal and browser text is too small to confidently reconstruct the complete action sequence or specific collected data. It illustrates a possible multi-stage continuation and does not provide a measured downstream-harm success rate. [A/B; HIGH for panel purpose, LOW for fine screenshot contents]
+
+## 11. Table-by-Table
+
+Table 1 — Utility and ASR, page 6. Rows are six principal models; columns are benign utility without attacks and ASR on 630 attacked combinations per model. Values are percentages; ASR has 95% binomial confidence margins. GPT-5 leads utility and has lowest ASR; DeepSeek has highest ASR; Maverick has lowest utility. Gemini and GPT-OSS tie on 61% utility. No confidence intervals for utility or formal pairwise significance tests are given. Exact values are reproduced in §§8 and 20.
+
+Table 2 — Transfer matrix, page 7. Rows are source models and columns target models; percentages condition on source success. The diagonal uses a dash because self-transfer is not reported as a comparison. Purple shading encodes larger transfer values. Full rows in target order GPT-5, Claude, Gemini, GPT-OSS, DeepSeek, Maverick are: GPT-5: —, 90.0, 78.8, 81.2, 88.8, 73.8; Claude: 56.2, —, 71.9, 69.5, 83.6, 63.3; Gemini: 32.8, 47.9, —, 59.9, 76.0, 39.1; GPT-OSS: 38.0, 52.0, 67.3, —, 76.0, 41.5; DeepSeek: 26.0, 39.2, 53.5, 47.6, —, 29.3; Maverick: 56.7, 77.9, 72.1, 68.3, 76.9, —. The largest displayed off-diagonal value is 90.0; the smallest is 26.0. No uncertainty intervals are supplied.
+
+Table 3 — Successful-case composition, page 7. Denominator is N = 948 successful attacks. Persuasion rows: Social Proof 172 (18.1%); Consistency 170 (17.9%); Reciprocity 134 (14.1%); Scarcity/FOMO 130 (13.7%); Authority 130 (13.7%); Liking 113 (11.9%); Unity 99 (10.4%). Manipulation rows: Adversarial Suffixes 232 (24.5%); CoT 226 (23.8%); Many-shot/Many-turn 226 (23.8%); Role-play/Storytelling 154 (16.2%); Override/Ignore 110 (11.6%). Authority and Scarcity tie; CoT and Many-shot tie. Counts in each grouping sum to 948. Displayed percentages can differ slightly from 100 because of rounding. These are not category-specific ASRs.
+
+Table 4 — Form among successes, page 7. Button/hyperlink percentages sum to 100 within each model: GPT-5 96.3/3.7; DeepSeek 70.0/30.0; Gemini 75.5/24.5; GPT-OSS 77.8/22.2; Maverick 73.1/26.9; Claude 88.3/11.7; all models 77.5/22.5. GPT-5 has the strongest concentration of successes in buttons; DeepSeek has the largest hyperlink share. The table title specifies successful-injection proportions. Its caption and surrounding language describing comparative effectiveness require attempted denominators or the separate paired experiment for stronger interpretation.
+
+Table 5 — Aggregate location/targeting, page 8. Four rows identify random post, target post, About, and recommendation. Targeted/non-targeted percentages are 1/4, 7/9, 59/52, and 20/29. About is highest and increases under targeting; the other displayed values decrease. The table supplies no clear aggregation denominator or confidence interval, and is inconsistent with direct aggregation of Table 15. Exact aggregate rates should therefore be treated cautiously.
+
+Table 6 — Tailoring, page 8. For each model, values are GoCalendar non-tailored/tailored, then DashDish non-tailored/tailored: GPT-5 2.9/5.7 and 0.0/0.0; Claude 2.9/17.1 and 2.9/2.9; Gemini 2.9/14.3 and 0.0/31.4; GPT-OSS 2.9/8.6 and 8.6/22.9; DeepSeek 8.6/42.9 and 22.9/20.0; Maverick 0.0/22.9 and 5.7/22.9. Average rows are 3.3/18.6 and 6.7/16.7. DeepSeek has highest tailored Calendar ASR; Gemini highest tailored DashDish ASR. Calendar rises for every model; DashDish rises for three, stays equal for two, and decreases for one. No uncertainty intervals are provided.
+
+Table 7 — Clone identities, page 13. Six rows connect clone names, original website names, and corresponding REAL clone URLs. It documents environment identity and author-provided access locations, not live availability. URLs were not opened. The six mappings are represented in §3; their repetitive URL strings are deliberately compressed.
+
+Table 8 — Action space, page 13. Element interactions: click, fill, select option, hover, focus, clear. Navigation: goto, go back, go forward. Tab management: new tab, tab close, tab focus. Communication: send message to user, report infeasible. Low-level inputs: scroll, press, drag and drop, upload file. These capabilities explain how an observed instruction can become an executed action. Their presence does not mean every action was used in every experiment.
+
+Table 9 — Model versions and release dates, page 13. GPT-5: OpenAI GPT-5, August 7, 2025; Claude 3.7 Sonnet: Anthropic Claude Sonnet 3.7, February 24, 2025; Gemini 2.5 Flash: Google Gemini 2.5 Flash, June 17, 2025; GPT-OSS-120B: OpenAI GPT-OSS-120B, August 5, 2025; DeepSeek-R1: DeepSeek R1 0528, May 28, 2025; LLaMA 4 Maverick: Meta LLaMA 4 Maverick 17B Instruct (128E), April 5, 2025. These are author-reported release dates, not experiment dates or independently checked version guarantees.
+
+Table 10 — All legitimate prompts, page 15. Calendar tasks: retrieve event room and delete event; rename/edit a Team Check-In event to Project Kickoff with Zoom location and a confidential-startup description; retrieve brainstorming agenda and speech time. Mail tasks: retrieve extended deadline and read status; inspect Facebook-comment email and potentially navigate using saved login; report exact statement balance from the first email. Network tasks: draft a personalized candidate message; inspect work authorization; assess candidate fit. Amazon tasks: summarize the most expensive console listing; list pros/cons; seek hidden discount code. Restaurant tasks: find discount codes; collect negative/cold-pizza reviews; summarize medium-pizza size opinions. Freelance tasks: compare Brian and Carol's start dates and healthcare-project suitability; extract Brian's permissible/preferred countries; summarize availability and programming languages. Exact prose is compressed, but all 18 task purposes and their important actions are represented.
+
+Table 11 — Component dimensions, page 16. It lists two interface forms, seven persuasion categories, five manipulation categories, placement, and tailoring. Full-dataset tailoring is off; the controlled two-prompt study turns it on. Location is one per environment with an expanded NetworkIn experiment. The rationale associates interface form with action bias versus navigation and manipulation with reasoning hijacks versus conditioning overload. These are author-supplied design interpretations, not separately validated psychological mechanisms.
+
+Table 12 — Persuasion definitions, page 16. Reciprocity invokes returning a favor; Commitment/Consistency invokes following an established pattern; Social Proof invokes others' behavior; Authority invokes apparent legitimacy; Liking invokes affinity; Scarcity invokes limited time or availability; Unity invokes shared identity. Example messages apply those ideas to the same injection scenario. These definitions and operational intent are retained; full repetitive attack wording is deliberately compressed. The names classify attacks and do not measure human-like cognition inside the models.
+
+Table 13 — Manipulation definitions, page 17. CoT supplies an apparent plan; adversarial suffixes append unusual tokens; many-shot/many-turn supplies completed examples; override tells the model to discard earlier instructions; role-play portrays compliance as appropriate for a helpful assistant. The paper uses a fixed suffix template, not a reported optimization search. Examples are compressed, preserving each method's distinct function. No independent per-method intervention outside the combined templates is specified.
+
+Table 14 — Newer models, page 17. ASR/maximum-step percentages: Claude Sonnet 4.6 3/22; Gemini 3.1 Pro 13/6; GPT-5.4 16/1. Claude has the lowest ASR but highest capped-run percentage in this table; GPT-5.4 has highest ASR but lowest capped-run percentage. Five environments replace the original six, so direct Table 1 comparisons are explicitly disallowed by the authors. No benign-utility column is present.
+
+Table 15 — Per-model location study, page 19. Column order is target post, random post, About, recommendation, unlike Table 5's first two rows. GPT-OSS targeted: 3, 0, 30, 8%; non-targeted: 5, 1, 27, 12%. DeepSeek targeted: 7, 2, 26, 20%; non-targeted: 8, 4, 20, 28%. Maverick targeted: 0, 0, 26, 0%; non-targeted: 0, 0, 16, 0%. About is the highest region in every row. The table does not state sample sizes per cell or uncertainty intervals. Its aggregate relationship with Table 5 is unresolved.
+
+## 12. Diagram / Architecture
+
+Figure 2 provides the execution architecture in simplified form. Input one is the user's authorized task. Input two is the environment observation, which can include the attacker's event-field text. The agent's decision process produces an action. The browser executes it, creating a new observation. The diagram's final branch distinguishes injected-control navigation from ignoring the control and continuing. In the full architecture, this process repeats, with task/history/browser-state fields included in each observation. [A/B; pp. 3, 13]
+
+The attack exploits the connection between information intake and executable control. [D] A webpage contribution can be mistaken for a prerequisite to the user's task: accept a policy, reveal content, or follow a helpful shortcut. The generated click then changes the source of subsequent observations to a website under broader attacker control. Figure 15 illustrates that continuation, while Appendix C.4 explains why the authors stop the metric at the initial transition.
+
+Figure 3 is the attack-construction architecture. Location determines where the agent encounters a payload; interface determines how navigation is triggered; persuasion provides a claimed reason to comply; manipulation provides model-directed instruction structure; tailoring aligns wording with the legitimate goal. Their connections describe a compositional space. They do not depict a trained classifier, a neural architecture, or an automated search algorithm. [A/B]
+
+The REAL execution loop and modular TRAP construction are separate systems: one runs the agent and browser; the other defines the adversarial content inserted into that browser. Logging observes their interaction. The paper does not supply sufficient code to reconstruct exact serialization, reset behavior, or every injection placement independently.
+
+## 13. Equations and Mathematical
+
+No formal numbered equations are present. The following mathematical expressions restate definitions in the paper; the notation is analyst-supplied, not author notation.
+
+Benign completion rate = number of legitimate tasks completed without injection ÷ number of legitimate tasks evaluated without injection. Multiplying by 100 expresses a percentage. The output measures capability under the stated un-attacked condition. It is not the proportion of attacked tasks completed safely. [A definition; p. 5]
+
+ASR = number of attacked task runs with an injected-control click and consequent redirection ÷ total attacked task runs evaluated. Multiplying by 100 expresses a percentage. For the main pooled evaluation, the operands are 948 and 3,780. The metric is a binary initial-compromise indicator, not a harm-severity score. [A definition; C computation; pp. 5–6]
+
+Let S_s be the set of task–injection combinations successful on source model s, and S_t the corresponding successful set on target model t. Transfer(s → t) = |S_s ∩ S_t| ÷ |S_s| × 100. Vertical bars mean the number of elements in a set, and the intersection contains combinations successful on both. The different source denominator explains why reverse directions need not match. This is a mathematical restatement of the authors' definition; individual set sizes are not all supplied. [A definition; analyst notation; p. 6]
+
+Successful-category share = successful attacks in a category ÷ 948 × 100. For Social Proof, 172 ÷ 948 × 100 ≈ 18.14%, reported as 18.1%. This differs from category-specific ASR, whose denominator would include every attempted attack in that category. Likewise, 735 ÷ 948 describes the button share among successes, whereas button-specific ASR requires button attempts. [A/C; Tables 3–4]
+
+Combinatorial construction: 7 persuasion principles × 5 manipulation methods = 35 templates; 18 tasks × 35 templates = 630 combinations; 6 models × 630 = 3,780 attacked runs. These identities connect benchmark design to sample counts. They do not include an independent multiplication by both interface types or tailoring levels. [A; pp. 5–6]
+
+Absolute ASR change is measured in percentage points: 18.6% − 3.3% = 15.3 percentage points. A multiplicative ratio divides comparable rates or counts: 39 ÷ 7 ≈ 5.57. A relative percentage increase would be (39 − 7) ÷ 7 × 100 ≈ 457.14%, an analyst-derived quantity not reported as the paper's principal effect. It is unnecessary to replace the clearer reported 5.6× ratio with that relative-increase expression. [C]
+
+Table 1's ± terms are identified as 95% binomial confidence margins. The exact interval algorithm is not given, so no formula is imputed. Standard deviation SD = 98 describes injection-length dispersion around mean 787 characters, rather than uncertainty in the mean or a confidence interval. [A; pp. 5–6]
+
+## 14. Interpretation and Discussion
+
+The strongest supported conclusion is that these agents can be redirected by attacker-controlled textual webpage content at non-trivial rates, and that the observed outcomes vary by model, interface, location, and task alignment. The controlled button study and tailoring study give narrower intervention evidence than the broad descriptive component tables. The paper answers its own transfer, component, interface, location, and tailoring questions with varying degrees of quantitative detail. No formal hypotheses are stated, so none should be declared statistically confirmed. [A/D]
+
+Research-question relevance [D]: web agents expose an LLM to a stream of third-party content while empowering it to act. The paper shows a concrete route from an untrusted field to a click, and from that click to a new attacker-controlled context. It also shows that task framing can encourage a malicious step to seem instrumental to completing the user's goal. These mechanisms plausibly add vulnerability relative to a system that only generates an answer to a fixed user prompt. However, no matched standalone model experiment measures that difference, so the paper cannot establish that every web agent is more vulnerable or by how much.
+
+Consistency issue 1 — Tables 5 and 15. Table 5 reports About success at 59% targeted and 52% non-targeted. Table 15 gives targeted About values 30%, 26%, 26%; non-targeted values 27%, 20%, 16%. [C] Equal-weight means are (30 + 26 + 26) ÷ 3 = 27.33% and (27 + 20 + 16) ÷ 3 = 21.00%, not 59% and 52%. Moreover, an ordinary positive-weight pooled rate from those same per-model rates cannot exceed the largest member, 30% or 27%. The discrepancy therefore cannot be explained merely by unequal positive weighting of the displayed rates. Rounded sums also do not reproduce all Table 5 values. Different denominators, subsets, normalization, or a reporting error could explain it, but the supplied document does not resolve which. The qualitative About-region pattern survives; the main aggregate magnitude is uncertain. [D; MEDIUM]
+
+Consistency issue 2 — Location count. Page 4 says four additional NetworkIn locations, while Figure 5 and Table 15 depict four study locations total. Table 11 says one per environment plus four in the NetworkIn experiment. It is unclear whether an original fifth location is being excluded, or whether additional refers imprecisely to the expanded study. The reported study has four identifiable regions. [A/B]
+
+Consistency issue 3 — Event identity and field label. Figure 4 uses Dinner and Movie and an event-address location. Figure 11's caption names Discuss team updates and challenges and calls it description text, while its surrounding subsection identifies event location. These examples should not be silently assumed to refer to exactly the same record or DOM field. [A/B; pp. 4, 12]
+
+Consistency issue 4 — Metric language. Table 4 and Table 3 explicitly report composition of successes, while nearby prose sometimes uses effectiveness language. The controlled form study does report ASRs and is more directly interpretable as an interface comparison. Figure 6's scaled colorbar lacks a precise scaling definition, preventing exact cross-checks between heatmap intensity, pairwise contributions to successes, and category totals. [A/B/D]
+
+Consistency issue 5 — Stochasticity. Appendix C says temperature 0.0; Appendix F reports opposite Gemini outcomes with identical setup but different random seeds. These are not necessarily contradictory, but exact seed control and backend nondeterminism are not specified. The paper acknowledges that hosted models may change and that its full dataset was run once. [A; pp. 8, 11, 13, 18]
+
+Consistency issue 6 — Updated evaluation. Table 14 introduces three additional models despite the limitations paragraph focusing on six recent models. It is best read as a supplementary changed-condition evaluation, not an extension of the original comparable six-model dataset. The appendix roadmap's placement of location details in E differs from their actual placement in F.4. These organizational differences do not invalidate the supplied table, but its conditions must remain explicit.
+
+## 15. Contributions and Novelty
+
+Conceptual contribution [A]: redefine the benchmark's critical step as an interaction boundary—one action transferring the agent to attacker-controlled context—rather than a long malicious outcome sequence. This provides a focused initial-redirection construct, with the acknowledged cost of excluding later behavior.
+
+Methodological contribution [A]: a five-component attack taxonomy combining interface and persuasion dimensions, with controlled studies that vary selected ingredients. The main 630-combination dataset instantiates only part of the conceptual space. Modularity supports interpretation and extension, but does not mean every ingredient's causal effect is isolated in the principal dataset.
+
+Benchmark/data contribution [A]: 18 legitimate tasks paired with 35 templates, evaluated across six original models in six clones. The resulting 3,780 attacked runs support comparative capability and redirection measurements.
+
+System/implementation contribution [A]: an extensible TRAP framework built on REAL, adding insertion, logging, and model-access functionality. Repository release and reproducibility provisions are author claims; the artifacts were not inspected or executed.
+
+Empirical contribution [A]: quantified redirection rates, asymmetric cross-model transfer, component-success composition, a controlled button-versus-link effect, concentration of location vulnerability, and effects of light task-specific wording. Updated-model results and curated traces add condition-specific evidence.
+
+Novelty qualification: the authors claim to be first to examine these human persuasion principles in LLM agents. That priority claim cannot be independently verified in closed-document mode. No new training algorithm, formal security theorem, or evaluated mitigation is supplied. [A/D; p. 4]
+
+## 16. Limitations
+
+Authors' stated limitations: six cloned websites; selected observation modalities; lexical rather than richer user/context tailoring; a one-click metric omitting post-injection behavior; one full-dataset run; a sampled 120-task subset whose three runs differed by less than 3% ASR; six principal models without proposed defenses; and a modular decomposition that abstracts away natural co-occurrence of persuasion components. The authors say attack effectiveness may differ when ingredients interact organically. They also state that externally hosted model behavior prevents guaranteed bit-level reproducibility. Image attacks are excluded for generation scalability and cost reasons. Updated-model results exclude Omnizon and are not directly comparable. [A; pp. 3, 8, 11, 17]
+
+Additional evidence-based analyst observations [D]: there is no standalone-LLM comparison, so the user's comparative premise remains untested. Eighteen task prompts and two selected tailoring prompts limit task-distribution coverage. The principal interface analysis lacks explicit attempted denominators by form in Table 4. Tables 5 and 15 create unresolved aggregation uncertainty. Curated trace selection cannot establish mechanism prevalence. Modality equivalence is described without quantitative evidence. Most secondary comparisons lack confidence intervals or formal tests. The supplied paper does not provide exact provider IDs, full prompts, resets, seeds, or execution code sufficient for independent reproduction without the absent repository.
+
+Additional observation [D]: redirection and downstream harm are different constructs. The first is directly measured, while the second is motivated and illustrated. A refusal, an inability to act, safe task completion, and failure to encounter the payload could all influence observed outcomes differently; the paper does not supply a complete exposure-conditioned or resistance-category accounting for every run. This matters when interpreting both low ASR and differences across agents.
+
+## 17. Threats to Validity
+
+The following categories are analyst-applied, not formal labels used by the authors. [D]
+
+Internal validity: varying one factor while holding others fixed is clearest in the paired GoMail experiment. The main dataset alternates form and fixes locations, so broad form associations can reflect task/context composition. Selection of vulnerable prompts for tailoring limits causal interpretation beyond those prompts. Location targeting also changes task wording and likely exposure paths; the paper does not decompose exposure probability from susceptibility conditional on seeing the injection.
+
+Construct validity: ASR measures a clicked redirection, a specific security-boundary crossing. It does not directly measure theft, financial loss, all unsafe behavior, or resistance quality. Benign utility helps reveal capability, but cannot establish attacked-task safety. Successful-case shares are distinct from per-category attack rates, and an unspecified scaled heatmap adds interpretive ambiguity.
+
+Statistical conclusion validity: the main ASR includes binomial confidence margins, but the full dataset is run once. Repeated uses of templates and tasks may create dependencies not discussed in the binomial treatment. The 120-task repeat check is reassuring within its sampled conditions, but lacks selection details and model-specific reporting. Secondary studies give limited uncertainty analysis, while location-table inconsistency prevents a clean aggregate calculation.
+
+External and ecological validity: high-fidelity clones and synthetic data make controlled evaluation practical, but live websites, changing interfaces, diverse user goals, different language distributions, image attacks, and natural multi-component social engineering may behave differently. The authors acknowledge clone and modularity limits. Their Impact Statement establishes controlled experimental use, not a measured live-deployment failure rate.
+
+Reproducibility: the repository is said to include scripts, templates, configurations, and provider identifiers, but it is absent here. Model version pinning is author-reported and hosted model behavior may drift. Omnizon's removal illustrates environment availability risk. Hardware and software-version details are not supplied in the paper text. These limitations prevent a reproduction audit from the provided evidence alone.
+
+Generalizability to the user's question: no matched standalone baseline or equalized attack-exposure experiment is present. The paper supports a mechanism-level account of web-agent risk, not a quantified causal claim that browser access universally increases LLM vulnerability.
+
+## 18. Future Work and Open Questions
+
+A. Author-proposed future work: expand attack surfaces, environments, and model coverage; develop systematic mitigation strategies in the reproducible framework; add interaction forms such as QR codes or notifications; and allow researchers to integrate new persuasion principles, manipulation methods, and interface vectors. The framework also supports image injections, although these were excluded from this study. [A; pp. 3–4, 8, 11]
+
+B. Additional open questions [D]: under equal model, prompt, and attacker-content conditions, how does a standalone text interaction compare with a browser agent? How much of an apparent location effect comes from encountering the payload versus complying after exposure? Which defenses preserve legitimate task performance while reducing redirection? How often do redirected agents resist second-stage instructions? How do naturally combined persuasion cues differ from modular templates? How stable are paired interface effects across other websites and tasks? What aggregation procedure or source correction resolves Tables 5 and 15? How do richer personalization and multiple independent runs change the selected tailoring effects?
+
+These are unanswered questions, not experiments claimed to have been conducted. The present evidence is sufficient to motivate them but not to predict their numerical outcomes.
+
+## 19. Terminology and Notation Glossary
+
+| Term | Meaning in this work |
+|---|---|
+| LLM | Large language model used to generate the agent's decisions/actions. |
+| Web agent | LLM-backed system that observes browser state and executes browser actions. |
+| TRAP | Task-Redirecting Agent Persuasion Benchmark. |
+| REAL | Named deterministic website-simulation framework; no acronym expansion supplied. |
+| Prompt injection | Attacker instructions embedded in content encountered during another task. |
+| Benign task | The legitimate task authorized by the user. |
+| Benign utility | Completion rate without injected attacks. |
+| ASR | Attack success rate: fraction of attacked runs with injected-control redirection. |
+| AXTree | Accessibility tree, the structured observation modality used in the main setup. |
+| DOM | Document Object Model, full-page HTML representation considered as an observation. |
+| Playwright | Browser automation mechanism executing agent action strings. |
+| OpenRouter | Model-access service used by the framework. |
+| Interaction vector | Button or hyperlink through which the tested redirection is triggered. |
+| Tailoring | Rewording an injection to reference the legitimate task. |
+| Targeting | In X5, a user task explicitly directs attention to the About section. |
+| CoT injection | Chain-of-Thought injection: attacker-supplied apparent reasoning steps. |
+| Many-shot/many-turn | Pattern demonstrations encouraging repetition of a malicious action. |
+| Adversarial suffix | Fixed unusual token tail appended to an attack instruction. |
+| Role-play/storytelling | Framing that portrays complying as part of an assistant's role. |
+| Override/ignore | Instructions claiming earlier rules should be discarded. |
+| Social Proof | Appeal to what other users supposedly do. |
+| Authority | Appeal to apparent administrative or legal legitimacy. |
+| Reciprocity | Appeal to returning a favor. |
+| Consistency | Appeal to continuing a prior commitment or pattern. |
+| Liking | Appeal based on affinity or appreciation. |
+| Scarcity/FOMO | Appeal to limited availability; FOMO conventionally denotes fear of missing out, but is not explicitly expanded by the paper. |
+| Unity | Appeal to shared identity or goals. |
+| SSA | Successful prompt injection attacks, counted and categorized in Table 3. |
+| SD | Standard deviation, used for injection length. |
+| 95% binomial interval | Reported statistical uncertainty for main ASR estimates; exact method unspecified. |
+| Percentage point | Absolute difference between percentage-valued rates. |
+| Transferability | Success overlap divided by source-model successes. |
+| Maximum steps | The 35-action truncation limit and, in Table 14, the proportion reaching it. |
+| S_s, S_t | Analyst-introduced sets of successful combinations for source and target models. |
+
+## 20. Key Numerical Results
+
+Author-reported values below were also cross-checked against rendered tables where available; they are classified by their primary author-reported status rather than treated as independent visual estimates.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Principal environments | 6 | clones | Original evaluation | Author-reported | pp. 3, 13; T7 |
+| Legitimate tasks | 18 | prompts | 3 per clone | Author-reported | pp. 3, 15; T10 |
+| Persuasion principles | 7 | categories | Template construction | Author-reported | pp. 4–5; T12 |
+| Manipulation methods | 5 | categories | Template construction | Author-reported | pp. 5, 17; T13 |
+| Templates | 35 | templates | 7 × 5 | Author-reported | p. 5 |
+| Combinations per model | 630 | attacked runs | 18 × 35 | Author-reported | pp. 5–6 |
+| Total original attacked runs | 3,780 | runs | 6 × 630 | Author-reported | p. 6 |
+| Successful attacks | 948 | redirections | Original pooled evaluation | Author-reported | p. 6 |
+| Pooled ASR | approximately 25 | % | 948/3,780 | Author-reported | p. 6 |
+| Exact count-based pooled ASR | 25.079365… | % | 948 ÷ 3,780 × 100 | Analyst-derived | p. 6 operands |
+| GPT-5 utility / ASR | 89 / 13 ±2.6 | % | ASR n=630; 95% binomial margin | Author-reported | p. 6; T1 |
+| Claude 3.7 utility / ASR | 83 / 20 ±3.1 | % | Same principal conditions | Author-reported | p. 6; T1 |
+| Gemini 2.5 utility / ASR | 61 / 30 ±3.6 | % | Same principal conditions | Author-reported | p. 6; T1 |
+| GPT-OSS utility / ASR | 61 / 27 ±3.5 | % | Same principal conditions | Author-reported | p. 6; T1 |
+| DeepSeek utility / ASR | 67 / 43 ±3.9 | % | Same principal conditions | Author-reported | p. 6; T1 |
+| Maverick utility / ASR | 22 / 17 ±2.9 | % | Same principal conditions | Author-reported | p. 6; T1 |
+| Step-capped runs | 639 | runs | 35-step cap | Author-reported | p. 6 |
+| Step-capped fraction | 16.904761… | % | 639 ÷ 3,780 × 100; overlap unspecified | Analyst-derived | p. 6 operands |
+| Injection length | 787; SD 98 | characters | Mean and dispersion | Author-reported | p. 5 |
+| Temperature | 0.0 | setting | Reported experiments | Author-reported | p. 13 |
+| Timeouts / delay | 30 / 10 / 1 | seconds | General / navigation / between actions | Author-reported | p. 13 |
+| GPT-5-source mean transfer | 82.5 | % | Conditional on GPT-5 success | Author-reported | p. 6; T2 |
+| DeepSeek-source mean transfer | 39.1 | % | Conditional on DeepSeek success | Author-reported | p. 6; T2 |
+| Button / hyperlink successes | 735 / 213 | attacks | Original pooled successes | Author-reported | p. 7 |
+| Button / hyperlink shares | 77.5 / 22.5 | % | Denominator 948 successes | Author-reported | p. 7; T4 |
+| Success-count ratio | 3.450704… | ratio | 735 ÷ 213; not interface ASR | Analyst-derived | p. 7 operands |
+| Paired GoMail GPT-OSS rates | 46 / 6 | % | Button / hyperlink | Author-reported | p. 7; §4.4 |
+| Paired GoMail Gemini rates | 66 / 9 | % | Button / hyperlink | Author-reported | p. 7; §4.4 |
+| Paired GoMail Claude rates | 46 / 6 | % | Button / hyperlink | Author-reported | p. 7; §4.4 |
+| Calendar tailoring means | 3.3 / 18.6 | % | Selected prompt; off/on | Author-reported | p. 8; T6 |
+| DashDish tailoring means | 6.7 / 16.7 | % | Selected prompt; off/on | Author-reported | p. 8; T6 |
+| Calendar tailoring count ratio | 7 → 39; 5.6× | successes; ratio | Six models, selected prompt | Author-reported | p. 8 |
+| DashDish tailoring count ratio | 14 → 35; 2.5× | successes; ratio | Six models, selected prompt | Author-reported | p. 8 |
+| Calendar / DashDish mean gains | 15.3 / 10.0 | percentage points | Rounded Table 6 means subtracted | Analyst-derived | p. 8; T6 |
+| Repeat-check subset | 120; 3; less than 3 | tasks; runs; % ASR difference | Sampled subset; details limited | Author-reported | p. 8 limitations |
+| Updated Claude ASR / cap | 3 / 22 | % | Five environments | Author-reported | p. 17; T14 |
+| Updated Gemini ASR / cap | 13 / 6 | % | Five environments | Author-reported | p. 17; T14 |
+| Updated GPT-5.4 ASR / cap | 16 / 1 | % | Five environments | Author-reported | p. 17; T14 |
+| Heatmap tick range | 0.00–0.35 | scaled hijack-rate ticks | Exact cells/scaling unspecified | Visually readable | p. 6; F6 |
+
+Location-table values are retained in §§8, 11, and 14 with their inconsistency, rather than promoted into a single reconciled reference rate. No approximate heatmap cell estimates are used as numerical evidence.
+
+## 21. Evidence Map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence Strength |
+|---|---|---|---|---|
+| TRAP measures textual webpage redirection in a modular benchmark | 18 tasks, 35 templates, 630 combinations | F2–F3; X1 | pp. 3–5 | HIGH; partial rather than full five-factor crossing |
+| Original agents suffer substantial redirection | 948/3,780; approximately 25% | T1; X1 | p. 6 | HIGH within benchmark; not downstream-harm rate |
+| Models differ in capability and susceptibility | Utility 22–89%; ASR 13–43% | T1 | p. 6 | HIGH; no causal isolation of alignment |
+| Successful attacks transfer asymmetrically | GPT-5→DeepSeek 88.8%; reverse 26.0% | T2; X2 | pp. 6–7 | HIGH for conditional values; different denominators |
+| Social Proof and Consistency are most represented persuasion categories | 172 and 170 of 948 successes | T3; F6; X3 | pp. 6–7 | HIGH for composition; not standalone category ASR |
+| Buttons outperform links in the controlled email condition | 46/6, 66/9, 46/6% | X4 | p. 7 | HIGH source support; one clone/prompt and three models |
+| About is a vulnerable location | Highest per-model values in every T15 row | F5; T5/T15; X5 | pp. 8, 19 | MEDIUM overall because main aggregate rates conflict |
+| Light tailoring increases selected aggregate rates | 3.3→18.6%; 6.7→16.7% | T6; X6 | p. 8 | HIGH; heterogeneous effects and selected small sample |
+| Redirection enables a broader attacker-controlled context | Single-click rationale and two-stage illustration | F15; C.4 | pp. 13–14 | HIGH as author threat rationale; no quantified downstream outcomes |
+| The benchmark has important reproducibility/generalization limits | One full run, clones, hosted models, no defenses | Limitations; A.1 | pp. 8, 11 | HIGH; artifacts not independently inspected |
+| Updated models cannot be directly compared with original rates | Omnizon removed; five environments | T14; X7 | p. 17 | HIGH and explicitly author-qualified |
+| Browser interaction adds plausible risk mechanisms relative to a standalone setting | Untrusted content enters observation–action loop and can trigger navigation | F2; §§3.1, 3.5; C.4 | pp. 3, 5, 13 | MEDIUM analyst inference; no matched standalone experiment |
+
+## 22. Very Simple Explanation
+
+Imagine asking an assistant to read your calendar and tell you where a meeting is. Someone has edited the meeting's location field to say that an official policy requires clicking a button before the information can be viewed. The assistant is supposed to read that field as information about your meeting. If it instead accepts the field as a new instruction, it may click the attacker's button and leave your task.
+
+The researchers built controlled copies of familiar websites and tested this kind of trick on six AI models. About one quarter of the tested attacked runs ended in the measured redirection. Some models did much better than others. Buttons were especially effective in a controlled email test, and small changes that made an attack sound relevant to the user's task sometimes caused many more failures.
+
+The important lesson is that using a web browser creates a link between reading and doing. A misleading sentence can lead to a real browser action, which can expose the assistant to even more attacker-controlled material. This paper demonstrates that route in its benchmark. It does not directly test whether the same model would be safer as a standalone chatbot, and it does not show that every redirection led to stolen data.
+
+The benchmark is useful because it makes different parts of these tricks easier to compare. Its limits still matter: only certain tasks and website copies were tested, most runs were not repeated, and one location table conflicts with its appendix. The evidence supports concern about browser-agent redirection while leaving the exact standalone-versus-agent comparison open.
+
+## Completeness Audit
+
+The inventory denominator is the supplied 19-page paper: main sections and substantive subsections, Appendices A–F, Figures 1–15, Tables 1–15, X1–X8, three principal contributions, and the explicit limitation statements. No unprovided repository content is counted as reviewed.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, venue, affiliations | Yes, text and image | Yes | Represented in compressed form | Superscript contribution markers undefined |
+| Abstract | Yes, text and image | Yes | Fully represented | Core setup, results, and contribution retained |
+| §1 Introduction | Yes, text and image | Yes | Represented in compressed form | External incident narratives treated as author motivation |
+| §2 Related work | Yes, text and image | Yes | Represented in compressed form | Benchmark categories and criticisms retained; no external validation |
+| §3.1 Agent setup | Yes, text and image | Yes | Fully represented | Loop, modules, modalities, observations, exclusions |
+| §3.2 Benign tasks | Yes, text and image | Yes | Fully represented | All 18 task purposes accounted for through T10 |
+| §3.3 Interaction vector | Yes, text and image | Yes | Fully represented | Buttons/links, destination, extension possibilities |
+| §3.3 Persuasion principles | Yes, text and image | Yes | Represented in compressed form | All seven definitions retained |
+| §3.3 Manipulation methods | Yes, text and image | Yes | Represented in compressed form | All five types and fixed-suffix condition retained |
+| §3.3 Location | Yes, text and image | Yes | Uncertain | Four-total versus four-additional wording flagged |
+| §3.3 Tailoring | Yes, text and image | Yes | Fully represented | Off in full dataset, on in selected study |
+| §3.4 Benchmark | Yes, text and image | Yes | Fully represented | 35, 630, assignment, length statistics |
+| §3.5 Metrics | Yes, text and image | Yes | Fully represented | Separate utility/ASR and downstream boundary |
+| §4.1 / X1 | Yes, text and image | Yes | Fully represented | Six rows, margins, counts, step cap |
+| §4.2 / X2 | Yes, text and image | Yes | Fully represented | Complete transfer matrix and definition |
+| §4.3 / X3 | Yes, text and image | Yes | Represented in compressed form | Counts complete; model narratives and pairings compressed |
+| §4.4 / X4 | Yes, text and image | Yes | Fully represented | Shares distinguished from paired ASRs |
+| §4.5 / X5 | Yes, text and image | Yes | Uncertain | Both conflicting location tables retained |
+| §4.6 / X6 | Yes, text and image | Yes | Fully represented | Every model row, selected conditions, exceptions |
+| §5 Conclusion | Yes, text and image | Yes | Represented in compressed form | Supported conclusions and comparison boundary retained |
+| Authors' Limitations | Yes, text and image | Yes | Fully represented | All substantive caveats listed |
+| Conflict disclosure | Yes, text and image | Yes | Represented in compressed form | Korgul began Google DeepMind internship after submission; Gemini evaluated |
+| Impact Statement | Yes, text only | Yes | Represented in compressed form | Synthetic clones, no real users/data, dual-use and release stance |
+| Acknowledgements | Yes, text only | Yes | Represented in compressed form | Funding identities noted below; no technical result content |
+| References, pp. 9–10 | Yes, text only | Yes | Inspected but deliberately omitted as repetitive/non-substantive | Relevant prior-work positioning retained; full bibliography not copied |
+| Appendix A.1 | Yes, text and image | Yes | Fully represented | Repository claims and hosted-model reproducibility caveat |
+| Appendix A.2 | Yes, text and image | Yes | Represented in compressed form | GPT-5 writing, literature, and technical editing; author review |
+| Appendix B.1–B.7 | Yes, text and image | Yes | Represented in compressed form | All examples accounted for; repeated malicious prose shortened |
+| Appendix C.1–C.4 | Yes, text and image | Yes | Fully represented | Environments, actions, settings, versions, metric |
+| Appendix D.1 | Yes, text and image | Yes | Represented in compressed form | All 18 tasks, exact wording compressed |
+| Appendix D.2–D.3 | Yes, text and image | Yes | Represented in compressed form | Every dimension and method definition retained |
+| Appendix E.1 / X7 | Yes, text and image | Yes | Fully represented | Changed five-environment evaluation preserved |
+| Appendix F.1–F.3 / X8 | Yes; p. 18 text only | Yes | Represented in compressed form | All supplied trace types and edge cases described |
+| Appendix F.4 | Yes, text and image | Yes | Fully represented | Complete per-model location values |
+| F1 | Yes, visual | Yes | Represented in compressed form | Six panels; fine text partly unreadable |
+| F2 | Yes, visual | Yes | Fully represented | Pipeline and decision branch |
+| F3 | Yes, visual | Yes | Fully represented | Components, colors, connections |
+| F4 | Yes, visual | Yes | Represented in compressed form | Calendar payload; fine text qualified |
+| F5 | Yes, visual | Yes | Fully represented | Four numbered regions |
+| F6 | Yes, visual | Yes | Uncertain | Qualitative heatmap; exact cells/scaling unavailable |
+| F7 | Yes, visual | Yes | Represented in compressed form | Legitimate task retained |
+| F8 | Yes, visual | Yes | Represented in compressed form | Interface example, ellipsis disclosed |
+| F9 | Yes, visual | Yes | Represented in compressed form | Authority highlighting |
+| F10 | Yes, visual | Yes | Represented in compressed form | Apparent reasoning plan |
+| F11 | Yes, visual | Yes | Uncertain | Event/field labels conflict |
+| F12 | Yes, visual | Yes | Fully represented | Strikethrough/addition distinction preserved |
+| F13 | Yes, visual | Yes | Represented in compressed form | Targeted prompt |
+| F14 | Yes, visual | Yes | Represented in compressed form | Non-targeted prompt |
+| F15a–b | Yes, visual | Yes | Uncertain | Two-stage purpose clear; fine screenshot text unreadable |
+| T1–T4 | Yes, text and visual | Yes | Fully represented | All displayed numeric rows retained |
+| T5 | Yes, text and visual | Yes | Uncertain | Aggregation conflicts with T15 |
+| T6 | Yes, text and visual | Yes | Fully represented | Complete model/condition values |
+| T7 | Yes, text and visual | Yes | Represented in compressed form | Mappings retained; URLs not repeated/opened |
+| T8–T9 | Yes, text and visual | Yes | Fully represented | Actions and model release dates retained |
+| T10 | Yes, text and visual | Yes | Represented in compressed form | All prompts' substantive actions retained |
+| T11–T13 | Yes, text and visual | Yes | Represented in compressed form | Complete categories/definitions; examples shortened |
+| T14–T15 | Yes, text and visual | Yes | Fully represented | Complete values and caveats |
+| Explicit experimental questions | Yes | Yes | Fully represented | Six question/objective analyses; no invented formal framework |
+| Formal hypotheses | Not present | Absence represented | Fully represented | No formal hypothesis-testing framework supplied |
+| Major equations / algorithms / theorems | Not present | Absence represented | Fully represented | Metric formulas labeled as analyst notation |
+| Three principal contributions | Yes | Yes | Fully represented | Modular space, extensibility, empirical insights |
+| Supplied separate supplementary files | None supplied | Absence represented | Missing from supplied material | Appendix reviewed; repository files absent |
+
+Ancillary disclosures: after submission, Korgul began an internship at Google DeepMind, which develops an evaluated model, Gemini. Acknowledgements identify Clarendon Fund support, Oxford Internet Institute funding through Dieter Schwarz Stiftung, a UKRI Turing AI Fellowship, and UK AISI Fast Grant support. Appendix A.2 states GPT-5 assisted with writing, literature support, and LaTeX technical editing; the authors say outputs were reviewed and fact-checked and that ideas, methods, and conclusions remain theirs. Page 9's Impact Statement says experiments used controlled synthetic clones and that exploit-ready code or instructions were deliberately not released. These are author disclosures, not independent audits of funding, review practices, or repository contents.
+
+Missing or inaccessible material
+
+No physical page is missing from the supplied extracted text. Visual renderings for pages 9, 10, and 18 are absent, so those pages have text-only coverage. External repository scripts, configurations, templates, full logs, README, exact provider identifiers, and any independently distributed supplementary artifacts were not supplied or inspected. Fine screenshot text in several interface figures, especially Figure 15, cannot be confidently recovered from the rendered images. No exact heatmap cell values are supplied.
+
+Uncertain interpretations
+
+Tables 5 and 15 do not yield consistent location aggregates; the correct aggregate cannot be selected from this document alone. Four additional versus four total NetworkIn locations is unresolved. Figure 11's event identity and description-versus-location wording are inconsistent with surrounding examples. Figure 6 does not define its rate scaling. Controlled interface repetition/aggregation details, benign-utility denominators, exact random seeds, and the 120-task repeat-check selection are insufficiently specified. Absence of visible reasoning in a curated trace does not demonstrate absence of internal computation. Apparent policy or human-persuasion mechanisms are observed framings and author interpretations, not proven cognitive mechanisms.
+
+Deliberately compressed material
+
+The full bibliography, correspondence addresses, repeated headers, decorative agent icons, repetitive payload wording, exact clone URLs, full legitimate-prompt prose, and extended trace quotations are compressed. Every figure and table is nevertheless accounted for, all principal result rows are retained, every legitimate task purpose is described, and every trace category is represented. Real-world incidents and prior benchmark claims are preserved as author-reported motivation/positioning rather than expanded into externally verified case studies.
+
+Potential omissions
+
+No known substantive supplied inventory item is left wholly unrepresented. Some items are represented in compressed form or with explicit uncertainty rather than exhaustive transcription. This is an inventory-based coverage statement, not a claim that all research artifacts, screenshot pixels, or every word have been recovered. The main unresolved empirical omission is the evidence needed to reconcile location aggregates and to quantify a matched web-agent-versus-standalone comparison; neither is available in the supplied work.
