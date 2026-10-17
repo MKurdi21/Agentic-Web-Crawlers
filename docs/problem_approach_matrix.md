@@ -1,5 +1,7 @@
 # Problem–Approach Matrix
 
+> Historical 48-paper reference, retained 2026-10-16. Counts, research priorities and recommendations below describe that earlier collection. Current authority is the [112-paper catalog](../research/catalog.md), [trap-oriented synthesis](../research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md) and [research foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md). The primary program studies task-dependent web-agent traps; the standalone comparison is secondary. No trap experiment has started.
+
 ## Scope and assignment rule
 
 This matrix is an evidence map of the **48 comprehensive summaries in `Summaries/`**, not a keyword map. A paper is placed in a cell only when the summary says that the paper (a) proposes or implements that row's approach and (b) applies or evaluates it on that column's problem. A benchmark paper is credited with benchmark/evaluation design, not with every method run as a baseline. A paper that discusses, recommends, or lists a defense is not credited with evaluating that defense. Attack benchmarks remain attacks/evaluations; they are never relabeled as defenses. A defense with poor or mixed results is included only in the evaluated-defense table and is marked accordingly.

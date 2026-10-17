@@ -1,4 +1,6 @@
 
+
+> Historical 48-paper reference, retained 2026-10-16. Counts, research priorities and recommendations below describe that earlier collection. Current authority is the [112-paper catalog](../research/catalog.md), [trap-oriented synthesis](../research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md) and [research foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md). The primary program studies task-dependent web-agent traps; the standalone comparison is secondary. No trap experiment has started.
 # Paper Inventory and Detailed Summaries
 
 ## Overview

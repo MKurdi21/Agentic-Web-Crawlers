@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-16",
+  "scope": "documentation synchronization; no scientific revalidation",
+  "status": "PASS",
+  "local_link_checks": 1101,
+  "link_scope": "active documents; current guidance only for historical handoff/topical snapshots",
+  "link_errors": [],
+  "canonical_membership": {
+    "COMPREHENSIVE_LITERATURE_REVIEW": {
+      "count": 112,
+      "exact_112_membership": true
+    },
+    "THEMATIC_EVIDENCE_MAP": {
+      "count": 112,
+      "exact_112_membership": true
+    },
+    "SECURITY_COMPARISON_MATRIX": {
+      "count": 112,
+      "exact_112_membership": true
+    },
+    "INITIAL_RESEARCH_FINDINGS": {
+      "count": 112,
+      "exact_112_membership": true
+    }
+  },
+  "canonical_pdfs": 112,
+  "archived_duplicates": 5,
+  "completed": 112,
+  "pending_excluded_failed_deferred": 0,
+  "live_authorized_inventory_matches_saved": true,
+  "completion_fingerprints_checked": 224,
+  "matrix_primary_profiles": 112,
+  "matrix_profile_text_unchanged": true,
+  "catalog_paper_entries_unchanged": true,
+  "comparison_methodology_unchanged": true,
+  "complete_evidence_register_unchanged": true,
+  "preedit_snapshots": {
+    "README.md": true,
+    "research/README.md": true,
+    "docs/RESEARCH_MODE_HANDOFF.md": true,
+    "research/catalog.md": true,
+    "research/synthesis/SECURITY_COMPARISON_MATRIX.md": true,
+    "research/synthesis/INITIAL_RESEARCH_FINDINGS.md": true,
+    "research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md": true,
+    "research/synthesis/THEMATIC_EVIDENCE_MAP.md": true,
+    "research/synthesis/RESEARCH_GAPS_AND_HYPOTHESES.md": true,
+    "research/synthesis/CONTROLLED_COMPARISON_STUDY_DESIGN.md": true,
+    "research/synthesis/AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md": true,
+    "docs/metadata_verification.md": true,
+    "docs/citation_clusters_and_reading_order.md": true,
+    "docs/gaps_and_research_directions.md": true,
+    "docs/problem_approach_matrix.md": true,
+    "docs/papers.md": true
+  },
+  "protected_files_checked": 38517,
+  "unexpected_protected_drift": {},
+  "authorized_protected_edit": {
+    "path": ".agents/skills/corpus-analysis/SKILL.md",
+    "scope": "dated maintenance-only notice; original skill bytes snapshotted",
+    "before_sha256": "ec18b25add57324e079bb2c92a605482dbaf0d1294b5d8328aa18f68d5f2e836",
+    "snapshot_sha256": "ec18b25add57324e079bb2c92a605482dbaf0d1294b5d8328aa18f68d5f2e836",
+    "after_sha256": "8e9e5b6d422d7495baf25db72cd74cc68e489d8f804b75f4067dc0efa3f5b290"
+  },
+  "checkpoint_semantic_sha256": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "future_repository_exists": false,
+  "software_tests": "not run; no software behavior changed",
+  "independent_scientific_validation": "not performed",
+  "archived_duplicate_hashes_match_canonical": true,
+  "unique_canonical_source_hashes": 112,
+  "snapshot_versions_preserved": 17,
+  "final_document_readback": "PASS after validation artifact creation; includes its local link"
+}

@@ -1,5 +1,7 @@
 # Citation Clusters and Recommended Reading Order
 
+> Historical 48-paper reference, retained 2026-10-16. Counts, research priorities and recommendations below describe that earlier collection. Current authority is the [112-paper catalog](../research/catalog.md), [trap-oriented synthesis](../research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md) and [research foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md). The primary program studies task-dependent web-agent traps; the standalone comparison is secondary. No trap experiment has started.
+
 This guide is based on the 48 papers represented in `Summaries/`. Clusters are claim-specific citation bundles, not leaderboards or mutually exclusive categories. In particular, keep these roles distinct in prose:
 
 - **Capability system:** proposes or trains an agent (for example, WebVoyager or WebSailor).

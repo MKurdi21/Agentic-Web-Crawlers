@@ -1,5 +1,7 @@
 # Metadata verification ledger (closed local corpus)
 
+> Historical 48-paper reference, retained 2026-10-16. Counts, research priorities and recommendations below describe that earlier collection. Current authority is the [112-paper catalog](../research/catalog.md), [trap-oriented synthesis](../research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md) and [research foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md). The primary program studies task-dependent web-agent traps; the standalone comparison is secondary. No trap experiment has started.
+
 **Audit date:** July 22, 2026
 **Scope:** exactly the 48 PDFs represented by the 48 files in `Summaries/` (24 repository-root PDFs, 17 `Security/` PDFs, and 7 `Borderline/` PDFs).
 **Network use:** none. This audit did not browse or renew any external verification.

@@ -1,5 +1,7 @@
 # Audited Gaps and Research Directions for Agentic Web Systems
 
+> Historical 48-paper reference, retained 2026-10-16. Counts, research priorities and recommendations below describe that earlier collection. Current authority is the [112-paper catalog](../research/catalog.md), [trap-oriented synthesis](../research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md) and [research foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md). The primary program studies task-dependent web-agent traps; the standalone comparison is secondary. No trap experiment has started.
+
 ## Scope, claim discipline, and audit method
 
 This document is a gap analysis of the **48 papers represented in `Summaries/`**, not a systematic review of every paper on web agents, crawling, extraction, or agent security. “The collection does not evaluate X” therefore means only that X is absent or inadequately tested in this closed evidence base. A field-wide absence or first-of-its-kind claim would require a separate literature search and is intentionally not made here.
