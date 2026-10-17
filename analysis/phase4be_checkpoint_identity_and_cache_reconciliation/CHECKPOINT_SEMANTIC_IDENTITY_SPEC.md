@@ -1,0 +1,5 @@
+# Stable checkpoint identity
+
+Version: `phase4be-checkpoint-semantic-identity-v1.0.0`. Policy SHA-256: `384ec978aa0f99f6f43c4f35efd1457ef91bbb2ad85e5a27aed3feb4efe2570b`. The JSON checkpoint is machine authority. Parse it strictly, remove only top-level `updated_at`, serialize the entire remaining object as deterministic UTF-8 JSON, and hash it. The current and Phase 4BE-C semantic hash is `88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef`. All remaining fields, including every paper and source hash, remain protected.
+
+Record raw SHA-256 for provenance. Accept a raw checkpoint change only when the authorized generator hash matches, isolated reproduction has the same semantic hash, and CHECKPOINT.md matches trusted generator rendering after normalizing exactly one `Updated:` line. The line must exactly equal `Updated: ` followed by the JSON timestamp, with no suffix or duplicate. A changed substantive Markdown line blocks. A changed source, issue, duplicate, status, or unknown field blocks.

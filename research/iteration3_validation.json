@@ -1,0 +1,340 @@
+{
+  "status": "operationally paused after nine additional papers",
+  "initial_completed_count": 15,
+  "newly_completed_count": 9,
+  "total_completed_count": 24,
+  "counts": {
+    "completed": 24,
+    "pending": 81,
+    "excluded": 7
+  },
+  "canonical_count": 112,
+  "archived_duplicate_count": 5,
+  "failed_papers": [],
+  "deferred_papers": [
+    {
+      "summary_name": "the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md",
+      "classification": "OPERATIONAL_USAGE_LIMIT",
+      "error": "OPERATIONAL_USAGE_LIMIT: see G:\\My Drive\\Papers\\Agentic Web Crawlers\\research\\evidence\\the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary/generation.log",
+      "generation_log": "research/evidence/the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary/generation.log",
+      "outputs_exist": false
+    }
+  ],
+  "newly_completed": [
+    {
+      "title": "AdvAgent: Controllable Blackbox Red-teaming on Web Agents",
+      "summary": "research/summaries/advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.md",
+      "record": "research/records/advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.json",
+      "source_sha256": "e2b5e36a069cd91d79413c0f4f506243bb276d42ae2204c5adadc99aa2118bef",
+      "supported_claim_groups": 15,
+      "narrative_characters": 73334
+    },
+    {
+      "title": "Attacking Vision-Language Computer Agents via Pop-ups",
+      "summary": "research/summaries/attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.md",
+      "record": "research/records/attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.json",
+      "source_sha256": "24e0d5a90275064313ffe5d791e3c5a46f694716b8c803d02afab118a73efd74",
+      "supported_claim_groups": 15,
+      "narrative_characters": 76244
+    },
+    {
+      "title": "EIA: Environmental Injection Attack on Generalist Web Agents for Privacy Leakage",
+      "summary": "research/summaries/eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.md",
+      "record": "research/records/eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.json",
+      "source_sha256": "8b3f9bd8a09991ccb66bee6d01d8e2b2e87a004428f1f3d6ebb791c321afed07",
+      "supported_claim_groups": 14,
+      "narrative_characters": 77315
+    },
+    {
+      "title": "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
+      "summary": "research/summaries/agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.md",
+      "record": "research/records/agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.json",
+      "source_sha256": "26a3f0426ee1d533e4dd9f62d1343a7a1d231fe718cfaf3a362cc7de829ae913",
+      "supported_claim_groups": 16,
+      "narrative_characters": 82384
+    },
+    {
+      "title": "SecureWebArena: A Holistic Security Evaluation Benchmark for LVLM-based Web Agents",
+      "summary": "research/summaries/securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md",
+      "record": "research/records/securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.json",
+      "source_sha256": "b7ea2139f2d1c474cf8fa128548f1f23170c8a761ffd3d61b38486f7bd8f1bb9",
+      "supported_claim_groups": 12,
+      "narrative_characters": 71303
+    },
+    {
+      "title": "WASP: Benchmarking Web Agent Security Against Prompt Injection Attacks",
+      "summary": "research/summaries/wasp_comprehensive_summary.md",
+      "record": "research/records/wasp_comprehensive_summary.json",
+      "source_sha256": "bf0c5f7118860c0d9672cf6ca3b214285f142b45c9d4dee9c007d787f146229e",
+      "supported_claim_groups": 16,
+      "narrative_characters": 70677
+    },
+    {
+      "title": "CELLMATE: Sandboxing Browser AI Agents",
+      "summary": "research/summaries/cellmate_sandboxing_browser_ai_agents_comprehensive_summary.md",
+      "record": "research/records/cellmate_sandboxing_browser_ai_agents_comprehensive_summary.json",
+      "source_sha256": "3bcee9a85cbcca525351e9b1b184fb86a7ac1641cd15e623fac4c3345fa34491",
+      "supported_claim_groups": 15,
+      "narrative_characters": 79012
+    },
+    {
+      "title": "Defending Against Indirect Prompt Injection Attacks With Spotlighting",
+      "summary": "research/summaries/defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.md",
+      "record": "research/records/defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.json",
+      "source_sha256": "0e99c2ad0af85eb97fce9f940a8010783641fa91f3aafedc5edf6becc5dc4ce2",
+      "supported_claim_groups": 15,
+      "narrative_characters": 71928
+    },
+    {
+      "title": "IsolateGPT: An Execution Isolation Architecture for LLM-Based Agentic Systems",
+      "summary": "research/summaries/isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md",
+      "record": "research/records/isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.json",
+      "source_sha256": "98c28e6d68ab378348fb8a1aea311c39533384fd7bdc15a4782a5bbf1ea057c0",
+      "supported_claim_groups": 14,
+      "narrative_characters": 73189
+    }
+  ],
+  "validated_completed": [
+    {
+      "title": "AutoWebGLM: A Large Language Model-based Web Navigating Agent",
+      "summary": "research/summaries/autowebglm_comprehensive_summary.md",
+      "record": "research/records/autowebglm_comprehensive_summary.json",
+      "source_sha256": "ee5100b55bdcc64eca63c5a0f9604a61dcaf60efdeea44838f60ba246cedfa72",
+      "supported_claim_groups": 15,
+      "narrative_characters": 81717
+    },
+    {
+      "title": "Go-Browse: Training Web Agents with Structured Exploration",
+      "summary": "research/summaries/go_browse_comprehensive_summary.md",
+      "record": "research/records/go_browse_comprehensive_summary.json",
+      "source_sha256": "4ddfc98553e56a7251c3c4ac87401044c369d758f3268d8dd010bdc7c32a1445",
+      "supported_claim_groups": 16,
+      "narrative_characters": 80870
+    },
+    {
+      "title": "GPT-4V(ision) is a Generalist Web Agent, if Grounded",
+      "summary": "research/summaries/seeact_comprehensive_summary.md",
+      "record": "research/records/seeact_comprehensive_summary.json",
+      "source_sha256": "ac281a3c5cdbda428e14605e9d96035fd35af82073ce46117c27c34792eea041",
+      "supported_claim_groups": 16,
+      "narrative_characters": 76883
+    },
+    {
+      "title": "LASER: LLM Agent with State-Space Exploration for Web Navigation",
+      "summary": "research/summaries/laser_comprehensive_summary.md",
+      "record": "research/records/laser_comprehensive_summary.json",
+      "source_sha256": "7e1ff14ef22ea7e4ac44b84b88563f830a14386f4da7354a8af366070ac5f989",
+      "supported_claim_groups": 16,
+      "narrative_characters": 70249
+    },
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "summary": "research/summaries/react_comprehensive_summary.md",
+      "record": "research/records/react_comprehensive_summary.json",
+      "source_sha256": "f285b0971ae4a790e402fb93966bed3adde2cf0a04977d08b2b40d6ab0cace69",
+      "supported_claim_groups": 15,
+      "narrative_characters": 71377
+    },
+    {
+      "title": "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+      "summary": "research/summaries/webvoyager_comprehensive_summary.md",
+      "record": "research/records/webvoyager_comprehensive_summary.json",
+      "source_sha256": "69094c0247e519a50f3457a00830e818f0d1e68233248bb958d3527f7d17d99f",
+      "supported_claim_groups": 15,
+      "narrative_characters": 79885
+    },
+    {
+      "title": "BEARCUBS: A benchmark for computer-using web agents",
+      "summary": "research/summaries/bearcubs_comprehensive_summary.md",
+      "record": "research/records/bearcubs_comprehensive_summary.json",
+      "source_sha256": "ed897dba84175152161a98532ea2fa84189a41d12151d39b965d7d0b42ff4055",
+      "supported_claim_groups": 15,
+      "narrative_characters": 76559
+    },
+    {
+      "title": "BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents",
+      "summary": "research/summaries/browsecomp_comprehensive_summary.md",
+      "record": "research/records/browsecomp_comprehensive_summary.json",
+      "source_sha256": "8de2e7a024b43ff7fbab29e0bb6dbdc131ad07206e6c186c2122502d69477760",
+      "supported_claim_groups": 16,
+      "narrative_characters": 72558
+    },
+    {
+      "title": "Mind2Web: Towards a Generalist Agent for the Web",
+      "summary": "research/summaries/mind2web_comprehensive_summary.md",
+      "record": "research/records/mind2web_comprehensive_summary.json",
+      "source_sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "supported_claim_groups": 15,
+      "narrative_characters": 77845
+    },
+    {
+      "title": "MMInA: Benchmarking Multihop Multimodal Internet Agents",
+      "summary": "research/summaries/mmina_comprehensive_summary.md",
+      "record": "research/records/mmina_comprehensive_summary.json",
+      "source_sha256": "1295b51e37abc2b4147cef166cc31e5c6a5e4df47ef1c394df7d3af84a9dcc81",
+      "supported_claim_groups": 14,
+      "narrative_characters": 69715
+    },
+    {
+      "title": "The BrowserGym Ecosystem for Web Agent Research",
+      "summary": "research/summaries/browsergym_comprehensive_summary.md",
+      "record": "research/records/browsergym_comprehensive_summary.json",
+      "source_sha256": "faf67147c8f28aca96ad6174c3ccaf4f127bab91fdeaaf0a8ac92f110e4fe09a",
+      "supported_claim_groups": 16,
+      "narrative_characters": 79296
+    },
+    {
+      "title": "WebArena: A Realistic Web Environment for Building Autonomous Agents",
+      "summary": "research/summaries/webarena_comprehensive_summary.md",
+      "record": "research/records/webarena_comprehensive_summary.json",
+      "source_sha256": "2240e08a747462c59b49796e56985428f592e45d96debfa2aa88286263a4a787",
+      "supported_claim_groups": 15,
+      "narrative_characters": 76041
+    },
+    {
+      "title": "AdvAgent: Controllable Blackbox Red-teaming on Web Agents",
+      "summary": "research/summaries/advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.md",
+      "record": "research/records/advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.json",
+      "source_sha256": "e2b5e36a069cd91d79413c0f4f506243bb276d42ae2204c5adadc99aa2118bef",
+      "supported_claim_groups": 15,
+      "narrative_characters": 73334
+    },
+    {
+      "title": "Attacking Vision-Language Computer Agents via Pop-ups",
+      "summary": "research/summaries/attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.md",
+      "record": "research/records/attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.json",
+      "source_sha256": "24e0d5a90275064313ffe5d791e3c5a46f694716b8c803d02afab118a73efd74",
+      "supported_claim_groups": 15,
+      "narrative_characters": 76244
+    },
+    {
+      "title": "EIA: Environmental Injection Attack on Generalist Web Agents for Privacy Leakage",
+      "summary": "research/summaries/eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.md",
+      "record": "research/records/eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.json",
+      "source_sha256": "8b3f9bd8a09991ccb66bee6d01d8e2b2e87a004428f1f3d6ebb791c321afed07",
+      "supported_claim_groups": 14,
+      "narrative_characters": 77315
+    },
+    {
+      "title": "Not What You\u2019ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
+      "summary": "research/summaries/indirect_prompt_injection_real_world_comprehensive_summary.md",
+      "record": "research/records/indirect_prompt_injection_real_world_comprehensive_summary.json",
+      "source_sha256": "56b01f1fade2c770cd9d859bea4f80cdd050e6414dbd36600c49d63b3447901d",
+      "supported_claim_groups": 20,
+      "narrative_characters": 76573
+    },
+    {
+      "title": "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
+      "summary": "research/summaries/agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.md",
+      "record": "research/records/agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.json",
+      "source_sha256": "26a3f0426ee1d533e4dd9f62d1343a7a1d231fe718cfaf3a362cc7de829ae913",
+      "supported_claim_groups": 16,
+      "narrative_characters": 82384
+    },
+    {
+      "title": "Formalizing and Benchmarking Prompt Injection Attacks and Defenses",
+      "summary": "research/summaries/formalizing_prompt_injection_comprehensive_summary.md",
+      "record": "research/records/formalizing_prompt_injection_comprehensive_summary.json",
+      "source_sha256": "9adb2f4e55bf9bfd171f7ddfc2c5f46c168f1cd28326101552b81fd2ebd2aaec",
+      "supported_claim_groups": 15,
+      "narrative_characters": 81219
+    },
+    {
+      "title": "SecureWebArena: A Holistic Security Evaluation Benchmark for LVLM-based Web Agents",
+      "summary": "research/summaries/securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md",
+      "record": "research/records/securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.json",
+      "source_sha256": "b7ea2139f2d1c474cf8fa128548f1f23170c8a761ffd3d61b38486f7bd8f1bb9",
+      "supported_claim_groups": 12,
+      "narrative_characters": 71303
+    },
+    {
+      "title": "WASP: Benchmarking Web Agent Security Against Prompt Injection Attacks",
+      "summary": "research/summaries/wasp_comprehensive_summary.md",
+      "record": "research/records/wasp_comprehensive_summary.json",
+      "source_sha256": "bf0c5f7118860c0d9672cf6ca3b214285f142b45c9d4dee9c007d787f146229e",
+      "supported_claim_groups": 16,
+      "narrative_characters": 70677
+    },
+    {
+      "title": "CELLMATE: Sandboxing Browser AI Agents",
+      "summary": "research/summaries/cellmate_sandboxing_browser_ai_agents_comprehensive_summary.md",
+      "record": "research/records/cellmate_sandboxing_browser_ai_agents_comprehensive_summary.json",
+      "source_sha256": "3bcee9a85cbcca525351e9b1b184fb86a7ac1641cd15e623fac4c3345fa34491",
+      "supported_claim_groups": 15,
+      "narrative_characters": 79012
+    },
+    {
+      "title": "Defending Against Indirect Prompt Injection Attacks With Spotlighting",
+      "summary": "research/summaries/defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.md",
+      "record": "research/records/defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.json",
+      "source_sha256": "0e99c2ad0af85eb97fce9f940a8010783641fa91f3aafedc5edf6becc5dc4ce2",
+      "supported_claim_groups": 15,
+      "narrative_characters": 71928
+    },
+    {
+      "title": "IsolateGPT: An Execution Isolation Architecture for LLM-Based Agentic Systems",
+      "summary": "research/summaries/isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md",
+      "record": "research/records/isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.json",
+      "source_sha256": "98c28e6d68ab378348fb8a1aea311c39533384fd7bdc15a4782a5bbf1ea057c0",
+      "supported_claim_groups": 14,
+      "narrative_characters": 73189
+    },
+    {
+      "title": "WARD: Adversarially Robust Defense of Web Agents Against Prompt Injections",
+      "summary": "research/summaries/ward_comprehensive_summary.md",
+      "record": "research/records/ward_comprehensive_summary.json",
+      "source_sha256": "60d29d0418e9027651e7c3baa354251853a4f92af1b0b5a33e2b070f4ae24eb6",
+      "supported_claim_groups": 15,
+      "narrative_characters": 73519
+    }
+  ],
+  "catalog_records": 24,
+  "catalog_membership": "matches all validated completed records",
+  "matrix_rows": 24,
+  "matrix_columns": 12,
+  "synthesis_link_checks": {
+    "checked": 67,
+    "result": "passed"
+  },
+  "previous_output_fingerprints": {
+    "checked": 30,
+    "result": "unchanged"
+  },
+  "protected_file_fingerprints": {
+    "checked": 12,
+    "result": "unchanged"
+  },
+  "eligible_source_checkpoint_fingerprints": {
+    "checked": 105,
+    "result": "unchanged",
+    "excluded_PDFs_opened": 0
+  },
+  "supported_claim_groups_new": 132,
+  "supported_claim_groups_total": 366,
+  "tests_observed": {
+    "research_mode": 10,
+    "summary_state": 4,
+    "total": 14,
+    "result": "passed"
+  },
+  "runner_changes": false,
+  "scientific_validation": "not performed",
+  "review_scope": "Existing schema/structure/page-bound/exact-quotation checks, deliverable readback, PDF identity and selected source/quantitative/visual review; not exhaustive independent scientific verification.",
+  "review_notes": "research/ITERATION3_REVIEW.md",
+  "synthesis_paths": [
+    "research/synthesis/SECURITY_COMPARISON_MATRIX.md",
+    "research/synthesis/INITIAL_RESEARCH_FINDINGS.md"
+  ],
+  "excluded_holdouts": [
+    "B03",
+    "B08",
+    "B04",
+    "B02",
+    "B05",
+    "B06",
+    "B07"
+  ],
+  "resume_selected_command": "research/.venv/Scripts/python.exe -B scripts/research_mode.py --limit 2 --paper the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md",
+  "continue_general_command": "research/.venv/Scripts/python.exe -B scripts/research_mode.py --limit 2",
+  "model_dispatch_after_usage_stop": 0
+}

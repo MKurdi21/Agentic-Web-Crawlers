@@ -1,0 +1,198 @@
+{
+  "initial_completed_count": 5,
+  "newly_completed_count": 10,
+  "total_completed_count": 15,
+  "newly_completed": [
+    {
+      "summary_name": "autowebglm_comprehensive_summary.md",
+      "record_path": "research/records/autowebglm_comprehensive_summary.json",
+      "summary_path": "research/summaries/autowebglm_comprehensive_summary.md",
+      "title": "AutoWebGLM: A Large Language Model-based Web Navigating Agent",
+      "source_sha256": "ee5100b55bdcc64eca63c5a0f9604a61dcaf60efdeea44838f60ba246cedfa72",
+      "characters": 81717,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "go_browse_comprehensive_summary.md",
+      "record_path": "research/records/go_browse_comprehensive_summary.json",
+      "summary_path": "research/summaries/go_browse_comprehensive_summary.md",
+      "title": "Go-Browse: Training Web Agents with Structured Exploration",
+      "source_sha256": "4ddfc98553e56a7251c3c4ac87401044c369d758f3268d8dd010bdc7c32a1445",
+      "characters": 80870,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "seeact_comprehensive_summary.md",
+      "record_path": "research/records/seeact_comprehensive_summary.json",
+      "summary_path": "research/summaries/seeact_comprehensive_summary.md",
+      "title": "GPT-4V(ision) is a Generalist Web Agent, if Grounded",
+      "source_sha256": "ac281a3c5cdbda428e14605e9d96035fd35af82073ce46117c27c34792eea041",
+      "characters": 76883,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "laser_comprehensive_summary.md",
+      "record_path": "research/records/laser_comprehensive_summary.json",
+      "summary_path": "research/summaries/laser_comprehensive_summary.md",
+      "title": "LASER: LLM Agent with State-Space Exploration for Web Navigation",
+      "source_sha256": "7e1ff14ef22ea7e4ac44b84b88563f830a14386f4da7354a8af366070ac5f989",
+      "characters": 70249,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "webvoyager_comprehensive_summary.md",
+      "record_path": "research/records/webvoyager_comprehensive_summary.json",
+      "summary_path": "research/summaries/webvoyager_comprehensive_summary.md",
+      "title": "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+      "source_sha256": "69094c0247e519a50f3457a00830e818f0d1e68233248bb958d3527f7d17d99f",
+      "characters": 79885,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "bearcubs_comprehensive_summary.md",
+      "record_path": "research/records/bearcubs_comprehensive_summary.json",
+      "summary_path": "research/summaries/bearcubs_comprehensive_summary.md",
+      "title": "BEARCUBS: A benchmark for computer-using web agents",
+      "source_sha256": "ed897dba84175152161a98532ea2fa84189a41d12151d39b965d7d0b42ff4055",
+      "characters": 76559,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "browsecomp_comprehensive_summary.md",
+      "record_path": "research/records/browsecomp_comprehensive_summary.json",
+      "summary_path": "research/summaries/browsecomp_comprehensive_summary.md",
+      "title": "BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents",
+      "source_sha256": "8de2e7a024b43ff7fbab29e0bb6dbdc131ad07206e6c186c2122502d69477760",
+      "characters": 72558,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "mind2web_comprehensive_summary.md",
+      "record_path": "research/records/mind2web_comprehensive_summary.json",
+      "summary_path": "research/summaries/mind2web_comprehensive_summary.md",
+      "title": "Mind2Web: Towards a Generalist Agent for the Web",
+      "source_sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "characters": 77845,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "mmina_comprehensive_summary.md",
+      "record_path": "research/records/mmina_comprehensive_summary.json",
+      "summary_path": "research/summaries/mmina_comprehensive_summary.md",
+      "title": "MMInA: Benchmarking Multihop Multimodal Internet Agents",
+      "source_sha256": "1295b51e37abc2b4147cef166cc31e5c6a5e4df47ef1c394df7d3af84a9dcc81",
+      "characters": 69715,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "browsergym_comprehensive_summary.md",
+      "record_path": "research/records/browsergym_comprehensive_summary.json",
+      "summary_path": "research/summaries/browsergym_comprehensive_summary.md",
+      "title": "The BrowserGym Ecosystem for Web Agent Research",
+      "source_sha256": "faf67147c8f28aca96ad6174c3ccaf4f127bab91fdeaaf0a8ac92f110e4fe09a",
+      "characters": 79296,
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    }
+  ],
+  "progress_counts": {
+    "completed": 15,
+    "pending": 90,
+    "excluded": 7
+  },
+  "new_claim_groups_checked": 154,
+  "catalog_records": 15,
+  "failed_or_deferred_papers": [],
+  "tests": {
+    "research_mode": 10,
+    "existing_summary_state": 4,
+    "failures": 0
+  },
+  "pilot_preservation": {
+    "files_checked": 10,
+    "changed": []
+  },
+  "monitored_historical_preservation": {
+    "files_checked": 9,
+    "changed": []
+  },
+  "eligible_source_hashes_matching_authoritative_checkpoint": 105,
+  "reserved_source_access": "Excluded identities verified from metadata; reserved canonical PDFs not opened",
+  "historical_B02": {
+    "consumed": 1,
+    "primary_accepted": true,
+    "untouched": 6,
+    "verifier": "NOT_RUN",
+    "adjudication": "NOT_RUN"
+  },
+  "review_scope": "Selected quantitative/source/visual checks; quotation presence does not prove entailment or exhaustive scientific validation"
+}

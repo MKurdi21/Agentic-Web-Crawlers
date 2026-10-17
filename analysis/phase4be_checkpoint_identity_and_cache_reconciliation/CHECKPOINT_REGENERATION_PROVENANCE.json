@@ -1,0 +1,26 @@
+{
+  "baseline_semantic_sha256": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "current_raw_sha256": {
+    "analysis/CHECKPOINT.md": "cbb63710c40f7809e6f6f0c51691e68bb30b1eb5a5f81bb071a9c3e0969c19f2",
+    "analysis/checkpoint.json": "fcf1a23b7810525b5937a08365036a060bdfe046ab9075ec1f6412eb7e558ff1"
+  },
+  "current_semantic_sha256": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "generated_counts": {
+    "canonical_pdf_count": 112,
+    "counts": {
+      "pending": 75,
+      "structural_pass": 37
+    },
+    "total_pdf_count": 117
+  },
+  "generated_duplicate_count": 5,
+  "generated_issue_count": 0,
+  "generated_json_equal_current_json": true,
+  "generated_markdown_equal_current_after_line_ending_normalization": true,
+  "generated_markdown_substantive_equal_current": true,
+  "generated_semantic_sha256": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "generator_exit_code": 0,
+  "generator_sha256": "7d92cd0953e45a71747bfe3f5533b092e855821ded9515ff0fa9e2a0a9c0d7ea",
+  "method": "Authorized generator copied with only root binding, update timestamp and output destinations changed; python -B; live checkpoint paths not written.",
+  "verdict": "PASS"
+}

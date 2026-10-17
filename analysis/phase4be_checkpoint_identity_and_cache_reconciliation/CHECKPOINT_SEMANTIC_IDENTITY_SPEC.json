@@ -1,0 +1,25 @@
+{
+  "allow_on": [
+    "raw checkpoint hash change only with approved timestamp change and matching semantic hash, Markdown rendering, generator and isolated reproduction"
+  ],
+  "approved_volatile_json_fields": [
+    "updated_at"
+  ],
+  "baseline_semantic_sha256": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "block_on": [
+    "semantic hash change",
+    "generator hash change",
+    "source hash or manifest drift",
+    "rendered Markdown substantive drift",
+    "malformed JSON",
+    "unknown volatile field",
+    "failed isolated reproduction"
+  ],
+  "canonicalization": "checkpoint-semantic-c14n-v1",
+  "generator_sha256": "7d92cd0953e45a71747bfe3f5533b092e855821ded9515ff0fa9e2a0a9c0d7ea",
+  "machine_authority": "analysis/checkpoint.json parsed with unique keys, remove exactly top-level updated_at, recursively retain every other value, JSON UTF-8 ensure_ascii=false sort_keys=true separators=(comma,colon), allow_nan=false, SHA-256",
+  "policy_sha256": "384ec978aa0f99f6f43c4f35efd1457ef91bbb2ad85e5a27aed3feb4efe2570b",
+  "rendered_authority": "analysis/CHECKPOINT.md must equal the trusted generator rendering after normalizing exactly one Updated: line; that line must exactly equal Updated: <JSON updated_at> with no suffix or duplicate; raw SHA always recorded",
+  "source_model": "12 approved corpus roots, 99_Duplicates separate, 112 mapped sources",
+  "version": "phase4be-checkpoint-semantic-identity-v1.0.0"
+}

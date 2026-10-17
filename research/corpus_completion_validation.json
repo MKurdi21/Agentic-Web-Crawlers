@@ -1,0 +1,714 @@
+{
+  "status": "operational_usage_limit",
+  "initial_completed": 45,
+  "newly_completed": [
+    {
+      "name": "webshop_comprehensive_summary.md",
+      "source": {
+        "pdf": "02_Web_Agent_Benchmarks_Environments/WebShop_Towards_Scalable_Real-World_Web_Interaction_with_Grounded_Language_Agents.pdf",
+        "summary_name": "webshop_comprehensive_summary.md",
+        "source_sha256": "de9dba42d2ee1a7ded4de5c85870c8570bfb1beddf1f491cc2cde84cdaa4b42f",
+        "category": "02_Web_Agent_Benchmarks_Environments",
+        "tags": [
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 12,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "workarena_comprehensive_summary.md",
+      "source": {
+        "pdf": "02_Web_Agent_Benchmarks_Environments/WorkArena_How_Capable_are_WebAgents_at_Solving_Common_Knowledge_Work_Tasks.pdf",
+        "summary_name": "workarena_comprehensive_summary.md",
+        "source_sha256": "686792a9085d998be3ac3de3e9c126fd0a9256b6ccb313aa006edb62f7645295",
+        "category": "02_Web_Agent_Benchmarks_Environments",
+        "tags": [
+          "benchmark"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 17,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "autoscraper_comprehensive_summary.md",
+      "source": {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/AutoScraper_A_Progressive_Understanding_Web_Agent_for_Web_Scraper_Generation.pdf",
+        "summary_name": "autoscraper_comprehensive_summary.md",
+        "source_sha256": "b86e2a6f54ce405eb093ff5eddcd28ac0ce9becf5452a9e3500fb8e1b44f585f",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "progress-evaluation",
+          "scraping",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "mind2web_2_comprehensive_summary.md",
+      "source": {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/Mind2Web_2_Evaluating_Agentic_Search_with_Agent-as-a-Judge.pdf",
+        "summary_name": "mind2web_2_comprehensive_summary.md",
+        "source_sha256": "1aaba4b08b43f832e2f55d6273475d958c3615b376e7f354eafd5ba31ee9449e",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "information-seeking"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "webdancer_comprehensive_summary.md",
+      "source": {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/WebDancer_Towards_Autonomous_Information_Seeking_Agency.pdf",
+        "summary_name": "webdancer_comprehensive_summary.md",
+        "source_sha256": "e7ea9dab41d1284d7ddcebc53022e23f14d868f4639469c7122d1f86797c9a51",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "information-seeking"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "websailor_comprehensive_summary.md",
+      "source": {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/WebSailor_Navigating_Super-human_Reasoning_for_Web_Agent.pdf",
+        "summary_name": "websailor_comprehensive_summary.md",
+        "source_sha256": "f4d03667b7de9073c6b42f935344cf80f65417eab482d77f8c68b844c45b9e16",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "webscraper_comprehensive_summary.md",
+      "source": {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/Webscraper_Leverage_Multimodal_Large_Language_Models_for_Index-Content_Web_Scraping.pdf",
+        "summary_name": "webscraper_comprehensive_summary.md",
+        "source_sha256": "30909091703af2b60f8abfb05c44321532b0949ca7242e1d0e747e9909000ab4",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "multimodal",
+          "scraping",
+          "tool-use",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "agentvigil_generic_black_box_red_teaming_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/AgentVigil_Generic_Black-Box_Red-teaming_for_Indirect_Prompt_Injection_against_LLM_Agents.pdf",
+        "summary_name": "agentvigil_generic_black_box_red_teaming_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md",
+        "source_sha256": "4bc0b57c44454a82f6d979378e223c49e7367ab137c189394eb9db510a2ffc39",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "adaptive-attack",
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "commercial_llm_agents_are_already_vulnerable_to_simple_yet_dangerous_attacks_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/Commercial_LLM_Agents_Are_Already_Vulnerable_to_Simple_Yet_Dangerous_Attacks.pdf",
+        "summary_name": "commercial_llm_agents_are_already_vulnerable_to_simple_yet_dangerous_attacks_comprehensive_summary.md",
+        "source_sha256": "5b3edc81df1df668ec22c9c4363d1a1070c6a01b46a8151b192d898d4a6eb90e",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "searchgeo_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/How_Much_Can_We_Trust_LLM_Search_Agents_Measuring_Endorsement_Vulnerability_to_Web_Content_Manipulation.pdf",
+        "summary_name": "searchgeo_comprehensive_summary.md",
+        "source_sha256": "f18d2d996f196614989c86e725c4bcc186e233358b042070cda440a7a924f6a5",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "information-seeking",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "canary_tokens_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/Identifying_AI_Web_Scrapers_Using_Canary_Tokens.pdf",
+        "summary_name": "canary_tokens_comprehensive_summary.md",
+        "source_sha256": "2b3a5363fdb15c5a18362fbba13f640f13fe29f8c227a93968ab6ff9485c84a5",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "scraping",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "forge_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/One_Polluted_Page_Is_Enough_Evaluating_Web_Content_Pollution_in_Generative_Recommenders.pdf",
+        "summary_name": "forge_comprehensive_summary.md",
+        "source_sha256": "6db036cce16ad627f9bdf243e0b25a0db8c00b9cf6445a3456c6d7d06a6db150",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "retrieval_barrier_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/Overcoming_the_Retrieval_Barrier_Indirect_Prompt_Injection_in_the_Wild_for_LLM_Systems.pdf",
+        "summary_name": "retrieval_barrier_comprehensive_summary.md",
+        "source_sha256": "745d721cf4fa003ef45b64d33373cbd42f211f09659c5b572d7601e5ef608fde",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "unsafe_llm_search_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/Unsafe_LLM-Based_Search_Quantitative_Analysis_and_Mitigation_of_Safety_Risks_in_AI_Web_Search.pdf",
+        "summary_name": "unsafe_llm_search_comprehensive_summary.md",
+        "source_sha256": "aa19adbc8d8d046713057d8ad5b1778162dc62df739d3703d110183abf04f780",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "information-seeking",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "vpi_bench_visual_prompt_injection_attacks_for_computer_use_agents_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/VPI-Bench_Visual_Prompt_Injection_Attacks_for_Computer-Use_Agents.pdf",
+        "summary_name": "vpi_bench_visual_prompt_injection_attacks_for_computer_use_agents_comprehensive_summary.md",
+        "source_sha256": "769803e65b999b6ced77abe3ca7e4c783e8f0f66946202072117d7b1c8e2c166",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "multimodal",
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 17,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "waaa_web_adversaries_against_agentic_browsers_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/WAAA_Web_Adversaries_Against_Agentic_Browsers.pdf",
+        "summary_name": "waaa_web_adversaries_against_agentic_browsers_comprehensive_summary.md",
+        "source_sha256": "486e671e26958e8af4d5eab28ea4dd181d4a8214db2ca2fcd47029c657d6499a",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "webcloak_characterizing_and_mitigating_threats_from_llm_driven_web_agents_as_intelligent_scrapers_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/WebCloak_Characterizing_and_Mitigating_Threats_from_LLM-Driven_Web_Agents_as_Intelligent_Scrapers.pdf",
+        "summary_name": "webcloak_characterizing_and_mitigating_threats_from_llm_driven_web_agents_as_intelligent_scrapers_comprehensive_summary.md",
+        "source_sha256": "451ba2bb2a8503b4590455a14593b8ac232c372689e4029368d689dd3ea21594",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "scraping",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "webinject_prompt_injection_attack_to_web_agents_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/WebInject_Prompt_Injection_Attack_to_Web_Agents.pdf",
+        "summary_name": "webinject_prompt_injection_attack_to_web_agents_comprehensive_summary.md",
+        "source_sha256": "ca1374bd826c17e3570487401de333eb1a4096a71e9fddcf76fdcc9aad9e431b",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "prompt-injection",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "when_ai_meets_web_comprehensive_summary.md",
+      "source": {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/When_AI_Meets_the_Web_Prompt_Injection_Risks_in_Third-Party_AI_Chatbot_Plugins.pdf",
+        "summary_name": "when_ai_meets_web_comprehensive_summary.md",
+        "source_sha256": "dd7ef2b3a06eaea6b7d229537f63a97a0c873676f4ad0a4d6512b33c329c74a6",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "prompt-injection",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "agentlab_benchmarking_llm_agents_against_long_horizon_attacks_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/AgentLAB_Benchmarking_LLM_Agents_against_Long-Horizon_Attacks.pdf",
+        "summary_name": "agentlab_benchmarking_llm_agents_against_long_horizon_attacks_comprehensive_summary.md",
+        "source_sha256": "860bfc133add288ad8b16b8e245b7167d0aa4946a3f6553b625907281a1cb3b8",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [
+          "benchmark",
+          "long-horizon"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "ai_agent_traps_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/AI_Agent_Traps.pdf",
+        "summary_name": "ai_agent_traps_comprehensive_summary.md",
+        "source_sha256": "603f0cae8cd8ab944f3e700a169d325120db42239075350d07c8183da71a527c",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "breaking_agents_compromising_autonomous_llm_agents_through_malfunction_amplification_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Breaking_Agents_Compromising_Autonomous_LLM_Agents_Through_Malfunction_Amplification.pdf",
+        "summary_name": "breaking_agents_compromising_autonomous_llm_agents_through_malfunction_amplification_comprehensive_summary.md",
+        "source_sha256": "4cda5554dd3c73a743d1b55cbccf60a160dcf442970df06eb9b69296ad19ea54",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "how_adversarial_environments_mislead_agentic_ai_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/How_Adversarial_Environments_Mislead_Agentic_AI.pdf",
+        "summary_name": "how_adversarial_environments_mislead_agentic_ai_comprehensive_summary.md",
+        "source_sha256": "0e5d385cfbbb91812762493dbc2bb5bc09806c1359ac195114765993201af3c2",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "its_a_trap_task_redirecting_agent_persuasion_benchmark_for_web_agents_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Its_a_TRAP_Task-Redirecting_Agent_Persuasion_Benchmark_for_Web_Agents.pdf",
+        "summary_name": "its_a_trap_task_redirecting_agent_persuasion_benchmark_for_web_agents_comprehensive_summary.md",
+        "source_sha256": "21826c891fad709395c830f81afb8ef6a48643775aa54049a6715f040935ead6",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [
+          "benchmark",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "mind_the_web_the_security_of_web_use_agents_5a834c4e_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Mind_the_Web_The_Security_of_Web-Use_Agents.pdf",
+        "summary_name": "mind_the_web_the_security_of_web_use_agents_5a834c4e_comprehensive_summary.md",
+        "source_sha256": "5a834c4ef546307f06cb4d081cce6d026ec9a7029039befbf9ff18bb70831a9a",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "mind_the_web_the_security_of_web_use_agents_comprehensive_summary.md",
+      "source": {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Mind_the_Web_The_Security_of_Web_Use_Agents.pdf",
+        "summary_name": "mind_the_web_the_security_of_web_use_agents_comprehensive_summary.md",
+        "source_sha256": "d9d8dd67c192eccb3a47c2a13d06258f4250f5c24a2d84516abab9686bd3f7ad",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "denial_of_wallet_defining_a_looming_threat_to_serverless_computing_comprehensive_summary.md",
+      "source": {
+        "pdf": "06_Resource_Exhaustion_Availability_Denial_of_Wallet/Denial_of_wallet_Defining_a_looming_threat_to_serverless_computing.pdf",
+        "summary_name": "denial_of_wallet_defining_a_looming_threat_to_serverless_computing_comprehensive_summary.md",
+        "source_sha256": "6b6a34a604e17634d86f339a707ce2e5e8c480a4db002db65290c276ba14d316",
+        "category": "06_Resource_Exhaustion_Availability_Denial_of_Wallet",
+        "tags": [
+          "resource-exhaustion"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "recurguard_runtime_monitoring_for_reasoning_token_consumption_attacks_comprehensive_summary.md",
+      "source": {
+        "pdf": "06_Resource_Exhaustion_Availability_Denial_of_Wallet/RecurGuard_Runtime_Monitoring_for_Reasoning-Token_Consumption_Attacks.pdf",
+        "summary_name": "recurguard_runtime_monitoring_for_reasoning_token_consumption_attacks_comprehensive_summary.md",
+        "source_sha256": "1cad6d424dc3890737e5530a21d95eecd9f87efa3b6432531b7a8083a40bf372",
+        "category": "06_Resource_Exhaustion_Availability_Denial_of_Wallet",
+        "tags": [
+          "defense",
+          "resource-exhaustion"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "indirect_prompt_injections_are_firewalls_all_you_need_or_stronger_benchmarks_comprehensive_summary.md",
+      "source": {
+        "pdf": "07_Security_Benchmarks_Evaluation/Indirect_Prompt_Injections_Are_Firewalls_All_You_Need_or_Stronger_Benchmarks.pdf",
+        "summary_name": "indirect_prompt_injections_are_firewalls_all_you_need_or_stronger_benchmarks_comprehensive_summary.md",
+        "source_sha256": "43f15bd759c2ec68fd0f7738f3d730a7231ebccc420027f2626c6b6ee11b9447",
+        "category": "07_Security_Benchmarks_Evaluation",
+        "tags": [
+          "benchmark",
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "ace_comprehensive_summary.md",
+      "source": {
+        "pdf": "08_Defenses_Guards_Containment/ACE_A_Security_Architecture_for_LLM-Integrated_App_Systems.pdf",
+        "summary_name": "ace_comprehensive_summary.md",
+        "source_sha256": "da686f6107fa0e40a440dc2f7ee4b2d0b93ce23cb77f2a3c2fa7512ab36c2ff0",
+        "category": "08_Defenses_Guards_Containment",
+        "tags": [],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "name": "guide_interpretable_gui_agent_evaluation_via_hierarchical_diagnosis_comprehensive_summary.md",
+      "source": {
+        "pdf": "09_Progress_Long_Horizon_Benign_Controls/GUIDE_Interpretable_GUI_Agent_Evaluation_via_Hierarchical_Diagnosis.pdf",
+        "summary_name": "guide_interpretable_gui_agent_evaluation_via_hierarchical_diagnosis_comprehensive_summary.md",
+        "source_sha256": "1bf91b3823009ae3ca0eb3dba4dfd9c6e871ef87929f7a88977765f2368e1a0c",
+        "category": "09_Progress_Long_Horizon_Benign_Controls",
+        "tags": [
+          "benchmark",
+          "progress-evaluation"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    }
+  ],
+  "counts": {
+    "completed": 76,
+    "excluded": 7,
+    "pending": 29
+  },
+  "completed_batches": 15,
+  "previous_output_fingerprints_unchanged": 90,
+  "protected_fingerprints_unchanged": 12,
+  "catalog_records": 76,
+  "tests": {
+    "research_mode": 10,
+    "summary_state": 4,
+    "total_passed": 14
+  },
+  "scientific_validation": "not independently performed",
+  "synthesis_coverage": 76,
+  "partial_batch": 16,
+  "stop_reason": "OPERATIONAL_USAGE_LIMIT: FocusAgent pending; TRAP retained output repaired and finalized without model dispatch"
+}

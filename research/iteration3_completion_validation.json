@@ -1,0 +1,153 @@
+{
+  "initial_completed": 24,
+  "previous_output_hashes": {
+    "research\\summaries\\autowebglm_comprehensive_summary.md": "fc29c81ba8e625c280ceb5e94e026b15acee8e85cf71c390afeade490b09ad44",
+    "research\\records\\autowebglm_comprehensive_summary.json": "df4e3427b60601c0a72a33f8c3bddfb020cd1f1eedd8ff3caf2abb70069846ff",
+    "research\\summaries\\go_browse_comprehensive_summary.md": "7013ac0965ed51bd64fcc533f369b02e6f779ce2727c3983d1ee2e94a95b28e1",
+    "research\\records\\go_browse_comprehensive_summary.json": "48f3178bb43dba84822035a460fea5e756d99fa636d868cdfb6f86072aa94f30",
+    "research\\summaries\\seeact_comprehensive_summary.md": "968cb43adddabd4fed2deeeb2f8ea9c1f5f95c885c4e33cb8686318f355894e8",
+    "research\\records\\seeact_comprehensive_summary.json": "2d6de718641cfffda40b9643c9d5746b49c084c8a1bd15fd4ed41d6f75dfd4a6",
+    "research\\summaries\\laser_comprehensive_summary.md": "0c4ad8b08d74a37ea1cd27e76af04e1c2d302bb946eaaf5f1fa9fc47dde96476",
+    "research\\records\\laser_comprehensive_summary.json": "a8ade629d6f0765db113d3ddc91cd4531c329963f0505c831ac1da9847c79335",
+    "research\\summaries\\react_comprehensive_summary.md": "6f5bb409e1c3eb9e4c515431589da9072f6e6333967e970f6167e51ab000c3e0",
+    "research\\records\\react_comprehensive_summary.json": "3568c64d6cade4d4a1075f84e1838b736297279a8eefdc3f7fd71de77d4035b2",
+    "research\\summaries\\webvoyager_comprehensive_summary.md": "6d4e6bfe554632175690a040b5d355b33c3b922b627e7d405078bbf912125319",
+    "research\\records\\webvoyager_comprehensive_summary.json": "92a470833bbda554ea5b8b7a35bedf61e0c722ffccb40e0bde1ef45931da030a",
+    "research\\summaries\\bearcubs_comprehensive_summary.md": "eaddab967b0407d82fc879effe1122e188d071820cde636e985b0ee5b2d4cf9d",
+    "research\\records\\bearcubs_comprehensive_summary.json": "4a53c6781afb0e6b758c9ed6595fe18ebd87fe8649dfd0a5c8359bf374139429",
+    "research\\summaries\\browsecomp_comprehensive_summary.md": "65b7f7f06d35b0f800c0f131c27bee767de9d551a64f4c2fc371cabd404a2b01",
+    "research\\records\\browsecomp_comprehensive_summary.json": "e62e702e4ad91d3912d6cc5671d444ee9672c109d02f4d36fef10b19e1fb0c07",
+    "research\\summaries\\mind2web_comprehensive_summary.md": "c62b7ff509311aa540d72a7b03e19a44cb7b9df8146e4d59b4633b4e3954d4e0",
+    "research\\records\\mind2web_comprehensive_summary.json": "ab8779212f3ae8e53cde2675ab13b4c7a6a6463cd1afec6876c03b8eaf81b91d",
+    "research\\summaries\\mmina_comprehensive_summary.md": "2502bedf0a10ec90d9924678e08d01b9cc24166f77b0fb8aeda95701600d172c",
+    "research\\records\\mmina_comprehensive_summary.json": "3fd79e77ba511dc44affb1dbc32464f099fa3e0efa2a4deb66b094fc6f7d310e",
+    "research\\summaries\\browsergym_comprehensive_summary.md": "39fd592266435cc9bf58fe56a7036e1cecda2d249be2c11697acffbf1dd10c06",
+    "research\\records\\browsergym_comprehensive_summary.json": "475c87f679fbb61e690166a6a4f74f1934544925b23f460490dbff327e30439b",
+    "research\\summaries\\webarena_comprehensive_summary.md": "2ff518be4234334007f539f2487d4a57003c87abf2cbe93d2ec1410bb929fa70",
+    "research\\records\\webarena_comprehensive_summary.json": "5b42a32483c4e7c2841670fbe3e9d37e6228478b4306137c3d6ef8ffb54cdc7f",
+    "research\\summaries\\advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.md": "17f80c3e82ea8714d95bf37e62387f65e95a1cf118f0d50e772b9492182784b0",
+    "research\\records\\advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.json": "6e6ebded5e3ad730e65a689f149c765b2ef25ab7c86951c40e1ddb0165cc476b",
+    "research\\summaries\\attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.md": "8bc8ee3ba5f0ae45bf626b8f8447672896bd2bd017d6176106093a8cac8c4a4d",
+    "research\\records\\attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.json": "6b1ef441d87e6749144cac147ef4975032eb7e3cf12047296aab5c298cfc88a9",
+    "research\\summaries\\eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.md": "ec65ea85de2f2328153311ed3929ec2506e4f278c9a3952a0c453a6ce0f29480",
+    "research\\records\\eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.json": "be29cf11dc05657af5e5f4c19498980df39bf8c1113e402ad10d1bb062fb3438",
+    "research\\summaries\\indirect_prompt_injection_real_world_comprehensive_summary.md": "e3fadcd74d7e43e04bbc1cafec42663edf5f0fae7e9946682948b5b1eef65092",
+    "research\\records\\indirect_prompt_injection_real_world_comprehensive_summary.json": "d931a8c370c00fb87f518c4d5b05a560a33e69a2649831c0607bea41a4b0a92d",
+    "research\\summaries\\agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.md": "fd858afd89c71e43bd39c99a17cd65dd5a27f75ae14b5fbef23fd3b1c79d55e6",
+    "research\\records\\agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.json": "2f34e7362f82f3fdd9954538aacde5e2002655ddb84ed2e25203a5830d780a00",
+    "research\\summaries\\formalizing_prompt_injection_comprehensive_summary.md": "e8cb30a238e09dd5bfdbd820ea09faa6bd976f3c674c297579d5b436ac7b8b40",
+    "research\\records\\formalizing_prompt_injection_comprehensive_summary.json": "987752d2735d637c6a3915d957b7838ad25870ee6c33954b9f9e72d7ed705226",
+    "research\\summaries\\securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md": "c98237e84ffa407d79c2cb77e4f9b1da79ec399475d0ece1fd85b94514173b26",
+    "research\\records\\securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.json": "fe9886f0d43d4fb4e760f6453a018487e9eeacab89815a019fdc694eac991547",
+    "research\\summaries\\wasp_comprehensive_summary.md": "d1201230e3c089e16f1ef73bb69cda096c8408f18ede4fb3acf50825cd6ad751",
+    "research\\records\\wasp_comprehensive_summary.json": "595481ebcdd5b243df9513093c365ca7e27ab929cc1ee48d94a651b6d65a524e",
+    "research\\summaries\\cellmate_sandboxing_browser_ai_agents_comprehensive_summary.md": "c00ca3786b8abea0621e497df0666e9f2cfaad520b53c43267a1de862c70a6a2",
+    "research\\records\\cellmate_sandboxing_browser_ai_agents_comprehensive_summary.json": "175e1be0ed91a8cb7ce77f0467d68c5f2514d9baf8248a5b3be08d0a51e52377",
+    "research\\summaries\\defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.md": "bb705d2874cda437521e4e19ada0744fbfbc8cc662debed61274627392f5157b",
+    "research\\records\\defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.json": "14e135ae0a604ca9a4949e8773d657ecc137fa589da14deeb7d895c5e6f53983",
+    "research\\summaries\\isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md": "1953267e886e27c96536042dacdfdc16386341e6b3cb53e50ffa19b99d479c98",
+    "research\\records\\isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.json": "ebf569b1cd1b72aea36f1f27146eb4e1433de6c4eafa6bccef619955fd580a93",
+    "research\\summaries\\ward_comprehensive_summary.md": "702a276cc63563218350412c1b38d000e5c6c87f5d15bfc47302cd5ba2ce9a1c",
+    "research\\records\\ward_comprehensive_summary.json": "af8f30bbba7c57d24ad9f1fb5ddeb039bbde8dfb1fad7b03c4b028209857b675"
+  },
+  "status": "complete",
+  "resume_newly_completed": 1,
+  "iteration_initial_completed": 15,
+  "iteration_newly_completed": 10,
+  "total_completed": 25,
+  "counts": {
+    "completed": 25,
+    "pending": 80,
+    "excluded": 7
+  },
+  "canonical_count": 112,
+  "archived_duplicate_count": 5,
+  "failed_papers": [],
+  "deferred_papers": [],
+  "excluded_holdouts": [
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08"
+  ],
+  "summary_path": "research/summaries/the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md",
+  "record_path": "research/records/the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.json",
+  "source": {
+    "pdf": "08_Defenses_Guards_Containment/The_Task_Shield_Enforcing_Task_Alignment_to_Defend_Against_Indirect_Prompt_Injection_in_LLM_Agents.pdf",
+    "summary_name": "the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md",
+    "source_sha256": "057ff02152c0bb61892b08abdc80f7af22416c03819e526878091ee87d3bf1e6",
+    "category": "08_Defenses_Guards_Containment",
+    "tags": [
+      "defense",
+      "prompt-injection"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "task_shield_quality": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 12,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "task_shield_supported_claim_groups": 12,
+  "task_shield_support_quotes": 14,
+  "task_shield_narrative_characters": 73893,
+  "validated_completed_pairs": 25,
+  "markdown_json_readback": "passed all 25",
+  "catalog_entries": 25,
+  "catalog_membership": "matches completed validated identities",
+  "previous_output_fingerprints_unchanged": 48,
+  "protected_input_fingerprints_unchanged": 12,
+  "eligible_source_hashes_matching_checkpoint": 105,
+  "reserved_source_pdfs_opened": 0,
+  "matrix_rows": 25,
+  "matrix_columns": 12,
+  "synthesis_local_links_valid": 76,
+  "total_supported_claim_groups": 378,
+  "iteration_supported_claim_groups": 144,
+  "tests": {
+    "research_mode": {
+      "passed": 10,
+      "command": "research/.venv/Scripts/python.exe -B scripts/test_research_mode.py"
+    },
+    "summary_state": {
+      "passed": 4,
+      "command": "research/.venv/Scripts/python.exe -B scripts/test_summary_state.py"
+    }
+  },
+  "source_review": {
+    "identity": "ACL 2025 Volume 1 Long Papers; Feiran Jia, Tong Wu, Xin Qin, Anna Squicciarini; printed pages 29680-29697; physical pages 1-18; source hash verified",
+    "coverage": "7 numbered figures, 7 numbered tables, definitions/equations and Algorithm 1 represented",
+    "reviewer_visual_pages": [
+      5,
+      8,
+      14
+    ],
+    "important_quantitative_checks": "Main and ablation tables, capacity discrepancies and latency figures checked against extraction and selected renders",
+    "claim_classification": "author reports, observable results, analyst-derived values and interpretations distinguished",
+    "scientific_validation": "not independently performed; no replication or exhaustive entailment review"
+  },
+  "important_scientific_concerns": [
+    "Exact experimental denominators not supplied; one trial per task and no security uncertainty estimates",
+    "Table 2a versus Table 4 GPT-4o Slack utility: 64.76 versus 50.48 percent",
+    "Restatement prose uses 63.80 Input Shield utility as full-shield comparison; Table 3 full shield utility is 50.48 percent",
+    "Defender capacity trends not uniformly monotonic across metrics; prompt/threshold ambiguities retained in narrative",
+    "No measured adaptive attack campaign, matched standalone comparator or open-source backbone evaluation",
+    "Full shield median latency 62.56 seconds versus Input Shield 18.78 and no defense 6.17 in mini Slack condition"
+  ],
+  "model_dispatch": {
+    "successful_targeted_attempts_on_resume": 1,
+    "retained_response_validation_retry": 1,
+    "additional_model_calls_for_retry": 0,
+    "additional_papers_processed": 0
+  },
+  "code_changes": false,
+  "historical_paused_report_preserved": "research/iteration3_validation.json",
+  "next_general_command": "research/.venv/Scripts/python.exe -B scripts/research_mode.py --limit 2"
+}

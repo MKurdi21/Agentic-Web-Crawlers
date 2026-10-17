@@ -1,0 +1,131 @@
+[
+  {
+    "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/AdvAgent_Controllable_Blackbox_Red-teaming_on_Web_Agents.pdf",
+    "summary_name": "advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.md",
+    "source_sha256": "e2b5e36a069cd91d79413c0f4f506243bb276d42ae2204c5adadc99aa2118bef",
+    "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+    "tags": [
+      "adaptive-attack",
+      "web-agent"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Black-box webpage attacks"
+  },
+  {
+    "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/EIA_ENVIRONMENTAL_INJECTION_ATTACK_ON_GENERALIST_WEB_AGENTS_FOR_PRIVACY_LEAKAGE.pdf",
+    "summary_name": "eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.md",
+    "source_sha256": "8b3f9bd8a09991ccb66bee6d01d8e2b2e87a004428f1f3d6ebb791c321afed07",
+    "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+    "tags": [
+      "prompt-injection",
+      "web-agent"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Environmental injection and privacy leakage"
+  },
+  {
+    "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/Attacking_Vision-Language_Computer_Agents_via_Pop-ups.pdf",
+    "summary_name": "attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.md",
+    "source_sha256": "24e0d5a90275064313ffe5d791e3c5a46f694716b8c803d02afab118a73efd74",
+    "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+    "tags": [
+      "multimodal"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Visual webpage attack delivery"
+  },
+  {
+    "pdf": "07_Security_Benchmarks_Evaluation/AgentDojo_A_Dynamic_Environment_to_Evaluate_Prompt_Injection_Attacks_and_Defenses_for_LLM_Agents.pdf",
+    "summary_name": "agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.md",
+    "source_sha256": "26a3f0426ee1d533e4dd9f62d1343a7a1d231fe718cfaf3a362cc7de829ae913",
+    "category": "07_Security_Benchmarks_Evaluation",
+    "tags": [
+      "defense",
+      "prompt-injection"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Tool-agent attack/defense benchmark"
+  },
+  {
+    "pdf": "07_Security_Benchmarks_Evaluation/WASP_Benchmarking_Web_Agent_Security_Against_Prompt_Injection_Attacks.pdf",
+    "summary_name": "wasp_comprehensive_summary.md",
+    "source_sha256": "bf0c5f7118860c0d9672cf6ca3b214285f142b45c9d4dee9c007d787f146229e",
+    "category": "07_Security_Benchmarks_Evaluation",
+    "tags": [
+      "benchmark",
+      "prompt-injection",
+      "web-agent"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Web-agent prompt-injection security benchmark"
+  },
+  {
+    "pdf": "07_Security_Benchmarks_Evaluation/SecureWebArena_A_Holistic_Security_Evaluation_Benchmark_for_LVLM-based_Web_Agents.pdf",
+    "summary_name": "securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md",
+    "source_sha256": "b7ea2139f2d1c474cf8fa128548f1f23170c8a761ffd3d61b38486f7bd8f1bb9",
+    "category": "07_Security_Benchmarks_Evaluation",
+    "tags": [
+      "benchmark",
+      "web-agent"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Multimodal web-agent security evaluation"
+  },
+  {
+    "pdf": "08_Defenses_Guards_Containment/IsolateGPT_An_Execution_Isolation_Architecture_for_LLM-Based_Agentic_Systems.pdf",
+    "summary_name": "isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md",
+    "source_sha256": "98c28e6d68ab378348fb8a1aea311c39533384fd7bdc15a4782a5bbf1ea057c0",
+    "category": "08_Defenses_Guards_Containment",
+    "tags": [
+      "defense"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Execution isolation defense"
+  },
+  {
+    "pdf": "08_Defenses_Guards_Containment/Defending_Against_Indirect_Prompt_Injection_Attacks_With_Spotlighting.pdf",
+    "summary_name": "defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.md",
+    "source_sha256": "0e99c2ad0af85eb97fce9f940a8010783641fa91f3aafedc5edf6becc5dc4ce2",
+    "category": "08_Defenses_Guards_Containment",
+    "tags": [
+      "defense",
+      "prompt-injection"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Untrusted-content provenance defense"
+  },
+  {
+    "pdf": "08_Defenses_Guards_Containment/The_Task_Shield_Enforcing_Task_Alignment_to_Defend_Against_Indirect_Prompt_Injection_in_LLM_Agents.pdf",
+    "summary_name": "the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md",
+    "source_sha256": "057ff02152c0bb61892b08abdc80f7af22416c03819e526878091ee87d3bf1e6",
+    "category": "08_Defenses_Guards_Containment",
+    "tags": [
+      "defense",
+      "prompt-injection"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Task-alignment defense"
+  },
+  {
+    "pdf": "08_Defenses_Guards_Containment/ceLLMate_Sandboxing_Browser_AI_Agents.pdf",
+    "summary_name": "cellmate_sandboxing_browser_ai_agents_comprehensive_summary.md",
+    "source_sha256": "3bcee9a85cbcca525351e9b1b184fb86a7ac1641cd15e623fac4c3345fa34491",
+    "category": "08_Defenses_Guards_Containment",
+    "tags": [
+      "defense",
+      "web-agent"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed",
+    "selection_reason": "Browser-agent sandboxing and containment"
+  }
+]

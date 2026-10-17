@@ -1,0 +1,262 @@
+{
+  "purpose": "20 eligible pending papers balanced across remaining categories; existing two-paper runner only",
+  "batches": [
+    [
+      {
+        "pdf": "02_Web_Agent_Benchmarks_Environments/VisualWebArena_Evaluating_Multimodal_Agents_on_Realistic_Visual_Web_Tasks.pdf",
+        "summary_name": "visualwebarena_comprehensive_summary.md",
+        "source_sha256": "6fc85c38c975c2af170c1d1a28f72ba557906d9019d1d9106a15215868bb491e",
+        "category": "02_Web_Agent_Benchmarks_Environments",
+        "tags": [
+          "benchmark",
+          "multimodal",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/WebGPT_Browser-assisted_question-answering_with_human_feedback.pdf",
+        "summary_name": "webgpt_comprehensive_summary.md",
+        "source_sha256": "acad8d9fd55a30b94de9dfdae413e10b21e07bde54d767b2405b31341739cedb",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "information-seeking",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/AGENTFUZZER_Generic_Black-Box_Fuzzing_for_Indirect_Prompt_Injection_against_LLM_Agents.pdf",
+        "summary_name": "agentfuzzer_generic_black_box_fuzzing_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md",
+        "source_sha256": "f41a7b42c8e11de28365641c590d92d9da831ad4bf4aee426e985dc07c2c27b7",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "adaptive-attack",
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Context_manipulation_attacks_Web_agents_are_susceptible_to_corrupted_memory.pdf",
+        "summary_name": "context_manipulation_attacks_web_agents_are_susceptible_to_corrupted_memory_comprehensive_summary.md",
+        "source_sha256": "c1acb6ff039f69fda4e181dff2223cd1d677b8e64d4d458ba97b593070c55a3b",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [
+          "memory",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "06_Resource_Exhaustion_Availability_Denial_of_Wallet/Autonomy_Comes_with_Costs_Detecting_Denial-of-Service_Vulnerabilities_Caused_by_Resource_Abusing_in_LLM-based_Agents.pdf",
+        "summary_name": "autonomy_comes_with_costs_detecting_denial_of_service_vulnerabilities_caused_by_resource_abusing_in_llm_based_agents_comprehensive_summary.md",
+        "source_sha256": "3f2bf1948dcde95883304013d9eb6a86b728470f3dc51dca51baf675d338fa5c",
+        "category": "06_Resource_Exhaustion_Availability_Denial_of_Wallet",
+        "tags": [
+          "resource-exhaustion"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "07_Security_Benchmarks_Evaluation/SafeArena_Evaluating_the_Safety_of_Autonomous_Web_Agents.pdf",
+        "summary_name": "safearena_comprehensive_summary.md",
+        "source_sha256": "03e535c1c0b69f56ba8eb6f2e1596f55c65ca4e1a15356eb3775983a974cdcb0",
+        "category": "07_Security_Benchmarks_Evaluation",
+        "tags": [
+          "benchmark",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "08_Defenses_Guards_Containment/PlanGuard_Defending_Agents_against_Indirect_Prompt_Injection_via_Planning-based_Consistency_Verification.pdf",
+        "summary_name": "planguard_defending_agents_against_indirect_prompt_injection_via_planning_based_consistency_verification_comprehensive_summary.md",
+        "source_sha256": "eb6b5ebaed769c95ec05de10b08c4feae53fd00ba028e737241a1aa7909023c3",
+        "category": "08_Defenses_Guards_Containment",
+        "tags": [
+          "defense",
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "09_Progress_Long_Horizon_Benign_Controls/AgentRewardBench_Evaluating_Automatic_Evaluations_of_Web_Agent_Trajectories.pdf",
+        "summary_name": "agentrewardbench_evaluating_automatic_evaluations_of_web_agent_trajectories_comprehensive_summary.md",
+        "source_sha256": "9c7d44da20f638f58d8aa4f547685eb1ebd9da78127c44493a9f2e31d0e324c9",
+        "category": "09_Progress_Long_Horizon_Benign_Controls",
+        "tags": [
+          "benchmark",
+          "progress-evaluation",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "10_Traditional_Crawling_Crawler_Traps/IRLbot_Scaling_to_6_Billion_Pagesand_Beyond.pdf",
+        "summary_name": "irlbot_scaling_to_6_billion_pagesand_beyond_comprehensive_summary.md",
+        "source_sha256": "e9bd69f22ad6f2ca12b3a9e264e44dac550dd3d3b4ea318596a328590c812f46",
+        "category": "10_Traditional_Crawling_Crawler_Traps",
+        "tags": [],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "11_Surveys_Taxonomies_SoK/Toward_Secure_LLM_Agents_Threat_Surfaces_Attacks_Defenses_and_Evaluation.pdf",
+        "summary_name": "toward_secure_llm_agents_comprehensive_summary.md",
+        "source_sha256": "878b26db78805a0edd186b004826227dcea007cdc9c45c4b756394f0674c4f89",
+        "category": "11_Surveys_Taxonomies_SoK",
+        "tags": [
+          "benchmark",
+          "defense",
+          "survey-taxonomy"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "02_Web_Agent_Benchmarks_Environments/WebLINX_Real-World_Website_Navigation_with_Multi-Turn_Dialogue.pdf",
+        "summary_name": "weblinx_comprehensive_summary.md",
+        "source_sha256": "b6e07743ffd1f7939998fae362d42f87a3f00a88e42445b4b791b5fdf5a091e0",
+        "category": "02_Web_Agent_Benchmarks_Environments",
+        "tags": [
+          "long-horizon"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "03_Agentic_Search_Scraping_Info_Seeking/WebWalker_Benchmarking_LLMs_in_Web_Traversal.pdf",
+        "summary_name": "webwalker_comprehensive_summary.md",
+        "source_sha256": "732f69fef0a8255beda990b28de040a720edf74bb6dd41cb59c0e9a27be47626",
+        "category": "03_Agentic_Search_Scraping_Info_Seeking",
+        "tags": [
+          "benchmark",
+          "information-seeking",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/Prompt_Injection_Attack_to_Tool_Selection_in_LLM_Agents.pdf",
+        "summary_name": "toolhijacker_comprehensive_summary.md",
+        "source_sha256": "1749efa3dbb7d90d32ce1b48c7b122c069048ce389bc1be8d7dac4bf86467967",
+        "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+        "tags": [
+          "prompt-injection",
+          "tool-use"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Hidden_in_Memory_Sleeper_Memory_Poisoning_in_LLM_Agents.pdf",
+        "summary_name": "hidden_in_memory_sleeper_memory_poisoning_in_llm_agents_comprehensive_summary.md",
+        "source_sha256": "6be0f159249e5a66c438d224a1b41c62c9bf97770bb20ea5229bd610987e32dc",
+        "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+        "tags": [
+          "memory"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "06_Resource_Exhaustion_Availability_Denial_of_Wallet/Overthinking_Loops_in_Agents_A_Structural_Risk_via_MCP_Tools.pdf",
+        "summary_name": "overthinking_loops_in_agents_a_structural_risk_via_mcp_tools_comprehensive_summary.md",
+        "source_sha256": "32493b11937620225490382eb3a6c48d957671ece044cdac2d5cc2deae851198",
+        "category": "06_Resource_Exhaustion_Availability_Denial_of_Wallet",
+        "tags": [
+          "resource-exhaustion",
+          "tool-use"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "07_Security_Benchmarks_Evaluation/ST-WebAgentBench_A_Benchmark_for_Evaluating_Safety_and_Trustworthiness_in_Web_Agents.pdf",
+        "summary_name": "st_webagentbench_comprehensive_summary.md",
+        "source_sha256": "3ee56f95b39fb59a6a19c0c6a53638c1adea5e8366216ce1bb321cc9a4ae0f8d",
+        "category": "07_Security_Benchmarks_Evaluation",
+        "tags": [
+          "benchmark",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "08_Defenses_Guards_Containment/StruQ_Defending_Against_Prompt_Injection_with_Structured_Queries.pdf",
+        "summary_name": "struq_defending_against_prompt_injection_with_structured_queries_comprehensive_summary.md",
+        "source_sha256": "98c56a8aabb43d1e1fd6eae5111bc09c79c069e52fac8139c578239d9ff74ff7",
+        "category": "08_Defenses_Guards_Containment",
+        "tags": [
+          "defense",
+          "prompt-injection"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "09_Progress_Long_Horizon_Benign_Controls/An_Illusion_of_Progress_Assessing_the_Current_State_of_Web_Agents.pdf",
+        "summary_name": "an_illusion_of_progress_assessing_the_current_state_of_web_agents_comprehensive_summary.md",
+        "source_sha256": "6aae476380da204f170bb785a40912bdc271fa6232e3ae90303bb2dd9b8fbfa8",
+        "category": "09_Progress_Long_Horizon_Benign_Controls",
+        "tags": [
+          "progress-evaluation",
+          "web-agent"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ],
+    [
+      {
+        "pdf": "10_Traditional_Crawling_Crawler_Traps/Detection_of_crawler_traps_formalization_and_implementation\u2014defeating_protection_on_internet_and_on_the_TOR_network.pdf",
+        "summary_name": "detection_of_crawler_traps_formalization_and_implementation_defeating_protection_on_internet_and_on_the_tor_network_comprehensive_summary.md",
+        "source_sha256": "1c7be7d81b301ee62efe1842315f99a161489a8e25fe711c6ce0697076c2769f",
+        "category": "10_Traditional_Crawling_Crawler_Traps",
+        "tags": [
+          "crawler-trap",
+          "scraping"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      },
+      {
+        "pdf": "12_Contextual_Borderline/Toolformer_Language_Models_Can_Teach_Themselves_to_Use_Tools.pdf",
+        "summary_name": "toolformer_comprehensive_summary.md",
+        "source_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+        "category": "12_Contextual_Borderline",
+        "tags": [
+          "tool-use"
+        ],
+        "excluded_holdout": null,
+        "hash_basis": "observed"
+      }
+    ]
+  ]
+}

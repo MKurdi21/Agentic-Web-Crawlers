@@ -1,6 +1,6 @@
 # Analysis Checkpoint
 
-Updated: 2026-09-28T14:34:48.799154+00:00
+Updated: 2026-10-03T16:23:32.881850+00:00
 
 Corpus: 112 canonical PDFs; 5 archived duplicates.
 Saved prompt SHA256: `21dd3b9e6cd783df7c7ff7c40543a620c4d4cbbb54990dc560a33f3b5a557988`

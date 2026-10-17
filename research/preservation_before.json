@@ -1,0 +1,11 @@
+{
+  "AGENTS.md": "7f42a063b0319f4968373def1b2f900367fe50cfa87bc42ba556f94bed615ae1",
+  "analysis/CHECKPOINT.md": "6365a36bedbd57309e3260658153898f50c63ada31cd54c308dc416623dd896c",
+  "analysis/checkpoint.json": "678da253156b8c990ab2de3c998c62c30c5b3496a0fb7e9ba852a3735c7a0265",
+  "analysis/manifest.csv": "e3bf75767e8232ea73df524b00fa5a492cd83b1846405976a4e23a9e4c39344d",
+  "analysis/PROMPT.md": "21dd3b9e6cd783df7c7ff7c40543a620c4d4cbbb54990dc560a33f3b5a557988",
+  "scripts/generate_summary.ps1": "36d309aad60fe8faf755172962e14c599af1d111f79a19f027fbe90d89ce0e00",
+  "scripts/summary_state.py": "7d92cd0953e45a71747bfe3f5533b092e855821ded9515ff0fa9e2a0a9c0d7ea",
+  "analysis/phase4b_b02_scientific_validation/primary_wire_recovery_v25_retry1/FINAL_HANDOFF.json": "42fbf6c9bd381bc23511f82c19711bc435dea6b9c4f88b3d94caf017a3e21b84",
+  "analysis/phase4b_b02_scientific_validation/primary_wire_recovery_v25_retry1/FINAL_CONSERVATION.json": "e87edb2387b22e7a485bd8cabe9ddbb4f31acb780da9f98946a5dd55ad15f8c7"
+}

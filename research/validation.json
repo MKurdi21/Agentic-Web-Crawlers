@@ -1,0 +1,94 @@
+{
+  "unit_tests": {
+    "research_mode": 10,
+    "existing_summary_state": 4,
+    "failures": 0
+  },
+  "pilots": [
+    {
+      "summary_name": "react_comprehensive_summary.md",
+      "characters": 71377,
+      "claims": 15,
+      "checks": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "webarena_comprehensive_summary.md",
+      "characters": 76041,
+      "claims": 15,
+      "checks": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "indirect_prompt_injection_real_world_comprehensive_summary.md",
+      "characters": 76573,
+      "claims": 20,
+      "checks": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 20,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "formalizing_prompt_injection_comprehensive_summary.md",
+      "characters": 81219,
+      "claims": 15,
+      "checks": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    },
+    {
+      "summary_name": "ward_comprehensive_summary.md",
+      "characters": 73519,
+      "claims": 15,
+      "checks": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      }
+    }
+  ],
+  "progress_counts": {
+    "pending": 100,
+    "completed": 5,
+    "excluded": 7
+  },
+  "catalog_records": 5,
+  "monitored_input_preservation": {
+    "files_checked": 9,
+    "changed": []
+  },
+  "eligible_corpus_hashes_checked_against_authoritative_checkpoint": 105,
+  "reserved_fingerprints": "metadata only; reserved canonical PDFs not opened",
+  "historical_B02": {
+    "consumed": 1,
+    "primary_accepted": true,
+    "untouched": 6,
+    "verifier": "NOT_RUN",
+    "adjudication": "NOT_RUN"
+  },
+  "review_scope": "Selected source text, figures and tables; no independent human scientific validation"
+}

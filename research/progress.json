@@ -1,0 +1,1684 @@
+{
+  "papers": {
+    "autowebglm_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "ee5100b55bdcc64eca63c5a0f9604a61dcaf60efdeea44838f60ba246cedfa72",
+      "summary_sha256": "fc29c81ba8e625c280ceb5e94e026b15acee8e85cf71c390afeade490b09ad44",
+      "record_sha256": "df4e3427b60601c0a72a33f8c3bddfb020cd1f1eedd8ff3caf2abb70069846ff",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T22:55:32.841957+00:00"
+    },
+    "go_browse_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "4ddfc98553e56a7251c3c4ac87401044c369d758f3268d8dd010bdc7c32a1445",
+      "summary_sha256": "7013ac0965ed51bd64fcc533f369b02e6f779ce2727c3983d1ee2e94a95b28e1",
+      "record_sha256": "48f3178bb43dba84822035a460fea5e756d99fa636d868cdfb6f86072aa94f30",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T22:55:12.358362+00:00"
+    },
+    "seeact_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "ac281a3c5cdbda428e14605e9d96035fd35af82073ce46117c27c34792eea041",
+      "summary_sha256": "968cb43adddabd4fed2deeeb2f8ea9c1f5f95c885c4e33cb8686318f355894e8",
+      "record_sha256": "2d6de718641cfffda40b9643c9d5746b49c084c8a1bd15fd4ed41d6f75dfd4a6",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:12:34.776429+00:00"
+    },
+    "laser_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "7e1ff14ef22ea7e4ac44b84b88563f830a14386f4da7354a8af366070ac5f989",
+      "summary_sha256": "0c4ad8b08d74a37ea1cd27e76af04e1c2d302bb946eaaf5f1fa9fc47dde96476",
+      "record_sha256": "a8ade629d6f0765db113d3ddc91cd4531c329963f0505c831ac1da9847c79335",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:12:34.989259+00:00"
+    },
+    "react_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "f285b0971ae4a790e402fb93966bed3adde2cf0a04977d08b2b40d6ab0cace69",
+      "summary_sha256": "6f5bb409e1c3eb9e4c515431589da9072f6e6333967e970f6167e51ab000c3e0",
+      "record_sha256": "3568c64d6cade4d4a1075f84e1838b736297279a8eefdc3f7fd71de77d4035b2",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T17:43:12.898727+00:00"
+    },
+    "webvoyager_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "69094c0247e519a50f3457a00830e818f0d1e68233248bb958d3527f7d17d99f",
+      "summary_sha256": "6d4e6bfe554632175690a040b5d355b33c3b922b627e7d405078bbf912125319",
+      "record_sha256": "92a470833bbda554ea5b8b7a35bedf61e0c722ffccb40e0bde1ef45931da030a",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:29:04.714569+00:00"
+    },
+    "bearcubs_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "ed897dba84175152161a98532ea2fa84189a41d12151d39b965d7d0b42ff4055",
+      "summary_sha256": "eaddab967b0407d82fc879effe1122e188d071820cde636e985b0ee5b2d4cf9d",
+      "record_sha256": "4a53c6781afb0e6b758c9ed6595fe18ebd87fe8649dfd0a5c8359bf374139429",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:28:33.923746+00:00"
+    },
+    "browsecomp_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "8de2e7a024b43ff7fbab29e0bb6dbdc131ad07206e6c186c2122502d69477760",
+      "summary_sha256": "65b7f7f06d35b0f800c0f131c27bee767de9d551a64f4c2fc371cabd404a2b01",
+      "record_sha256": "e62e702e4ad91d3912d6cc5671d444ee9672c109d02f4d36fef10b19e1fb0c07",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:45:57.679782+00:00"
+    },
+    "mind2web_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "summary_sha256": "c62b7ff509311aa540d72a7b03e19a44cb7b9df8146e4d59b4633b4e3954d4e0",
+      "record_sha256": "ab8779212f3ae8e53cde2675ab13b4c7a6a6463cd1afec6876c03b8eaf81b91d",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:45:58.063244+00:00"
+    },
+    "mmina_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "1295b51e37abc2b4147cef166cc31e5c6a5e4df47ef1c394df7d3af84a9dcc81",
+      "summary_sha256": "2502bedf0a10ec90d9924678e08d01b9cc24166f77b0fb8aeda95701600d172c",
+      "record_sha256": "3fd79e77ba511dc44affb1dbc32464f099fa3e0efa2a4deb66b094fc6f7d310e",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T00:00:53.536986+00:00"
+    },
+    "browsergym_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "faf67147c8f28aca96ad6174c3ccaf4f127bab91fdeaaf0a8ac92f110e4fe09a",
+      "summary_sha256": "39fd592266435cc9bf58fe56a7036e1cecda2d249be2c11697acffbf1dd10c06",
+      "record_sha256": "475c87f679fbb61e690166a6a4f74f1934544925b23f460490dbff327e30439b",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T23:59:58.369635+00:00"
+    },
+    "visualwebarena_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6fc85c38c975c2af170c1d1a28f72ba557906d9019d1d9106a15215868bb491e",
+      "summary_sha256": "9bce3ff2afb2a63c1cdbfa4d0cb51ae5d456a845704a9a8c6b4db41f1968d4cd",
+      "record_sha256": "8347c915b685f1b41b847f211f9dc2de764b48e5efbff47cd39ccb9f0b9dc05c",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T18:09:28.757617+00:00"
+    },
+    "webarena_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "2240e08a747462c59b49796e56985428f592e45d96debfa2aa88286263a4a787",
+      "summary_sha256": "2ff518be4234334007f539f2487d4a57003c87abf2cbe93d2ec1410bb929fa70",
+      "record_sha256": "5b42a32483c4e7c2841670fbe3e9d37e6228478b4306137c3d6ef8ffb54cdc7f",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T17:43:13.118704+00:00"
+    },
+    "weblinx_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "b6e07743ffd1f7939998fae362d42f87a3f00a88e42445b4b791b5fdf5a091e0",
+      "summary_sha256": "ebcfeb74125199ed91152a06bc9b9ef7595fddc5ded0986612790d5552036d49",
+      "record_sha256": "168a50556a85d6672651bfd1b20f34697ca816844b976cc31818a313b01b4651",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:18:45.691497+00:00"
+    },
+    "webshop_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "de9dba42d2ee1a7ded4de5c85870c8570bfb1beddf1f491cc2cde84cdaa4b42f",
+      "summary_sha256": "54e97235a6bdcb72a530f2a8a82f27a990b6f9244cd2e8a18fe993c82fa80e72",
+      "record_sha256": "34164a8b733c8261061cef90f1fa223e450b82213da0480ad40ca3d67a83b6cc",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 12,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T14:36:25.318449+00:00"
+    },
+    "workarena_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "686792a9085d998be3ac3de3e9c126fd0a9256b6ccb313aa006edb62f7645295",
+      "summary_sha256": "ef2201f5bb9a3fd2cc2ef2dca1bccf63eae88d5fe3548360a17333da23cc76f4",
+      "record_sha256": "f11d2416e7a583f6c3a5b7ef0e86ddb1173de08645081c210e79848cc0c13582",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 17,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T14:49:27.155037+00:00"
+    },
+    "workarena_plus_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "9e93845d77c1e954cbdcc7c7bfc1b2b284a850171058193f0b43c79914b423e1",
+      "summary_sha256": "d99370a52667e785e027bb3e35cfc846f5fbacd0453562aa369aadcf9f692cad",
+      "record_sha256": "4b30aba50e280e4e569a8b9bfe967d6bdcc4aadfd6663eeb2ad7e31fc6a0791a",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T00:15:58.560446+00:00"
+    },
+    "autoscraper_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "b86e2a6f54ce405eb093ff5eddcd28ac0ce9becf5452a9e3500fb8e1b44f585f",
+      "summary_sha256": "e1c60f906e1994beb0dbf26895173c1f37b4e625a2b36027381aeb59896fe208",
+      "record_sha256": "59f2e72b912b808929a368c60be0e85e154d66a52c206db326af890781c98912",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T15:11:09.173482+00:00"
+    },
+    "mind2web_2_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "1aaba4b08b43f832e2f55d6273475d958c3615b376e7f354eafd5ba31ee9449e",
+      "summary_sha256": "ba395c60d432046e4ad7c11243149172dd2eea273735078e6c4ae9a8e34d6d41",
+      "record_sha256": "9c7f5f8a3b6815c139e1868eb9bc13dcff19b4917a32615324ee5ef708a12157",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T15:11:09.956852+00:00"
+    },
+    "webdancer_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "e7ea9dab41d1284d7ddcebc53022e23f14d868f4639469c7122d1f86797c9a51",
+      "summary_sha256": "d6cc09bea44cdffb444c8338e805251189cf0ae24f60a8425817d794b6220fc4",
+      "record_sha256": "540085a7aee759e61a896c63d0d61403f784995fed2dd2bea727c6a2a6ff8c45",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T15:22:49.824365+00:00"
+    },
+    "webgpt_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "acad8d9fd55a30b94de9dfdae413e10b21e07bde54d767b2405b31341739cedb",
+      "summary_sha256": "a7d865b1a76b1f7db88890714c474fff3db690c5e9cff4861a8d575aceaa02b2",
+      "record_sha256": "31fa6981c46cc2838e8177d7a795d81d310b4080d257e649b163a949e80c7aef",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T18:09:29.278032+00:00"
+    },
+    "websailor_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "f4d03667b7de9073c6b42f935344cf80f65417eab482d77f8c68b844c45b9e16",
+      "summary_sha256": "5b4d6bcc050e30f7ee23dfc2100935d12b20961abc64b3dd12652f74be9aa228",
+      "record_sha256": "8c9a52ac825f8f7906fbec766fdad4e12f36c7c0ee4143805de0b21f086fa1da",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T15:34:50.836391+00:00"
+    },
+    "webscraper_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "30909091703af2b60f8abfb05c44321532b0949ca7242e1d0e747e9909000ab4",
+      "summary_sha256": "9b40643500b1bbccb09b0c77bf394bcd667d10aac19df4c3cc7acc7524159109",
+      "record_sha256": "162cd32e0c236028ebee85759afa40d9ac37ee76f44e988262052cb602a2a235",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T19:23:24.648423+00:00"
+    },
+    "webwalker_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "732f69fef0a8255beda990b28de040a720edf74bb6dd41cb59c0e9a27be47626",
+      "summary_sha256": "ff63a554b498fbcef73f67c7d74ee6eb326e67fdb45101e6100cdce186fa7adb",
+      "record_sha256": "07f99ff2938c055d40165f2206048f411fa8ec2f0fe3c81f7298efc8ed0dd9d0",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:18:46.248451+00:00"
+    },
+    "advagent_controllable_blackbox_red_teaming_on_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "e2b5e36a069cd91d79413c0f4f506243bb276d42ae2204c5adadc99aa2118bef",
+      "summary_sha256": "17f80c3e82ea8714d95bf37e62387f65e95a1cf118f0d50e772b9492182784b0",
+      "record_sha256": "6e6ebded5e3ad730e65a689f149c765b2ef25ab7c86951c40e1ddb0165cc476b",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T14:50:45.833498+00:00"
+    },
+    "agentfuzzer_generic_black_box_fuzzing_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "f41a7b42c8e11de28365641c590d92d9da831ad4bf4aee426e985dc07c2c27b7",
+      "summary_sha256": "b13221f184fba5ba1aea1d176158cc170302b528ef3e5e238db3f9abc813449f",
+      "record_sha256": "8c1d3e9b22c73b6899cae8f3f218ad05aabedfe7f701d3aef35326c023619990",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T18:34:45.924400+00:00"
+    },
+    "agentvigil_generic_black_box_red_teaming_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "4bc0b57c44454a82f6d979378e223c49e7367ab137c189394eb9db510a2ffc39",
+      "summary_sha256": "48fcc4c1ec17365f15ceff85a36a687b63b49d65db47a112e8a5c293747d9dcb",
+      "record_sha256": "d49dde271d63d98d01e427392c14a1003970a6381c638dc23fd841a1c3016dfb",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T19:23:25.383578+00:00"
+    },
+    "attacking_vision_language_computer_agents_via_pop_ups_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "24e0d5a90275064313ffe5d791e3c5a46f694716b8c803d02afab118a73efd74",
+      "summary_sha256": "8bc8ee3ba5f0ae45bf626b8f8447672896bd2bd017d6176106093a8cac8c4a4d",
+      "record_sha256": "6b1ef441d87e6749144cac147ef4975032eb7e3cf12047296aab5c298cfc88a9",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T15:22:04.139158+00:00"
+    },
+    "commercial_llm_agents_are_already_vulnerable_to_simple_yet_dangerous_attacks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "5b3edc81df1df668ec22c9c4363d1a1070c6a01b46a8151b192d898d4a6eb90e",
+      "summary_sha256": "20345bc62aa5b2deed76e3b0a1f07a33a7a404e56041611012faf728fcecfca1",
+      "record_sha256": "687e720fbf82ef3a517aeae4ed573af92f8742903dd11407c16e5ec12e840700",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T19:41:47.680371+00:00"
+    },
+    "dissecting_adversarial_robustness_of_multimodal_lm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "8549edb0501857b3ed9913946ca919a701b95374d9765ac197169eb76e2f71bd",
+      "summary_sha256": "9f358a2a3fc48bd2223374c89914124df6744c949de0d914ae42fd7da1693d18",
+      "record_sha256": "02bf13cae069a324a64bec4e3edfbc769034445b629cad0d74573019b6db9975",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T00:22:25.666707+00:00"
+    },
+    "eia_environmental_injection_attack_on_generalist_web_agents_for_privacy_leakage_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "8b3f9bd8a09991ccb66bee6d01d8e2b2e87a004428f1f3d6ebb791c321afed07",
+      "summary_sha256": "ec65ea85de2f2328153311ed3929ec2506e4f278c9a3952a0c453a6ce0f29480",
+      "record_sha256": "be29cf11dc05657af5e5f4c19498980df39bf8c1113e402ad10d1bb062fb3438",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T14:50:24.458655+00:00"
+    },
+    "searchgeo_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "f18d2d996f196614989c86e725c4bcc186e233358b042070cda440a7a924f6a5",
+      "summary_sha256": "3a42f04afe4742b2b2adff0ea1b3ccc22bf2eabdf36f6475f905d1038ee03170",
+      "record_sha256": "ed8834d7e5cf6c078d0ffebc4c7c1e61d2265fe3de30fa009452770d14496779",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T19:41:48.657429+00:00"
+    },
+    "canary_tokens_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "2b3a5363fdb15c5a18362fbba13f640f13fe29f8c227a93968ab6ff9485c84a5",
+      "summary_sha256": "90f6b265b9b646b09da9d62fe99b1dc6eac9455178d9edd4d5acca8102e0cae9",
+      "record_sha256": "827d0ad7109a5b2a08f9a382aad2e162d17536f1ec134fe32c3633697e5e5626",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T20:02:20.209322+00:00"
+    },
+    "indirect_prompt_injection_real_world_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "56b01f1fade2c770cd9d859bea4f80cdd050e6414dbd36600c49d63b3447901d",
+      "summary_sha256": "e3fadcd74d7e43e04bbc1cafec42663edf5f0fae7e9946682948b5b1eef65092",
+      "record_sha256": "d931a8c370c00fb87f518c4d5b05a560a33e69a2649831c0607bea41a4b0a92d",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 20,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T18:17:16.461597+00:00"
+    },
+    "forge_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6db036cce16ad627f9bdf243e0b25a0db8c00b9cf6445a3456c6d7d06a6db150",
+      "summary_sha256": "2c5d73ad2ac0ef83ad97b2e90a9165cb21e6df37124be12d13d272a4439f15a5",
+      "record_sha256": "f7071434fac080e7fee5180e7fb3e480de1c4ca743ca5fbfea8e17d512bbd05c",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T20:02:21.145402+00:00"
+    },
+    "retrieval_barrier_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "745d721cf4fa003ef45b64d33373cbd42f211f09659c5b572d7601e5ef608fde",
+      "summary_sha256": "5c6059e1b4832cb19de977e699b6c287586046eef527e9f4a283e342c9b7e9ba",
+      "record_sha256": "b762e04914c82c9c7063fe14bb9c5e685a757199cb3d78b6186b34cf4738bec4",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T20:27:06.154588+00:00"
+    },
+    "toolhijacker_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "1749efa3dbb7d90d32ce1b48c7b122c069048ce389bc1be8d7dac4bf86467967",
+      "summary_sha256": "54acede4a96395ada15a30f3ad3229f3e8b5541bff2b8d67437a6a005697b76d",
+      "record_sha256": "65544523f7ae15420d3c18e40b87506fa48b2187a91afb69db1086eac089f7f4",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:37:42.807004+00:00"
+    },
+    "unsafe_llm_search_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "aa19adbc8d8d046713057d8ad5b1778162dc62df739d3703d110183abf04f780",
+      "summary_sha256": "715c650e8d067edb60d597661144143db228745538529a1ca9562b4987229baf",
+      "record_sha256": "da7f9d7a9c0f40a8f98dd3bfff8d1b0d5377e60b8bc12ec379f4759efbc59db9",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T20:26:23.745671+00:00"
+    },
+    "vpi_bench_visual_prompt_injection_attacks_for_computer_use_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "769803e65b999b6ced77abe3ca7e4c783e8f0f66946202072117d7b1c8e2c166",
+      "summary_sha256": "a403d1cfcb04e3e5918f32d1795213d381355a9efd0d3fe37197cd308c80a585",
+      "record_sha256": "71c676ade3f25eb57874df61fad0a7ae553de92e63dd4e8892c757ed7ecf63f9",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 17,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T20:37:22.504407+00:00"
+    },
+    "waaa_web_adversaries_against_agentic_browsers_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "486e671e26958e8af4d5eab28ea4dd181d4a8214db2ca2fcd47029c657d6499a",
+      "summary_sha256": "ac3e023c62b68e46cfa194ebcc5ace44873fda7a49017c975d35a9395512c9d4",
+      "record_sha256": "fecaa81eba2f45f479092b8b3b5ea7c097de5973a9fb064b1fba38bc86d6b27f",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T20:45:10.738198+00:00"
+    },
+    "webcloak_characterizing_and_mitigating_threats_from_llm_driven_web_agents_as_intelligent_scrapers_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "451ba2bb2a8503b4590455a14593b8ac232c372689e4029368d689dd3ea21594",
+      "summary_sha256": "a7fd52add5506a8caa647f56024823ad353da722ed9d984e82b41d40b77de19a",
+      "record_sha256": "8622800bb2ba89b7857726c764d55d5f8c1db3acb015855502478cbb3ee00102",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T01:29:52.252448+00:00"
+    },
+    "webinject_prompt_injection_attack_to_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "ca1374bd826c17e3570487401de333eb1a4096a71e9fddcf76fdcc9aad9e431b",
+      "summary_sha256": "ffa9428dec3127cb67ffab0e9ee4735414392f010e43646874e35ef7e502bf49",
+      "record_sha256": "4af48c0f4b166b164099c1e1b4a88545af5469c213976bdb04b269b27a2537b1",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T01:29:53.200830+00:00"
+    },
+    "when_ai_meets_web_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "dd7ef2b3a06eaea6b7d229537f63a97a0c873676f4ad0a4d6512b33c329c74a6",
+      "summary_sha256": "616c785b422f1e720dcbc1b7503ee7a0eb384e77484952c97e9ae3e57352e0e9",
+      "record_sha256": "3e6cb64af02becd868a3ca887aca9f99423cf91f7844776e2d5bdf6636d3c2d7",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T02:00:37.180452+00:00"
+    },
+    "agentlab_benchmarking_llm_agents_against_long_horizon_attacks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "860bfc133add288ad8b16b8e245b7167d0aa4946a3f6553b625907281a1cb3b8",
+      "summary_sha256": "cc87a14b94133cc8710260be4c6724b5a8997d46fde12e1af137a7487168e7aa",
+      "record_sha256": "f82f1b84164abea76835026ab598d95c1d4c29ebc30fd7dc1b13a84fe3db6db4",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T02:00:37.993068+00:00"
+    },
+    "ai_agent_traps_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "603f0cae8cd8ab944f3e700a169d325120db42239075350d07c8183da71a527c",
+      "summary_sha256": "d03ab8c47e4881531fe9375476adc6a9ba6e1d3bf233b7f918ca9b06031c2329",
+      "record_sha256": "9fdc5a19967bcc4b3f4c963f0b33bb44432d58945c3092c77547b019cb5a9031",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T02:21:39.545386+00:00"
+    },
+    "breaking_agents_compromising_autonomous_llm_agents_through_malfunction_amplification_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "4cda5554dd3c73a743d1b55cbccf60a160dcf442970df06eb9b69296ad19ea54",
+      "summary_sha256": "067f1aca8b2f17190f83186d807c3622ed99f65f9986203c4d5876a09f127d22",
+      "record_sha256": "c4eae3f6829c633e102c3acb7de8a073a039bff0f1450e4078e5a179ce7b9d60",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T02:21:40.412989+00:00"
+    },
+    "context_manipulation_attacks_web_agents_are_susceptible_to_corrupted_memory_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "c1acb6ff039f69fda4e181dff2223cd1d677b8e64d4d458ba97b593070c55a3b",
+      "summary_sha256": "70f83e1c44f7ef9d92ee267db290b98e97d4175bb557cc6b91658fe669b1b42e",
+      "record_sha256": "4de66abd2209aa49b6ecf0d3139669e350778cd86277cab522326c279e170401",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T18:34:46.502971+00:00"
+    },
+    "hidden_in_memory_sleeper_memory_poisoning_in_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6be0f159249e5a66c438d224a1b41c62c9bf97770bb20ea5229bd610987e32dc",
+      "summary_sha256": "282088ede226ba34b022ca1bcf31e76514532e291d61b7f9e8ea9c7aad3381d4",
+      "record_sha256": "6d4db1080784711960df9db60f677e231e778324cda11727b0ce7c001748c89c",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:37:32.212781+00:00"
+    },
+    "how_adversarial_environments_mislead_agentic_ai_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "0e5d385cfbbb91812762493dbc2bb5bc09806c1359ac195114765993201af3c2",
+      "summary_sha256": "7ab0de58bdaba15a66bc0fc5b071366b1f385f7e55f378472ed2cc361212b61b",
+      "record_sha256": "2df9b16d1a0c5d4324b958534fc012ec0e8a72cbf4993b15badee3c78542d6d2",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T23:46:02.437259+00:00"
+    },
+    "its_a_trap_task_redirecting_agent_persuasion_benchmark_for_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "21826c891fad709395c830f81afb8ef6a48643775aa54049a6715f040935ead6",
+      "summary_sha256": "fd0df43d48dd5a94b0bdebd503eddc708370c99b0b1d4c8d132cf9dec293a808",
+      "record_sha256": "18cc623992671e893b6b35c8f712c5c3927bacc70819e5e3ac161d2017166958",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-14T23:32:30.433390+00:00"
+    },
+    "mind_the_web_the_security_of_web_use_agents_5a834c4e_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "5a834c4ef546307f06cb4d081cce6d026ec9a7029039befbf9ff18bb70831a9a",
+      "summary_sha256": "82c23c67f7393a278c189fca6113d922a25a820f803b3c3892b69858cade7d46",
+      "record_sha256": "9c8ee62cab6564f94db0cc49059f34fdf8ae2f221d1c8491d3bf7285a3973ac6",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T23:26:44.028187+00:00"
+    },
+    "mind_the_web_the_security_of_web_use_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "d9d8dd67c192eccb3a47c2a13d06258f4250f5c24a2d84516abab9686bd3f7ad",
+      "summary_sha256": "7f960f31ab66bceeb1d55596a0f2ddd713734d29f85d00437232e375e0d626e0",
+      "record_sha256": "a891abe7e704709c939ba4ccda9ca581aa23783752c7088c5ec9ce5ba933fc85",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T23:26:44.998171+00:00"
+    },
+    "autonomy_comes_with_costs_detecting_denial_of_service_vulnerabilities_caused_by_resource_abusing_in_llm_based_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "3f2bf1948dcde95883304013d9eb6a86b728470f3dc51dca51baf675d338fa5c",
+      "summary_sha256": "ed89df86cd451435a023ae337a0d345b52dba1f8f90b94d5cb75bbf2225a0d7a",
+      "record_sha256": "66b56a2ae1a59dd7371e4eb74b16792f4f03fbd6380f75920c6881fe742fd402",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 13,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T19:01:20.775227+00:00"
+    },
+    "beyond_max_tokens_stealthy_resource_amplification_via_tool_calling_chains_in_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "ed33f5670b718dbb449a216656c9369f48cee9daa6e66995dae097ee3ad8b7a7",
+      "summary_sha256": "402e6c58d582234dbe1f371c9bbce4ee947756362fb9c1b3c8dd03f973e67881",
+      "record_sha256": "f603feb05ec5c7db415d016f50b59397cf208ae9049450a896ef1940c79ce23d",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T12:07:33.823073+00:00"
+    },
+    "denial_of_wallet_defining_a_looming_threat_to_serverless_computing_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6b6a34a604e17634d86f339a707ce2e5e8c480a4db002db65290c276ba14d316",
+      "summary_sha256": "27c5120301e49c26373e5747abd8c78e261295066ce211433161b5c25b6acff8",
+      "record_sha256": "7ca5a5101918a97081c933e35e5d904fce21193ae87a6eb8553a4da0cbde668a",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T23:53:51.553622+00:00"
+    },
+    "overthinking_loops_in_agents_a_structural_risk_via_mcp_tools_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "32493b11937620225490382eb3a6c48d957671ece044cdac2d5cc2deae851198",
+      "summary_sha256": "eb58ff1b2a4dc95fafe71dae0b59f33309d80c63850d93afbdb3b71c11d1fcf9",
+      "record_sha256": "8bda0decaf95847ca7e08978b6016775c58dd9ab86a8c7cc0d008a7583c0b58c",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:52:17.607714+00:00"
+    },
+    "recurguard_runtime_monitoring_for_reasoning_token_consumption_attacks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "1cad6d424dc3890737e5530a21d95eecd9f87efa3b6432531b7a8083a40bf372",
+      "summary_sha256": "98313aba98367b37c16117016a2cab4970e18ab59be9143a1eac16f58d3ca0e6",
+      "record_sha256": "948244a01477a30fdee4c7b290cdc95217d6c37fd87fa230161adf9f3a2d88e3",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T02:46:23.592416+00:00"
+    },
+    "when_agents_do_not_stop_uncovering_infinite_agentic_loops_in_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "b83573a510a6653c176bde3666a95b2302b819f24b2d2d767ccc60c6039ad335",
+      "summary_sha256": "659b0a99c1be360274de2df51b22aa0a94ed3b782f65e4b1f789dfa358446d41",
+      "record_sha256": "50c58aa3eb13862eaae6ddb323fe3864db5a5448c8b4383b1c3e05b74d9e5ad7",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-14T23:58:09.453948+00:00"
+    },
+    "agentdojo_a_dynamic_environment_to_evaluate_prompt_injection_attacks_and_defenses_for_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "26a3f0426ee1d533e4dd9f62d1343a7a1d231fe718cfaf3a362cc7de829ae913",
+      "summary_sha256": "fd858afd89c71e43bd39c99a17cd65dd5a27f75ae14b5fbef23fd3b1c79d55e6",
+      "record_sha256": "2f34e7362f82f3fdd9954538aacde5e2002655ddb84ed2e25203a5830d780a00",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T15:21:53.066370+00:00"
+    },
+    "formalizing_prompt_injection_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "9adb2f4e55bf9bfd171f7ddfc2c5f46c168f1cd28326101552b81fd2ebd2aaec",
+      "summary_sha256": "e8cb30a238e09dd5bfdbd820ea09faa6bd976f3c674c297579d5b436ac7b8b40",
+      "record_sha256": "987752d2735d637c6a3915d957b7838ad25870ee6c33954b9f9e72d7ed705226",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T18:17:16.679281+00:00"
+    },
+    "indirect_prompt_injections_are_firewalls_all_you_need_or_stronger_benchmarks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "43f15bd759c2ec68fd0f7738f3d730a7231ebccc420027f2626c6b6ee11b9447",
+      "summary_sha256": "51d77e240be819192c2424ba5e99b7f3a0906972b6951a920f29dce70ab3f5c5",
+      "record_sha256": "08105a502405905d6442c1c0a4d0eb90625f15c11477aecb9a6de6ad700f2881",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-14T00:01:33.720451+00:00"
+    },
+    "safearena_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "03e535c1c0b69f56ba8eb6f2e1596f55c65ca4e1a15356eb3775983a974cdcb0",
+      "summary_sha256": "c4bffd5e7ac5f5ba8d6d4e063511866b5b5ddf8c233ab12225d68ba8db7bd55c",
+      "record_sha256": "e8f9ae4ae758a498addb51fbfa2d3d02fb0c34917af30659dbc03bc8eae8ce25",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T19:01:21.280206+00:00"
+    },
+    "securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "b7ea2139f2d1c474cf8fa128548f1f23170c8a761ffd3d61b38486f7bd8f1bb9",
+      "summary_sha256": "c98237e84ffa407d79c2cb77e4f9b1da79ec399475d0ece1fd85b94514173b26",
+      "record_sha256": "fe9886f0d43d4fb4e760f6453a018487e9eeacab89815a019fdc694eac991547",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 12,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T15:41:34.969911+00:00"
+    },
+    "st_webagentbench_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "3ee56f95b39fb59a6a19c0c6a53638c1adea5e8366216ce1bb321cc9a4ae0f8d",
+      "summary_sha256": "c12c98923216abab513aa6c51ec31d7200f7b87c4af5bd810e3682b0f035da78",
+      "record_sha256": "f6934cec11274bab6cffc53f76f72fef56cdf4a2c23a9af799198b8a1c13464e",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:52:18.209845+00:00"
+    },
+    "wasp_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "bf0c5f7118860c0d9672cf6ca3b214285f142b45c9d4dee9c007d787f146229e",
+      "summary_sha256": "d1201230e3c089e16f1ef73bb69cda096c8408f18ede4fb3acf50825cd6ad751",
+      "record_sha256": "595481ebcdd5b243df9513093c365ca7e27ab929cc1ee48d94a651b6d65a524e",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T15:40:38.746700+00:00"
+    },
+    "ace_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "da686f6107fa0e40a440dc2f7ee4b2d0b93ce23cb77f2a3c2fa7512ab36c2ff0",
+      "summary_sha256": "3bca4756236684db5875e335c48f78920015073f475c9ccf3d462a1db2f67692",
+      "record_sha256": "f2b8aeb24f315ca7ee50717760d987b4c45b725a258159b775dfce7c3a918c8c",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T02:46:24.620724+00:00"
+    },
+    "rennervate_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "c607e41816c18cb5171ea8c3b045c05cc5025899c63d0fc7752e7cd061e9a8e6",
+      "summary_sha256": "8a91a5c6ac366f94c02aa1972cd5097368050cd89299b328eebe84b1e4a6d8b9",
+      "record_sha256": "c3785cc9bb50ef7401f95bd362c734d5b1f685d20a5d191d5de613765e122b33",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T12:33:50.587311+00:00"
+    },
+    "browsesafe_understanding_and_preventing_prompt_injection_within_ai_browser_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "65582a1d404d2b62e9a76e9696127618e5c2becb46489f89b35a9085f854a007",
+      "summary_sha256": "3652d95ea9a6e1e1bcc5263dcb1c5a06fd62953ecb867aa36f693227ccbb9693",
+      "record_sha256": "4e4a0edc8fc82df01b533240281658f06d344363d25a3808976c4ae38bb020a0",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T00:29:57.170548+00:00"
+    },
+    "cellmate_sandboxing_browser_ai_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "3bcee9a85cbcca525351e9b1b184fb86a7ac1641cd15e623fac4c3345fa34491",
+      "summary_sha256": "c00ca3786b8abea0621e497df0666e9f2cfaad520b53c43267a1de862c70a6a2",
+      "record_sha256": "175e1be0ed91a8cb7ce77f0467d68c5f2514d9baf8248a5b3be08d0a51e52377",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T16:55:17.832391+00:00"
+    },
+    "defeating_prompt_injections_by_design_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "c3719f6ce73eecf45e3764debef8a3d8ff8c9233b37d128c558b694ec3790cc7",
+      "summary_sha256": "86124b6c642200334e8036367cae18ae4b06a358226f590b60624e004e6d966d",
+      "record_sha256": "8a4ee15e50c426b3d807c53be02c6c9043abbee4e5fc725d244e244e8985e318",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 12,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T00:44:00.351683+00:00"
+    },
+    "defending_against_indirect_prompt_injection_attacks_with_spotlighting_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "0e99c2ad0af85eb97fce9f940a8010783641fa91f3aafedc5edf6becc5dc4ce2",
+      "summary_sha256": "bb705d2874cda437521e4e19ada0744fbfbc8cc662debed61274627392f5157b",
+      "record_sha256": "14e135ae0a604ca9a4949e8773d657ecc137fa589da14deeb7d895c5e6f53983",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T16:05:51.164204+00:00"
+    },
+    "isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "98c28e6d68ab378348fb8a1aea311c39533384fd7bdc15a4782a5bbf1ea057c0",
+      "summary_sha256": "1953267e886e27c96536042dacdfdc16386341e6b3cb53e50ffa19b99d479c98",
+      "record_sha256": "ebf569b1cd1b72aea36f1f27146eb4e1433de6c4eafa6bccef619955fd580a93",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T16:05:51.636631+00:00"
+    },
+    "melon_provable_defense_against_indirect_prompt_injection_attacks_in_ai_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "5b1ae66b933f722c981710e5782d3dfd80977ff8ac3566b108b7de1b88a99f8d",
+      "summary_sha256": "292ed7ee99b9b1cef7e02d1a4ac37fee34d88eeae485a317f863afe1cb9578dd",
+      "record_sha256": "7c9f2480d70658a39e8fa292d5c8d7b9dfa43dfac36f24068dc1bcdda101e5cd",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T12:24:54.874883+00:00"
+    },
+    "planguard_defending_agents_against_indirect_prompt_injection_via_planning_based_consistency_verification_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "eb6b5ebaed769c95ec05de10b08c4feae53fd00ba028e737241a1aa7909023c3",
+      "summary_sha256": "97d8526df44915ad38840dcffaf36073ef8b5c67d5fdcf4ddacebd67eba5a183",
+      "record_sha256": "3dcc717c06e7e42d8b396a1ee80f96598a70f5c1ee8bbcf14c960e8252e36507",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 17,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T23:47:53.192497+00:00"
+    },
+    "prismata_confining_cross_site_prompt_injection_in_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "10612beadc515de9565242cdf5c9e97a034195073d1f81ac763418d73829bbce",
+      "summary_sha256": "a282cf684f6b9f2a8e97a9e26f173d62867561c305218126ac93fa04c2c6f77a",
+      "record_sha256": "d4d30590c7e5284a253900239ca5e9c0c6d8217415c4d0cf2552b985f686f91b",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 13,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T00:24:08.630390+00:00"
+    },
+    "secalign_defending_against_prompt_injection_with_preference_optimization_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "fd4931f9c1278dbd2ad2cabc9f7200d79ee3d1fee6a1dc86badcc5c3f65dbe27",
+      "summary_sha256": "f875346f7de5389397e080660865675dfa03ac73d6dfb2985dc7e4ed4419db0b",
+      "record_sha256": "24585c2d7df9fd6994e4856518911415b90e80e8ab2edb834769d3a86b87d4dd",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 13,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T12:07:12.627291+00:00"
+    },
+    "snapguard_lightweight_prompt_injection_detection_for_screenshot_based_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "d00648fa086d0a041ccea96371c3fbd48d0ba73049e2e7bdd665a0e8a35ef079",
+      "summary_sha256": "30cd7a333da1ab149eaca97019b77f5e2144e76b4fa43258d3703ac92eed5aba",
+      "record_sha256": "9d9b1d54d02fb425654580b1f49bda3e4801b20262a45b65c2cb5298a7deb988",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 13,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T00:55:42.306875+00:00"
+    },
+    "struq_defending_against_prompt_injection_with_structured_queries_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "98c56a8aabb43d1e1fd6eae5111bc09c79c069e52fac8139c578239d9ff74ff7",
+      "summary_sha256": "c8b6ae8198a601d9694690851732e2827137030a385def07efb33e99753b3d54",
+      "record_sha256": "033278eeddeb8c1bec1193ced142db5a2287bf967bbad0549d9e6ee61716bda2",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T13:27:02.830449+00:00"
+    },
+    "the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "057ff02152c0bb61892b08abdc80f7af22416c03819e526878091ee87d3bf1e6",
+      "summary_sha256": "b1768742e2d18b98f8e3792eb322ba4f1c6bae54946c59f1e7482d74b4e62a10",
+      "record_sha256": "d16b9b80fec46baf067ef10ac62961b22a965728032961b219dcef06d15b0ee7",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 12,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T17:41:02.364487+00:00"
+    },
+    "untrusted_content_masking_for_web_agents_with_security_guarantees_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "d25d31e68ce316c495d154c1427b07c6a2b9f01369fbd329c44260f008b6b45d",
+      "summary_sha256": "b6292ec703ac57dff456f3767402d49b47b26b9757aac4c08bfc77e2088196aa",
+      "record_sha256": "791cb3cc979fb323d73bf94cb451fdb1e0860d028a2243071fc5a4a12ebfcb9f",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 12,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T00:55:43.494610+00:00"
+    },
+    "ward_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "60d29d0418e9027651e7c3baa354251853a4f92af1b0b5a33e2b070f4ae24eb6",
+      "summary_sha256": "702a276cc63563218350412c1b38d000e5c6c87f5d15bfc47302cd5ba2ce9a1c",
+      "record_sha256": "af8f30bbba7c57d24ad9f1fb5ddeb039bbde8dfb1fad7b03c4b028209857b675",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-09T18:13:04.609836+00:00"
+    },
+    "webagentguard_a_reasoning_driven_guard_model_for_detecting_prompt_injection_attacks_in_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6021b2ee18987f9614db50eac523aa253133de2706afe4c4b477fefc3e2e1444",
+      "summary_sha256": "a785d907aaa4300a725cb5f06d9ae516c6af92a2bf84d9b6f56417e147789be8",
+      "record_sha256": "1ab7c041d3c376b8deed5fd90ba7a30ddb9886114deefa8051dafd2c5df09bfe",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T01:11:34.545838+00:00"
+    },
+    "agentrewardbench_evaluating_automatic_evaluations_of_web_agent_trajectories_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "9c7d44da20f638f58d8aa4f547685eb1ebd9da78127c44493a9f2e31d0e324c9",
+      "summary_sha256": "0107388e50beabd376d4e983fe77b5b9fb25276864be65349b8325ed6ed5e7f9",
+      "record_sha256": "b0fcd0ec23f0f5cc13a113e0680649817cd9cd7c4a48ee493ea5b368fa6e3fbb",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T23:47:53.725307+00:00"
+    },
+    "an_illusion_of_progress_assessing_the_current_state_of_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6aae476380da204f170bb785a40912bdc271fa6232e3ae90303bb2dd9b8fbfa8",
+      "summary_sha256": "db5487a1770dbd9d1c591b8c556a6fb4ad6fe5283a1bea65723af8bd44c4f37a",
+      "record_sha256": "7cb5331e94b016519bd1419acd2acafb07c98b941d6127119044cceec64e97b3",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T13:27:03.577667+00:00"
+    },
+    "focusagent_simple_yet_effective_ways_of_trimming_the_large_context_of_web_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "7965e54d13b59a9e3bc410f3ed146b2983a84f99864c3d9110db39e040849350",
+      "summary_sha256": "e535967194b24f2c3d3bb1e9f01d97049b1530ace05b5957dae4c90c89a8cbf7",
+      "record_sha256": "d4675b64a87372657cc1d0eb0eec22f500a5dc638f803d0620888fd2595e8774",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-14T23:57:27.397439+00:00"
+    },
+    "guide_interpretable_gui_agent_evaluation_via_hierarchical_diagnosis_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "1bf91b3823009ae3ca0eb3dba4dfd9c6e871ef87929f7a88977765f2368e1a0c",
+      "summary_sha256": "d8cc3989b6a5b0e753c0057ab715781e4a0ea373ba777d6c1450079ffd03574b",
+      "record_sha256": "cdd8cbc583db4eefcb3f2d1def73d21731adf1ab51500c04db1c4658c77aa1e5",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-13T23:46:03.390408+00:00"
+    },
+    "odysseys_benchmarking_web_agents_on_realistic_long_horizon_tasks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "281fd20b2e68a5fea73d9dc95a371e7e95dfd20217dd7732526e36c5d41ae077",
+      "summary_sha256": "5958e7eaf542dd5481a76f7b6bcda02c851fb754a35791eb733a1a069014e1da",
+      "record_sha256": "e33c784b2fbd17e974f56f849baf89b71db711a0fefa6e48cf703a0218580c90",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T21:47:53.391359+00:00"
+    },
+    "the_long_horizon_task_mirage_diagnosing_where_and_why_agentic_systems_break_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "515851522526216becaadd883a6a1201e45fdc8b4259c3bc55698253c501119c",
+      "summary_sha256": "0ab5dde6abea56a5f7953943bd9e68ce27b83fdd06e7654af10b4d2e5bcfa15e",
+      "record_sha256": "da3dde9482ee3d290e3c3e739f0fb10a884a73f92f34335b4b6c59b9a9cf5dd0",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T01:11:35.737711+00:00"
+    },
+    "webchorearena_evaluating_web_browsing_agents_on_realistic_tedious_web_tasks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "b249731a61bfebc1d435fe6797b8964304d7c82add8c8d0f9d62d105e6ff463e",
+      "summary_sha256": "b5d3102a869a984e310ec0c6b0f5a68bfbd563353e35bef9ea966764c617094b",
+      "record_sha256": "518889da3c134afbcff957e05de94002dfaacb17acf5e75a6348ae84163e346a",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T01:26:31.386552+00:00"
+    },
+    "detection_of_crawler_traps_formalization_and_implementation_defeating_protection_on_internet_and_on_the_tor_network_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "1c7be7d81b301ee62efe1842315f99a161489a8e25fe711c6ce0697076c2769f",
+      "summary_sha256": "d87a028d170993472cccde24a611beb4c9026f2738c9bf72b1e3dcc299ecc916",
+      "record_sha256": "f657e102b0bf0b008d392431781853c46222a0ce467d57b533b9a9f189496b47",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T13:38:05.804122+00:00"
+    },
+    "irlbot_scaling_to_6_billion_pagesand_beyond_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "e9bd69f22ad6f2ca12b3a9e264e44dac550dd3d3b4ea318596a328590c812f46",
+      "summary_sha256": "7a5fc15496d4e3432b2ae47b0ab0d7ad4976dbde20e17f466caa87ddbf0b6e43",
+      "record_sha256": "f0f10756df764fdf9b3a63ce140ea92a0fd93ffc04c873571595afad044b9295",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-10T23:56:26.195211+00:00"
+    },
+    "measuring_what_the_crawler_sees_discovery_curves_core_persistence_and_shell_dynamics_in_longitudinal_web_crawls_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "821e47e4a865d8e70cd212eea3c1d4842c3e9096cd384b4ed9a9232fd728365f",
+      "summary_sha256": "244bbf0c741d2b50bf874de906b9b962079fe224cd8b49faaab5317ede412d94",
+      "record_sha256": "d0b4fce6ec343d9efb42cf8dcdf78aff5f37bc152ec8a4331f6c71bbd04a528e",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 13,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T22:02:38.700242+00:00"
+    },
+    "the_impact_of_crawl_policy_on_web_search_effectiveness_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "bee052f814bcbdd19a4eabcfb086b3c505829f811c0408e9b19d284c6788ecbd",
+      "summary_sha256": "031ed8d659e06b658d0db97d9f994c5f690e0a8b3de4cbb83ffb9ef00d709fc7",
+      "record_sha256": "8fbcc6c643fe8a69f64872c994b57e9095bf6c723f76b2b592d7dfec06c5c97d",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T00:15:59.577775+00:00"
+    },
+    "web_crawling_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "46f9b9ca7e200798c294c6dfb57db71a8823065ec065d8703f15a042042195d9",
+      "summary_sha256": "d7fb929ede4680e20494cedb1a5467859546e9a4777f56bbbff798d24fd5662f",
+      "record_sha256": "7618ea7e5336025270c2893b73209d39895398738aa530b4bdca96cf28cccb10",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T12:23:42.767237+00:00"
+    },
+    "a_survey_on_autonomy_induced_security_risks_in_large_model_based_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "8d4a26f6b0de285a7b683fba8056db691a0f8a4d71be472719876912fcc335d7",
+      "summary_sha256": "73e8a24b075ea0c2842126d7fbf8e22b3db4fbbd7a3eba1bf2befa7f72cf8da7",
+      "record_sha256": "2ddfee1bf20d013b3e5119fe1b053bdc8453ce6fbd182473278c57c492d3fa36",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T01:26:32.602665+00:00"
+    },
+    "a_survey_on_trustworthy_llm_agents_threats_and_countermeasures_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "d88f294eb5a6f0ab1a3e7931372e96ebbe450e966b75b12917809c81e743c189",
+      "summary_sha256": "aaa05edb802ece40b2cab5e835e809c0cfc2c8829463345cdc69a6e26d9f175e",
+      "record_sha256": "d1aefd2e5ffe7470d6e6fc0cc329946c613bafff56de6add549fbf7a7717a046",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T13:53:51.223543+00:00"
+    },
+    "a_systematic_survey_of_security_threats_and_defenses_in_llm_based_ai_agents_a_layered_attack_surface_framework_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "91b2131716ee0a426f5304e318bb5ca218de7c5de85ca5ac75be37e28471ed48",
+      "summary_sha256": "b335e20d3aaf87f72bc74057dd51da74e8502a2bb04e6f2cc1d857e8b27694a6",
+      "record_sha256": "0fa4586aa9d7aa63a17db07e132b31bc886eb9726bb66711156c7dcf35acb4e7",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T01:42:14.673601+00:00"
+    },
+    "sok_attack_and_defense_landscape_of_agentic_ai_systems_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "61f744eb2f4f6299f268e712a845916e99022b4333a03fded586ce182056903c",
+      "summary_sha256": "9729012da59d46ecf60127a6d0982a555046ebc58241711e8eb81acdd60ad4bb",
+      "record_sha256": "420ef15cf8b6ff5d1fb2c0580300ff375c89baf4e0f327eaab558e7c265affdb",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:08:32.291250+00:00"
+    },
+    "talk_is_not_cheap_a_taxonomy_and_benchmark_coverage_audit_for_llm_attacks_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "0cc1a6988d0c71fd7801e2decaf38e1ab4b26e488fb512c00edac3193ced4805",
+      "summary_sha256": "9bf168b7a75c8da2c12cec569e7ac9ba8c18edce91f7ddccf90e22dfdecbc6a8",
+      "record_sha256": "92a559b644eb59797916eccd1931184915c488b6703ef0f3805562f74ae4f535",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T22:02:04.213732+00:00"
+    },
+    "toward_secure_llm_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "878b26db78805a0edd186b004826227dcea007cdc9c45c4b756394f0674c4f89",
+      "summary_sha256": "b52e45e6b7d7c301fb256269ab7e52d101a135718c788cb19955bfa6eacd0388",
+      "record_sha256": "12a242bc742d339fcb3ae6a6295f55890193ed8f2108e9122bfff4aa8b4d229f",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-11T00:03:42.558641+00:00"
+    },
+    "androidworld_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "37775d3c1a2f35b56fa0831d7e7496c9ca263b54fc6acd84471131556af90ae8",
+      "summary_sha256": "a7819b7f5ef62584d6c4d031c74ee4bca34b246f3231a66f003bc594c287e662",
+      "record_sha256": "3cae8abf07b8c117427f561083505ee1f3e67e0be6c575edef543acad4da7f9c",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 18,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-15T11:48:17.522878+00:00"
+    },
+    "awe_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "444fa363b42871fe4f4f289c8bfcad27cc030277baf502ea3164c7068fba1403",
+      "summary_sha256": "4195c259ec9d276c725c7d8993769bf66b60d0301ece377c59643dca2ac4174e",
+      "record_sha256": "fcd3b5f685ec74fc635c9e0d6ad30d677f4776a9a3cf340268feb5d582429965",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:08:33.594259+00:00"
+    },
+    "backdooragent_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "104e3fa18fbf58c027ca7f8e3c4037be6b5c3c4e27f11fd118ca79bfe59e763d",
+      "summary_sha256": "9acbeeec459240e7e8b7986cfd4602d25ae70563c6c93923036944da6ea33b19",
+      "record_sha256": "095fd1f6eca29b0cf039b9e86090bfcdae31894a4df4b814e153195e5f1857b2",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:26:48.738446+00:00"
+    },
+    "dont_click_that_teaching_web_agents_to_resist_deceptive_interfaces_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "44136c75aec98025803cc388bd2cf3be4fc692a979606771d72e31939f0f2982",
+      "summary_sha256": "d16e1213e1fc48290a5895aa42c4bee62efcc66d0fa67bf4e083b42822e1f338",
+      "record_sha256": "9ef1a144905408a55577f62eed579bca19c065933b2b2fb75126c083dfc07ecf",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:26:50.089943+00:00"
+    },
+    "doomarena_a_framework_for_testing_ai_agents_against_evolving_security_threats_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "7b4a2d6085e0f66a3b1f88291f349c52e679e35f2e122d86578895541632b6d5",
+      "summary_sha256": "36807258be729d05870e94ab0da085f536e7222bcb66d9048d4355b81f1d96d4",
+      "record_sha256": "befe1fa29c9913bf9a2f3234f89f859347f7385c284bf57bf3b688a14e2554a8",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:34:32.317979+00:00"
+    },
+    "evocrawl_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "bc0333d4cffdacd05f2f4823ef4d3de5cc96aa23a273e72d62b5bbbd6d956b5c",
+      "summary_sha256": "477400bd030ae93bf88fe840e6043807a1db8e111d47ec1d18f55daebdec6a29",
+      "record_sha256": "efc9c9941dcf87c2f2cf1392cb026b5dfce0ea1eb5c6d89c6f11f0b109c7e1fe",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:42:04.632284+00:00"
+    },
+    "gorilla_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "db45fa166012d3c0449f7222baccb3ceefd84906cff74a9f4fddde93ee6fe969",
+      "summary_sha256": "fe56c12750cc15568ecba996f36927ce51f0a879645f01b91242d7ff2ae75a7e",
+      "record_sha256": "6c14f735ca207133106d1d53df49b5f1ebe4ef76ce6b1ab3e021e4a654087198",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 13,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:50:18.267062+00:00"
+    },
+    "injecagent_benchmarking_indirect_prompt_injections_in_tool_integrated_large_language_model_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "690a5d14abf0d33002822b531b78fa375da51783ff831ba8ecbb6e22f3d4f382",
+      "summary_sha256": "11f6bdb3738e7e69c4f4db11e600227af568b8329c8837ea1543ca5e2aae0df0",
+      "record_sha256": "527bba32e11cb6d19a6956d0c6a447324118054d10f721d8cea532dbbaff2579",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T14:58:41.681137+00:00"
+    },
+    "skilltrojan_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "d7c8e992f573589a9ed2119b1667d7ffee51f984bb7d7d19c4ef5c95c4315f89",
+      "summary_sha256": "980ede9588a80818a8eb6b754cf300d5b734ebe438b8f5863f27903024635ddf",
+      "record_sha256": "7c83643901070bfc1ebb6a731d80729639d91400e1885b3e0334cad764cddb14",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T15:13:14.238401+00:00"
+    },
+    "the_hidden_dangers_of_browsing_ai_agents_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "31d2d63b2ec6a08d735938ba35a6d50c46bc48a72fe55fe7a388eaf06cd4123d",
+      "summary_sha256": "28a8105ae146e82816c2d1ad2421b358066e838b1dd1fd5f5b53a39dbfbdffa4",
+      "record_sha256": "e71a02a820720a435136494331461e4301701da9897326e19bd8e1d05c0634ae",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 14,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T15:12:57.404837+00:00"
+    },
+    "toolformer_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+      "summary_sha256": "4bdc7e84611e851470a12c7c3da45e2b405b6388623634e55aa8a110910ecc9f",
+      "record_sha256": "88ca3ead7ffad17d09c89b919203ca436d3d8ef355095e6628c6847caec82a55",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 16,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-12T13:50:29.380142+00:00"
+    },
+    "yurascanner_comprehensive_summary.md": {
+      "status": "completed",
+      "source_sha256": "d14f2628fde42eaf5bf3fc671b39ca9b22f10cb088c59db2afa3c8c4979487f3",
+      "summary_sha256": "03b4109b2d48d84dcbc8c1e7a3590426413ac7ef9821e1de8c32f1edf1ea78bf",
+      "record_sha256": "8e6b171afe0ff811eeb91f8c161e0e08f6b46c0c0078c23393f0481e4954fecd",
+      "quality": {
+        "structural_checks": "passed",
+        "schema_checks": "passed",
+        "source_quote_checks": "passed",
+        "supported_claim_count": 15,
+        "scientific_validation": "not performed",
+        "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+      },
+      "completed_at": "2026-10-16T15:21:30.313163+00:00"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "all_other_json_fields_equal": true,
+  "approved_volatile_json_fields": [
+    "updated_at"
+  ],
+  "approved_volatile_markdown_rendering": [
+    "Updated: line"
+  ],
+  "classification": "SEMANTICALLY_IDENTICAL_TIMESTAMP_ONLY",
+  "current_raw_hashes": {
+    "analysis/CHECKPOINT.md": "cbb63710c40f7809e6f6f0c51691e68bb30b1eb5a5f81bb071a9c3e0969c19f2",
+    "analysis/checkpoint.json": "fcf1a23b7810525b5937a08365036a060bdfe046ab9075ec1f6412eb7e558ff1"
+  },
+  "current_updated_at": "2026-09-28T14:34:48.799154+00:00",
+  "duplicates_equal": true,
+  "generator_sha256": "7d92cd0953e45a71747bfe3f5533b092e855821ded9515ff0fa9e2a0a9c0d7ea",
+  "issues_equal": true,
+  "markdown_equal_except_updated_line": true,
+  "paper_records_equal": true,
+  "phase4be_c_raw_hashes": {
+    "analysis/CHECKPOINT.md": "0b4ed3b067fba893a485c743b0ed4ae1bd432cfce0ba6e643152701a10ebec72",
+    "analysis/checkpoint.json": "68f0dbdb53d0b799195e0f8259014d9c1d147bc0c13c872e940870964b446b23"
+  },
+  "phase4be_c_updated_at": "2026-09-28T13:57:37.173932+00:00",
+  "semantic_hash_current": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "semantic_hash_phase4be_c": "88baac4b7db698e6c63e26c78e258978bbd429a7386416b7a64c20a32ed116ef",
+  "status_counts_equal": true
+}

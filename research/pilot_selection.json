@@ -1,0 +1,27 @@
+[
+  {
+    "summary_name": "react_comprehensive_summary.md",
+    "reason": "Architecture of reasoning, actions, and external observations",
+    "reserved": false
+  },
+  {
+    "summary_name": "webarena_comprehensive_summary.md",
+    "reason": "Realistic benchmark and consequential browser actions",
+    "reserved": false
+  },
+  {
+    "summary_name": "indirect_prompt_injection_real_world_comprehensive_summary.md",
+    "reason": "Indirect prompt injection via attacker-controlled retrieved content",
+    "reserved": false
+  },
+  {
+    "summary_name": "formalizing_prompt_injection_comprehensive_summary.md",
+    "reason": "Formal attack definition and attack/defense evaluation",
+    "reserved": false
+  },
+  {
+    "summary_name": "ward_comprehensive_summary.md",
+    "reason": "Multimodal web-agent guard and adaptive adversarial training",
+    "reserved": false
+  }
+]
