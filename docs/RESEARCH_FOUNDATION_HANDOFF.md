@@ -10,6 +10,8 @@ The objective is to investigate crawler-like adversarial traps against goal-dire
 
 The completed corpus contains **112 canonical PDFs, 112 comprehensive Markdown summaries and 112 structured JSON research records**, plus **five archived exact duplicates** outside the count. There are **zero pending, excluded, failed or deferred papers** in current Research Mode. Processing and literature synthesis deliverables are complete. Their checks do not establish exhaustive entailment, independent human scientific validation or replication.
 
+For a compact evidence interpretation and its source/version caveats, see the [literature findings handoff](LITERATURE_REVIEW_FINDINGS_HANDOFF.md). It complements the detailed synthesis; it does not add canonical papers or experimental results.
+
 ## Findings, competitors and provisional contribution
 
 Classical traps establish useful analogies involving branching, changing identifiers, repeated content and delays. AI agents additionally interpret user goals and page semantics. Existing empirical studies demonstrate navigation diversion, task persuasion, iterative tool/resource manipulation and engagement with decoys; they do not all measure the same victim, task or outcome. Task relevance is not authorization, displayed progress is not verified progress, entry is not retention, and leaving/stopping is not task recovery.

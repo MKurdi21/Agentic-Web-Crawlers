@@ -13,6 +13,7 @@ As of 2026-10-16: **112 canonical papers, 112 comprehensive Markdown summaries, 
 | Location | Purpose |
 |---|---|
 | [Research foundation handoff](docs/RESEARCH_FOUNDATION_HANDOFF.md) | Concise scientific handoff and future-repository boundary |
+| [Literature findings handoff](docs/LITERATURE_REVIEW_FINDINGS_HANDOFF.md) | Compact evidence interpretation, source caveats and untested research direction |
 | [Research Mode](research/README.md) | Completed processing workflow and maintenance guidance |
 | [Catalog](research/catalog.md) / [inventory](research/inventory.json) | All 112 identities and original paths in the twelve authorized numbered corpus roots |
 | [Summaries](research/summaries/) / [records](research/records/) | Current comprehensive summaries, typed claims, page locators and source fingerprints |
