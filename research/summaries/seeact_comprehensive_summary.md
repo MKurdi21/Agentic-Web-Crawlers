@@ -1,0 +1,633 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is **GPT-4V(ision) is a Generalist Web Agent, if Grounded**, by Boyuan Zheng, Boyu Gou, Jihyung Kil, Huan Sun, and Yu Su, all affiliated with The Ohio State University. The supplied first page identifies arXiv:2401.01614v2, dated 12 March 2024. A conference or journal venue is not established by the supplied document.
+
+**Access record.** Extracted text is supplied for physical PDF pages 1–36, with no missing page number in that sequence. Direct visual renderings are supplied for 31 pages: 1–7, 10, and 14–36. Pages 8, 9, 11, 12, and 13 are assessed from supplied text only. All 20 numbered figures and all nine numbered tables occur on visually supplied pages. Their principal content is readable, although small text inside website screenshots is less reliable than surrounding captions and extracted figure text. The principal equations on pages 2–3 are readable. Appendices A–I are present. No supplementary file, repository contents, executable implementation, or independently downloaded dataset is supplied or inspected. The paper links code, data, tools, and an annotation library; those linked artifacts are outside this review. No tools, browsing, or additional OCR were used.
+
+The input metadata's automatic indication that appendices were detected on page 7 does not identify their actual beginning: the supplied document has an appendix contents page on page 13, and Appendix A starts on page 14. The full numbered page sequence establishes access to this supplied version, but does not prove that every artifact associated with the research is included.
+
+**Evidence convention.** [A] means author-reported; [B] means directly observable in a supplied visual; [C] means analyst-derived, with operands provided; [D] means analyst interpretation. No [E] external information is introduced. Confidence is HIGH for clearly readable source statements and tables, MEDIUM for bounded interpretations, LOW for uncertain graphical estimates, and UNKNOWN for information absent from the source. Page locators below refer to physical PDF pages, which match the printed page numbers here. Prompts reproduced in the paper are treated as research evidence, never as instructions for this analysis.
+
+**Scope warning relevant to the requested research question.** This is a web-agent capability and grounding study, not an adversarial security evaluation. Its comparisons with text-only GPT-4 are comparisons between web-agent implementations, not between a web agent and an ordinary standalone conversational large language model. Security relevance is therefore explicitly labeled analyst inference.
+
+## 1. Plain-language orientation
+
+The work asks whether a model that can understand both images and language can operate ordinary websites from instructions such as renting a truck or finding a service provider. A website is more than a block of text: its layout, pictures, form fields, selected options, and error messages tell a user what has happened and what to do next. The researchers investigate whether GPT-4V can use that visual information to make useful decisions.
+
+Their system, **SeeAct**, separates deciding what to do from identifying the exact website control that should receive the action. First, the model describes its next action from a screenshot, the task, and previous actions. Second, a grounding procedure connects that description to an actual webpage element and an executable operation. A description such as clicking the search button can be sensible even when the system selects the wrong underlying control.
+
+The main finding is conditional. With humans implementing the model's intended actions, SeeAct completes 51.1% of the online evaluation tasks. With its best automated grounding method, textual choices, it completes 37.8%. Text-only GPT-4 and fine-tuned FLAN-T5-XL web agents achieve 13.3% and 8.9%, respectively, on that online evaluation. These are whole-task outcomes on a 90-task evaluation, not general guarantees for all websites. The humans also supervise safety, and the evaluation excludes important sensitive operations. [A: pp. 4–7, 14–15, Table 4]
+
+The central contribution is a framework and evaluation showing that visual action planning can be substantially stronger than exact element selection. The researchers also show that cached, reference-trace evaluation can understate live task completion because websites permit alternative routes and error correction. For the security research question, the work supplies evidence about the connection between model interpretation and browser execution, but does not measure attacks or establish a comparative vulnerability rate. [D]
+
+## 2. Document roadmap
+
+The abstract and Introduction, pages 1–2, motivate multimodal web agents and summarize four findings: strong performance with oracle grounding, grounding as a bottleneck, different generalization behavior for fine-tuning and in-context learning, and disagreement between offline and online evaluation.
+
+Section 2, pages 2–4, defines the agent's state and actions, explains screenshot-based action generation, and introduces three automated grounding methods plus human oracle grounding. Section 3, pages 4–5, introduces Mind2Web, its cleaned multimodal version, comparison methods, and evaluation metrics. Section 4, pages 5–8, reports offline and online results, task-difficulty analysis, grounding-error analysis, and qualitative case studies. Section 5, page 8, positions the work within web agents, large multimodal models, and visual grounding. Section 6, page 8, gives conclusions and future directions. Section 7, page 9, discusses deployment impacts and safety precautions. Acknowledgments and references occupy pages 9–12.
+
+Page 13 lists nine appendices. Appendix A provides model details; B tests annotation styles; C describes live evaluation; D gives prompts. Appendices E–I explain visual-grounding failures, planning, identical elements, knowledge requirements, alternative paths, and error correction. Their explanatory text is concentrated on page 19, with Figures 4–20 on pages 20–36. Thus distant appendix pages materially qualify the main results.
+
+**Inventory denominator.** This review tracks S1–S7; subsections SS2.1–SS2.3, SS3.1–SS3.4, and SS4.1–SS4.4; appendices AP-A–AP-I; figures F1–F20; tables T1–T9; mathematical objects E1–E3; and experiments X1–X6. E1 is the action policy, E2 the state update, and E3 the executable action triplet. X1 is the model comparison, X2 the grounding comparison, X3 the online/offline comparison, X4 the difficulty analysis, X5 the annotation-error analysis, and X6 the markup ablation. Qualitative cases are separately represented through F4–F20. No numbered pseudocode, theorem, lemma, formal hypothesis, or explicit list of numbered research questions appears.
+
+## 3. Background and context
+
+A **large language model (LLM)** processes language; the paper's text-only agents use webpage HTML as their environment input. A **large multimodal model (LMM)** also accepts images. GPT-4V is the principal LMM studied; Gemini Pro Vision, LLaVA-1.5, and BLIP-2 appear as other multimodal models. The paper does not claim that every model receiving visual input performs equally well.
+
+**Hypertext Markup Language (HTML)** describes webpage elements. The **Document Object Model (DOM)** is the element structure searched by the attribute-based method. A screenshot shows the rendered website. Rendering can convey state or meaning poorly captured by an element's own text, such as a selected radio button or an automatically filled date. Conversely, HTML representations provide element identities needed to execute actions. [A: pp. 2–4, 31]
+
+**Grounding** means connecting a model's description to a specific actionable element. Here it is different from merely recognizing that a search should occur. **Action generation** creates the textual plan; **action grounding** converts that plan into an executable browser event. **Element grounding** is the target-selection part, which the authors identify as especially difficult.
+
+**Supervised fine-tuning (SFT)** trains a model on annotated action examples. **In-context learning (ICL)** supplies examples or instructions at inference time rather than performing this task-specific training. The supplied text explicitly reports three demonstrations for GPT-3.5 and GPT-4. It does not establish an identical demonstration configuration for every ICL model.
+
+A **cross-encoder ranker** scores candidate elements. SeeAct's choice and annotation methods inherit a DeBERTa-base ranker from MindAct and retain the top 50 candidates. **Set-of-mark (SoM) prompting** refers here to visual marks such as bounding boxes and labels added to an image. Its effectiveness on other image types is discussed as the authors' description of prior work, not independently verified.
+
+The authors' motivating example contains 423 HTML elements and requires 186,490 GPT-2-tokenizer text tokens versus 1,445 GPT-4V visual tokens. These are different tokenization systems applied to one example. They illustrate representational burden, not a universal cost, latency, or memory comparison. [A: p. 2]
+
+## 4. Research problem and gap
+
+**Existing problem.** A generalist web agent must follow a natural-language task across unfamiliar websites, often through multiple dynamically rendered pages and more than ten actions. It must identify useful next steps and execute them against the correct controls. [A: pp. 1–2]
+
+**Prior shortcomings according to the authors.** Raw HTML can be massive, noisy, and semantically incomplete. Text-only representations miss embedded images and may omit the meaning of nearby labels or selected controls. Existing models also struggle to generalize across varied web environments. Visual understanding offers an alternative, but exact visual grounding remains difficult. [A: pp. 2, 8]
+
+**Research gap.** Strong image-and-language reasoning does not automatically imply reliable interaction with a dense website screenshot. The paper investigates both the promise of advanced LMMs and the unproven step from a natural-language action description to a particular HTML element.
+
+**Motivation.** Websites are designed to be interpreted visually by humans; the authors seek to exploit that interface rather than rely entirely on raw markup. They also want evaluation that allows valid alternative plans instead of accepting only one annotated action sequence.
+
+**Scope.** The study uses Mind2Web-derived tasks and a cleaned screenshot/HTML dataset. It studies ordinary task execution, model comparisons, grounding strategies, and limited live browsing. It does not introduce an attacker, malicious webpage generation, prompt-injection benchmark, or controlled standalone-LLM security comparison. Those omissions set the boundary of what it can support for the requested security analysis.
+
+## 5. Research questions, objectives, and hypotheses
+
+The paper provides informal objectives rather than formal numbered research questions. Its explicit objective is to investigate LMMs as generalist web agents. Section 2 divides this into action generation and element grounding. [A: pp. 1–2]
+
+The following register preserves those objectives without attributing invented formal questions to the authors:
+
+| ID | Objective extracted from the paper | Addressing evidence |
+|---|---|---|
+| O1 | Assess whether GPT-4V can generate useful actions across websites | Oracle grounding; Tables 2–4; planning examples |
+| O2 | Compare ways to ground descriptions into executable elements | Three automated methods; Table 3; annotation ablation |
+| O3 | Compare LMMs with text-only and smaller fine-tuned models | Table 2 and Table 4 |
+| O4 | Evaluate generalization across tasks, websites, and domains | Three Mind2Web test splits |
+| O5 | Compare cached-reference and live task evaluation | Table 4; Figure 19 |
+| O6 | Understand failure modes and useful qualitative capabilities | Figure 3; 100-error analysis; Figures 10–20 |
+
+No formal statistical hypotheses or preregistered acceptance thresholds are supplied. Statements about a website 'world model' are interpretations of qualitative behavior, not a separately specified hypothesis test.
+
+The user's research question—why web AI agents may be more vulnerable than standalone LLMs—is an additional analytical lens. Its relevance is discussed as [D], not substituted for the paper's actual objectives.
+
+## 6. Assumptions / Threat Model
+
+**System assumptions.** The agent receives a task, current observation, and action history. The observation includes HTML and a screenshot, although SeeAct action generation uses the screenshot without HTML. Browser actions have an element, operation, and optional value. The website responds by producing a new observation. Candidate-based methods assume that ranking and representation can expose an appropriate target; a none option exists when they cannot. [A: pp. 2–4]
+
+**Oracle assumption.** Human annotators identify the action intended by the description. This approximates ideal grounding when the necessary variables are described. It does not give the model perfect planning, and it is not a fully autonomous deployment condition.
+
+**Evaluation environment.** Live tasks are restricted to non-login tasks. Humans monitor actions, evaluate completion, and prohibit login attempts, final submissions, and other potentially harmful actions. Time-sensitive tasks are updated, invalid tasks are resampled, and pop-up advertisements are manually closed. These are substantive conditions, not peripheral administrative details. [A: pp. 5–7, 14–15]
+
+**Threat model status: absent.** The work specifies no attacker capabilities, attacker-controlled channels, attack budget, target security property, or adversarial success metric. It does not test whether webpage content can override agent instructions. There is no demonstrated trust-isolation mechanism between website information and decisions, but absence of a described mechanism does not prove absence from implementation.
+
+**Security interpretation [D, MEDIUM].** The architecture contains an information-to-action boundary: observations influence a description, which is grounded and executed in a browser. Wrong interpretation or wrong grounding can affect website state. That boundary and the authors' safety monitoring are relevant to security analysis, but observed accidental failures cannot be relabeled attacks.
+
+## 7. Methodology
+
+### Study design and processing sequence
+
+This is an empirical AI-agent systems study with benchmark comparisons, a live evaluation tool, an ablation, a selected-error analysis, and illustrative cases. Its central decomposition is perception/planning followed by execution grounding.
+
+At each step, GPT-4V receives the screenshot, task, and history. The prompt asks it to identify the page, inspect previous actions, examine current screenshot details, and describe the next target and operation. The action-generation stage excludes HTML. Operation and input value are then parsed from the description; selecting the target element is the principal remaining challenge. [A: pp. 3, 15]
+
+### Grounding methods
+
+**Element attributes:** request a detailed description, target type, and exact visible text; search DOM elements heuristically using type and text; select a unique match or ask the model to resolve multiple matches. No ranked candidate list is supplied to this method. Missing text, text attached to another element, and insufficiently discriminating attributes are limitations. [A: pp. 3, 5, 16]
+
+**Textual choices:** rank elements with a DeBERTa-base cross-encoder, retain 50 candidates, and present their HTML-derived representations as multiple-choice options. SeeAct groups candidates into sets of 17 options. The model matches its intended target against the choices, including a none option. Visual planning is therefore combined with textual element identity. The supplied methods do not fully specify every tie-breaking or aggregation detail across groups. [A: pp. 4, 17]
+
+**Image annotation:** use ranked candidates, overlay red bounding boxes and nearby labels, and ask for the label identifying the target. A label-assignment procedure reduces overlap. The chosen markup uses numbers at the bottom-left. If the intended element is not marked, the prompt asks for NA rather than invention. [A: pp. 4–5, 18]
+
+**Oracle grounding:** humans identify and implement the model's intended action. Offline it helps estimate action-generation capability; online it also allows intentions of scrolling with screenshots of the current view. It removes much of the automated grounding difficulty but retains planning errors. [A: pp. 4, 14]
+
+### Dataset and preprocessing
+
+The original Mind2Web description reports over 2,000 tasks, 137 websites, 31 low-level domains, and 12 high-level domains. Its primary operations are Click, Type, and Select; Hover and Press Enter are incorporated into Click in the benchmark description. The researchers align HTML documents with screenshots from the raw dump and use human verification for visibility and correct rendering. The resulting dataset is called Multimodal Mind2Web. [A: p. 4]
+
+| Cleaned split | Tasks | Domains | Websites | Mean actions | Mean visual tokens | Mean HTML elements | Mean HTML tokens |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Train | 1,009 | 17 | 73 | 7.7 | 4,240 | 602 | 128,827 |
+| Cross-Domain | 694 | 13 | 53 | 5.9 | 4,314 | 494 | 91,163 |
+| Cross-Task | 177 | 17 | 64 | 7.6 | 4,172 | 607 | 123,274 |
+| Cross-Website | 142 | 9 | 10 | 7.2 | 4,653 | 612 | 114,358 |
+
+Table 1 is the authority for these cleaned counts. The domain hierarchy behind its domain column is not explicitly reconciled with the original 31/12-domain description. Cross-Task means unseen tasks on included websites/domains. Cross-Website means held-out websites, and Cross-Domain means two held-out top-level domains. No validation split statistics appear in Table 1.
+
+### Models and implementation
+
+MindAct comparisons also rank the top 50 candidates, but group them into sets of five for iterative refinement. FLAN-T5 is fine-tuned with a left-to-right language-modeling objective over ground-truth action sequences. BLIP-2-T5 jointly fine-tunes its language model and modality bridge while keeping its vision encoder frozen. The encoder is CLIP-pretrained ViT-L/14; the reported image resolution is 2,048, without a fully specified dimensional convention. Its FLAN-T5 language component starts from Mind2Web-fine-tuned parameters. [A: pp. 4, 14]
+
+Text-only models are GPT-3.5-turbo-0613 and GPT-4-turbo-1106-preview, with three-shot ICL. SeeAct uses GPT-4-vision-preview, Gemini Pro Vision, and LLaVA-1.5. Gemini's single-turn restriction is accommodated by merging the two turns. CogAgent uses cogagent-chat-hf without Mind2Web fine-tuning and represents pixel-level grounding. The online browser tool uses Playwright; image annotation uses Supervision. Versions for these libraries, hardware, seeds, learning rates, batch sizes, epochs, decoding parameters, and repeated-run counts are not specified in the supplied work.
+
+### Evaluation metrics
+
+Element Accuracy tests target correctness. Operation F1 is token-level F1 for the operation and input value. Step Success Rate requires both correct element and operation; these step metrics are macro-averaged over tasks. Whole-task Success Rate requires every step to succeed in the strict offline version. Offline0 permits zero wrong actions; Offline1 allows an error at one step. Online completion is judged by a human monitoring live execution. No confidence intervals, significance tests, or error bars accompany the main tables. [A: pp. 5–6]
+
+### Live evaluation conditions
+
+Ninety tasks are evaluated across the three test splits. Time-sensitive details are rewritten to remain valid; tasks invalidated by website change are resampled from the same split. SeeActChoice retains the top-50 candidate setting and three groups, and gains Press Enter and Terminate. Oracle uses current-view screenshots and allows scrolling intentions. Pop-ups are manually closed. These differences matter when comparing online outcomes with cached evaluation and when assessing autonomy. [A: pp. 6–7, 14–15]
+
+## 8. Experiments / Analyses
+
+**X1 — Offline model comparison.** Purpose: compare multimodal, text-only, SFT, and ICL agents across Cross-Task, Cross-Website, and Cross-Domain. Outcomes: Element Accuracy, Operation F1, and Step Success Rate. Table 2 marks GPT-3.5, GPT-4, and GPT-4V-Oracle with a star indicating 30 tasks per split. Other rows are not marked with that subset condition. FLAN-T5 leads automated Step SR on all three splits, with 53.5, 41.1, and 38.9; the last value ties BLIP-2. Oracle reaches 61.9, 65.0, and 62.1, but comparisons to unstarred rows need the sampling caveat. [A: p. 6]
+
+**X2 — Grounding comparison.** Purpose: isolate alternative grounding procedures for GPT-4V. Table 3 uses 30 tasks per split for all four methods. Attributes achieve 16.1/12.1/19.0; annotation 20.3/13.9/23.7; choices 39.1/32.7/42.0; oracle 61.9/65.0/62.1, in Cross-Task/Cross-Website/Cross-Domain order. Choices are the strongest automated method, but substantial oracle gaps remain. The shared subset makes this the clearer grounding comparison. [A: p. 6]
+
+**X3 — Online versus offline whole-task completion.** Purpose: assess whether reference-trace scores represent live success. On the 90-task evaluation, Table 4 compares Offline0, Offline1, and Online. SeeActChoice is 3.3/12.2/37.8; oracle 13.3/27.8/51.1; GPT-4 1.1/12.2/13.3; FLAN-T5 4.4/24.4/8.9. Online gains are not uniform relative to Offline1: FLAN-T5's online result is lower than its one-error-tolerant offline result. Alternative paths, recovery, changed tasks, action-space differences, and manual support all affect interpretation. [A: pp. 6–7, 14–15]
+
+**X4 — Task difficulty.** Purpose: relate online success to action horizon. Figure 3 groups 37 Easy tasks with 1–4 actions, 35 Medium tasks with 5–9, and 18 Hard tasks with 10–18. Success decreases across these groups for all four models. Oracle remains strongest, and its gap over choices becomes more pronounced for longer tasks. Difficulty is defined from annotated action counts, not an independent measure of semantic complexity. Exact bar values are not labeled. [A/B: p. 7]
+
+**X5 — Image-annotation error analysis.** Purpose: explain grounding failures after correct action generation. The authors randomly sample 100 predictions meeting that condition. They classify 54% as fabricated bounding-box/label assignments when the intended target is not marked, and 46% as incorrect box-to-label linking. These percentages describe this selected failure sample, not all actions, all model outputs, or adversarial vulnerabilities. Figures 10–13 illustrate the two categories. [A: pp. 7, 19, 26–29]
+
+**X6 — Markup ablation.** Purpose: test numeric, single-letter, and double-letter labels at bottom-left or bottom-center positions, plus using the annotated image during action generation. Table 5 reports the best Step SR, 24.3, for bottom-left numbers. The annotated-generation condition is 22.3. A sample size and split identity for this table are not supplied, so its 24.3 cannot be assumed directly comparable to Table 3's annotation results. [A: p. 14]
+
+**Qualitative analyses.** Figures 4–9 compare two-stage grounding formats on a shared search example. Figures 14–15 show prospective planning and visual state recovery; Figure 16 demonstrates ambiguity among identical textual choices; Figures 17–18 show knowledge requirements; Figures 19–20 illustrate alternative paths and correcting a previous error. They are examples, not independent estimates of capability frequency.
+
+## 9. Results
+
+The strongest supported result is that GPT-4V action descriptions are often more useful than automated element selection. Within Table 3's shared 30-task-per-split condition, the oracle-minus-choice Step SR differences are **22.8, 32.3, and 20.1 percentage points**, calculated as 61.9−39.1, 65.0−32.7, and 62.1−42.0. [C] This is a grounding gap under the human approximation, not a measurement of exploitable insecurity.
+
+Choices outperform annotation by **18.8, 18.8, and 18.3 percentage points** in that same table: 39.1−20.3, 32.7−13.9, and 42.0−23.7. [C] These differences are larger than the Introduction's phrase 'up to 10%' if that phrase refers to these exact Step SR comparisons. The source does not specify a different metric or subset that reconciles the wording. [A/C: pp. 2, 6]
+
+On live tasks, automated SeeActChoice exceeds GPT-4 by **24.5 percentage points** and FLAN-T5 by **28.9 points**, from 37.8−13.3 and 37.8−8.9. Oracle exceeds choices by **13.3 points**, from 51.1−37.8. [C] The online oracle gap differs from the offline split-specific gaps; there is no single universal grounding-gap number.
+
+Table 2's SeeAct GPT-4V Step SR values are 40.2/32.4/36.8, whereas Table 3's choices row is 39.1/32.7/42.0. These are not contradictory once their different reported subset conditions are retained. However, the prose on page 6 claims improvements over GPT-4 of 6.8/5.7/12.3. Table 2 subtraction gives 7.9/5.4/7.1, while Table 3 choices minus Table 2 GPT-4 gives 6.8/5.7/12.3. The prose appears consistent with the latter arithmetic, but explicitly aligning the exact tasks across those tables is not documented beyond the subset sizes. [C/D]
+
+The authors report better SFT performance on familiar websites and stronger potential generalization from large ICL models. Table 2 supports a more conditional reading: automated FLAN-T5 still exceeds automated GPT-4V choices in Step SR on all three displayed splits. The particularly large unseen-website advantage is demonstrated with human oracle grounding. This distinction prevents an unsupported statement that the tested autonomous ICL implementation dominates SFT everywhere.
+
+The error study shows that correct intent can still produce an incorrect element label. Conversely, Figure 20 shows an instance of useful recovery, and Figure 19 shows an alternative valid route. Neither establishes a broad reliability or security guarantee. The authors themselves identify potentially harmful actions during live evaluation and require human validation before execution. [A: pp. 7–9]
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Overall SeeAct operation, page 1
+
+The diagram combines a task banner, a screenshot-based LMM action description, a grounding result, and a browser event. Blue distinguishes the LMM stage and pink/red the grounding/action presentation. The intended flow is task and visual page → textual plan → HTML element plus operation → execution. It contains no quantitative axes or statistical comparison. It supports the central separation of planning and grounding. The visible example clicks Find Your Truck; it does not depict an attack or a safety filter. [A/B]
+
+### Figure 2 — Three grounding representations, page 3
+
+A shared action description branches to element attributes, an annotated screenshot, and textual choices. Attributes expose text and type; visual marks attach candidate labels to boxes; textual choices present HTML-derived candidates including None. Arrows connect the intended action and webpage representations to method-specific output boxes. The illustrated search button is represented as choice G in the candidate examples. It is a representation comparison, not a performance result. [A/B]
+
+### Figure 3 — Success by task horizon, page 7
+
+This grouped bar plot has Easy, Medium, and Hard on the horizontal axis and Success Rate on the vertical axis, from 0 to 70 with regular ten-unit ticks. The metric is percentage whole-task success. Blue is SeeAct-Oracle, orange SeeAct-Choices, gray GPT-4, and red FLAN-T5-XL. No error bars or significance markers are shown. All series decline with action-count difficulty. Oracle remains highest and choices second. The bars visually suggest oracle around the mid-60s, mid-40s, and low-30s across the groups, but those are approximate visual estimates, not exact labeled values. Exact values are deliberately not transcribed. The caption's exact group counts are 37/35/18 and ranges 1–4/5–9/10–18. [A/B]
+
+### Figure 4 — Attribute-method action generation, page 20
+
+A beige input block gives the photographer-search task and history; a website screenshot and enlarged crop show populated search fields; a blue response block explains clicking Search. The magnification connector links the full page to the relevant region. The figure shows a natural-language target description before exact DOM matching. The task's four-hour wedding and date are contextual requirements, not reported outcomes. [A/B]
+
+### Figure 5 — Attribute-method structured output, page 21
+
+The second-turn response contains element description, BUTTON type, Search text, CLICK, and None. It demonstrates the five-field interface used by the heuristic matcher. No browser completion result appears. Together with Figure 4, it illustrates the two-stage procedure. [A/B]
+
+### Figure 6 — Textual-choice action generation, page 22
+
+The same photographer-search setup produces a screenshot-grounded decision to click the Search button beside the postcode field. A full-page image and crop show where the decision arises. This is substantively repetitive with Figure 4 but documents that choice grounding begins from visual action generation too. [A/B]
+
+### Figure 7 — Textual-choice selection, page 23
+
+Options A–Q contain HTML-like element descriptions and a none option. Two options contain Search buttons, so the example is not simply choosing the only occurrence of the word Search. The response selects H, the button with id 7, with CLICK and None. It illustrates matching the intended visual control to a textual candidate. It does not quantify robustness to all duplicated elements. [A/B]
+
+### Figure 8 — Image-annotation action generation, page 24
+
+The unannotated screenshot and response again identify the Search button. The page shows that a sensible intended action can precede annotation grounding. Full-page and enlarged views expose the search region. Its caption calls this grounding via image annotation, but the depicted first turn is the generation stage in that pipeline. [A/B]
+
+### Figure 9 — Annotation-grounding mismatch, page 25
+
+Red boxes identify controls and black labels carry white numbers. The response selects ELEMENT: 4. In the magnified visual, 4 lies with the postcode field, while the Search button has label 5. Thus the supplied visual directly shows a mismatch between the preceding intended Search action and the selected label. The caption only identifies the method and does not explicitly call this a failure. This observation is HIGH-confidence at the visible crop, while the precise effect of executing that chosen control is not shown. [B]
+
+### Figure 10 — Invented assignment for an absent candidate, page 26
+
+The task involves configuring a phone purchase. The generated intent is to click Continue; the selected label is 12 even though the caption says the intended element is absent from the candidate set. Red boxes and black labels show nearby candidate controls. The lesson is not that Continue is invisible on the webpage: it is visible but not included as the required marked candidate. The expected fallback would be NA. [A/B]
+
+### Figure 11 — A second absent-candidate assignment, page 27
+
+The agent intends to change a vehicle-search distance to 50 miles but outputs label 5 when that target is not among the supplied image options. The surrounding filter layout and annotations illustrate how a nearby label can be mistaken for the intended control. It is another selected failure example, not a measured frequency beyond the 100-error analysis. [A/B]
+
+### Figure 12 — Wrong box-to-label association, page 28
+
+The travel-search screenshot shows the From field containing Pune. The intended action is TYPE Ahmedabad. The agent selects 10; the caption identifies the correct label as 11. The crop visibly places 10 near the adult/room control above the origin field and 11 beside the origin input. The value is correct while the element identity is wrong, illustrating why operation correctness alone is insufficient. [A/B]
+
+### Figure 13 — Adjacent filter confusion, page 29
+
+The intended target is the Telehealth filter. The response selects 7 instead of 6; visually, 7 is attached to Accepts New Patients and 6 to Offers Telehealth. Both criteria belong to the task, but selecting the latter intended step still requires the correct identity. This demonstrates local spatial association failure, not malicious redirection. [A/B]
+
+### Figure 14 — Prospective planning, page 30
+
+A retail homepage is paired with a plan to navigate to speakers, apply Bluetooth and wireless filters, select sale items, and constrain price below $50. The response discusses pages not currently shown. It supports the authors' claim of speculative planning, but neither verifies that those future controls exist nor shows completed execution. [A/B]
+
+### Figure 15 — Current visual state beyond history, page 31
+
+The rental form visibly contains pickup/drop-off dates, time, postcode, and return-location selection. The caption says the same-day drop-off was automatic and that a No selection was poorly recorded because the input lacked text. The response recognizes these states and proposes Find Your Truck. This supports visual recovery of current state from incomplete history; it does not prove full rental-task completion. [A/B]
+
+### Figure 16 — Identical textual controls, page 32
+
+Three store cards each contain a Schedule button. The response intends the Midtown Manhattan store, with the selected March 24 evening time. The caption says identical representations make the choices method unable to distinguish the buttons and that it tends to select the first choice. The screenshot contains visual distinctions between the store cards; the limitation concerns the choice representation, not an absence of distinguishing information everywhere. [A/B]
+
+### Figure 17 — Knowledge requirement with unresolved answer, page 33
+
+A driving-school page lists districts. The response recognizes that Dublin, Virginia must be associated with a district but says the screenshot does not determine which one. This is a recognized knowledge gap, not successful geographical reasoning. The figure supports the need for information beyond visible matching. [A/B]
+
+### Figure 18 — Airport-code knowledge example, page 34
+
+A route-search page has origin DEL and the response proposes entering SJD for Los Cabos. The caption reports that code as correct. This is author-reported success in one knowledge-dependent step; no external airport database was checked and no aggregate knowledge score is supplied. [A/B]
+
+### Figure 19 — Alternative route, page 35
+
+The annotated route uses More Resources and then Natural products database; the model instead chooses Natural products information from the first page. Two screenshot views and enlargement connectors expose the routes. The caption reports arrival at the target via the shorter alternative. It explains why matching one reference sequence can misclassify valid behavior. The input history and caption vary between More Resources and More, a naming detail retained as source wording rather than silently standardized. [A/B]
+
+### Figure 20 — Correcting a prior input error, page 36
+
+A healthcare signup form visibly highlights a phone field and displays Enter a valid mobile number. The response prioritizes correcting the phone entry before continuing address completion. The caption reports error recognition and reprioritization, not successful completion after correction. The sample form data are example context and are deliberately compressed. [A/B]
+
+Figures 4–20 are interface screenshots and transcript composites, not statistical plots: axes, scales, confidence intervals, and legends are generally inapplicable. Their beige inputs, blue responses, red boxes, black labels, and magnified regions encode pipeline stages or selected controls.
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Cleaned dataset statistics, page 5
+
+Rows are train and three test splits; columns count tasks, domains, websites, and average actions, visual tokens, HTML elements, and HTML tokens. Exact values are reproduced in Section 7. Cross-Domain has the most test tasks, 694, and the fewest average actions, 5.9. Cross-Website has ten websites and the highest mean visual-token count, 4,653. These are descriptive statistics, not effectiveness measures. Visual tokens use the authors' stated OpenAI visual-token calculator. No variability measures accompany the means.
+
+### Table 2 — Model comparison, page 6
+
+Every metric is reported on a percentage-style 0–100 scale; Op. F1 is a token-overlap score rather than an ordinary count of fully correct operations. Each cell below preserves the order Element Accuracy / Operation F1 / Step SR.
+
+| Model | Cross-Task | Cross-Website | Cross-Domain |
+|---|---|---|---|
+| FLAN-T5-XL, SFT | 57.1 / 75.7 / 53.5 | 43.8 / 67.7 / 41.1 | 41.4 / 65.9 / 38.9 |
+| BLIP-2-T5-XL, SFT | 50.1 / 77.0 / 47.0 | 39.4 / 69.3 / 37.0 | 41.2 / 69.3 / 38.9 |
+| GPT-3.5* | 19.4 / 59.2 / 16.8 | 14.9 / 56.5 / 14.1 | 25.2 / 57.9 / 24.1 |
+| GPT-4* | 40.8 / 63.1 / 32.3 | 30.2 / 61.0 / 27.0 | 35.4 / 61.9 / 29.7 |
+| CogAgent | 22.4 / 53.0 / 17.6 | 18.4 / 42.2 / 13.4 | 20.6 / 42.0 / 15.5 |
+| SeeAct–LLaVA-1.5 | 9.7 / 65.6 / 8.1 | 9.1 / 60.8 / 7.5 | 10.9 / 63.9 / 8.5 |
+| SeeAct–Gemini Pro Vision | 21.5 / 67.7 / 19.6 | 17.1 / 61.3 / 15.4 | 20.7 / 64.3 / 18.0 |
+| SeeAct–GPT-4V | 46.4 / 73.4 / 40.2 | 38.0 / 67.8 / 32.4 | 42.4 / 69.3 / 36.8 |
+| SeeAct–GPT-4V-Oracle* | 66.4 / 79.2 / 61.9 | 69.5 / 78.9 / 65.0 | 72.8 / 73.6 / 62.1 |
+
+Stars mean 30 tasks per split. Oracle is highest across every displayed metric, subject to that subset caveat. LLaVA has the lowest Element Accuracy and Step SR in each split. CogAgent has the lowest Operation F1 in each split. Among automated rows, BLIP-2 has the strongest Operation F1 on Cross-Task and Cross-Website; Cross-Domain Op. F1 ties at 69.3 for BLIP-2 and GPT-4V. These distinctions show why one metric should not stand in for all performance. No uncertainty or significance statistics are supplied.
+
+### Table 3 — Grounding comparison, page 6
+
+All rows are GPT-4V on 30 tasks per split; entries are Step SR percentages. Values appear in Section 8. Attributes are worst and oracle best in every split; choices are the best automated method. The table does not directly isolate ranking recall, language matching, and visual recognition as separate causal components. It compares complete grounding procedures.
+
+### Table 4 — Whole-task completion, page 6
+
+| Agent | Offline0 | Offline1 | Online |
+|---|---:|---:|---:|
+| FLAN-T5-XL | 4.4 | 24.4 | 8.9 |
+| GPT-4 | 1.1 | 12.2 | 13.3 |
+| SeeActChoice | 3.3 | 12.2 | 37.8 |
+| SeeActOracle | 13.3 | 27.8 | 51.1 |
+
+Units are percentages. Offline0 demands no incorrect reference step; Offline1 permits one. GPT-4 and choices tie under Offline1, but their online outcomes diverge. Oracle leads all three columns. GPT-4 is lowest under Offline0, FLAN-T5 lowest online. Live evaluation has human monitoring and restricted actions; the table is not an unsupervised deployment safety test.
+
+### Table 5 — Markup ablation, page 14
+
+| Label / location | Element Accuracy | Operation F1 | Step SR |
+|---|---:|---:|---:|
+| Number / bottom-left | 27.0 | 73.7 | 24.3 |
+| Number / bottom-center | 23.0 | 76.4 | 21.8 |
+| Single letter / bottom-left | 19.4 | 81.0 | 17.2 |
+| Single letter / bottom-center | 19.7 | 78.8 | 19.7 |
+| Double letter / bottom-left | 19.8 | 68.3 | 18.3 |
+| Double letter / bottom-center | 22.4 | 74.6 | 22.4 |
+| Number* / bottom-left* | 26.6 | 73.9 | 22.3 |
+
+The star means the annotated image is also used in action generation. Bottom-left numbers lead Element Accuracy and Step SR; single-letter bottom-left labels lead Operation F1 but have the worst Step SR. Double-letter bottom-left labels have the lowest Operation F1. No sample size, interval, or significance test is reported. The table tests representation choices, not security defenses.
+
+### Table 6 — Action-generation prompt, page 15
+
+This table specifies a system role, task and history placeholders, page identification, previous-action analysis, screenshot inspection, and next-action selection. It instructs one currently valid action at a time. It explains what information the method asks the model to inspect, but does not prove compliance. The detailed prose is compressed rather than reproduced wholesale.
+
+### Table 7 — Attribute prompt, page 16
+
+It adds precise relative location and distinguishing details, then requires five lines: element description, element type, exact element text, action, and value. Types are BUTTON, TEXTBOX, SELECTBOX, and LINK. Actions are CLICK, TYPE, and SELECT. CLICK uses None; TYPE and SELECT require values. The prompt explicitly discourages inventing element text, but empirical failures still occur elsewhere in the pipeline.
+
+### Table 8 — Textual-choice prompt, page 17
+
+The model reiterates its target, examines candidates, resolves multiple matches by reexamining the screenshot, and selects the none option if no candidate fits. Its output has element letter, action, and value. This is a format and matching procedure, not a probabilistic confidence estimator or attack-resistant boundary.
+
+### Table 9 — Annotation prompt, page 18
+
+The model checks for a red bounding box and a white number on black at the bottom-left. It must output NA if the target is unmarked, then provide element number, action, and value. This matters because the 54% fabrication category occurs despite an explicit instruction against making up a mark. The relevant empirical claim concerns selected grounding errors, not general instruction-following failure rates.
+
+## 12. Diagram / Architecture Interpretation
+
+Figure 1 is the system-level architecture, and Figure 2 expands its grounding stage. The input task defines the goal; a screenshot supplies current visual state; history supplies previous actions. The LMM produces a textual description. A grounding component links that description to an actual element and operation. Playwright converts the resulting triplet to a browser event in live evaluation. The changed website becomes the next observation, creating an iterative perception–decision–execution loop. [A: pp. 1–5]
+
+There are two information paths in the automated choice method. Visual information guides action generation and helps matching; HTML-derived candidate descriptions provide addressable element identities. The ranker filters the possible targets before selection, so an intended element may be absent even if it is visually visible. Figure 10 makes that distinction concrete.
+
+Oracle grounding substitutes a human for much of the description-to-control conversion. Human safety monitoring is an additional evaluation intervention; it should not be conflated with the model's planner or with an implemented autonomous safety architecture. The figures do not draw a separate adversarial-content detector or policy-enforcement module, and the supplied work does not establish such a design.
+
+**Security relevance [D].** The iterative loop increases the places where erroneous observations, target confusion, or an incorrect intermediate action may influence subsequent actions. The authors explicitly discuss cascading grounding errors. This offers a mechanism relevant to operational risk, but evaluating an attacker exploiting the mechanism would require evidence not present here.
+
+## 13. Equations and mathematical concepts
+
+**E1 — Action policy, page 2, Section 2.1:**
+
+`a_t = π(s_t, T, {a_1, a_2, ..., a_(t−1)})`
+
+This is a functional specification, not a fitted equation reported with coefficients. The policy π takes current observation s_t, task T, and prior actions and returns the next executable action a_t. The subscript t denotes the current step; the earlier-action collection provides history. The paper uses a sequence A = [a_1, ..., a_n] for the overall task. It does not define a maximum horizon n or a formal stopping condition in this equation. Terminate is later enabled for the online choice agent.
+
+**E2 — Website state update, page 2:**
+
+`s_(t+1) = S(a_t) = {h_(t+1), i_(t+1)}`
+
+The authors write S for the website/environment and its response to an action. The next observation contains HTML h and screenshot i. In ordinary language, acting changes the page and supplies a new view. The displayed expression leaves the current state implicit; it should not be silently rewritten as a complete state-transition probability model. No transition distribution, reward, or optimization objective is defined.
+
+**E3 — Executable action and intended description, page 3:**
+
+`a = (e, o, v)`, with `e ∈ E` and `o ∈ O`.
+
+The element e is the control to operate on; E is the set of webpage elements. Operation o belongs to operation set O. Value v provides additional text or selection information. A textual description is denoted ã and contains descriptive counterparts ẽ, õ, and ṽ. Generation produces that description; grounding recovers an executable identity and operation. These tildes distinguish described intent from executable specification, not statistical estimates with reported uncertainty.
+
+There is no theorem, proof, formal security property, or mathematical grounding loss in the supplied paper. FLAN-T5's left-to-right training objective is described verbally rather than with an explicit loss equation. Operation F1 is defined as token-level F1 but its full computational formula and tokenization details are not supplied; they are not filled in from external knowledge.
+
+The equations clarify why a correct verbal idea need not yield a correct action: recovering o and v may be straightforward while e is still wrong. Step SR therefore requires both target and operation correctness.
+
+## 14. Interpretation and discussion
+
+The evidence answers the paper's objectives in a conditional way. O1 is supported by stronger oracle results and examples of useful planning, but oracle completion remains 51.1%, not universal success. O2 is answered by the superiority of textual choices among the tested automated methods and by substantial remaining gaps. O3 shows differences between model families and configurations, rather than a universal claim that vision always helps: BLIP-2 does not outperform FLAN-T5 in Step SR. O4 shows that familiar-site SFT remains competitive, while the strongest generalization promise is seen with large models and improved grounding. O5 is supported by live/offline disagreement and an alternative-path example. O6 identifies concrete error categories and qualitative recovery abilities.
+
+The authors offer possible explanations for BLIP-2's weak gain: inadequate image-detail understanding from its encoder, mismatch to webpage screenshots, and possible rendering problems in training examples. These are proposed explanations, not individually controlled causal tests. Their statement that smaller fine-tuned models can lose knowledge through catastrophic forgetting is likewise not demonstrated by a dedicated forgetting experiment here. [A: pp. 6–7]
+
+**Consistency register.** First, Table 2 and Table 3 have different sampling conditions and should remain separate. Second, the page-6 improvement arithmetic matches Table 3 choices rather than Table 2's GPT-4V row. Third, the Introduction says a 20–30% oracle gap and the Conclusion says 20–25%, whereas Table 3 gives differences from 20.1 to 32.3 percentage points and Table 4 gives 13.3 points online. Fourth, the Introduction's annotation advantage 'up to 10%' is not reconciled with Table 3's approximately 18-point Step SR differences. Fifth, the Conclusion rounds live oracle performance to 50%, whereas Table 4 and the abstract give 51.1%. The latter is an ordinary summary rounding, unlike an unexplained condition mismatch. Sixth, Figure 9's visible output is a wrong label despite its neutral method caption.
+
+For the security question, the meaningful inference is that a web agent connects interpretation to executable effects and repeated website interaction. The paper directly acknowledges possible harmful actions, privacy-sensitive profiles, financial transactions, and form submissions. It does not establish that agents are more vulnerable than standalone LLMs, identify a prompt-injection pathway, or show how much adversarial control is required. Its contribution to that research question is architectural and safety-motivational evidence, not comparative attack evidence. [A/D: pp. 5, 9, 14]
+
+## 15. Contributions and novelty
+
+**Conceptual:** distinguish action-generation capability from element-grounding capability so that a weak execution result is not automatically attributed to poor planning.
+
+**Methodological:** compare attributes, textual candidates, annotated screenshots, and human oracle grounding within a shared framework.
+
+**System and implementation:** introduce SeeAct and a Playwright-based tool for running agents on live websites. The paper reports code and tool availability; their contents are not reviewed here.
+
+**Dataset:** align and clean screenshots and HTML into Multimodal Mind2Web, with human verification and split statistics. This extends the available multimodal evaluation representation, not the original invention of Mind2Web.
+
+**Evaluation:** combine offline element/operation metrics with supervised online whole-task completion, showing meaningful disagreement between the evaluation modes.
+
+**Empirical:** demonstrate GPT-4V's conditional web-agent capability, identify grounding as a bottleneck, and characterize two image-annotation failure categories.
+
+**Qualitative:** document prospective planning, state interpretation beyond textual history, knowledge-dependent steps, alternative routes, and error correction. These examples support existence of behaviors without measuring prevalence.
+
+No theoretical theorem, security defense, formally verified policy, or adversarial benchmark contribution is established by the supplied work.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+Fine-grained grounding remains difficult, especially matching boxes to labels or handling absent marked candidates. Attribute heuristics depend on text and locality, which do not always identify the intended element. Textual choices can contain identical representations, leading to first-choice behavior. Grounding errors can cascade on longer tasks. [A: pp. 5, 7, 19, 32]
+
+Training screenshots may contain rendering failures or capture inaccuracies, even though the authors describe test screenshots as error-free. The possible image-encoder limitations of BLIP-2 are proposed explanations rather than proven causes. [A: p. 6]
+
+Strict offline success leaves no room for exploration or correction and may reject alternative valid paths. Live tasks can become invalid after website changes and require resampling. Pop-ups can stall MindAct and are manually closed in the evaluation. [A: pp. 5–7, 15]
+
+The authors acknowledge deployment privacy and sensitive-operation concerns, possible harmful actions, and the need to assess and mitigate safety risk. These concerns are managed here through human validation and restricted tasks rather than quantified autonomous defenses. [A: p. 9]
+
+### Additional evidence-based analyst observations
+
+[D] Human oracle grounding is a useful diagnostic but cannot establish autonomous reliability. Human safety monitoring and pop-up removal also limit conclusions about unattended operation.
+
+[D] Mixed subset conditions complicate model ranking in Table 2. Table 3 is more controlled for grounding comparisons, but 30 tasks per split still provide limited evidence and no reported intervals.
+
+[D] No repeated-run variability, statistical significance, API sampling configuration, or complete training configuration is reported. Consequently, observed numerical differences cannot be assigned a source-supported significance level.
+
+[D] The selected 100-error sample cannot estimate overall hallucination incidence. Qualitative examples cannot establish general planning or recovery rates.
+
+[D] The security question remains only indirectly informed because there are no adversarial tests and no standalone-LLM security baseline. High task success and low attack susceptibility are different constructs; the source measures the former.
+
+## 17. Threats to validity
+
+These labels are analyst-applied categories, not terminology the authors explicitly organize their limitations around.
+
+**Internal validity [D].** Human implementation, manual pop-up closure, different candidate group sizes, and different live action options make some comparisons depend on more than model identity. The oracle comparison intentionally changes grounding, so it is diagnostic rather than a comparison between equally autonomous systems.
+
+**External validity [D].** The evaluation comes from one benchmark family and a 90-task live sample. Login, final submissions, and other sensitive operations are excluded. Generalization to unrestricted websites or sensitive workflows is not established.
+
+**Construct validity [D].** Strict reference-trace success differs from actual goal achievement when alternative routes or corrections are valid. Annotated action count is a proxy for difficulty. Task-completion metrics do not measure adversarial robustness, privacy leakage, or harmful-action incidence.
+
+**Statistical conclusion validity [D].** There are no reported confidence intervals, error bars for Figure 3, significance tests, or repeated-run summaries. Small subgroup counts, especially 18 Hard tasks, limit precision. The 54/46 error breakdown is conditional on the selected error sample.
+
+**Ecological validity [D].** Live websites improve realism relative to cached pages, but supervision, prohibited operations, rewritten dates, replacement tasks, and manual ad closure create a supported evaluation environment.
+
+**Reproducibility [D].** Model names, prompts, ranker family, action formats, dataset counts, and code links help reproduction. Missing hardware, hyperparameters, seeds, detailed grouping logic, and tool versions leave important implementation uncertainty. No linked artifact was inspected.
+
+**Security-generalization validity [D].** The study cannot resolve why agents are more vulnerable than standalone LLMs as a measured comparative claim. It can identify relevant execution pathways and author-reported safety concerns, which would need separate testing under an explicit adversarial model.
+
+## 18. Future work and open questions
+
+**A. Explicit author directions.** Improve grounding by better exploiting the known correspondence between HTML and rendered elements; reduce hallucination; emphasize online evaluation because web tasks permit multiple plans; and assess and mitigate deployment safety risks so agents do not produce or execute harmful actions. [A: pp. 8–9]
+
+**B. Analyst-derived open questions.** How much of each grounding failure comes from ranking out the target, insufficient candidate context, or incorrect visual matching? Can surrounding store or form context distinguish identical element text? What fraction of useful corrective plans succeeds when executed without human grounding? How do task-completion results change when manual pop-up removal is removed?
+
+For the security research question, further unresolved questions are whether untrusted page content can redirect the planner, whether grounding ambiguity can be deliberately induced, how wrong intermediate actions propagate, and how proposed-action review should interact with privacy-sensitive or irreversible operations. These are logical follow-up questions, not attack mechanisms demonstrated in this paper. A direct agent-versus-standalone comparison would also need matched models and explicit security outcomes. [D]
+
+## 19. Terminology and notation glossary
+
+| Term | Meaning in this paper |
+|---|---|
+| Generalist web agent | A system intended to complete natural-language tasks on varied real-world websites |
+| LLM | Large language model; text-only environment processing in the compared agents |
+| LMM | Large multimodal model; accepts visual information as well as language |
+| GPT-4V | The principal vision-capable GPT model studied |
+| SeeAct | Screenshot-based action generation with a grounding stage |
+| Mind2Web | Existing web-task benchmark with annotated action traces |
+| Multimodal Mind2Web | The authors' aligned, cleaned screenshot/HTML version |
+| MindAct | Candidate-ranking and multiple-choice agent framework used for comparisons |
+| HTML | Hypertext Markup Language; webpage element representation |
+| DOM | Document Object Model; element structure used for searching targets |
+| Grounding | Mapping described intent to an executable element/action |
+| Oracle | Human approximation of ideal implementation of the intended action |
+| SFT | Supervised fine-tuning on annotated actions |
+| ICL | In-context learning during inference |
+| SoM | Set-of-mark prompting with visual annotations |
+| Cross-encoder | Model used here to rank candidate elements jointly with context |
+| Ele. Acc | Element Accuracy, testing target selection |
+| Op. F1 | Token-level F1 for operation and input value |
+| Step SR | Success requiring correct target and operation |
+| Whole-task SR | Success of the complete task under the specified evaluation |
+| Offline0 / Offline1 | Reference evaluation tolerating zero / one erroneous step |
+| NA / None | Fallback output for an unmarked target / a nonmatching choice; None also serves as CLICK's value |
+| π | Action policy taking observation, task, and history |
+| s_t | Current observation at step t |
+| h_t / i_t | HTML document / screenshot in the observation |
+| T / A | Task / sequence of executable actions |
+| e / E | Target element / set of webpage elements |
+| o / O | Operation / set of available operations |
+| v | Additional input required by the operation |
+| ã | Textual description of the intended action |
+| IATA | The airport-code system invoked in the examples; expanded as International Air Transport Association, without external code verification |
+| CLIP / ViT-L/14 | Named pretrained encoder family and architecture designation; their expansions and internal details are not supplied |
+| Playwright / Supervision | Named browser-execution / image-annotation tools used by the authors |
+
+The IATA expansion is a conventional expansion rather than a definition supplied in the paper; the substantive evidence here is limited to the authors' reported DEL/SJD example. No outside airport facts are used. Other undefined architecture details remain undefined rather than being supplemented.
+
+## 20. Key numerical results
+
+| Quantity / result | Value | Unit | Condition / context | Status | Source |
+|---|---:|---|---|---|---|
+| Original benchmark tasks | Over 2,000 | Tasks | Mind2Web description | Author-reported | p. 4, Section 3.1 |
+| Original websites | 137 | Websites | Mind2Web description | Author-reported | p. 4 |
+| Original domain hierarchy | 31 / 12 | Low-/high-level domains | Mind2Web description | Author-reported | p. 4 |
+| Cleaned split task counts | 1,009 / 694 / 177 / 142 | Tasks | Train / Cross-Domain / Cross-Task / Cross-Website | Author-reported | p. 5, T1 |
+| Total cleaned tasks | 2,022 | Tasks | 1,009+694+177+142 | Analyst-derived | p. 5, T1 |
+| Ranked candidates | 50 | Elements | Choice and annotation methods | Author-reported | p. 4 |
+| SeeAct / MindAct group size | 17 / 5 | Options / elements | Inference grouping description | Author-reported | p. 4 |
+| Text-only ICL demonstrations | 3 | Examples | GPT-3.5 and GPT-4 | Author-reported | p. 14 |
+| BLIP-2 image resolution | 2,048 | Unspecified dimension convention | Frozen ViT-L/14 encoder | Author-reported | p. 14 |
+| Shared grounding subset | 30 per split | Tasks | Table 3 | Author-reported | p. 6 |
+| Oracle offline Step SR | 61.9 / 65.0 / 62.1 | % | Cross-Task / Cross-Website / Cross-Domain, subset | Author-reported | p. 6, T3 |
+| Choice offline Step SR | 39.1 / 32.7 / 42.0 | % | Same grounding subset | Author-reported | p. 6, T3 |
+| Oracle minus choices | 22.8 / 32.3 / 20.1 | Percentage points | 61.9−39.1 / 65.0−32.7 / 62.1−42.0 | Analyst-derived | p. 6, T3 |
+| Choices minus annotation | 18.8 / 18.8 / 18.3 | Percentage points | Shared grounding subset | Analyst-derived | p. 6, T3 |
+| Live sample | 90 | Tasks | Three test splits, updated/resampled where needed | Author-reported | pp. 6–7 |
+| Online oracle / choices | 51.1 / 37.8 | % tasks | Human-monitored live evaluation | Author-reported | p. 6, T4 |
+| Online GPT-4 / FLAN-T5 | 13.3 / 8.9 | % tasks | Web-agent baselines | Author-reported | p. 6, T4 |
+| Online oracle minus choices | 13.3 | Percentage points | 51.1−37.8 | Analyst-derived | p. 6, T4 |
+| Online choices minus GPT-4 | 24.5 | Percentage points | 37.8−13.3 | Analyst-derived | p. 6, T4 |
+| Difficulty group sizes | 37 / 35 / 18 | Tasks | Easy / Medium / Hard | Author-reported | p. 7, F3 |
+| Difficulty action ranges | 1–4 / 5–9 / 10–18 | Actions | Annotated trace length | Author-reported | p. 7, F3 |
+| Selected error sample | 100 | Predictions | Correct generation, wrong annotation grounding | Author-reported | p. 7 |
+| Fabrication / linking errors | 54 / 46 | % of selected errors | Not percentages of all actions | Author-reported | p. 7 |
+| Best markup Step SR | 24.3 | % | Bottom-left numeric labels; sample unspecified | Author-reported | p. 14, T5 |
+| Figure 9 selected / Search label | 4 / 5 | Labels | Postcode-field label selected for intended Search | Visually readable | p. 25, F9 |
+| Figure 12 wrong / correct label | 10 / 11 | Labels | Origin input example | Author-reported and visually readable | p. 28, F12 |
+| Figure 13 wrong / correct label | 7 / 6 | Labels | Telehealth example | Author-reported and visually readable | p. 29, F13 |
+| Motivating HTML / visual tokens | 186,490 / 1,445 | Tokens in different tokenizers | One 423-element screenshot | Author-reported | p. 2 |
+
+All full result-table entries are preserved in Sections 7, 8, and 11. Figure 3's unlabeled bar heights are not inserted as exact numbers. Percentage-point differences are not relative percent improvements.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure / table / experiment | Source | Qualification / evidence strength |
+|---|---|---|---|---|
+| Visual planning can be stronger than automated grounding | Oracle exceeds each automated grounding method | T3, X2 | pp. 4–6 | HIGH for reported results; human oracle condition |
+| Choices are the strongest tested automated grounding approach | Highest automated Step SR in every split | T3 | p. 6 | HIGH within the shared subset |
+| SeeAct can outperform compared agents online | 37.8 versus 13.3 and 8.9 | T4, X3 | pp. 6–7 | HIGH for this supervised 90-task evaluation |
+| Offline trace success can understate live task success | Large online/Offline0 gaps and alternative path | T4, F19 | pp. 6–7, 35 | HIGH observation; MEDIUM attribution to a single cause |
+| Long action horizons expose grounding difficulty | Declining success and larger oracle/choice separation | F3, X4 | p. 7 | HIGH trend; exact bars unlabeled, small Hard group |
+| Annotation failures include fabrication and spatial linking | 54/46 split of 100 selected errors | X5, F10–F13 | pp. 7, 26–29 | HIGH conditional sample; not general incidence |
+| Identical choices can be ambiguous | Three Schedule controls; first-choice tendency | F16, AP-G | pp. 19, 32 | HIGH example; frequency unquantified |
+| Visual observations can reveal state omitted from history | Automatic drop-off date and No selection recognized | F15 | p. 31 | HIGH example; no aggregate metric |
+| The agent can recognize a prior input error | Invalid-phone message causes proposed correction | F20 | p. 36 | HIGH recognition example; completed correction not shown |
+| Deployment has safety implications | Authors report potential harmful actions and manual validation | S7, AP-C | pp. 9, 14 | HIGH author report; no harmful-action rate |
+| Architecture is relevant to operational security | Model output is converted to browser events | F1, system method | pp. 1, 5 | MEDIUM analyst inference; no adversarial test |
+| Greater vulnerability than standalone LLMs is unproven here | No adversarial protocol or standalone security baseline | Study scope and metrics | pp. 3–6, 9 | HIGH scope observation; no comparative risk estimate |
+
+The external research question therefore receives a bounded answer: this paper supplies mechanisms and deployment concerns that motivate security analysis, but cannot establish comparative vulnerability or explain it through measured attacks.
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine giving a computer a screenshot of a website and asking it to rent a truck. It has two jobs. First, it must decide what should happen next. Second, it must point to the exact button or box that should receive the action. Those jobs sound similar, but the paper shows they can succeed or fail separately. The computer can correctly say 'click Search' and still choose the postcode box beside it.
+
+The researchers tested several ways to help it point correctly: describe the button's text and type, choose from a list of webpage controls, or read numbers drawn beside controls. Choosing from the list worked best among the automated methods. Humans translating the computer's intended actions worked better still. On the monitored live tests, the automated choice method finished 37.8% of tasks, while human grounding reached 51.1%.
+
+A website may also offer more than one correct route. A computer that finds a shortcut or fixes an earlier mistake can finish the task while disagreeing with a recorded example. That is why testing real completion can tell a different story from checking whether every step matches a reference list.
+
+For security, the important difference suggested by this setup is that the computer's decisions can become actual browser actions. A wrong selection may affect a real form or workflow, and the authors used people to check safety. But this paper did not test hackers, malicious instructions, or ordinary chat models against web agents. It helps explain why action execution deserves security study; it does not prove that web agents are more vulnerable.
+
+## Completeness Audit
+
+The inventory is the denominator. 'Fully represented' means the item's substantive content is covered at the level supported by the supplied evidence, not that every word or screenshot pixel is reproduced. Text-only pages remain explicitly distinguished from visually inspected pages.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, abstract, version | Yes, text and visual | Yes | Fully represented | p. 1; no venue inferred |
+| S1 Introduction | Yes, text and visual | Yes | Fully represented | Motivation, token example, four findings |
+| SS2.1 Formulation | Yes, text and visual | Yes | Fully represented | E1–E3, observations and history |
+| SS2.2 Action Generation | Yes, text and visual | Yes | Fully represented | Screenshot-only generation |
+| SS2.3 Action Grounding | Yes, text and visual | Yes | Fully represented | Three methods plus oracle |
+| SS3.1 Dataset | Yes, text and visual | Yes | Fully represented | Original versus cleaned counts retained |
+| SS3.2 Methods | Yes, text and visual | Yes | Fully represented | Ranker, groups, baselines |
+| SS3.3 Offline Evaluation | Yes, text and visual | Yes | Fully represented | Metrics and averaging |
+| SS3.4 Online Evaluation | Yes, text and visual | Yes | Fully represented | Execution and safety restrictions |
+| SS4.1 Offline Results | Yes, text and visual | Yes | Fully represented | Full T2/T3 results and condition caveats |
+| SS4.2 Online Results | Yes, text and visual | Yes | Fully represented | T4, sample, rewriting and resampling |
+| SS4.3 Difficulty analysis | Yes, text and visual | Yes | Fully represented | X4/F3; exact bars unavailable |
+| SS4.3 Error analysis | Yes, text and visual | Yes | Fully represented | X5; selected sample denominator |
+| SS4.4 World knowledge | Yes, mixed modalities | Yes | Represented in compressed form | Qualitative, not aggregate proof |
+| SS4.4 Website world model | Yes, text and visual | Yes | Represented in compressed form | Planning examples bounded |
+| SS4.4 Error correction continuation | Yes, p. 8 text only | Yes | Fully represented | Connected to F20 |
+| S5 Web Agent related work | Yes, text only | Yes | Represented in compressed form | HTML ranking, summarization, visual methods |
+| S5 LMM related work | Yes, text only | Yes | Represented in compressed form | Author positioning, no independent review |
+| S5 Visual Grounding related work | Yes, text only | Yes | Represented in compressed form | Marks, coordinates, region representations |
+| S6 Conclusion | Yes, text only | Yes | Fully represented | Rounding and gap wording checked |
+| S7 Impact Statements | Yes, text only | Yes | Fully represented | Privacy, sensitive actions, human validation |
+| Acknowledgments | Yes, text only | Briefly | Inspected but deliberately compressed as secondary | ARL and Cisco support reported; not methodological evidence |
+| References pp. 9–12 | Yes, text; p. 10 also visual | Yes, by relevant categories | Represented in compressed form | Citation lists not independently validated |
+| Appendix contents p. 13 | Yes, text only | Yes | Fully represented | A–I mapped |
+| AP-A Offline method details | Yes, text and visual | Yes | Fully represented | Models, training choices, demonstrations |
+| AP-B Markup ablation | Yes, text and visual | Yes | Fully represented | X6/T5 |
+| AP-C Online details | Yes, text and visual | Yes | Fully represented | Extra actions, supervision, pop-ups |
+| AP-D Prompts | Yes, text and visual | Yes | Represented in compressed form | T6–T9 fields and rules retained |
+| AP-E Annotation errors | Yes, text and visual | Yes | Fully represented | F10–F13 |
+| AP-F Planning | Yes, text and visual | Yes | Fully represented | F14–F15 |
+| AP-G Textual-choice ambiguity | Yes, text and visual | Yes | Fully represented | F16 |
+| AP-H Knowledge requirements | Yes, text and visual | Yes | Fully represented | F17–F18; unresolved versus successful example |
+| AP-I Path variation and correction | Yes, text and visual | Yes | Fully represented | F19–F20 |
+| O1–O6 informal objectives | Yes | Yes | Fully represented | No formal RQs manufactured |
+| Formal hypotheses | Not present | Absence recorded | Not present in supplied material | No tests invented |
+| X1 Model comparison | Yes | Yes | Fully represented | Mixed star conditions disclosed |
+| X2 Grounding comparison | Yes | Yes | Fully represented | Shared subset |
+| X3 Live/offline comparison | Yes | Yes | Fully represented | Restricted and human-supported |
+| X4 Difficulty | Yes | Yes | Fully represented | Trend, ranges, counts |
+| X5 Error sample | Yes | Yes | Fully represented | Conditional 54/46 proportions |
+| X6 Markup ablation | Yes | Yes | Fully represented | Sample identity unspecified |
+| F1 | Yes, visual and text | Yes | Fully represented | System diagram |
+| F2 | Yes, visual and text | Yes | Fully represented | Three grounding representations |
+| F3 | Yes, visual and text | Yes | Fully represented | Exact bar heights uncertain |
+| F4 | Yes, visual and text | Yes | Represented in compressed form | Attribute first turn |
+| F5 | Yes, visual and text | Yes | Fully represented | Attribute output fields |
+| F6 | Yes, visual and text | Yes | Represented in compressed form | Repeated generation example |
+| F7 | Yes, visual and text | Yes | Fully represented | Choice H among duplicate Search text |
+| F8 | Yes, visual and text | Yes | Represented in compressed form | Annotation first turn |
+| F9 | Yes, visual and text | Yes | Fully represented | Visible 4-versus-5 mismatch |
+| F10 | Yes, visual and text | Yes | Fully represented | Absent marked target, label 12 |
+| F11 | Yes, visual and text | Yes | Fully represented | Absent marked target, label 5 |
+| F12 | Yes, visual and text | Yes | Fully represented | Wrong 10, correct 11 |
+| F13 | Yes, visual and text | Yes | Fully represented | Wrong 7, correct 6 |
+| F14 | Yes, visual and text | Yes | Fully represented | Plan, not verified completion |
+| F15 | Yes, visual and text | Yes | Fully represented | State missing from history |
+| F16 | Yes, visual and text | Yes | Fully represented | Identical choices |
+| F17 | Yes, visual and text | Yes | Fully represented | Knowledge gap remains |
+| F18 | Yes, visual and text | Yes | Fully represented | Author-reported code example |
+| F19 | Yes, visual and text | Yes | Fully represented | Alternative route |
+| F20 | Yes, visual and text | Yes | Fully represented | Proposed correction |
+| T1 | Yes, visual and text | Yes | Fully represented | All entries retained |
+| T2 | Yes, visual and text | Yes | Fully represented | All metric entries retained |
+| T3 | Yes, visual and text | Yes | Fully represented | All results retained |
+| T4 | Yes, visual and text | Yes | Fully represented | All results retained |
+| T5 | Yes, visual and text | Yes | Fully represented | All rows retained |
+| T6 | Yes, visual and text | Yes | Represented in compressed form | Prompt stages and rules |
+| T7 | Yes, visual and text | Yes | Represented in compressed form | Five fields and types |
+| T8 | Yes, visual and text | Yes | Represented in compressed form | Choices and fallback |
+| T9 | Yes, visual and text | Yes | Represented in compressed form | Labels and NA rule |
+| E1 Policy | Yes, visual and text | Yes | Fully represented | Symbols and role explained |
+| E2 State update | Yes, visual and text | Yes | Fully represented | Implicit-state convention noted |
+| E3 Action triplet and tilde notation | Yes, visual and text | Yes | Fully represented | Intent versus execution |
+| Algorithm/pseudocode blocks | Not present | Absence recorded | Not present in supplied material | Prose procedure represented |
+| Major contributions | Yes | Yes | Fully represented | Section 15 |
+| Author-stated limitations | Yes | Yes | Fully represented | Separated from analyst concerns |
+| Supplied supplementary files | None supplied | Absence recorded | Not supplied | No supplement claimed reviewed |
+| Linked code, data, tool artifacts | No | Boundary recorded | Inaccessible within supplied material | No browsing or execution |
+
+### Missing or inaccessible material
+
+No physical page is absent from the supplied text. Visual renderings of pages 8, 9, 11, 12, and 13 are absent; their text is reviewed. Repository implementation, released dataset files, evaluation scripts, and external cited publications are not supplied. Hardware, numerous hyperparameters, repeated-run statistics, and the Table 5 sample identity are unspecified. A security threat model, attack experiments, and a standalone-LLM security comparison are absent from the study rather than missing pages.
+
+### Uncertain interpretations
+
+Exact Figure 3 bar values are not labeled. Some small website text is less readable than the extracted descriptions, so it is not reconstructed pixel by pixel. The domain hierarchy in Table 1 is not explicitly aligned with the original benchmark's low-/high-level counts. Gap wording and improvement arithmetic have the inconsistencies described in Section 14; no automatic reconciliation is asserted. Figure 9 visibly selects the postcode-associated label while its caption remains neutral. Table 5's sample size and split are unknown. The supplied notation does not define a complete stochastic transition model.
+
+### Deliberately compressed material
+
+Repeated photographer-search narratives, complete prompt wording, peripheral screenshot text, sample personal form data, bibliographic entries, and acknowledgments are compressed. Their methodological role, output fields, relevant numbers, visual target identities, and qualifications are retained. Repeated headers, page decorations, and empty whitespace have no substantive analytical role.
+
+### Potential omissions
+
+Every inventoried substantive section, experiment, numbered figure, numbered table, principal mathematical object, appendix, objective, contribution, and limitation category is represented. This does not imply lossless reproduction or inspection of unavailable linked artifacts. Remaining uncertainty concerns exact unlabeled plot values, small visual details, unspecified experimental settings, and unreconciled source wording. The analysis is comprehensive relative to the supplied inventory, not evidence of a complete security assessment.

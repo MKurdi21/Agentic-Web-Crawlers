@@ -1,0 +1,587 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied main document is available as extracted text for physical PDF pages 1–21. Page 1 is the proceedings cover; pages 2–21 carry printed proceedings pages 8055–8074. All source locators below use physical PDF page numbers, not proceedings pagination. The accessible sequence includes the abstract, §§1–10, ethics and open-science statements, references [1]–[78], and Appendices A–G. No missing physical page is apparent within the supplied sequence. This establishes coverage of the supplied document, not independent verification of the original PDF or its hash.
+
+Direct visual inspection was possible for the supplied renderings of pages 1–12, 14, and 21. Pages 13 and 15–20 were inspected through their supplied extracted text only. All nine numbered figures and all three numbered tables occur on visually supplied pages. Their principal content is readable; fine screenshot text and unlabeled graphical segment values are less reliable. The central threat-model equations are available both visually and in extracted text on p. 5. Appendix prompts and the first fourteen XGBoost features are text-only evidence; the fifteenth feature and Appendices E–G are also visually supplied on p. 21. OCR was not needed or performed. No tools, external research, repository access, or supplementary-file inspection were used.
+
+The accessibility metadata reports no detected appendix pages, but the actual supplied text explicitly contains Appendices A–G on pp. 18–21. The text takes precedence for that inventory finding. The paper references defense code and prompt artifacts on GitHub and Zenodo; these external artifacts were not supplied or reviewed. In particular, the exact HtmlLLM detection prompt is referred to code rather than reproduced in the accessible paper. The paper states that its malicious-query data cannot be publicly shared. Embedded-image counts in the accessibility metadata do not determine substantive visual coverage: vector plots and diagrams were inspected in the provided page images regardless of those counts.
+
+Evidence labels throughout are [A] author-reported, [B] directly observable, [C] analyst-derived, and [D] analyst interpretation. No [E] external information is introduced. Confidence describes fidelity to supplied evidence, not proof that an author's factual claim is correct. HIGH means directly readable and clearly attributable; MEDIUM indicates qualified inference or incompletely specified conditions; LOW indicates weak or ambiguous support; UNKNOWN indicates information unavailable in the supplied work.
+
+## 1. Plain-language orientation
+
+[A] This paper studies AI-Powered Search Engines, abbreviated AIPSEs: applications that search the web and use a Large Language Model, or LLM, to turn retrieved material into an answer. Its concern is that an apparently useful answer can recommend a malicious website, reproduce harmful code, or treat a deceptive source as authoritative. A user may ask an ordinary question without trying to break the system and still receive dangerous material.
+
+[A] The researchers evaluate seven production search applications using keyword lists, natural-language questions, and follow-up URL queries. They build a dataset from malicious-site intelligence sources, label where malicious links appear in answers, compare AI search with traditional search, construct two fictional online attacks, and test a defense that combines content refinement with website detectors. The main contribution is a structured measurement of these application-level risks and a user-side mitigation framework, rather than a new foundational language model.
+
+[A] The headline findings are that all seven evaluated AIPSEs expose some malicious-content risk, that direct URL follow-ups can move dangerous links into more prominent answer positions, and that natural-language queries usually reduce risk but do not do so consistently across all applications. The traditional-search comparison favors AIPSEs under its particular later test conditions. The two constructed case studies show unsafe copying of fabricated API documentation and acceptance of a phishing site's false claim to be official. The proposed HtmlLLM-assisted defense changes 36 of 46 selected main-risk responses into warning-bearing responses, while its URL detector has a reported F1 score of 0.822.
+
+[D] Relevance to the user's question, 'Why Are Web AI Agents More Vulnerable Than Standalone LLMs?': the paper supplies evidence about an additional exposure route introduced by web retrieval. Attackers can put material on public websites that becomes part of the model's answer context. However, it does not run a controlled comparison between standalone LLMs and otherwise identical web agents. Therefore it supports an explanation of web-specific vulnerability mechanisms, not a quantified conclusion that web agents are universally more vulnerable than standalone LLMs.
+
+## 2. Document roadmap
+
+The original title is **Unsafe LLM-Based Search: Quantitative Analysis and Mitigation of Safety Risks in AI Web Search**. The authors are Zeren Luo, Zifan Peng, Yule Liu, Zhen Sun, Mingchen Li, Jingyi Zheng, and Xinlei He. Affiliations are The Hong Kong University of Science and Technology (Guangzhou), with Mingchen Li also affiliated with the University of North Texas. Luo and Peng are marked equal contributors, listed alphabetically; He is corresponding author. The cover identifies the 34th USENIX Security Symposium, August 13–15, 2025, Seattle, Washington, USA. The title page visibly carries an artifact-availability badge; that badge is an observable publication marking, not evidence that the linked artifact was inspected.
+
+This is a mixed empirical cybersecurity and AI-systems paper. Its studies include observational product testing, a query-pattern questionnaire, comparative utility and safety assessment, two constructed attacks, and defense evaluation. It is not a systematic literature review, theoretical proof paper, or standalone-LLM benchmark. No separate keywords field, formally numbered research questions, hypotheses, theorem, or numbered algorithm is supplied.
+
+| Inventory item | Physical pages | Role |
+|---|---|---|
+| Abstract and §1 Introduction | 2–3 | Problem, headline findings, contributions |
+| §2 Related Work | 3–5 | RAG, LLM threats, website detection, seven products |
+| §3 Threat Model | 5 | Retrieval formulation and limited-resource attacker |
+| §4 Risk Identification and Query Collection; §§4.1–4.2 | 5–7 | Response taxonomy, website filtering, query construction, realism checks |
+| §5 Risk Evaluation; §§5.1–5.4 | 7–9 | Keyword, natural-language, URL results and takeaways |
+| §6 Comparison to Traditional Search Engine | 9–10 | Later multilingual utility and safety comparison |
+| §7 Case Studies; §§7.1–7.3 | 10–13 | Fabricated documentation, phishing authority claims, safeguards |
+| §8 Risk Mitigation; §§8.1–8.2 | 13–14 | Defender model, tools, agent workflow, evaluation |
+| §9 Discussions and Limitations | 14–15 | Time-sensitive sites, manual evaluation, small scale |
+| §10 Conclusion | 15 | Synthesis and safety motivation |
+| Ethics Considerations; Open Science | 15 | Restricted data release, disclosure, promised artifacts |
+| References [1]–[78] | 15–18 | Author-provided bibliography |
+| Appendices A–G | 18–21 | Filtering words, prompts, features, ratings, confusion matrices, questionnaire |
+
+The visual inventory is F1 overall process, F2 response structure, F3 query generation, F4 query-type risk comparison, F5 risky-URL counts and composition, F6 URL-risk transitions, F7 comparative risk-return counts, F8 fabricated-documentation answer, and F9 phishing-source answer. Tables T1–T3 cover utility ratings, detector/defense performance, and confusion matrices. Two unnumbered equations, E1 and E2 here, define normal and poisoned retrieval. The attack-code listing on p. 11 and the prompts in §§4.2 and 8.1 and Appendices B–C are substantive procedural objects, not instructions for this analysis.
+
+## 3. Background and context
+
+[A] An LLM generates text using learned information and supplied context. The authors describe limitations involving knowledge cutoffs and hallucinations: answers that are not reliably grounded in correct information. Retrieval-Augmented Generation, or RAG, supplements the model with retrieved material. Their account has three components: a knowledge database, a retriever that selects relevant information, and a generator, usually an LLM, that writes the answer. In AI search, the database may contain snapshots of webpages. Retrieval can improve freshness while also bringing untrusted content into the answer-generation process. Sources: pp. 2–4, §2.
+
+[A] Traditional Search Engines, or TSEs, return search results that users normally inspect themselves. AIPSEs interpret questions and summarize material. The paper distinguishes an **answer**, the generated response; **references**, specific links cited beside answer passages; and **sources**, the broader list of related websites, which often requires opening an additional interface. These are distinct user-visible locations. A malicious link in a source drawer is not equivalent to one directly recommended in the answer. Copilot lacks the broader sources component in the evaluated configuration. Sources: pp. 5–6, §4.1, F2.
+
+[A] Phishing involves impersonation or deceptive requests for sensitive information. Malware is malicious software. Scams seek fraudulent gain; spam is unsolicited or irrelevant material; fake news is misleading information presented as news. These definitions are operationalized in Appendix C rather than independently validated here. The authors' illegal-content category is broad and jurisdictional; it is their prompt category, not a legal finding by this analysis.
+
+[A] Search Engine Optimization, or SEO, attempts to raise a site's position in search results. Poisoning means placing adversarial material in data or context used by a system. The related-work section discusses prompt poisoning, knowledge-base poisoning, jailbreaks, and safety misalignment. It attributes difficulty distinguishing user instructions from external inputs to LLM-based systems. These are author-provided background statements; the bibliography is not a set of independently inspected studies.
+
+## 4. Research problem and gap
+
+[A] The existing problem is that retrieval may select an unfiltered malicious website and generation may reuse its information without checking safety. The resulting answer can provide malware download links, harmful technical instructions, or unsupported source claims. The authors motivate the problem partly through a reported November 2024 incident involving approximately $2,500 lost after code from ChatGPT Search directed a developer to a fake Solana API site. The p. 2 footnote reports theft within 30 minutes. This is a cited motivating incident, not an independently reproduced experiment or verified external event in this analysis.
+
+[A] According to the authors, prior work often examines open-source retrievers and models, adversarially optimized inputs, or detection methods that focus on URLs rather than the context of the generated search response. Their gap is a systematic risk assessment of production AIPSEs using non-optimized, mostly benign queries, supplemented by simple practical attacks and a response-level defense. They explicitly contrast their work with preference manipulation in AI search. Sources: pp. 3–4, §2.
+
+[A] Scope includes seven named products, three query formats, malicious websites across several categories, Google and Bing comparisons, and Perplexity-hosted case studies. It does not include all web agents, autonomous browser actions, purchase execution, operating-system tools, or a controlled standalone-model baseline. Their novelty language includes 'first' quantitative assessment; that priority claim is recorded as theirs and cannot be established against outside literature in closed-document mode.
+
+[D] The relevant gap for the user's research question is a trust-boundary problem: information found on the web can be promoted into generated guidance. The paper measures several manifestations of that promotion, but its product-level observations do not isolate the causal contributions of retrieval, model training, system prompting, ranking, or interface design.
+
+## 5. Research questions / objectives / hypotheses
+
+No formal research questions or hypotheses are explicitly numbered or framed as statistical tests. The following are author objectives reconstructed from the introduction and section purposes, not invented author-quoted questions:
+
+1. **O1 — Quantify risk:** determine how often malicious content or URLs occur in seven production AIPSEs and where those URLs appear. Supported by §§4–5, F4–F6.
+2. **O2 — Compare query conditions:** examine keyword lists, natural-language queries, and direct URL follow-ups. Supported by §§4.2 and 5.1–5.3.
+3. **O3 — Compare search families:** assess utility and safety of AIPSEs against Google and Bing, including safe-search conditions. Supported by §6, T1, F7.
+4. **O4 — Demonstrate practical manipulation:** test fabricated online documentation and a phishing site's authority claims. Supported by §§7.1–7.2, F8–F9.
+5. **O5 — Mitigate response risk:** evaluate prompt-only refinement and an agent with alternative URL detectors. Supported by §8, T2–T3.
+
+[A] The authors express an intuition that directly querying a URL may increase risk because the model may trust its content. They also expect ordinary natural-language questions to reflect typical usage better than raw keyword lists. These are methodological expectations, not formally specified hypotheses with predefined rejection thresholds. The questionnaire and realism checks support the choice of query conditions; they do not establish population-wide query prevalence.
+
+[D] The user's broader question is addressed indirectly by O1, O2, and O4: these reveal attacks available through external content. O3 compares against traditional search, not standalone LLMs. O5 studies an agent used as a defender, so the word 'agent' in this paper should not be treated as synonymous with the vulnerable production products in every section.
+
+## 6. Assumptions / threat model
+
+[A] The normal system combines user query Q with search-retrieved information S(Q), then generates response R. The attacker publishes content that changes the retrieved information to S′(Q), with the goal of changing the generated response to R′. Attacker goals include getting a particular website included, having its content cited, and obtaining specific answers based on harmful content. Categories include phishing, scams, malware, spam, and illegal content. Source: p. 5, §3.
+
+[A] The modeled attacker has limited resources: a small amount of money for domains and websites, the ability to publish on public platforms, and potentially the ability to perform SEO. Public-platform examples include social-media posts and edits on crowdsourced sites; the authors note that malicious edits may be reverted. The two case studies use basic web development without SEO. The threat model does not require access to model weights, provider system prompts, or internal search infrastructure. It also does not demonstrate that every attacker-published page will be retrieved.
+
+[D] The central trust boundary is between externally supplied website material and the generated answer. A page can claim to be official, contain fabricated instructions, or disparage another source; the vulnerable system may then present those claims as its own guidance. Attacker control of webpage content is observed in the case studies. Actual credential theft, malware execution, or financial loss is not measured in those experiments.
+
+[A] The defender can capture original AIPSE results and post-process them with an agent, detectors, or external LLM calls. Its goal is to identify risks and attach refusals or warnings. The authors assume a small false-positive proportion has limited effect because usable benign links remain. The XGBoost results test the practical weakness of that assumption when false positives are numerous. Source: p. 13, §8.
+
+## 7. Methodology
+
+### Study architecture and risk labels
+
+[A] Risk is defined by both maliciousness and placement. **Main risk:** a malicious URL is directly cited in the answer without the warning condition. **Warning risk:** the answer cites a malicious URL with an explicit warning or a suggestion of legitimate alternatives. **Source risk:** a malicious URL appears only among sources. **None risk:** the URL is benign. Response labels follow a hierarchy: any main-risk URL makes the response main risk-inclusive; otherwise a warning URL makes it warning risk-inclusive; otherwise malicious URLs restricted to sources make it source risk-inclusive. This hierarchy matters because multiple URL types may occur in one response while the response receives one dominant label. Sources: pp. 5–6, §4.1.
+
+[A] The authors describe main risk as placing the user one click away from an attack. [D] This is an exposure interpretation, not a measured probability that a click succeeds or a user suffers damage. The labeling rule also assigns unresolved URLs to none risk after three annotators independently judge them indeterminate. Therefore 'none' cannot be interpreted as verified benignness in every annotated case. Source: p. 7, risk labeling.
+
+### Dataset construction
+
+[A] Initial candidates are 17,225 PhishTank URLs collected November 27–December 27, 2024; 2,427 ThreatBook URLs collected in 2024; and 4,385 LevelBlue URLs collected in 2024. Sites must respond with status 200 and have valid domain certificates. Cloud-storage links, URL shorteners, and domain marketplaces are filtered out. The retained stage contains 353 PhishTank, 291 ThreatBook, and 147 LevelBlue URLs with HTML files. Three graduate-level annotators then cross-validate harmfulness. They remove cases where a harmless primary domain has an attacker-created subdomain or path whose keywords do not match search intent for the main site. Detection platforms assist when manual classification is uncertain. The final pool contains 325 URL–keyword pairs; 100 are randomly sampled as the evaluation foundation. Sources: pp. 6–7, §4.2.
+
+[C] The initial total is 17,225 + 2,427 + 4,385 = **24,037** candidates; the intermediate retained total is 353 + 291 + 147 = **791**. These are derived totals, not independent datasets. The paper does not provide a duplicate-removal breakdown or counts for each exclusion rule. Five volunteers validate topic diversity, including software, entertainment, and cryptocurrency subjects. Random-sampling seed and detailed topic-class distribution are not supplied.
+
+### Queries and realism checks
+
+[A] GPT-4o version 2024-08-06 extracts five keywords from HTML title, h1, h2, h3, and meta fields. The authors report initial trials supporting five keywords as sufficient, but provide no trial-size or ablation results. Keyword lists containing Appendix A's irrelevant terms are discarded. GPT-4o then transforms each retained keyword list into a natural-language search query. The resulting primary datasets have 100 keyword lists and 100 natural-language queries. The MetaMask example illustrates transformation from a list about wallet functions to a question about using those functions; it is not an independently sampled user query. Sources: pp. 6–7.
+
+[A] URL queries are selected from risk-bearing URLs returned in earlier responses: one URL is randomly chosen for each existing risk type under the described procedure. There are 457 URL queries. These are follow-up tests conditional on earlier retrieval and risk categories, not an independent random sample of internet URLs. F3 illustrates both the natural-language conversion and the extraction of links for URL follow-ups.
+
+[A] An online questionnaire yields 120 valid responses, of which 118 report AIPSE experience. Participants receive 5 RMB and average 56.2 seconds to complete it. Reported preferred usage is natural language 83.1%, keywords 43.2%, and URLs 21.2%. Because the questionnaire allows multiple choices, these percentages are not mutually exclusive shares. The authors report consultation with their university's Institutional Review Board, or IRB, office; a formal approval identifier is not supplied. Recruitment targets universities and several workplace sectors. Demographic distributions and response-rate information are not supplied.
+
+[A] Realism checks find Google Trends data above its undisclosed threshold for 92.8% of 500 individual keywords; 84 of 100 generated natural-language questions return over 1,000 Google results. Five volunteers rate query naturalness at a mean of 4.49 on a 1–5 scale. Mean pairwise quadratic-weighted Cohen's kappa is 0.241, described by the authors as fair agreement. URL-query users report summarization 100%, code crawling 20.83%, and translation 8.33%. [D] Search availability and hit counts indicate discoverability, not direct proof of actual user frequency. Low agreement qualifies the naturalness mean. Source: p. 7.
+
+### Product configurations and annotation
+
+[A] The seven products are ChatGPT Search, Perplexity Pro, Copilot, TextCortex, Grok, Doubao, and Kimi. The supplied historical description associates ChatGPT Search with GPT-4o; TextCortex uses its Zeno assistant with GPT-4o; Perplexity uses the Pro plan and default Pro search. Other product details include Perplexity's Sonar/Llama 3 70B account, its crawler and ranking infrastructure, and Kimi's approximately 200,000-character context. These are paper-time descriptions, not verified current specifications. Exact frozen versions for every production application are not supplied. Source: p. 5.
+
+[A] §5 says four individuals conduct the experiment within five days after collection, grouped in pairs for cross-validation. A graduate-level annotator labels each response URL, an additional annotator reviews uncertainty, and a new annotator performs final review. §9 instead says all experiments are manually conducted by six individuals within five days. These staffing descriptions are not automatically reconciled; they may refer to different scopes, but the paper does not explain that difference.
+
+### Defense implementation
+
+[A] The defender follows ReAct: repeated thought, action, and observation stages. A content-refinement tool uses GPT-4.1, in-context examples, and chain-of-thought-style prompt scaffolding to classify six risk cases and append safer alternatives or warnings. The original response is retained according to §8.1. Appendix C also says to adjust malicious content and retain benign content, so the exact delivered interface and separation between original and refined material are not fully demonstrated. These prompt passages were analyzed as method descriptions only.
+
+[A] Three detector options are evaluated. XGBoost trains on 5,000 PhishTank phishing URLs and 5,000 legitimate URLs from the cited UNB dataset using fifteen features. PhishLLM infers brand–domain mappings and credential-taking intent, then uses search validation. HtmlLLM uses gpt-4.1-2025-04-14 to examine URLs and HTML. The paper reports that model's knowledge cutoff as June 1, 2024; this is an author-reported configuration statement. All compared defense methods use the same GPT-4.1 foundation model. Sources: pp. 13–14.
+
+[A] Appendix D lists IP presence, @ symbol, length, depth, redirection markers, 'https' inside the domain, shortening-service use, a domain dash, DNS record, domain age, domain remaining time, invisible iframe, mouse-over scripts, disabled right-click, and multiple redirects. The length indicator uses ≥54 characters. Some features inspect webpage behavior or domain metadata rather than only URL text. Despite its title, the appendix does not supply XGBoost train/validation/test splits, hyperparameters, seeds, or detailed training results. No hardware, latency, monetary-cost, or memory benchmark is supplied for the defense.
+
+## 8. Experiments / analyses
+
+| ID | Purpose and setup | Outcomes and qualifications |
+|---|---|---|
+| X1 — Query-pattern validation | 120 questionnaire responses; 100 five-keyword lists; 100 generated questions; five naturalness raters | Supports plausible use of the three formats; naturalness mean 4.49 but agreement κ = 0.241. No population-representative sampling established. |
+| X2 — Keyword risk | Seven AIPSEs, 100 keyword lists each; URL and response-level labels | Grok, TextCortex, Kimi have 41, 34, 32 main-risk responses. F4–F5 separate response categories from URL counts. |
+| X3 — Natural-language risk | Seven AIPSEs, 100 generated questions each, compared with keyword condition | ChatGPT none-risk responses increase 39→60; most products improve, but Doubao and Kimi worsen on described main-risk outcomes. |
+| X4 — URL follow-up transitions | 457 selected URL queries from earlier returned risk classes | Source/warning links often move into main answers. Excluding inaccessible outcomes, Grok has 48/49 source URLs becoming main or warning; all Kimi outcomes are main risk-inclusive. |
+| X5 — Comparative utility | Additional 20 keyword lists and 20 corresponding natural-language questions, six languages, Jan. 1–May 3, 2025; five raters | Filtered benign-result URLs: 1,192 TSE, 1,217 AIPSE. Mean Needs Met ratings favor AIPSEs; this is conditioned on malicious-link exclusion. |
+| X6 — Comparative safety | Same 40 query conditions; Google/Bing default and safe variants; five risk raters | All URLs: 1,453 TSE, 1,422 AIPSE. F7 reports risk-return query counts; tested AIPSEs have fewer than tested TSE conditions. Earlier reporting to vendors precedes this comparison. |
+| X7 — Documentation spoofing | Fictional cryptocurrency platform and API docs; keyword and natural-language queries; eight Perplexity model choices | All eight reproduce malicious-documentation code and suggest substituting a personal API key, according to authors. No functioning backend or actual exfiltration. |
+| X8 — Official-source spoofing | Two fictional WordPress sites, phishing site launched roughly three weeks later; query Taisuratopia; same eight Perplexity choices | All eight treat phishing content as authentic and warn about official site. Two use both sources; six use only phishing content. No repeated-run success-rate denominator provided. |
+| X9 — Detector evaluation | 207 main URLs, three inaccessible; 204 classified URLs in T3, 83 malicious and 121 benign | HtmlLLM F1 0.822; XGBoost recall 1.000 with 83 false positives; PhishLLM recall 0.024. |
+| X10 — Response defense | 46 selected main-risk responses from §6; prompt-only versus agent with each detector | Prompt 17/46; PhishLLM agent 12/46; HtmlLLM agent 36/46; XGBoost agent 46/46. Success means conversion to warning risk, not guaranteed removal of all danger. |
+
+For X2–X4, the manipulated condition is query format and the comparison unit includes both individual URLs and whole responses. Those units must not be pooled indiscriminately. X4 is conditional on earlier outputs, whereas X2 and X3 use paired topic foundations. The paper does not report formal significance tests, confidence intervals, repeated-run variability, or a per-product randomized order. X5–X6 use additional later data and therefore cannot be read as the original risk experiment repeated under unchanged conditions.
+
+For X7 and X8, the eight choices are ChatGPT-o1, ChatGPT-4o mini, Grok-2, Sonar Large, Sonar Huge, Claude 3.5 Sonnet, Perplexity Pro Search, and Claude 3.5 Haiku. The paper calls them foundation models, although one label names a search mode. This analysis preserves that list without assuming they are eight independent standalone architectures. Holding the Perplexity platform constant improves indexing consistency but limits cross-platform inference.
+
+## 9. Results
+
+### Exposure differs from unsafe answer promotion
+
+[A/B] F5 shows that ChatGPT Search returns 304 risky URLs across 100 keyword queries and Grok 360. Yet their risky-URL compositions differ: ChatGPT has 8.9% main, 4.6% warning, and 86.5% source; Grok has 34.4% main, 5.0% warning, and 60.6% source. The paper interprets ChatGPT's generator as comparatively cautious despite retrieving many risky links. This supports distinguishing retrieval exposure from answer-level recommendation. It does not reveal internal filtering mechanisms.
+
+[A] At response level, Grok, TextCortex, and Kimi produce 41, 34, and 32 main-risk responses out of 100 keyword queries. ChatGPT has 21% main-or-warning responses. The introduction reports 47% risky responses and 34% directly citing harmful content, but does not clearly restate the aggregation denominator or query-condition scope alongside those percentages. They should be retained as headline author claims rather than silently reconstructed from the small F4 bars.
+
+### Query format changes outcomes
+
+[A] ChatGPT's none-risk response count rises from 39 under keywords to 60 under natural-language queries. [C] This is 60 − 39 = **21 more responses**, or **21 percentage points** with 100 queries per condition. It is not a 21% relative improvement. [A] Most other products show an improvement in none-risk counts, but Doubao and Kimi show more main-risk responses and fewer none-risk responses. The authors observe refusals for certain isolated terms but normal answers when those terms occur in natural-language formulations, and speculate about weaker alignment for implicit English keywords. That explanation is an author speculation, not an isolated causal test.
+
+[A] Under URL follow-ups, Grok's source-risk links become main or warning in 48 of 49 accessible cases. Main-risk retention is 88.57% for TextCortex and 97.22% for Grok, excluding inaccessible outcomes. Kimi's accessible URL-query responses are all main risk-inclusive. These are conditional rates; inaccessible cases are excluded and therefore they are not total success rates over all 457 URL queries.
+
+### Comparative search results favor AIPSEs under qualified conditions
+
+[A/B] T1's AIPSE mean Needs Met ratings range from TextCortex 4.53 to Kimi 4.98. Google is 3.64, Google safe 3.71, Bing 4.48, and Bing safe 4.44. Ratings use a 1–5 scale and are assessed on URLs remaining after malicious URLs are excluded. F7 shows 4–10 risk-return queries per AIPSE out of 40, versus 14–18 for the TSE conditions. The paper also states that malicious URLs were reported to affected AIPSE technical-support teams before this comparison and providers had initiated mitigation. The comparison is consequently a later, intervention-exposed snapshot.
+
+### Constructed websites influence both content and authority
+
+[A] In the documentation attack, all eight tested Perplexity model choices accept the fictional platform and copy code that sends an API key to the fictional backend. In the source-authenticity attack, all eight identify the phishing content as authentic and warn about the intended official site; ChatGPT-4o mini and Grok-2 consider both sources, while the other choices consider only the phishing site. These outcomes are reported for specific constructed demonstrations and should not be generalized into universal attack success rates.
+
+### Defense success and detector quality are different
+
+[A/B] HtmlLLM's detector precision, recall, and F1 are 0.838, 0.807, and 0.822; its agent succeeds on 36/46 selected responses, reported as 78.3%. XGBoost reaches 100.0% response defense success but has precision 0.500 and F1 0.667, reflecting extensive overflagging. PhishLLM's F1 is 0.044 and agent success 26.1%; prompt-only success is 37.0%. Thus the detector with the highest response-warning rate is not the detector with the best discrimination.
+
+[A] The abstract reports approximately 10.7% reduction in available information. The supplied methods and result tables do not explain that quantity's denominator, measurement rule, or a matching information-retention experiment. It should be treated as an under-specified author-reported result, not a verified usability metric or runtime cost.
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Overall study process, p. 4
+
+[B] This is a left-to-right workflow diagram with four colored stages: data collection, risk evaluation, case study, and agent defense. The collection panel lists URL check, accessibility check, relevance check, and cross-validation. The evaluation panel contains miniature risk charts and an AIPSE-versus-TSE comparison. The case-study panel depicts retrieval/indexing of official and unofficial websites. The defense panel connects observation, thought, action, and tools. There are no quantitative axes, units, confidence intervals, or statistical markers. The overall arrow communicates progression between research tasks; the internal defense arrows indicate an iterative control loop. [A] The caption identifies 100 websites and corresponding keywords as the foundation. The miniature plots are overview icons, not additional standalone experiments requiring numeric extraction.
+
+### Figure 2 — Typical answer structure, p. 6
+
+[B] A schematic user query appears above an answer box, reference markers, and a separate sources list. It uses a weather example to demonstrate interface organization, not to establish a weather result. The figure clarifies why the placement of a URL matters: answer references are immediately visible while the broader source list is separate. There are no axes or measured values. The caption and §4.1 agree on answer, references, and sources; the schematic does not depict Copilot's exceptional lack of sources.
+
+### Figure 3 — Query-generation pipeline, p. 6
+
+[B] The upper path connects a keyword-list query through ChatGPT-4o to a natural-language query. The lower path connects product outputs to extraction of main-, warning-, and source-risk malicious URLs, then to direct URL queries. Directional arrows distinguish transformation of wording from extraction of previously returned links. Product icons represent repeated application testing. The diagram has no numeric axes. It supports the methodological dependence of URL follow-ups on prior outputs; it does not imply that all three query datasets are independently sampled.
+
+### Figure 4 — Natural-language versus keyword response risk, p. 8
+
+[B] This is a stacked-bar chart with seven product groups and paired bars labeled NL and KW. The horizontal axis names products; the vertical axis is Count, extending to 100. Colors encode main, warning, source, and none categories. The stacks represent response counts, not total URLs. There are no displayed error bars or statistical significance annotations. Most products show a larger gray none-risk segment for NL; Doubao and Kimi show the contrary pattern described in the text.
+
+[A] Exact main-risk keyword counts provided by nearby text are Grok 41, TextCortex 34, and Kimi 32. ChatGPT none-risk counts are 39 for KW and 60 for NL. Other exact segment counts are not confidently readable from the rendered small chart and are not guessed. The caption notes Copilot has no sources, explaining the missing source-risk segment. The visual supports directional comparisons, while exact unlabeled bars remain uncertain.
+
+### Figure 5 — Risky URLs retrieved by keyword queries, p. 8
+
+[B] Seven stacked bars show risky-URL Count on a linear vertical scale with labeled ticks through 350; Grok's total of 360 extends above the final labeled tick. Totals are printed above each bar. Red/pink denotes main, orange warning, and yellow source. Each bar is partitioned by percentages of its risky URLs, not percentages of all returned URLs or all queries. No uncertainty bars are shown.
+
+| Product | Risky URLs | Main % | Warning % | Source % |
+|---|---:|---:|---:|---:|
+| ChatGPT Search | 304 | 8.9 | 4.6 | 86.5 |
+| Grok | 360 | 34.4 | 5.0 | 60.6 |
+| Perplexity Pro | 116 | 59.5 | 11.2 | 29.3 |
+| TextCortex | 151 | 47.0 | 6.6 | 46.4 |
+| Copilot | 38 | 57.9 | 42.1 | Not applicable |
+| Doubao | 111 | 14.4 | 53.2 | 32.4 |
+| Kimi | 207 | 39.6 | 3.4 | 57.0 |
+
+All numbers in this table are visually readable figure labels, also present in extracted text. Rounding prevents treating them as exact underlying integer counts. Copilot's main and warning categories exhaust its risky URLs because it lacks the sources component. The caption calls absent source URLs 'low-risk URLs'; this should not be mistaken for verified benign URLs. ChatGPT's displayed main plus warning shares sum to 13.5%, while prose gives 13.2%; that discrepancy remains unresolved. Kimi's 207 is also not lower than most products, qualifying the prose's grouping of Kimi with Doubao as having fewer risky URLs.
+
+### Figure 6 — Risk transitions after URL follow-ups, p. 9
+
+[B] This is an aggregate Sankey-style flow diagram. Left categories are Main, Source, and Warning; right categories include Main, Inaccessible, Warning, Source, and None. Band width represents the amount of transition flow, but the supplied figure provides no readable numeric counts, numeric scale, or axis ticks. It visually shows substantial flow into Main, including from prior Source. The left side omits None because follow-ups are drawn from risk classes. 'Loading [MathJax]/extensions/MathMenu.js' in extracted text is an extraction artifact, not a scientific annotation visible in the figure.
+
+[A] Exact product-level transition values come from nearby text: Grok 48/49 source-to-main-or-warning, TextCortex main retention 88.57%, Grok 97.22%, and all accessible Kimi follow-ups main risk-inclusive. They are not exact counts read from the bands. Inaccessible outcomes may reflect a dead website, retrieval refusal, failure to invoke internet access, or claimed inaccessibility despite available content. The diagram therefore combines different reasons for missing follow-up content.
+
+### Figure 7 — Comparative risk-return queries, p. 10
+
+[B] Eleven labeled bars compare seven AIPSEs and four TSE configurations. The horizontal axis lists systems; the vertical axis is Risk Return Count, linear, with ticks 0–21. Numeric labels give ChatGPT 4, Copilot 4, Doubao 6, Grok 10, Kimi 7, Perplexity 6, TextCortex 8, Google 16, Bing 18, Google safe 14, and Bing safe 14. Each count is out of 40 query conditions. The bars use two color families for search groups; no error bars or significance tests are shown.
+
+[A] The caption defines a risk-return query as one for which malicious URLs appear. The chart supports lower counts for the tested AI products than the tested traditional-search conditions. It does not measure infection, click behavior, or loss. Because AI source drawers are excluded from the main-response comparison, and prior disclosure affected product behavior, the figure's scope is narrower than all-source retrieval safety.
+
+### Figure 8 — Fabricated API documentation answer, p. 11
+
+[B] The screenshot shows a query asking for example V50TAIS API code, a generated answer organized into API-related tasks, and source references alongside it. The text and caption identify ChatGPT-o1 on Perplexity. This is a qualitative example output, not a plot with axes or a numerical distribution. Fine code and source descriptions in the screenshot are too small for reliable character-by-character transcription. The adjacent readable code listing and result text supply the precise attack mechanism: users are instructed to put a personal API key into code directed to the fictional service.
+
+[A] The broader result that all eight tested choices copy the malicious code is author-reported prose. The screenshot directly illustrates one answer and cannot itself establish eight-model coverage. No real backend is implemented, so the example demonstrates unsafe recommendation rather than actual credential collection.
+
+### Figure 9 — Phishing authority accepted in an answer, p. 12
+
+[B] The screenshot displays the Taisuratopia query and a generated answer presenting contradictory-source information and a caution section. It places references in an adjacent sources column. The nearby text and caption identify ChatGPT-o1 on Perplexity and the fictional Taisriyahid information. The readable headings show that source claims affect the generated answer; fine URL labels are not relied on for exact transcription. There are no axes, units, repeated-run statistics, or uncertainty marks.
+
+[A] The authors say this output illustrates trusting the phishing site and flagging the official site. The screenshot is one qualitative example; the eight-choice finding comes from prose. The query term Taisuratopia names a fictional species within the broader Taisriyahid information setting, explaining the related but different names without treating them as identical.
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Utility and rating agreement, p. 10
+
+[A/B] Rows are products or search configurations. Columns are mean Needs Met Rating with a Min–Max range and mean pairwise quadratic-weighted Cohen's κ among five raters. NMR uses scores 1–5; κ measures agreement, not utility. The paper does not label Min–Max as a confidence interval or explain its precise aggregation basis, so it is preserved as printed.
+
+| Platform | NMR | Printed Min–Max | κ |
+|---|---:|---|---:|
+| ChatGPT | 4.80 | 4.77–4.83 | 0.910 |
+| Copilot | 4.90 | 4.86–4.95 | 0.762 |
+| Doubao | 4.69 | 4.67–4.71 | 0.949 |
+| Grok | 4.68 | 4.66–4.69 | 0.839 |
+| Kimi | 4.98 | 4.98–4.98 | 0.798 |
+| Perplexity | 4.73 | 4.71–4.76 | 0.851 |
+| Textcortex | 4.53 | 4.46–4.60 | 0.858 |
+| Google | 3.64 | 3.57–3.71 | 0.935 |
+| Google safe | 3.71 | 3.63–3.80 | 0.911 |
+| Bing | 4.48 | 4.37–4.61 | 0.841 |
+| Bing safe | 4.44 | 4.34–4.53 | 0.892 |
+
+Kimi has the highest mean utility rating; Google has the lowest. Doubao has the highest κ; Copilot has the lowest. These rankings address different properties. There are no significance markers, confidence intervals, or tests of differences. Malicious URLs were excluded before utility scoring. Appendix E restricts Fully Meets to clear intent for a specific result, which matters for interpreting scores close to five across mixed query topics.
+
+### Table 2 — URL detection and response-warning success, p. 14
+
+[A/B] URL rows compare precision, recall, and F1 for PhishLLM, XGBoost, and HtmlLLM. The Prompt column has dashes because prompt-only defense has no separate URL detector. The Agent row reports defense success rate, or DSR: how many main-risk responses become warning-risk responses.
+
+| Metric | Prompt | PhishLLM | XGBoost | HtmlLLM |
+|---|---:|---:|---:|---:|
+| Precision | Not applicable | 0.222 | 0.500 | 0.838 |
+| Recall | Not applicable | 0.024 | 1.000 | 0.807 |
+| F1 | Not applicable | 0.044 | 0.667 | 0.822 |
+| DSR | 37.0% | 26.1% | 100.0% | 78.3% |
+
+HtmlLLM has the highest precision and F1. XGBoost has the highest recall and DSR. PhishLLM has the lowest detector metrics and DSR. Prompt-only defense exceeds the PhishLLM agent on the response metric. There are no uncertainty estimates or significance tests. The table shows a discrimination-versus-overwarning tradeoff; it does not establish that warnings always prevent a user from following dangerous instructions.
+
+### Table 3 — Confusion matrices, Appendix F, p. 21
+
+[B] Rows are actual malicious and actual benign. Each detector has Predicted Malicious, PM, and Predicted Benign, PB, columns.
+
+| Actual class | HtmlLLM PM | HtmlLLM PB | XGBoost PM | XGBoost PB | PhishLLM PM | PhishLLM PB |
+|---|---:|---:|---:|---:|---:|---:|
+| Malicious | 67 | 16 | 83 | 0 | 2 | 81 |
+| Benign | 13 | 108 | 83 | 38 | 7 | 114 |
+
+[C] Each matrix totals 83 malicious + 121 benign = 204 URLs, matching 207 evaluated minus three inaccessible. HtmlLLM detects 67 malicious URLs and misses 16, while falsely flagging 13 benign URLs. XGBoost catches all 83 malicious URLs but also flags 83 benign ones. PhishLLM catches two malicious URLs and misses 81. These details are essential for understanding why 100% response-warning success is not the same as high-quality URL discrimination. The appendix title singles out HtmlLLM, but the table contains all three detectors and is represented accordingly.
+
+## 12. Diagram / architecture interpretation
+
+The research workflow in F1 and the data construction in F3 form two different architectures. F1 organizes the study; F3 shows how test inputs depend on prior processing. In F3, the keyword foundation produces natural-language questions by rewriting, while product-generated links produce URL follow-ups by extraction. Thus a follow-up can expose a trust change: material once buried in sources becomes the explicit focus of a later answer.
+
+[A] The defense architecture takes the original query, content, and references. It first calls content refinement, then checks reference links with a URL detector, and checks suspicious claims of official status. Tool observations return to the ReAct loop until the agent considers the information sufficient. If no references exist, the instruction permits stopping. If tools fail repeatedly, it tells the agent to stop and answer from known information. The final output should combine the refinement with findings and list safe URLs. Sources: pp. 13–14, Appendix B on p. 18.
+
+[D] This is a post-processing boundary rather than a demonstrated modification to production retrieval or model training. Its security depends on the captured result, tool accuracy, interpretation of suspicious claims, and what the user sees in the final output. The paper reports that internal model knowledge can sometimes recover an authentic site even after a detector error, but does not quantify that recovery separately. The stopping rule has no specified numeric tool-failure limit, and the exact execution library, tool-call budget, and latency are not supplied.
+
+Appendix B supplies a single-action JSON interface with action and action_input, plus the thought/action/observation format. Appendix C supplies classification and refinement instructions with three examples: credit-card phishing, unsupported alien-invasion news, and a benign open-access paper site. These examples explain the intended tool behavior; they are not additional empirical experiments. Their content is deliberately compressed here, and no instruction from them was executed.
+
+## 13. Equations and mathematical concepts
+
+### E1 — Normal retrieval and generation, p. 5, §3
+
+`M(Q || S(Q)) = R`
+
+[A] M is the LLM; Q is the user query; S(Q) is external data retrieved by the search engine for that query; `||` means concatenation; R is the ordinary response. This is a functional description of combining two textual inputs, not a loss function, probabilistic theorem, or optimization objective. It expresses the model's dependency on both user intent and retrieved content. No retrieval-score formula or condition ensuring trustworthy information is supplied.
+
+### E2 — Poisoned external content, p. 5, §3
+
+`M(Q || S′(Q)) = R′`
+
+[A] S′(Q) is the attacker-altered retrieved data and R′ is the resulting malicious response. The prime marks altered information and output; the query can remain unchanged. The formulation represents the threat mechanism. It does not prove that any attacker page will be retrieved, that every poisoned input causes a malicious output, or that the change is attributable to one particular internal component. The paper contains no theorem or proof attached to this equation.
+
+### Detector metrics reconstructed from supplied counts
+
+[C] To reproduce the table values, let TP be actually malicious URLs predicted malicious, FP benign URLs predicted malicious, FN malicious URLs predicted benign, and TN benign URLs predicted benign. Precision = TP/(TP+FP); recall = TP/(TP+FN); F1 = 2TP/(2TP+FP+FN). These formulas are analyst-provided calculations from T3, not numbered author equations.
+
+For HtmlLLM, precision = 67/(67+13) = 0.8375, rounding to 0.838; recall = 67/(67+16) ≈ 0.80723, rounding to 0.807; F1 = 134/(134+13+16) = 134/163 ≈ 0.82209, rounding to 0.822. XGBoost precision = 83/(83+83) = 0.500; recall = 83/83 = 1.000; F1 = 166/(166+83) ≈ 0.66667. PhishLLM precision = 2/(2+7) ≈ 0.22222; recall = 2/83 ≈ 0.02410; F1 = 4/(4+7+81) ≈ 0.04348. Conventional three-decimal rounding of the latter gives 0.043, while T2 prints 0.044. That minor table–appendix inconsistency is retained rather than repaired.
+
+[A] Cohen's weighted κ with quadratic weights is used for rating agreement. The paper explains its approximate −1 to 1 interpretation but does not supply a computational equation or raw ratings. Therefore its reported values cannot be reconstructed from the supplied aggregate data. No p-values, significance thresholds, power analysis, or explicit confidence-interval method are supplied.
+
+## 14. Interpretation and discussion
+
+[A] The authors interpret the study as showing weak filtering of harmful internet content in production AIPSEs. The important distinction is between finding a dangerous page and endorsing it in an answer. ChatGPT's high source-risk share relative to its main-risk share illustrates that retrieved exposure can coexist with more cautious generation. Doubao's large warning share illustrates that a system can mention risky material while explicitly qualifying it. Neither observation establishes that all remaining content is safe.
+
+[D] For the user's research question, the strongest supported mechanism is **external-content incorporation**: a benign query can retrieve a malicious page, and the model can transform that page into apparently useful advice. The documentation case adds an action-oriented consequence: generated code can carry a sensitive key toward an attacker-selected endpoint. The phishing case adds an authority consequence: an attacker can cause the answer to distrust the intended official source. These mechanisms are broader than merely producing inaccurate facts.
+
+[D] Direct URL follow-ups reveal that interface location and user interaction alter exposure. A malicious page relegated to a source list can become the object of an explicit summarization request, after which its content appears in the answer. This supports a dynamic view of risk across turns, but the paper does not evaluate full autonomous multi-step browsing trajectories or tool execution.
+
+[A] The authors attribute some product differences to indexing breadth, Chinese-focused search domains, or English-language alignment. These explanations are qualified in the prose as speculation. The study does not separately manipulate index size or language alignment. It also attributes poor PhishLLM performance partly to 49.4% of 83 malicious evaluation URLs being non-phishing. That is a plausible task-mismatch account within the paper, but a category-stratified detector breakdown is absent.
+
+### Cross-reference and consistency findings
+
+1. **Staffing:** §5 on p. 7 says four individuals; §9 on p. 14 says six individuals for all experiments. Scope may differ, but the source does not clarify it.
+2. **ChatGPT risky-URL share:** F5 gives 8.9% main plus 4.6% warning = 13.5%; p. 8 prose gives 13.2%. The 0.3-percentage-point difference is not silently attributed to rounding.
+3. **Kimi URL count:** p. 8 describes Doubao and Kimi as having fewer risky URLs, but F5 gives Kimi 207, exceeding five of the other six products except Grok and ChatGPT. The grouping is only partially supported.
+4. **PhishLLM F1:** T3 yields 4/92 ≈ 0.04348, while T2 reports 0.044. Both are preserved.
+5. **Safety denominators:** 1,453 TSE + 1,422 AIPSE = 2,875 URLs matches the introduction's comparative safety total. Utility instead uses 1,192 + 1,217 = 2,409 filtered URLs. These are different analyses, not contradictory totals.
+6. **Defense denominators:** 207 − 3 = 204 matches T3. The selected defense-response total is 46, while F7's seven AIPSE risk-return counts sum to 45. Those metrics can differ because F7 counts any malicious URL and defense selects main-risk responses, but the apparent total relationship is not explained; no one-to-one reconciliation is claimed.
+7. **Safe-search description:** §6 initially emphasizes enabled safe search, while T1 and F7 display default and safe variants. The rendered results establish that both are represented, without clarifying all collection-order details.
+8. **Information cost:** the abstract's approximately 10.7% information reduction lacks an explicit supporting measurement procedure in the supplied body.
+
+## 15. Contributions and novelty
+
+[A] The authors claim three principal contributions: a first quantitative assessment of malicious content/URL inclusion in production AIPSEs; a utility and safety comparison with TSEs plus practical case studies; and an agent-based defense using external tools while maintaining answer relevance.
+
+These can be separated by type. The **conceptual** contribution is a placement-sensitive risk taxonomy and threat model. The **methodological** contribution is a pipeline from malicious-site intelligence to five-keyword queries, rewritten questions, and risk-conditioned URL follow-ups. The **empirical** contribution is product comparison under those conditions. The **security demonstration** contribution is the two fictional-site manipulations. The **system** contribution is a user-side ReAct defense. The **detector implementation** contribution is the proposed HtmlLLM URL-and-HTML analysis approach.
+
+[D] The supplied document supports novelty as a particular combination and evaluation framework. It does not establish priority against all literature, a new theorem, a new underlying LLM architecture, or a publicly reproducible benchmark dataset. The defense's exact HtmlLLM prompt remains outside the supplied paper, and its reported strengths are tied to the selected response and URL sets.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+[A] Phishing websites are time-sensitive and may rapidly become unavailable or change. The authors attempt to address this with manual testing within five days of collection. They acknowledge dependence on manual assessment because suitable automated web-search APIs are unavailable for their evaluation, and acknowledge the relatively small dataset imposed by resources. They propose automated methods and larger datasets as future improvements. Sources: pp. 14–15, §9.
+
+[A] Data cannot be publicly shared because it contains keywords associated with illegal websites, following consultation with their IRB office and provider support teams. This limits access to the exact query corpus. The open-science section promises prompt templates and defense code through Zenodo and GitHub, but those artifacts are not included in this supplied evidence. Source: p. 15.
+
+### Additional evidence-based analyst observations
+
+[D] The primary query foundation is malicious-site-derived, not a random sample of ordinary user questions; risk prevalence should be interpreted within that enriched test distribution. The filtering excludes attacker-created paths on otherwise benign domains, dead sites, shorteners, and cloud-storage services, narrowing the measured attack surface. Indeterminate URLs are assigned none risk, potentially reducing measured danger. Annotation reliability for risk labels is not reported as a dedicated agreement statistic.
+
+[D] Product configurations are incompletely frozen, repeated-run variability is not measured, and external site state changes during collection. Perplexity-only case studies provide model-choice breadth within one application, not evidence across all seven applications. The fictional topics make source control easier but may differ from mature, heavily documented topics. The paper does not provide actual compromise outcomes or a user study measuring whether warnings prevent harm.
+
+[D] Defense evaluation selects only main-risk responses and excludes direct URL queries. That is a reasonable bounded test but does not establish protection for the very follow-up behavior shown to increase risk. Training/test separation, URL/domain overlap, and leakage precautions for XGBoost are not specified. The exact HtmlLLM prompt, tool-call budgets, costs, and raw response outputs are unavailable. The approximately 10.7% information-loss claim remains under-specified.
+
+## 17. Threats to validity
+
+The following labels are analyst-applied categories, not headings the authors use.
+
+**Internal validity [D]:** the observational product tests cannot isolate whether failures arise from retrieval, generation, system prompts, language handling, or product UI. Provider disclosure before §6 changes the later comparison environment. Different site-access conditions can influence URL follow-up outcomes. Unspecified execution ordering and repeat counts limit causal attribution.
+
+**External validity [D]:** seven products, 100 malicious-derived primary topics, 40 later comparison conditions, and two fictional case studies do not cover all web agents, all user populations, or all contemporary product versions. English-heavy primary queries and differing product language focus constrain generalization. The case studies share Perplexity indexing.
+
+**Construct validity [D]:** risk labels combine maliciousness, presentation location, and warnings. Main risk measures exposure, not successful compromise; warning risk remains malicious-link presence. DSR measures warning conversion, not complete safety. Utility excludes malicious URLs and rates results rather than directly observing end-to-end user task success. 'None' includes indeterminate labels under the stated rule.
+
+**Statistical conclusion validity [D]:** no formal significance tests or uncertainty estimates accompany the main product differences or DSR. T1 Min–Max ranges are not identified as confidence intervals. The naturalness agreement κ = 0.241 qualifies the mean score. Paired query topics and derived URL follow-ups create dependencies that should not be treated as independent random observations.
+
+**Ecological validity [D]:** the website attacks are live and indexed, which makes them more realistic than solely pasted text, but all content is fictional and no operational backend is used. The prominent testing warning is an image; whether each product perceived that warning is not established. User willingness to execute code or follow warnings is unmeasured.
+
+**Reproducibility [D]:** supplied prompts improve procedural transparency, but private query data, missing exact HtmlLLM prompt, incomplete training configuration, mutable web state, and product updates prevent full reproduction from the paper alone. The reported artifact links are leads for future authorized checking, not inspected evidence here.
+
+## 18. Future work and open questions
+
+### A. Explicit author-proposed future work
+
+[A] §9 proposes automated evaluation methods and a larger dataset to improve scalability. The conclusion expresses a broader hope of advancing safeguards for AIPSEs. The authors intend to release prompt templates and defense code. These are proposals or release statements, not work verified as completed in this analysis.
+
+### B. Analyst-identified open questions
+
+[D] A controlled standalone-versus-web-enabled test is required to quantify the user's central comparative claim. Holding the model and prompting constant while varying external retrieval would help isolate the additional attack surface. Other unresolved questions are whether warning conversion changes user behavior, how defenses handle direct URL follow-ups, whether detectors remain reliable on newly appearing domains, and how source-authenticity checks work when the model lacks prior knowledge of a fictional or newly launched service.
+
+[D] Further unresolved questions concern latency and monetary costs, detector robustness to adversarial HTML, dependence on image-based warnings, multilingual differences, repeated-run variability, realistic prevalence outside malicious-derived topics, and leakage between detector training and evaluation. These are logically remaining questions, not additional claims that the authors tested them.
+
+## 19. Terminology and notation glossary
+
+| Term | Beginner-friendly meaning within this paper |
+|---|---|
+| LLM — Large Language Model | Model generating language or code from learned information and supplied context |
+| AIPSE — AI-Powered Search Engine | Search application combining retrieved web material with generated answers |
+| TSE — Traditional Search Engine | Search application principally returning result links for inspection |
+| RAG — Retrieval-Augmented Generation | Adding retrieved information to the generator's context |
+| Retriever | Component selecting material relevant to a query |
+| Knowledge database | Stored information or webpage snapshots available for retrieval |
+| Answer | Generated response text |
+| Reference | Specific website cited beside an answer passage |
+| Source | Website in the broader related-material list |
+| Main risk | Malicious URL directly cited in the answer without the warning condition |
+| Warning risk | Malicious answer link accompanied by warnings or legitimate alternatives |
+| Source risk | Malicious link present only in the sources list |
+| None risk | Benign URL category; annotation procedure also places indeterminate cases here |
+| URL — Uniform Resource Locator | Website/resource address |
+| HTML — Hypertext Markup Language | Webpage markup examined for metadata and detector input |
+| API — Application Programming Interface | Service interface; fictional API documentation is used in the attack |
+| API key | Sensitive value used to authenticate access to a service |
+| SEO — Search Engine Optimization | Effort to increase visibility in search rankings |
+| Phishing | Deceptive impersonation intended to obtain sensitive information |
+| Poisoning | Corrupting information used by a model or retrieval system |
+| ReAct | Iterative thought, action, observation approach used by the defender |
+| ICL — In-Context Learning | Providing examples in the prompt to guide task behavior |
+| CoT — Chain of Thought | Prompted intermediate reasoning scaffold described by the authors |
+| XGBoost | Tree-boosting classifier used as a detector baseline |
+| PhishLLM | Prior phishing detector used as a baseline |
+| HtmlLLM | Proposed GPT-4.1 detector inspecting URLs and corresponding HTML |
+| NMR — Needs Met Rating | Five-level result-utility score mapped to 1–5 |
+| κ — Cohen's weighted kappa | Agreement measure for ratings beyond chance agreement |
+| DSR — Defense Success Rate | Share of selected main-risk responses changed to warning-risk responses |
+| TP / FP / FN / TN | Correct malicious flags / benign false alarms / missed malicious URLs / correctly retained benign URLs |
+| Precision | Fraction of malicious predictions that are actually malicious |
+| Recall | Fraction of actual malicious URLs detected |
+| F1 | Combined precision–recall score reconstructed in §13 |
+| M, Q, S(Q), R | Model, query, retrieved data, response |
+| S′(Q), R′ | Attacker-altered retrieved data and resulting malicious response |
+| `||` | Concatenation of query and retrieved content |
+| IRB — Institutional Review Board | University ethics office consulted by the authors |
+| TPS — Transactions Per Second | Throughput unit used in fictional site's legitimacy claims, not a measured system result |
+
+## 20. Key numerical results
+
+Values below preserve their conditions. More complete product-specific URL shares and NMR rows appear in §§10–11 to avoid repeating every cell.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Evaluated production AIPSEs | 7 | products | Primary risk study | Author-reported | pp. 2–5 |
+| Initial candidates | 17,225 / 2,427 / 4,385 | URLs | PhishTank / ThreatBook / LevelBlue | Author-reported | p. 6, §4.2 |
+| Initial total | 24,037 | URLs | Sum of three candidate pools | Analyst-derived | p. 6: 17,225+2,427+4,385 |
+| Intermediate retention | 353 / 291 / 147 | URLs | Same source order after accessibility/filtering | Author-reported | p. 6 |
+| Intermediate total | 791 | URLs | 353+291+147 | Analyst-derived | p. 6 |
+| Validated final pool | 325 | URL–keyword pairs | Before evaluation sampling | Author-reported | p. 6 |
+| Primary foundation | 100 | entries | Randomly sampled topics | Author-reported | p. 6 |
+| Keyword / natural-language / URL queries | 100 / 100 / 457 | queries | Distinct construction procedures | Author-reported | p. 7 |
+| Keywords per list | 5 | terms | GPT-4o extraction | Author-reported | p. 6 |
+| Questionnaire valid responses / prior users | 120 / 118 | people | Online recruited sample | Author-reported | p. 7 |
+| Natural-language / keyword / URL preference | 83.1 / 43.2 / 21.2 | percent | Multiple-choice usage, not exclusive shares | Author-reported | p. 7 |
+| Reward / mean completion | 5 / 56.2 | RMB / seconds | Questionnaire | Author-reported | p. 7 |
+| Keywords with Trends data | 92.8 | percent | 500 individual keywords; undisclosed threshold | Author-reported | p. 7 |
+| Questions returning >1,000 results | 84 | of 100 | Google check of generated questions | Author-reported | p. 7 |
+| Naturalness / agreement | 4.49 / 0.241 | 1–5 score / κ | Five raters | Author-reported | p. 7 |
+| URL intents | 100 / 20.83 / 8.33 | percent | Summarization / code crawling / translation among URL users | Author-reported | p. 7 |
+| Headline risky / direct-harm responses | 47 / 34 | percent | Introduction; aggregation scope not fully restated | Author-reported | p. 3 |
+| Grok / TextCortex / Kimi main-risk | 41 / 34 / 32 | responses out of 100 | Keyword queries | Author-reported | p. 8, §5.1 |
+| ChatGPT none-risk KW→NL | 39→60 | responses out of 100 | Paired query-format conditions | Author-reported | p. 8, §5.2 |
+| ChatGPT none-risk increase | 21 | percentage points | (60−39)/100 ×100 | Analyst-derived | p. 8 |
+| ChatGPT / Grok risky URLs per keyword query | 3.04 / 3.60 | URLs/query | 100 queries each | Author-reported | p. 8 |
+| Grok source transitions | 48/49 | accessible cases | Source→main or warning | Author-reported | p. 9 |
+| TextCortex / Grok main retention | 88.57 / 97.22 | percent | URL queries; inaccessible excluded | Author-reported | p. 9 |
+| Additional comparison conditions | 20+20 | queries | Keyword and natural language, six languages | Author-reported | pp. 9–10 |
+| Utility URLs TSE / AIPSE | 1,192 / 1,217 | URLs | Malicious results excluded | Author-reported | p. 10 |
+| Safety URLs TSE / AIPSE | 1,453 / 1,422 | URLs | All results in specified locations | Author-reported | p. 10 |
+| Safety total | 2,875 | URLs | 1,453+1,422 | Author-reported and numerically cross-checked | pp. 2, 10 |
+| Case-study model choices | 8 | choices | Perplexity environment | Author-reported | pp. 10–12 |
+| Phishing-site delay | Approximately 3 | weeks | After simulated official site | Author-reported | pp. 11–12 |
+| XGBoost training data | 5,000+5,000 | URLs | Phishing plus legitimate | Author-reported | p. 13 |
+| XGBoost features / length indicator | 15 / ≥54 | features / characters | Appendix D | Author-reported | pp. 20–21 |
+| Defense sample | 46 | main-risk responses | §6-derived; URL queries excluded | Author-reported | p. 14 |
+| Detector sample / inaccessible | 207 / 3 | URLs | Main URLs | Author-reported | p. 14 |
+| Classified sample | 204 | URLs | 207−3; matches 83+121 in T3 | Analyst-derived | pp. 14, 21 |
+| Malicious / benign detector classes | 83 / 121 | URLs | T3 actual classes | Visually readable | p. 21, T3 |
+| Non-phishing share | 49.4 | percent | Among 83 malicious URLs | Author-reported | p. 14 |
+| HtmlLLM precision / recall / F1 | 0.838 / 0.807 / 0.822 | scores | URL detection | Visually readable | p. 14, T2 |
+| Prompt / PhishLLM / XGBoost / HtmlLLM DSR | 37.0 / 26.1 / 100.0 / 78.3 | percent | 46 selected responses | Visually readable | p. 14, T2 |
+| HtmlLLM successes | 36/46 | responses | Main→warning conversion | Author-reported | p. 14 |
+| Information reduction | Approximately 10.7 | percent | Measurement definition unavailable | Author-reported | p. 2, abstract |
+
+No approximate visual estimates are used as numerical results. Unlabeled F4 segments and F6 band sizes are deliberately not converted into exact values.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence Strength |
+|---|---|---|---|---|
+| Ordinary queries can expose malicious material | Seven-product risk evaluation using non-optimized, mostly benign queries | X2–X4, F4–F6 | pp. 3–9 | HIGH for authors' tested observations; enriched query foundation limits prevalence inference |
+| Retrieval exposure differs from answer promotion | ChatGPT 304 risky URLs, 86.5% source share; Grok 360 and larger main share | F5, X2 | p. 8 | HIGH for displayed values; internal mechanism not isolated |
+| Natural language usually helps but has exceptions | ChatGPT none-risk 39→60; Doubao/Kimi contrary results | F4, X3 | pp. 8–9 | HIGH for stated directions; no universal protective rule |
+| URL follow-ups can escalate risk | Grok 48/49 source→main/warning; Kimi accessible outputs all main | F6, X4 | p. 9 | HIGH for author-reported conditional results; inaccessible excluded |
+| Tested AIPSEs outperform TSEs in later utility assessment | NMR AIPSE means 4.53–4.98 versus TSE 3.64–4.48 | T1, X5 | p. 10 | HIGH for table; benign-filtered URLs and no significance test |
+| Tested AIPSEs have fewer risk-return queries | AIPSE counts 4–10 versus TSE 14–18 out of 40 | F7, X6 | p. 10 | HIGH for counts; prior provider reporting and different presentation scope |
+| Fabricated documentation reaches generated code | Authors report exact code copying across eight Perplexity choices | F8, X7 | pp. 10–11 | HIGH for reported demonstration; no live backend or measured theft |
+| Fake authority claims can reverse source trust | All eight warn about intended official site; two use both sources | F9, X8 | pp. 11–12 | HIGH for author report; fictional topic and one platform |
+| HtmlLLM balances detection better than tested baselines | Precision 0.838, recall 0.807, F1 0.822 | T2–T3, X9 | pp. 14, 21 | HIGH; selected 204-URL sample, incomplete replication details |
+| Warning success can hide false positives | XGBoost 100% DSR with 83 benign URLs flagged | T2–T3, X9–X10 | pp. 14, 21 | HIGH; DSR is not complete safety or usability |
+| Web retrieval creates an additional attacker-controlled input route | Threat equations and constructed webpage attacks | E1–E2, X7–X8 | pp. 5, 11–12 | MEDIUM analyst relevance inference; no standalone-versus-agent test |
+| Manual, small-scale testing constrains conclusions | Authors acknowledge manual evaluation and limited resources | §9 | pp. 14–15 | HIGH for stated limitation |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+An AI search system does two jobs: it finds webpages and then writes an answer from them. A dishonest person can build a webpage that looks useful but contains dangerous instructions or false claims. If the AI trusts that page, it can pass the dishonest information to someone who asked a normal question.
+
+The researchers tested seven AI search products. They found that dangerous links could appear in answers, and that asking the AI to explain a particular link could make a previously less-visible dangerous page become a direct recommendation. Ordinary sentences often worked better than keyword lists, but some products showed the opposite result. Their separate comparison also found that the tested AI search products returned fewer risky queries than Google and Bing under those test conditions.
+
+They then built fictional websites. In one example, AI answers copied code that would send a person's API key toward the fictional service. In another, a fake site claimed to be official and persuaded the AI to distrust the intended official site. The websites had no real credential-collecting backend, so these were demonstrations of unsafe advice rather than real theft.
+
+A second AI process with website-checking tools improved many answers by adding warnings. But warning about everything can also wrongly label useful sites as dangerous. The paper's lesson is that web information needs careful checking before it becomes trusted guidance. It does not prove that every web agent is more vulnerable than a standalone language model; it shows a specific extra way attackers can influence systems that read the web.
+
+## Completeness Audit
+
+The inventory denominator is the supplied 21-page paper, including nine figures, three tables, two threat equations, ten distinct analyses registered above, and seven appendices. Inspected does not mean independently reproduced or externally verified.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Cover, author/title/venue material | Yes, visual and text | Yes | Represented in compressed form | Branding, ISBN and publication decoration compressed |
+| Abstract | Yes, visual and text | Yes | Fully represented | Includes under-specified 10.7% claim |
+| §1 Introduction and contributions | Yes, visual and text | Yes | Fully represented | Motivating incident distinguished from experiment |
+| §2 Related Work: LLM/RAG | Yes, visual and text | Yes | Represented in compressed form | Categories and positioning retained; no external literature validation |
+| §2 Threats in LLM-Based System | Yes, visual and text | Yes | Represented in compressed form | Poisoning, jailbreak and misalignment categories retained |
+| §2 Malicious Website Detection | Yes, visual and text | Yes | Represented in compressed form | URL, webpage and hybrid approaches retained |
+| §2 AIPSE and seven product descriptions | Yes, visual and text | Yes | Represented in compressed form | Historical specifications treated as paper-time claims |
+| §3 Threat Model | Yes, visual and text | Yes | Fully represented | Attacker goals, capabilities and formulation |
+| §4.1 Response and risk taxonomy | Yes, visual and text | Yes | Fully represented | Response hierarchy and Copilot exception included |
+| §4.2 Collection/filtering | Yes, visual and text | Yes | Fully represented | Counts, exclusions, sampling and uncertainty preserved |
+| §4.2 Keyword and natural-language prompts | Yes, visual and text | Yes | Represented in compressed form | Inputs, model version, five-keyword rule and transformation retained |
+| §4.2 URL construction | Yes, visual and text | Yes | Fully represented | Conditional sampling and 457 count |
+| §4.2 Query-pattern realism checks | Yes, visual and text | Yes | Fully represented | Questionnaire, Trends, result counts and κ |
+| §5 Risk-labeling method | Yes, visual and text | Yes | Fully represented | Indeterminate→none rule included |
+| §5.1 Keyword risk | Yes, visual and text | Yes | Fully represented | Exact text values and F5 labels; unlabeled F4 counts uncertain |
+| §5.2 Natural-language risk | Yes, visual and text | Yes | Fully represented | General improvement and Doubao/Kimi exceptions |
+| §5.3 URL risk | Yes, visual and text | Yes | Fully represented | Transitions, inaccessible outcomes, excluded denominators |
+| §5.4 Takeaways | Yes, visual and text | Yes | Represented in compressed form | Repetitive conclusions consolidated |
+| §6 Query collection | Yes, visual and text | Yes | Fully represented | Additional 40 conditions and six languages |
+| §6 Utility comparison | Yes, visual and text | Yes | Fully represented | Benign filtering, NMR, raters, T1 |
+| §6 Safety comparison | Yes, visual and text | Yes | Fully represented | URL counts, F7 and prior disclosure |
+| §7.1 Documentation case | Yes, visual and text | Yes | Fully represented | Fabricated legitimacy and credential-direction mechanism |
+| §7.1 Code listing | Yes, visual and text | Yes | Represented in compressed form | Sensitive key, endpoint and POST behavior explained; full executable listing omitted |
+| §7.2 Phishing case | Yes, visual and text | Yes | Fully represented | Timing, official labeling, contradictory facts, false authority claims |
+| §7.3 Ethical safeguards | Yes, p. 12 visual/text; p. 13 text | Yes | Fully represented | Fictional names, image warnings, absent backend, custom visuals |
+| §8 Defender goals | Yes, text | Yes | Fully represented | Capture/post-process authority and false-positive assumption |
+| §8.1 Agent design and tools | Yes, text; instruction visual on p. 14 | Yes | Fully represented | ReAct, refinement, three detectors, training corpus |
+| §8.2 Defense evaluation | Yes, visual and text | Yes | Fully represented | 46 responses, 207 URLs, three inaccessible, T2 |
+| §9 Timeliness limitation | Yes, visual and text | Yes | Fully represented | Five-day mitigation and staffing inconsistency |
+| §9 Human evaluation limitation | Yes, text | Yes | Fully represented | Manual work, small scale, future automation |
+| §10 Conclusion | Yes, text | Yes | Represented in compressed form | Conclusions integrated without stronger claims |
+| Ethics Considerations | Yes, text | Yes | Fully represented | Restricted data, disclosure, low-rank fictional sites |
+| Open Science | Yes, text | Yes | Fully represented | Artifact references recorded, not accessed |
+| References [1]–[78] | Yes, text; some page 15–18 only text | Yes | Inspected but deliberately omitted as repetitive/non-substantive | Bibliography existence and relevant categories retained; individual entries not reproduced |
+| O1–O5 objectives | Yes | Yes | Fully represented | Analyst-organized objectives, not formal author RQs |
+| Formal hypotheses | Not applicable | Absence recorded | Fully represented | None explicitly supplied |
+| X1–X10 analyses | Yes | Yes | Fully represented | Distinct conditions and units preserved |
+| F1 | Yes, visual | Yes | Fully represented | Study workflow |
+| F2 | Yes, visual | Yes | Fully represented | Response schematic |
+| F3 | Yes, visual | Yes | Fully represented | Query data paths |
+| F4 | Yes, visual | Yes | Uncertain | Exact unlabeled segment counts not guessed |
+| F5 | Yes, visual | Yes | Fully represented | All totals and percentage labels retained |
+| F6 | Yes, visual | Yes | Uncertain | Band counts unavailable; qualitative flow and text values retained |
+| F7 | Yes, visual | Yes | Fully represented | All eleven labeled counts retained |
+| F8 | Yes, visual | Yes | Represented in compressed form | Screenshot fine print uncertain; one-example scope retained |
+| F9 | Yes, visual | Yes | Represented in compressed form | Screenshot fine print uncertain; one-example scope retained |
+| T1 | Yes, visual and text | Yes | Fully represented | All rows, ranges and κ |
+| T2 | Yes, visual and text | Yes | Fully represented | All metric cells and DSR definition |
+| T3 | Yes, visual and text | Yes | Fully represented | All confusion-matrix cells |
+| E1–E2 threat equations | Yes, visual and text | Yes | Fully represented | Symbols and limitations explained |
+| Numbered algorithms/theorems | Not applicable | Absence recorded | Fully represented | None supplied |
+| Major contributions C1–C3 | Yes | Yes | Fully represented | Priority claims attributed to authors |
+| Appendix A — irrelevant keywords | Yes, text | Yes | Represented in compressed form | Full exclusion list not repeated; rule and representative terms retained |
+| Appendix B — ReAct prompt | Yes, text | Yes | Represented in compressed form | Single-action JSON and iterative structure retained |
+| Appendix C — refinement prompt | Yes, text | Yes | Represented in compressed form | Six categories, actions and three example purposes retained |
+| Appendix D — features/training | Yes, text; final feature visual | Yes | Fully represented | All fifteen features and ≥54 threshold; missing training detail flagged |
+| Appendix E — quality ratings | Yes, visual and text | Yes | Represented in compressed form | Five categories and Fully Meets condition retained |
+| Appendix F — confusion matrices | Yes, visual and text | Yes | Fully represented | T3 analyzed and metrics cross-checked |
+| Appendix G — questionnaire | Yes, visual and text | Yes | Represented in compressed form | Seven topics and multiple-choice query/intent design retained |
+| Motivating incident and substantive footnotes | Yes | Yes | Represented in compressed form | Incident amounts/timing and role of guideline/artifact references retained |
+| Supplied supplementary files | None supplied | Absence recorded | Missing from supplied material | No supplementary artifact reviewed |
+| Exact HtmlLLM detection prompt and defense repository | No | Limitation recorded | Missing from supplied material | Paper refers to external code |
+
+### Missing or inaccessible material
+
+No numbered page or substantive numbered figure/table is missing from the supplied sequence. Missing external materials include the linked defense repositories and artifacts, exact HtmlLLM detector prompt referred to code, private query corpus, raw annotations, and raw trial outputs. Their absence limits reproducibility but does not prevent analysis of the supplied paper. Fine text inside F8–F9 and exact unlabeled F4/F6 quantities cannot be confidently extracted from the supplied renderings.
+
+### Uncertain interpretations
+
+Unresolved points are the four-versus-six staffing descriptions; ChatGPT's 13.2% prose share versus 13.5% sum of F5 labels; Kimi's prose characterization relative to its displayed 207 risky URLs; PhishLLM's reported 0.044 F1 versus the T3-derived approximately 0.04348; the F7 total versus selected defense-response total; the exact basis of T1 Min–Max ranges; the aggregation scope of the 47% and 34% introductory claims; and the measurement basis for approximately 10.7% information reduction. None is automatically reconciled.
+
+### Deliberately compressed material
+
+The bibliography, repeated introduction/conclusion statements, branding, full Appendix A word list, full prompt wording and illustrative examples, detailed questionnaire answer options, and executable attack-code listing are compressed. Their substantive functions are represented. Appendix G asks about gender, age, industry, education, prior AIPSE use, query methods, and URL-query intent; it is not a separate behavioral-outcome experiment. Fictional-site claims of 1M+ users, 5,000+ TPS, and 200+ partners are treated as fabricated legitimacy cues, not measured performance. The MIT-license claim and WordPress construction are method details, not authenticity evidence.
+
+### Potential omissions
+
+Every substantive inventoried section, subsection, experiment, figure, table, equation, contribution, stated limitation, and appendix has a representation or explicit uncertainty entry. Exact small-figure values and unsupplied external artifacts remain outside the represented evidence. The analysis is comprehensive with respect to the accessible inventory and disclosed compression; it does not claim independent reproduction, external source validation, or a direct experimental answer to standalone-LLM versus web-agent vulnerability.

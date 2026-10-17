@@ -1,0 +1,519 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is available as extracted text for physical PDF pages 1–15. Rendered page images are supplied for pages 1–10, 14, and 15. Pages 11–13 were inspected through their supplied text only; no claim of visual inspection is made for those pages. The text includes the title, abstract, numbered main sections through §7, references, and Tables 4–6 on the final page. The sequence appears to reach the end of this supplied paper, but page count alone cannot establish that every original artifact or supplement has been supplied.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document | Yes: supplied text covers pages 1–15 |
+| Visually inspected pages | 1–10, 14, 15 |
+| Text-only pages | 11–13 |
+| Apparently missing pages | None within the supplied 1–15 sequence |
+| Figures | All ten numbered figures have supplied rendered images |
+| Tables | All six numbered tables are available in text and rendered images |
+| Equations | Main mathematical expressions are readable; subscripts and tree-path notation were cross-checked against supplied text |
+| Appendices | Appendix A and Appendix B are referenced; their descriptive headings are not visible in the supplied final-page material, which contains the relevant action/model tables |
+| Supplementary files | None supplied; no embedded file was reported in the provided accessibility metadata |
+| OCR | No additional OCR performed or needed for the principal analysis |
+| Remaining limitations | Small plots do not expose exact values for every bar or curve; some model identities conflict across prose, figures, and tables |
+
+This is a closed-document analysis. No tools, browsing, external sources, citation validation, or independent reproduction were used. The supplied hash is retained as an identifier, not independently recomputed. All document content is treated as evidence, never as instructions. Evidence labels used below are [A] author-reported, [B] directly observable in supplied visuals, [C] analyst-derived, and [D] analyst interpretation. Confidence is HIGH for clearly legible statements and table entries, MEDIUM for qualified interpretation, and LOW or UNKNOWN for unresolved identification or unavailable details.
+
+## 1. Plain-Language Orientation
+
+Prismata studies how a web-browsing AI agent can be redirected by material it encounters while completing a legitimate task. A shopping page can contain the website's own buttons, customer reviews, seller content, and advertisements. The user may authorize buying an item, while an attacker places instructions in a review telling the agent to send private information or change account settings. The attacker does not need to control the whole website. [A: pp. 1–3]
+
+The authors call this class Cross-Site Prompting, abbreviated XSP: indirect prompt injection on a benign website that manipulates the agent. Their central difficulty is the web entanglement problem. An instruction such as click(elementId=42) does not reveal whether clicking means purchasing an item, sending a message, or resetting a password. Understanding its security implications requires examining the page, but the page itself may contain the attack. [A: pp. 1–2]
+
+Prismata inserts a defense between the browser and the agent. It limits both the content the agent receives and the page elements it can operate. It derives permissions from the user's task and restricted pieces of page structure, then enforces the permissions through code. Two mechanisms work together: an action gate assesses each interactive element using its ancestor path, and Biba parsing identifies boundaries around less-trusted content before exposing their descendants to a labeling model. [A: pp. 2–5]
+
+In the three main attack settings, the authors report average attack success falling from 85.5% without Prismata to 0.7% with it. Task completion under attack increases from 4.5% to 23.0%. In benign conditions, task success decreases from 29.9% to 26.6%. These are results for the reported WebArena configuration, not universal rates for all web agents. [A: pp. 3, 8–9]
+
+The central contribution is a task-dependent permission architecture that seeks to prevent attacker text from influencing the decisive permission assignment. It does not make every model decision correct, eliminate all injected content, or protect every modality. Its strongest argument depends on the attacker's placement in the page tree, trustworthy structural cues, and a constrained browser action interface. [A: pp. 3–6, 11–12]
+
+Research relevance [D]: this paper helps explain why web agents have additional security exposure beyond generating text. They repeatedly encounter mixed-origin material and can use an authenticated browser to take consequential actions. However, it does not experimentally compare web agents with standalone large language models. It therefore supports a mechanism-based explanation of additional exposure, not a measured claim that one population is a specified amount more vulnerable than the other.
+
+## 2. Document Roadmap
+
+The title is Prismata: Confining Cross-Site Prompt Injection in Web Agents. The authors are Corban Villa, Alp Eren Ozdarendeli, Sijun Tan, and Raluca Ada Popa, all listed at UC Berkeley. Page 1 identifies arXiv:2607.08147v1, dated 9 July 2026, in cs.CR. No accepted conference or journal venue for this work is stated in the supplied title material. No keywords block is visible.
+
+| Original section | Location | Role in the argument |
+|---|---|---|
+| Abstract | p. 1 | Problem, two defense mechanisms, principal claim |
+| §1 Introduction | pp. 1–2 | XSP, least privilege, web entanglement, contributions |
+| §1.1 System Overview | pp. 2–3 | Critical paths, structural cues, motivating examples |
+| §1.2 Evaluation summary | p. 3 | Main attack and benign-utility results |
+| §2 Prismata System Design | pp. 3–5 | Architecture, threat model, security definition and proof sketch |
+| §2.1 Setup and Threat Model | p. 3 | BrowserGym, attacker capabilities, scope exclusions |
+| §2.2 System Architecture | pp. 3–4 | Action gate, Biba parser, enforcement, page drift |
+| §2.3 Prismata Security | pp. 4–5 | Capability composition and three injection-placement cases |
+| §2.4 Informal Proof of Security | p. 5 | Why the mechanisms compose; remaining exposure |
+| §3 Empirical Foundations | pp. 5–6 | Real-page corpus, structural coverage, caching |
+| §4 Implementation & Evaluation Framework | pp. 6–8 | Attacks, interfaces, metrics, implementation |
+| §§4.1–4.4 | pp. 6–8 | Attack templates; framework; metrics; software |
+| §5 Evaluation | pp. 8–10 | Setup, validation, attacks, labeling, utility and cost |
+| §§5.1–5.1.1 | p. 8 | Models, repetitions, expert validation procedure |
+| §§5.2–5.4 | pp. 8–10 | Attack evaluation, label evaluation, deployment overhead |
+| §6 Discussion & Related Work | pp. 10–12 | Positioning, XSS comparison, limitations |
+| §§6.1–6.3 | pp. 10–12 | Prior approaches; XSS preventions; explicit caveats |
+| §7 Conclusion | p. 12 | Restates contribution and evaluation outcomes |
+| References | pp. 12–14 | Entries [1]–[100], treated as the authors' bibliography |
+| Final-page tables | p. 15 | Browser actions and model snapshots |
+
+The closest document type is a cybersecurity computer-systems paper with an AI-based labeling component, an informal security argument, empirical structural analysis, and benchmark experiments. It is not a systematic review, a formal comparative study of standalone models, or a complete mathematical proof independent of empirical assumptions.
+
+The inventory contains Figures 1–10, Tables 1–6, Definition 2.1, capability/path equations, three labeling metrics, six distinct analysis groups described in §8 below, and two named principal techniques. There is no numbered pseudocode algorithm, formal hypothesis list, or explicit research-question list.
+
+## 3. Background and Context
+
+A large language model, or LLM, processes natural-language context. In this paper's agent setting, a surrounding system repeatedly gives the model a representation of a browser page and executes its selected action. The supplied work emphasizes that text encountered as task data can also be interpreted as instructions. Prompt injection exploits that ambiguity. An indirect injection arrives through an external information source rather than the authorized user's request. [A: pp. 1, 11]
+
+Hypertext Markup Language, HTML, describes the page structure. The Document Object Model, DOM, is represented here as a rooted tree of elements. An interactive element might be a link, button, or input field. Its critical path is its chain of ancestors from the DOM root to the element. An accessibility tree, AxTree, provides the more compact observation consumed by the evaluated agent. Prismata uses the finer-grained DOM for labeling and maps the resulting permissions to the accessibility-tree observation. [A: pp. 2–4; B: Fig. 3]
+
+Least privilege means granting only the permissions needed for the assigned task. Contextual least privilege makes those permissions depend on the current user task. For instance, the paper distinguishes reading reviews to select a product from writing messages or changing credentials. A user-generated review can be relevant to the task without being entitled to direct unrelated browser operations. [A: pp. 2–3]
+
+Content provenance means where content originates. Prismata distinguishes developer content, public-user content, hosted-party content such as seller listings, and external content such as advertisements. These are policy categories within this system; the paper does not claim every item in a category is truthful or malicious. Origin labels and capabilities are separate: identifying a review as user content does not by itself specify whether it should be hidden, readable, or interactive. [A: p. 4]
+
+Cross-Site Scripting, XSS, involves injected executable code. The authors use it as an analogy for mixed-trust web content, while stressing that XSP uses natural language or images and may exploit the site's legitimate features. Content Security Policy, CSP, sanitization, and sandboxed inline frames can restrict conventional scripts but do not automatically give an LLM's context fine-grained authority boundaries. This is the paper's explanation, not an independent evaluation of all XSS defenses. [A: pp. 1, 11]
+
+Biba parsing adapts integrity principles described by the authors as no-read-down and no-write-up. In Prismata, descendants and siblings are hidden while an ancestor is labeled; resolved labels are locked; descendants cannot gain higher trust than their parent. The intended effect is to stop lower-trust material from revising the authority assigned above it. [A: pp. 2, 4–5]
+
+## 4. Research Problem and Gap
+
+Existing problem [A]: trusted and untrusted material coexist on benign websites. An agent may use the same browser session to read an attacker's review and operate sensitive account features. Restricting access only by domain is too coarse because harmful actions, including messages and public posts, can remain on the same trusted site. [pp. 1–2, 10]
+
+Shortcomings attributed to prior approaches [A]: model-level defenses depend on models resisting malicious instructions and have been bypassed in cited adaptive attacks. Structured-tool security systems benefit from meaningful argument names and metadata; generic browser clicks and fills supply less security meaning. The authors describe pre-planning approaches as difficult to transfer to data-dependent web tasks, and manually authored per-site maps as difficult to scale. These are the authors' characterizations of the cited work; the cited systems were not independently reviewed here. [pp. 1–2, 10–11]
+
+Research gap [A]: deriving fine-grained, task-specific browser permissions requires interpreting site structure, but the interpretation process itself can encounter adversarial content. The defense therefore needs to limit what its own labeling model sees, not merely ask a second model whether a page seems dangerous. [pp. 1–2]
+
+Motivation [A]: support existing websites without requiring developers to annotate every untrusted region. Prismata seeks useful restrictions despite imperfect semantic labeling. Scope [A]: textual browser observations on benign sites under stated XSS-related assumptions, particularly attacks whose goals exceed the user's task privileges. [pp. 2–3]
+
+Research relevance [D]: the argument identifies an interaction among exposure, authority, and ambiguous action semantics. It does not show that every web agent is more injection-susceptible at the model level than the same model in a chat interface. The additional concern is what an induced instruction can cause the surrounding browser system to do.
+
+## 5. Research Questions
+
+Explicit formal research questions: none are numbered or stated as a formal list in the supplied paper. Explicit statistical hypotheses: none are specified. The following are author objectives reconstructed from their stated design and evaluation aims, rather than invented formal hypotheses.
+
+| Objective ID | Author objective | Evidence location |
+|---|---|---|
+| O1 | Derive task-scoped page permissions without decisive exposure to attacker content where structural conditions permit | §§1.1, 2.2–2.4, pp. 2–5 |
+| O2 | Confine both observations and browser actions | §§1–2, pp. 2–4 |
+| O3 | Establish how often critical-path and preceding-cue conditions hold on real pages | §3, pp. 5–6 |
+| O4 | Evaluate attack mitigation and benign utility | §§5.2, 5.4, pp. 8–10 |
+| O5 | Compare model-derived permitted elements with expert-derived permitted elements | §§5.1.1, 5.3, pp. 8–10 |
+| O6 | Assess request reuse, latency, and inference cost | §3 and §5.4, pp. 6, 10 |
+| O7 | Provide a reusable attack/defense evaluation framework | §4, pp. 6–8 |
+
+The user's question, Why Are Web AI Agents More Vulnerable Than Standalone LLMs?, is an external analytical framing supplied with this task. It is not the paper's title or an experimentally tested comparative hypothesis. The paper can inform that framing through its mechanisms and examples, with MEDIUM confidence for the broader inference and HIGH confidence that the reported experiments concern web agents with and without Prismata.
+
+## 6. Assumptions / Threat Model
+
+System model [A]: BrowserGym runs a web agent in headless Chromium. Elements receive identifiers. Element-targeting actions refer to identifiers, while navigation and control actions are separate categories. The agent observes captured page state and acts through a finite action interface. Prismata mediates the observation and element-targeting actions. [p. 3; Table 4, p. 15]
+
+Attacker capabilities [A]: an attacker can inject textual content into user fields, hosted-party fields, or external content on an otherwise benign site. The attacker may know the user's task and construct targeted content. Adaptive attackers may iteratively attack trust derivation. The authors do not assume that labeling models are adversarially robust. [p. 3]
+
+Trusted or relied-upon components [A/D]: the user's task is the source for the origin-class policy; browser infrastructure and deterministic confinement are relied upon to enforce permissions; developer-authored structure supplies contextual cues under the threat model. The labeling models remain fallible. Calling the entire developer page semantically correct would exceed the stated argument: the system relies on structural separation and model interpretation, not an oracle for correct labels. [pp. 3–5, 11]
+
+Excluded capabilities [A]: arbitrary attacker JavaScript execution on the trusted origin is treated as conventional XSS and excluded. Attacker JavaScript is assumed confined to sandboxed frames. Textual modality is evaluated; image, audio, and other non-textual attacks are outside current coverage. Attacks that remain within the user's permitted privileges, such as misleading product selection through fake reviews when reviews must be read, are outside the intended least-privilege protection. [pp. 3, 11–12]
+
+Environmental assumptions [A]: sites implement conventional XSS defenses and relevant web best practices. Reducing the empirical residual from 0.10% to 0.017% additionally relies on same-origin GET navigation being non-state-changing, and on cross-site links falling outside the same-site XSP interpretation used in this analysis. That reduction must not be reported without its conditions. [p. 6]
+
+Boundary qualification [D]: the informal proof says every action targets a DOM identifier, but the setup and final action table explicitly include navigation and control actions that do not. The strongest directly supported mediation statement concerns identifier-targeted page operations through the described interface. The supplied text does not fully resolve how every non-element action is covered by the universal wording. [pp. 3–5, 15]
+
+## 7. Methodology
+
+The study combines architectural design, a conditional security argument, a real-DOM structural survey, benchmark attacks, expert labeling comparisons, and deployment-overhead measurements.
+
+Action gate [A]: enumerate interactive elements through browser DevTools. For each element, provide an LLM only the user task and that element's complete ancestor chain. Sibling and unrelated content are absent. The model determines whether the operation is within the task scope. If an injected review is elsewhere in the DOM, it cannot directly appear in the gate's input for an account-settings element. This is an input-isolation argument, not a guarantee that the model will interpret clean structure correctly. [pp. 3–5]
+
+Biba parsing [A]: walk a path from root toward descendants. At a labeling decision, expose only the current element and its ancestors. Hide children and siblings. Once an origin label is decided, lock it. If a trusted structural cue indicates a lower-trust region, propagate that label down the subtree without further queries. Non-developer content also receives a capability: prune material unnecessary for the task; allow needed content to be observed in read-only form. [p. 4]
+
+Task-only policy [A]: a separate model receives task details without DOM content and decides which origin classes are required. For example, canceling a subscription should not require exposing user, seller, or advertisement content. This isolates the policy model from injected page text, although semantic policy mistakes remain possible. [pp. 4–5, 11]
+
+Mechanical confinement [A]: use captured HTML, the accessibility tree, and DevTools metadata to build an element-ID-to-capability map. Remove disallowed provenance regions from the observation. Remove or disable target identifiers for read-only content. When an action arrives, reject it if its target is absent or lacks permission. This is code-based enforcement of the assigned map; it does not require the agent to obey a verbal warning. Repeat capture, labeling, and filtering after actions. [p. 4]
+
+Captured-state design [A]: Prismata filters the serialized observation rather than changing the live DOM. The authors argue that this adds no separate page-drift channel beyond the standard observation/action gap. It does not eliminate that gap. Dynamic content is reprocessed on the next observation. [pp. 4, 12]
+
+Structural corpus [A]: start from the Tranco top 10K domains and sample 100 archived pages per available domain: the homepage and 99 randomly selected captured URLs. The resulting archive contains 2,832 domains and 283,200 DOMs. For labeling, select one Common Crawl page per domain and an equal number of Mind2Web pages, with task steps sampled roughly evenly. This yields 5,664 DOMs, evenly split between sources. A provenance model flags user, hosted-party, and external nodes; remaining nodes are treated as developer content. A second model identifies where a structural cue appears along each untrusted node's root path. Prompts were manually iterated against manually checked pages. [pp. 5–6]
+
+Benchmark setup [A]: use WebArena sites backed by realistic open-source applications. Evaluate each experiment three times and report means and standard deviations across runs. Initial full-WebArena reward-weighted success is 33.6% for GPT-5.4, 30.8% for GPT-5.4-mini, and 16.0% for GPT-5.4-nano. GPT-5.4-mini is selected as the primary agent for cost/performance reasons. These screening numbers differ in stated metric and context from Table 2's 29.9% benign baseline. [p. 8]
+
+Implementation [A]: Python; rLLM for asynchronous parallel evaluation; BrowserGym and Playwright with Chromium; LiteLLM and Redis for API/request caching; SQLAlchemy and PostgreSQL for results. Caching is disabled by default and selectively enabled for Prismata requests, while remaining disabled for the agent/attack logic as described. The framework has 18,409 lines of code; Prismata has approximately 1,135. The parser uses asynchronous requests, semaphores, and condition variables. Exact dependency versions, hardware, generation temperatures, seeds, and complete prompts are not specified in the supplied material. [p. 8]
+
+No model-training split or training procedure is reported for Prismata's evaluation. This is primarily an inference-time defense using selected existing models. Fine-tuning is proposed as a possible improvement rather than performed as a necessary component. No significance test, confidence interval, or power analysis is reported.
+
+## 8. Experiments / Analyses
+
+X1 — Real-page structural analysis. Purpose: test the empirical conditions supporting Cases 1 and 2. Data: 5,664 labeled DOMs and 90,408 untrusted path instances, comprising 24,992 Common Crawl and 65,416 Mind2Web instances. Only 1,086 untrusted paths, or 1.2%, contain an actionable descendant. Of those, all but 94 have a preceding structural cue. The residual 94 cases are 8.7% of actionable cases and 0.10% of all untrusted instances. Seventy-nine are links; removing them under the stated navigation assumptions leaves 15 non-link cases, approximately 0.017% of the full corpus. Figures 5 and 6 and §3 supply the evidence. Caveat: model-assisted annotation and conditional interpretation do not establish real-world exploit probability. [pp. 5–6]
+
+X2 — Main WebArena attack evaluation. Purpose: measure attack mitigation and task completion with and without Prismata. Conditions: Shortcut, Fake Completion, and Ignore Instruction pop-ups injected at realistically attacker-modifiable DOM locations. All three aim to induce interaction with malicious content, including redirection. Metrics: task success rate, TSR; attack success rate, ASR; defense success rate, DSR. Results: Table 2, reproduced in §11 below. Three repetitions provide run-level standard deviations. Caveat: a small family of tested templates is not an exhaustive attack distribution. [pp. 6–9]
+
+X3 — WASP stress tests. Purpose: test a same-site malicious account operation. The described email-change attack tries to change the user's email to an attacker-selected address. Table 3 presents end-to-end, E2E, and Int. settings, each for Goal 0 and Goal 1. Without Prismata, Goal 0 succeeds 1/21 in each setting and Goal 1 succeeds 0/21. With Prismata, both goals show 0/21 in both settings. The observed unprotected success is blocked. The paper does not define Int. or fully explain both goal formulations in the supplied discussion, so their semantics remain uncertain. The low unprotected success limits how strongly this subset alone establishes broad effectiveness. [p. 9]
+
+X4 — Adaptive WA20 attacks. Purpose: stress the defense with adaptive variants. Table 3 gives undefended ASR of 100.0%, 65.0%, and 85.0% for Shortcut, Completion, and Ignore; defended ASR is 0.0% for all three. The supplied text acknowledges iterative attackers but does not specify enough detail about search budget, feedback, attacker model, stopping rules, or variant construction to reproduce this adaptive evaluation. WA20 is identified with 20-task runs in the cost discussion; the adaptive table itself gives percentages without run-level uncertainty. [pp. 3, 9–10]
+
+X5 — Expert/model allowed-element validation. Purpose: assess whether model labels produce similar permitted-element sets to expert labels. Data: 20 benign observations, four each from GitLab, Maps, Reddit, Shopping, and Shopping Admin, randomly selected without conditioning on task success. Each observation is annotated once by an expert and once by each candidate model, holding cascading/enforcement settings fixed. Annotation takes roughly one hour per observation, approximately 20 hours total. All evaluated labelers exceed 93% precision and 87% F1 in the prose. GPT-5.4-nano has reported precision 98.69% and recall 82.69%; Gemini 3 Flash has reported highest F1, 95.14%. Figures 8 and 9 show aggregate and site-level comparisons. Caveats: model identity inconsistencies, small expert sample, no inter-annotator agreement, and benign-only validation. [pp. 8–10]
+
+X6 — Benign utility, caching, and deployment overhead. Purpose: assess the cost of the added restrictions and labeling requests. Benign TSR is 29.9 ± 1.4% without Prismata and 26.6 ± 0.3% with it. Matched WA20 runs have web-agent request-duration contributions of 1,649.8 seconds and 1,781.4 seconds, respectively; the defense adds policy, action-gate, and parser contributions of 459.0, 1,098.2, and 789.6 seconds. Simulated cached cost is $1.105 without Prismata and $1.623 with it across 20 tasks. Reported savings are $1.821 from key-value reuse and $1.102 from request reuse. Figure 6 additionally assesses structural reuse within sites and across monthly snapshots. Caveat: the component durations should not automatically be treated as independent wall-clock overheads in an asynchronous implementation. [pp. 6, 8–10]
+
+Framework analysis distinct from a reported experiment: defense_harness replays successful reference trajectories and checks whether a defense blocks their recorded actions. The authors call this a lower-bound utility metric because an alternative successful path might remain available. The supplied pages describe the harness but do not provide a distinct numerical harness-result table. [p. 7]
+
+## 9. Results
+
+The strongest direct experimental result is the change in attack behavior for the three main templates. Shortcut ASR falls from 63.9% to 2.1%; Completion falls from 92.5% to 0.0%; Ignore falls from 100.0% to 0.0%. Their defended TSR values are 24.4%, 24.8%, and 19.9%, respectively, compared with 11.2%, 2.3%, and 0.0% without protection. [A: Table 2, p. 8]
+
+The author-reported cross-template means are ASR 85.5% to 0.7%, TSR 4.5% to 23.0%, and defended DSR 93.1%. The authors report an 84.8-percentage-point ASR reduction and 18.5-percentage-point TSR increase, approximately 5.1 times the undefended TSR. These are absolute rate differences and a ratio, respectively; the 84.8-point figure is not an 84.8% relative reduction. [A: p. 9]
+
+Benign utility is reduced by 3.3 percentage points, from 29.9% to 26.6%. Analyst-derived [C]: 26.6/29.9 × 100 ≈ 88.96% of the reported benign baseline TSR is retained. This calculation describes the reported aggregate rates, not the probability that an individual previously successful task remains successful. [A/C: pp. 8–10]
+
+Structural findings support the architecture's placement-based argument. Most sampled untrusted paths cannot lead to a targetable descendant; many remaining paths have cues that can be read before entering the untrusted region. The final residual of 0.017% is conditional on the handling of ordinary links. It is not an observed ASR, an upper bound on all prompt injection, or a guarantee over every website. [A/D: pp. 5–6]
+
+Label agreement is high on the sampled benign observations, but high precision and F1 are not equivalent to worst-case safety. The authors explicitly acknowledge that one critical mislabel can matter even when aggregate F1 is 95%. Moreover, GPT-5.4-nano's strongest precision comes with the lowest reported recall, showing a security/utility trade-off in admitted-element sets. [A: pp. 9–10]
+
+The cost results show a substantive additional request burden, partially reduced by reuse. Analyst-derived [C]: $1.623 − $1.105 = $0.518 additional simulated cached cost across the reported 20-task runs; $0.518/$1.105 × 100 ≈ 46.88% relative increase. These values describe this matched workload and pricing simulation, not a current universal deployment price. [A/C: p. 10]
+
+## 10. Figure-by-Figure
+
+Figure 1 — Motivating XSP scenario, p. 1. Visually inspected. This is a three-step diagram rather than a quantitative plot. Eve supplies a malicious review; Alice asks her agent to shop; the agent leaks details through a site interaction. Red attacker text appears inside a normal review region of a shopping page. Dashed arrows show influence from the malicious content toward the agent and disclosure path. A displayed product price is illustrative, not an experimental measurement. The figure explains how trusted-site access and untrusted embedded text coexist. The caption's disclosure outcome is a motivating scenario, not a success-rate experiment. [A/B]
+
+Figure 2 — Web entanglement, p. 2. Visually inspected. The top panel shows a semantic email tool call with an external recipient and sensitive body. The bottom panel shows a generic fill operation whose target is only an element identifier. Red callouts ask who owns the element and whether the field is a login or direct message. There are no axes or measured units. Its purpose is to explain why a browser defense needs structural context that a more descriptive tool API may already supply. This compares action interfaces conceptually, not standalone-model vulnerabilities experimentally. [A/B]
+
+Figure 3 — Prismata interface and information flow, p. 3. Visually inspected. The sequence runs from the user's shopping task through encounter with malicious material, DOM processing, and a restricted observation delivered to the web agent. HTML and AxTree appear as observation representations. The filtering box contains DOM pruning and element-level permissions: unwanted third-party content is removed, while a user-profile control can be disabled. Arrows point from captured page information to filtering and then to the agent. It visually separates the data removed from what remains actionable. Detailed return-action enforcement is supplied by §2.2 rather than fully drawn. [A/B]
+
+Figure 4 — Three injection placements, p. 5. Visually inspected. Three small tree diagrams use red for injected content, blue for a structural cue, teal for the target element, and gray/white for developer structure. Case 1 places the injection on a different branch. Case 2 places it above the action but below a reviews cue. Case 3 places it on the action path below an uninformative div. No quantitative axes apply. The diagram makes the locality argument visible: exposure depends on ancestry, not simply coexistence on a page. [A/B]
+
+Figure 5 — Coverage across sites, p. 6. Visually inspected. Panel (a) plots Case 1 critical-path coverage; panel (b) plots Case 2 structural-cue coverage. Both horizontal axes are Site Percentile, 0–100, and vertical axes are Coverage, 0–1, with linear displayed scales. Blue and orange curves/filled regions distinguish panels. Case 1 coverage stays high across most of the plotted ordering before falling near one end; Case 2 rises toward high coverage across the displayed ordering. No uncertainty bands or significance markers are shown. Exact per-percentile values are not labeled, and the prose does not fully specify percentile ordering or per-site weighting. The exact corpus counts in §3 are preferable to visual estimates. [A/B]
+
+Figure 6 — Reuse of DOM lineage, p. 6. Visually inspected. Panel (a) has DOMs per Site on the horizontal axis, extending to 100, and Cache Rate on the vertical axis, labeled 0, 50, 100. The blue Mind2Web curve rises faster and remains above the orange Common Crawl curve. Panel (b) has Monthly Snapshot labeled 1, 4, 7, 10, 13 and the same cache-rate scale. Its orange curve increases gradually over the year-like sequence. Both axes appear linear; no error bars are shown. The curves support reusable site scaffolding, but exact terminal percentages are not numerically labeled. No exact visual cache rate is asserted here. [A/B]
+
+Figure 7 — Attack examples, p. 7. Visually inspected. The left image, labeled Environmental Distraction Attack, embeds malicious instructions in a review. The right image, labeled Pop-up Attack, overlays a deceptive task-completion message on a shopping page. Red regions indicate adversarial content, while ordinary product and review layout remains visible behind it. No axes or numerical outcomes apply. The caption refers to three evaluated templates, but the image contains two example layouts rather than one separately labeled panel for each template. It should not be counted as three distinct measured attack examples. [A/B]
+
+Figure 8 — Labeler agreement, p. 9. Visually inspected. A grouped bar chart displays Precision in red, Recall in blue, and F1 in orange. The vertical Score axis runs 0–1. The horizontal labels name Gemini 3.1 Flash Lite, GPT-5 Nano, GPT-OSS 120B, Qwen3 8B, MiniMax M2.5, and GPT-5.4 Nano. No error bars or exact bar-value annotations appear. The main visual pattern is high precision with some lower recall, particularly for the final model. Exact reported values come from nearby prose. Identity conflicts with prose and Table 5 are preserved below rather than resolved by guessing. [A/B]
+
+Figure 9 — Site-level agreement for GPT-5.4-nano, p. 9. Visually inspected. The grouped bar encoding matches Figure 8. The horizontal axis lists GitLab, Maps, Reddit, Shopping, and Shopping Admin. The vertical Score axis is 0–1. Maps has the most visible recall reduction. The caption and prose state precision at least 95% per site and F1 above 89%; exact per-site bars are not labeled. There are no uncertainty bars. This is agreement over four sampled observations per site, not a site-wide safety guarantee. [A/B]
+
+Figure 10 — Deployment overhead and caching, p. 10. Visually inspected. Panel A is a stacked comparison of No Prismata and Prismata with Seconds on a linear axis up to about 4,000. Panel B similarly compares cached cost in USD. Colors identify web agent, policy model, action gate, and Biba parser. Panel C separates component latency into four bars, with Seconds on its vertical axis. Panel D compares No Cache and Cached costs for KV Cache and Req. Cache. The KV bars label $2.023 and $0.202; the request-cache no-cache bar labels $1.102, while an exact cached request-bar value is not clearly labeled. The prose reports avoided costs of $1.821 and $1.102. Component durations and simulated cost are workload-specific; no hardware or uncertainty bars are shown. [A/B]
+
+## 11. Table-by-Table
+
+Table 1 — Injection-placement cases, p. 4. The rows correspond to Figure 4. Case 1: injection i is outside path(e), injection-free labeling marked yes. Case 2: i is on the path with preceding cues, yes. Case 3: i is on the path without cues, no guarantee. The cross means the derivation is not guaranteed injection-free, not that every such instance causes a successful exploit. There are no empirical uncertainty measures because this table is a conceptual case analysis. [A/B]
+
+Table 2 — Main attack evaluation, p. 8. Empty circles denote Prismata disabled and filled circles enabled. All rates below are percentages; σ is the standard deviation across three reported runs. Dashes denote metrics not reported/applicable in those rows, not zero.
+
+| Setting | Prismata | TSR ± σ | ASR ± σ | DSR ± σ |
+|---|---|---:|---:|---:|
+| Benign baseline | Disabled | 29.9 ± 1.4 | — | — |
+| Benign baseline | Enabled | 26.6 ± 0.3 | — | — |
+| Shortcut | Disabled | 11.2 ± 0.9 | 63.9 ± 2.0 | — |
+| Shortcut | Enabled | 24.4 ± 1.1 | 2.1 ± 0.4 | 88.4 ± 2.0 |
+| Completion | Disabled | 2.3 ± 0.3 | 92.5 ± 0.7 | — |
+| Completion | Enabled | 24.8 ± 0.8 | 0.0 ± 0.0 | 95.8 ± 2.7 |
+| Ignore | Disabled | 0.0 ± 0.0 | 100.0 ± 0.0 | — |
+| Ignore | Enabled | 19.9 ± 0.7 | 0.0 ± 0.0 | 95.1 ± 5.0 |
+
+Completion and Ignore tie at zero defended ASR. Shortcut retains nonzero ASR and has the lowest defended DSR. Defended Completion has the highest attacked TSR, 24.8%, still below the benign baseline with defense. No significance markers or hypothesis tests are provided. [A/B]
+
+Table 3 — WASP and adaptive stress tests, p. 9. The left half gives success counts out of 21 for each reported goal/setting. E2E without Prismata is 1/21 for Goal 0 and 0/21 for Goal 1; Int. without Prismata is the same. With Prismata, all four entries are 0/21. The right half reports adaptive WA20 ASR: Shortcut 100.0 to 0.0; Completion 65.0 to 0.0; Ignore 85.0 to 0.0, each comparing disabled to enabled. No σ, confidence intervals, or adaptive-budget details are included. Repeated counts should not be assumed to represent independent additional sets of 21 without more protocol information. [A/B/D]
+
+Table 4 — Browser action space, p. 15. Element-targeting operations are click, dblclick, fill, clear, select_option, hover, press, focus, and drag_and_drop. Their parameters include bid, button/modifier settings, input values, option lists, key combinations, or from_bid/to_bid. Navigation operations are tab_focus, new_tab, go_back, go_forward, and goto. Control operations are noop, send_msg_to_user, and report_infeasible. The noop default is 1,000 milliseconds. The agent emits exactly one action per step. Footnote: goto is exposed only in the WASP action set, not standard WebArena. This footnote materially qualifies the action interface and the interpretation of universal identifier-mediation language. [A/B]
+
+Table 5 — Foundation models, p. 15. It lists GPT-5.4 with snapshot gpt-5.4-2026-03-05; GPT-5.4-mini with gpt-5.4-mini-2026-03-17; GPT-5.4-nano with gpt-5.4-nano-2026-03-17; gemini-3-flash-preview with no public snapshot; and gpt-oss-20b with no public snapshot. Providers are OpenAI except the Gemini row, Google. This is model metadata, not performance evidence. It does not align completely with Figure 8's model list. [A/B]
+
+Table 6 — Evaluation snapshots, p. 15. It repeats the three OpenAI GPT-5.4 family snapshots and providers. It does not identify snapshots for all six labelers appearing in Figure 8. The supplied material therefore supports exact snapshot attribution for these three rows, while full labeler reproducibility remains unresolved. [A/B]
+
+## 12. Diagram / Architecture
+
+Figures 1–4 are the substantive architecture/concept diagrams; Figure 7 provides attack-layout illustrations. Their individual content is accounted for in §10. The combined control flow is as follows. The authorized user supplies a task. BrowserGym captures the page's HTML, accessibility representation, and metadata. A task-only policy model determines required origin classes. The action gate independently assesses the scope of each target using its root-to-element path. Biba parsing determines provenance/capabilities while restricting exposure during traversal. The stricter of the two capability assignments becomes effective. The resulting map filters the observation and checks subsequent target-based actions before browser execution. After execution, a new captured state starts the process again. [A: pp. 3–5]
+
+The data path and control path are distinct. Observation filtering removes or restricts information sent toward the agent. Action checking constrains operations sent back toward the browser. Keeping a sensitive button out of the visible observation is not the sole safeguard: the corresponding permission check is intended to prevent an agent from invoking its identifier anyway. Read-only content can remain available for reasoning while losing interactive identifiers. [A: p. 4]
+
+Caching reuses judgments when DOM lineage recurs. The supplied paper measures benefits but does not fully specify cache key construction, invalidation criteria, or how semantic changes under structurally similar markup are detected. This is a reproducibility limitation, not evidence that caching actually caused a bypass. [D: pp. 4, 6, 8, 10]
+
+## 13. Equations and Mathematical
+
+E1 — DOM model, §2.3, p. 4: T = (E, r). T is the rooted DOM tree, E its set of elements, and r the root. I ⊆ E is the attacker-controlled subset. path(e) is the ancestor path from root to element e. The notation describes structural placement; no probabilistic attack model is introduced.
+
+E2 — Effective capability, §2.3, p. 4: cap(e, task) = min(cap_gate(e, task), cap_biba(e, task)). The two component assignments come from action gating and Biba parsing. The minimum means retain the more restrictive capability. The paper uses an ordered-permission idea but does not give a complete numerical encoding or full lattice of all browser capabilities. The important property is monotonic restriction: a permissive mistake in one component cannot override a stricter assignment from the other. [A]
+
+E3 — Gate input restriction, §2.4, p. 5: cap_gate(e) = ActionGate(path(e), task). This defines the gate as a function of the target's path and user task. If injected element i is not on path(e), then i is absent from that decision's input. The argument establishes non-exposure to that injected content; it does not establish semantic correctness of the resulting scope decision. [A/D]
+
+Definition 2.1 — Injection-free label, p. 4: a label is injection-free when no untrusted content on path(e) is an input to the labeling decision. The surrounding argument uses this to identify a protected decisive labeling step. An injection-free label may still be mistaken for ordinary model-quality reasons. That distinction is essential when interpreting the informal guarantee alongside the labeling limitations. [A/D]
+
+E4 — Recursive path traversal, §2.4, p. 5: path(e) = (e1, …, ej, …, e). At depth j, only the prefix (e1, …, ej) is visible. If a structural cue at ej identifies untrusted material appearing at ej+1 or below, the ancestor decision is locked before the injection becomes visible. Descendant labels cascade. This is the proof mechanism for Case 2. It depends on recognizing the cue and on the cue preceding the attacker-controlled content. [A]
+
+E5 — Allowed-element precision, §4.3.2, p. 7: Prec = |A_model ∩ A_human| / |A_model|. A_model is the set admitted after model-derived labeling, policy, and enforcement. A_human is the corresponding expert-derived set. The numerator counts elements both admit; the denominator counts all model-admitted elements. Low precision indicates admitting elements the expert would reject. This is agreement with an expert reference, not a directly measured probability of attack. [A]
+
+E6 — Allowed-element recall, §4.3.2, pp. 7–8: Rec = |A_model ∩ A_human| / |A_human|. The denominator counts expert-admitted elements. Lower recall means excluding more elements the expert would permit, which the authors associate with reduced utility. The supplied expressions do not specify conventions for empty denominators. [A]
+
+E7 — F1, p. 8: F1 = 2 × Prec × Rec / (Prec + Rec). This harmonic mean combines precision and recall. It does not preserve worst-case safety information: a single critical over-permissive label can be hidden inside a high aggregate score. The authors explicitly raise this issue. [A: p. 10]
+
+The informal proof combines three claims: off-path injections cannot enter the gate's input; preceding cues allow downward restriction before exposure; deterministic code enforces the resulting map within the stated interface. Case 3 remains when neither input-isolation route excludes the injection. No formal theorem proves all model labels correct, and no numbered algorithm or optimization loss is supplied.
+
+## 14. Interpretation and Discussion
+
+The results support a defense architecture that reduces the agent's opportunities to act on malicious material, rather than requiring it to identify every malicious sentence. The method can permit reading a review while preventing unrelated account operations. This distinction matters because the legitimate task sometimes requires exposure to untrusted information. [A/D: pp. 2–5]
+
+O1 and O2 are addressed through restricted labeling inputs and mechanical enforcement, with the three-case argument making conditions explicit. O3 receives empirical support from the structural corpus. O4 is supported by the substantial changes in Table 2 and the modest absolute benign-TSR reduction. O5 receives expert-agreement evidence, qualified by sample size and reference uncertainty. O6 is addressed by cache and cost measurements, while O7 is supported by the modular framework design. No formal hypotheses were stated, so none can be declared statistically confirmed.
+
+Several consistency issues remain. First, the overview describes analysis over 1,500+ sites, while §3 specifies 2,832 archived Common Crawl domains and 5,664 labeled DOMs. The detailed counts are not automatically contradictory with a lower-bound site description, but the exact unique-site denominator across all analyses is not transparently mapped. The report preserves both descriptions. [pp. 2, 5–6]
+
+Second, the initial model screen reports reward-weighted TSR 30.8% for GPT-5.4-mini, whereas Table 2's baseline is 29.9%. The metric/context descriptions differ, but the supplied text does not fully reconcile the numerical difference. These values must not be substituted for one another. [p. 8]
+
+Third, model identities are inconsistent. Figure 8 labels Gemini 3.1 Flash Lite and GPT-5 Nano, whereas prose discusses Gemini 3 Flash and GPT-5.4-mini. Table 5 lists gemini-3-flash-preview and gpt-oss-20b, whereas Figure 8/prose include GPT-OSS-120B, Qwen3-8B, and MiniMax-M2.5. The numerical prose claims can be reported with their stated attribution, but a single verified roster cannot be reconstructed from supplied evidence. [pp. 9, 15]
+
+Fourth, the security proof's universal identifier-targeting wording is broader than Table 4's actual action categories. The table explicitly includes navigation/control actions, including WASP-only goto. The document's claim should be read together with the narrower setup statement about element-targeting mediation. [pp. 3–5, 15]
+
+Finally, ASR and DSR are not complements. The agent can ignore an attack that the defense failed to remove, so low ASR alone does not show every attack was actively neutralized. Conversely, the authors state a successful attack counts as defense failure. Table 2's zero ASR with DSR below 100% is therefore not itself contradictory. [pp. 7, 9]
+
+## 15. Contributions and Novelty
+
+Conceptual [A]: formalize XSP as a web-agent attack class and identify web entanglement as a policy-derivation problem. Introduce contextual least privilege over both observations and actions. [pp. 1–2]
+
+Methodological/algorithmic [A]: dynamic trust derivation combines per-target critical-path analysis with Biba-inspired origin labeling. Locked labels and downward propagation restrict the reach of untrusted descendants. Mechanical confinement applies the resulting permissions to observations and target-based tool calls. [pp. 2–5]
+
+Security argument [A]: characterize Cases 1–3 and explain why the more restrictive composition protects decisive labeling in the first two, while localizing remaining exposure to affected paths. The proof is informal and conditional, not an unconditional verification of all model reasoning. [pp. 4–5]
+
+Systems/implementation [A]: implement Prismata as a Python module in an asynchronous browser-evaluation framework and provide standardized interfaces for attacks and defenses. [pp. 6–8]
+
+Empirical [A]: measure structural conditions over thousands of DOMs, report attack and utility outcomes, compare allowed-element sets against expert annotations, and measure caching/overhead. [pp. 5–10]
+
+Dataset/benchmark qualification [D]: the work constructs an analyzed DOM corpus and an evaluation framework, but the supplied text does not establish a separately released, fully documented new dataset with licensing and access instructions. Novelty claims are the authors' claims; no external priority check was performed.
+
+## 16. Limitations
+
+Authors' stated limitations [A]:
+
+- Task-scope attacks remain: fake reviews or other content can influence a decision when reading that content is legitimately required. [p. 3]
+- The evaluated defense operates on textual observations; non-textual image, audio, and multimodal attacks remain outside coverage. [pp. 3, 12]
+- Integrity is prioritized over contextual labeling accuracy: hiding descendants can remove useful interpretive context. [p. 11]
+- Policy, gate, and parser outputs depend on underlying model quality. [p. 11]
+- HTML structure and available attributes may not provide enough information; labeling is heuristic and the human reference is not asserted as absolute ground truth. [pp. 11–12]
+- Captured/live page drift remains a general agent limitation. [p. 12]
+- High aggregate F1 does not establish worst-case safety. [p. 10]
+- Human annotation can suffer fatigue and error; the study is capped at four observations per site. [p. 10]
+- LLM hallucinations remain a concern, although structured output limits available responses. [p. 12]
+- High-risk tasks may require broad capabilities for untrusted content, weakening the protection available through least privilege. [p. 12]
+- Case 3 exposes labeling to attacker-controlled content; its empirical rarity is not elimination. [pp. 4–6]
+- The defense harness can reject a recorded trajectory even if an alternative route exists. [p. 7]
+
+Additional evidence-based analyst observations [D]:
+
+- Three main attack templates plus limited stress tests do not establish coverage of every XSP strategy.
+- The adaptive protocol lacks details needed to assess attack-search strength or reproduce the search.
+- The labeling sample is small, benign, and apparently singly annotated per observation; no inter-annotator agreement is reported.
+- The structural corpus is model-assisted, with no reported quantitative accuracy audit for its full provenance/cue annotations.
+- Aggregate element agreement and aggregate structural frequencies do not measure the impact of rare high-value mistakes.
+- Model-list inconsistencies weaken precise attribution and reproducibility.
+- Hardware, dependency versions, seeds, complete prompts, cache invalidation rules, and several workload details are absent.
+- No direct standalone-LLM comparison, component-removal ablation, or head-to-head experimental comparison against the cited alternative defenses appears in the supplied results.
+
+## 17. Threats to Validity
+
+The following validity labels are analyst organization, not labels asserted by the authors.
+
+Internal validity [D]: the with/without-defense comparisons show association within the implemented framework, but there is no reported gate-only, parser-only, or policy-only ablation to isolate each component's contribution. Agent randomness is addressed through three runs, while detailed seeds and pairing procedures are not given. The replay harness can reduce agent variation but does not replace end-to-end trajectories. [pp. 7–9]
+
+Construct validity [D]: ASR is interaction with injected malicious content, not necessarily completed data theft or account compromise. DSR measures removal or downgrading, and allowed-element precision measures agreement with a human reference. Each is informative but represents a different construct. The 0.017% structural residual is yet another quantity and must not be equated to ASR. [pp. 6–9]
+
+External/ecological validity [D]: realistic WebArena applications and live-web-derived DOMs improve relevance, but archived structures and benchmark tasks do not establish performance over every live site, accessibility representation, agent architecture, or modality. The threat model excludes trusted-origin script compromise and assumes relevant web best practices. [pp. 3, 5–6, 8, 12]
+
+Statistical conclusion validity [D]: Table 2 reports standard deviations across three runs, but no confidence intervals or significance tests. Zero successes in finite tests do not establish a zero underlying failure probability. Table 3's WASP baseline is already low, so its blocked single success offers narrower evidence than a broad high-success attack campaign.
+
+Reproducibility [D]: some model snapshots are supplied, but labeler identities conflict and non-OpenAI snapshots are incomplete. Software names are given without full versions, hardware, or all generation settings. No repository was opened, code executed, or dataset reconstructed during this analysis.
+
+Generalizability to the user's comparative question [D]: there is no matched standalone-model control, shared attack set, or standardized harm comparison between agents and standalone LLMs. The paper supports why browser integration creates additional attack surfaces and action consequences; it cannot quantify a general comparative vulnerability gap.
+
+## 18. Future Work and Open Questions
+
+A. Explicitly proposed by the authors [A]: extend the permission structure to non-textual observations such as screenshots; explore defenses for visual, audio, and other multimodal attacks; fine-tune policy/gate/parser components, potentially with reinforcement learning; use the modular framework to introduce new attacks and defenses; collaborate with site developers on standardized labels; delegate extensive untrusted work to quarantined agents for high-risk tasks. The authors also suggest that filtered observations could be consumed by subagents in multi-agent architectures, while describing this as theoretical compatibility rather than an evaluated deployment. [pp. 3, 7, 11–12]
+
+B. Additional open questions [D]: how effective is each component independently? How robust is cue recognition when attackers can influence unusual attributes or layouts? What cache invalidation rules preserve the intended boundaries? How does performance change with longer adaptive searches, rare sensitive controls, or sites with sparse semantic markup? How can broad-permission tasks be handled without losing useful autonomy? What is the practical end-to-end impact of timing changes between snapshots and live actions? A direct web-agent/standalone-model comparison would require matched models, exposure conditions, attack objectives, and outcome definitions; none is supplied here.
+
+## 19. Terminology and Notation Glossary
+
+| Term | Beginner-friendly meaning |
+|---|---|
+| LLM | Large language model; the language-processing component used by the agent and labelers |
+| Web agent | System that observes browser content and selects browser actions to complete a user task |
+| Prompt injection | Attacker-supplied content that attempts to redirect model behavior |
+| Indirect prompt injection | Injection encountered through task material rather than the authorized user request |
+| XSP | Cross-Site Prompting; the paper's benign-site web-agent injection class |
+| XSS | Cross-Site Scripting; injected executable web code used as a security analogy |
+| DOM | Document Object Model; the page's element tree |
+| HTML | Hypertext Markup Language; page structure/attributes represented in the DOM |
+| AxTree | Accessibility tree; compact structured page observation |
+| Critical path | Root-to-target ancestor chain in the DOM, not a runtime scheduling concept here |
+| Structural cue | Heading, attribute, or wrapper indicating an upcoming lower-trust region |
+| Provenance | Origin category assigned to content |
+| Hosted party | A party hosted by the site, such as a marketplace seller |
+| Contextual least privilege | Task-dependent limits on what the agent sees and can operate |
+| Action gate | Model decision on whether a target operation fits the task |
+| Biba parsing | Top-down labeling that masks descendants and prevents upward privilege changes |
+| Mechanical confinement | Code-based observation filtering and permission enforcement |
+| Read-only | Content may be observed while interaction is restricted |
+| CSP | Content Security Policy; browser restrictions discussed for traditional web security |
+| ARIA | Accessibility-related roles/attributes used by the paper to identify interactive elements; the acronym is not expanded in the supplied paper |
+| TSR | Task success rate |
+| ASR | Attack success rate |
+| DSR | Defense success rate |
+| Precision | Fraction of model-admitted elements also admitted by the expert |
+| Recall | Fraction of expert-admitted elements retained by the model |
+| F1 | Harmonic mean of precision and recall |
+| σ | Reported run-to-run standard deviation |
+| bid | BrowserGym element identifier |
+| E2E | End-to-end evaluation |
+| Int. | Table 3 setting abbreviation whose full meaning is not specified in the supplied discussion |
+| WA20 | Reported 20-task workload designation; exact task-selection protocol not fully supplied |
+| WASP | Named external benchmark used for stress tests; no expansion is given in the supplied analysis text |
+| KV cache | Key-value cache reuse in the reported inference-cost analysis |
+| T, E, r | DOM tree, its element set, and its root |
+| I, i | Attacker-controlled subset and an injected element |
+| path(e) | Ancestor path to element e |
+| cap(e, task) | Effective permission for an element under a task |
+| A_model, A_human | Permitted-element sets derived from model and expert labels |
+
+## 20. Key Numerical Results
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Archived Common Crawl domains | 2,832 | domains | Available sample from Tranco top 10K | Author-reported | p. 5, §3 |
+| Archived DOMs | 283,200 | DOMs | 100 per sampled domain | Author-reported | p. 5, §3 |
+| Labeled DOM corpus | 5,664 | DOMs | Equal Common Crawl/Mind2Web split | Author-reported | p. 5, §3 |
+| Untrusted instances | 90,408 | paths | 24,992 Common Crawl; 65,416 Mind2Web | Author-reported | pp. 5–6 |
+| Paths with actionable descendants | 1,086; 1.2 | paths; % | Out of 90,408 | Author-reported | p. 6 |
+| Residual without preceding cue | 94; 0.10 | paths; % | Full untrusted-instance denominator | Author-reported | p. 6 |
+| Links among residual cases | 79; 84 | cases; % | 57 plain links, 22 role=link | Author-reported | p. 6 |
+| Conditional non-link residual | 15; 0.017 | cases; % | Assumed safe GET/site-scope handling | Author-reported | p. 6 |
+| Experiment repetitions | 3 | runs | Means and standard deviations reported | Author-reported | p. 8 |
+| Main average ASR | 85.5 → 0.7 | % | Three main attack templates | Author-reported | p. 9 |
+| Main average TSR | 4.5 → 23.0 | % | Three main attack templates | Author-reported | p. 9 |
+| Average defended DSR | 93.1 | % | Main templates | Author-reported | p. 9 |
+| Benign TSR | 29.9 → 26.6 | % | Without → with Prismata | Author-reported | pp. 8–10 |
+| Benign TSR retained | 88.96 approximately | % of baseline rate | 26.6/29.9 × 100 | Analyst-derived | Table 2 operands, p. 8 |
+| Adaptive ASR | 100/65/85 → 0/0/0 | % | Shortcut/Completion/Ignore | Visually readable | p. 9, Table 3 |
+| WASP Goal 0 | 1/21 → 0/21 | successes/tests | Both E2E and Int. rows | Visually readable | p. 9, Table 3 |
+| Expert validation | 20 | observations | Four per five domains | Author-reported | pp. 8–9 |
+| Annotation effort | About 20 | hours | Approximately one hour per observation | Author-reported | p. 8 |
+| GPT-5.4-nano precision | 98.69 | % | Allowed-element expert agreement | Author-reported | p. 9 |
+| GPT-5.4-nano recall | 82.69 | % | Same validation sample | Author-reported | p. 9 |
+| Highest reported labeler F1 | 95.14 | % | Prose attributes to Gemini 3 Flash; roster uncertain | Author-reported | p. 9 |
+| Web-agent duration contribution | 1,649.8 → 1,781.4 | seconds | Matched WA20 comparison | Author-reported | p. 10 |
+| Policy/gate/parser contributions | 459.0 / 1,098.2 / 789.6 | seconds | Prismata run components | Author-reported | p. 10 |
+| Simulated cached cost | 1.105 → 1.623 | USD | Across 20-task runs | Author-reported | p. 10 |
+| Additional cached cost | 0.518 | USD | 1.623 − 1.105 | Analyst-derived | p. 10 operands |
+| KV/request savings | 1.821 / 1.102 | USD avoided | Reported cache mechanisms | Author-reported | p. 10 |
+| Framework/module size | 18,409 / about 1,135 | code lines | Evaluation framework / Prismata | Author-reported | p. 8 |
+
+Exact per-template means and σ are preserved in the Table 2 transcription in §11. No approximate plot coordinates are promoted to exact numerical results.
+
+## 21. Evidence Map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence Strength |
+|---|---|---|---|---|
+| Web actions need page context for security meaning | Generic click/fill contrasted with semantic email arguments | Fig. 2 | pp. 2, 10–11 | HIGH for author argument; conceptual comparison |
+| Prismata restricts observations and operations | DOM labeling, filtered AxTree, capability checks | Fig. 3; architecture | pp. 3–4 | HIGH for described design; code not independently executed |
+| Off-path injected content is excluded from gate input | Gate sees only target path and task | Case 1, E3 | pp. 4–5 | HIGH for stated input-isolation reasoning; semantic correctness separate |
+| Preceding cues can protect decisive labeling | Prefix-only traversal and locked downward labels | Case 2, Fig. 4 | pp. 4–5 | Conditional on cue recognition and placement |
+| Residual exposure is structurally uncommon in sampled corpus | 94/90,408; conditional 15/90,408 | X1, Fig. 5 | pp. 5–6 | Model-assisted corpus; not exploit probability |
+| Main tested attacks are substantially reduced | Average ASR 85.5% to 0.7% | X2, Table 2 | pp. 8–9 | HIGH for reported means; three templates, finite runs |
+| Benign utility is mostly retained in aggregate | TSR 29.9% to 26.6% | X6, Table 2 | pp. 8–10 | Lower defended rate; no general per-task equivalence |
+| Adaptive/WASP successes are blocked in reported tests | Table 3 zero defended entries | X3–X4 | p. 9 | Limited protocol detail and small WASP baseline |
+| Model labels often agree with expert-admitted sets | Precision/F1 results over 20 observations | X5, Figs. 8–9 | pp. 8–10 | Small benign sample; model-name inconsistencies |
+| Caching reduces reported inference cost | KV/request reuse savings | X6, Figs. 6, 10 | pp. 6, 10 | Workload-specific simulated costs |
+| Protection does not cover all attack goals/modalities | Explicit scope and limitations | §2.1, §6.3 | pp. 3, 11–12 | HIGH for author-stated exclusions |
+| Paper informs agent-versus-standalone question mechanistically | Mixed-origin context plus browser action authority | Figs. 1–2; discussion | pp. 1–2, 10–11 | MEDIUM analyst inference; no direct comparative experiment |
+
+## 22. Very Simple Explanation
+
+Imagine asking an assistant to buy a bow tie online. The shop page contains real shop buttons, reviews written by strangers, and advertisements. One stranger writes a review that tells the assistant to send private information instead. The assistant must read some page content to shop, but reading a stranger's words should not give that stranger control over the browser.
+
+Prismata tries to give the assistant a limited view and a limited set of usable buttons. It studies the page's family tree of elements. If a section is marked as reviews, it can allow the assistant to read those reviews while preventing interaction with their controls. Separately, it checks whether each button belongs to the user's actual task. A shopping task should not automatically permit changing account details.
+
+In the tested attacks, this made malicious interactions much less common and helped the assistant finish more legitimate tasks under attack. It also made some benign tasks harder and required extra model requests. The method still depends on imperfect judgments about page structure, and it does not solve attacks hidden in images or misleading information that stays within the allowed task.
+
+For the larger question about web agents and standalone language models, the useful lesson is that browser agents connect language understanding to actions in an environment containing other people's content. This paper explains and tests protection for that connection. It does not directly measure whether a standalone model would be easier or harder to fool under matched conditions.
+
+## Completeness Audit
+
+Coverage is assessed against the supplied-document inventory, not against response length. All numbered figures and tables in the supplied material were visually inspected. The main text on pages 11–13 was read from supplied extraction only. No missing external artifact was silently treated as reviewed.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title/authors/arXiv metadata | Yes | Yes | Fully represented | §2 |
+| Abstract | Yes | Yes | Represented in compressed form | Orientation, contributions, claims |
+| §1 Introduction | Yes | Yes | Represented in compressed form | XSP, problem, prior-work gap |
+| §1.1 System Overview | Yes | Yes | Fully represented substantively | Paths, cues, paired mechanisms |
+| §1.2 Evaluation summary | Yes | Yes | Fully represented | Main rates retained |
+| §2 System Design | Yes | Yes | Fully represented substantively | §§6–7, 12–13 |
+| §2.1 Setup and Threat Model | Yes | Yes | Fully represented | Attacker powers and exclusions |
+| §2.2 System Architecture | Yes | Yes | Fully represented | Gate, parser, enforcement, page drift |
+| §2.3 Prismata Security | Yes | Yes | Fully represented | Definition, min composition, three cases |
+| §2.4 Informal Proof | Yes | Yes | Fully represented in compressed form | Proof dependencies and boundary mismatch |
+| §3 Empirical Foundations | Yes | Yes | Fully represented substantively | Corpus, annotations, residual counts, reuse |
+| §4 Implementation/Evaluation Framework | Yes | Yes | Fully represented substantively | Interfaces and implementation |
+| §4.1 Attacks | Yes | Yes | Fully represented | Three templates and injection-location condition |
+| §4.2 Framework | Yes | Yes | Fully represented | step/success, run_defense, end-to-end and harness |
+| §4.3 Metrics | Yes | Yes | Fully represented | TSR, ASR, DSR, allowed-element metrics |
+| §4.3.1 Attack Metrics | Yes | Yes | Fully represented | ASR/DSR distinction retained |
+| §4.3.2 Labeling Metrics | Yes | Yes | Fully represented | Set equations and limitations |
+| §4.4 Implementation | Yes | Yes | Represented in compressed form | Stack, caching, concurrency, code sizes |
+| §5 Evaluation | Yes | Yes | Fully represented substantively | All reported analysis groups |
+| §5.1 Setup | Yes | Yes | Fully represented | Models, repeated runs, differing baseline contexts |
+| §5.1.1 Validation Study | Yes | Yes | Fully represented | Sampling, expert procedure, effort |
+| §5.2 Attack Evaluation | Yes | Yes | Fully represented | Main and stress-test results |
+| §5.3 Labeling Evaluation | Yes | Yes | Fully represented | High agreement and model-name uncertainty |
+| §5.4 Utility Evaluation | Yes | Yes | Fully represented | Benign TSR and overhead |
+| §6 Discussion | Yes, partly text-only | Yes | Represented in compressed form | Prior-work positioning retained |
+| §6.1 Related Work | Yes, partly text-only | Yes | Represented in compressed form | Categories, CaMeL, dual-LLM argument |
+| §6.2 XSS Preventions | Yes, text-only | Yes | Represented in compressed form | Sanitization, sandboxing, permissions analogy |
+| §6.3 Limitations | Yes, text-only | Yes | Fully represented substantively | All named limitations grouped in §16 |
+| §7 Conclusion | Yes, text-only | Yes | Represented in compressed form | Repeated claims consolidated |
+| Formal research questions | Checked | Yes | Not present | Informal objectives identified instead |
+| Formal hypotheses | Checked | Yes | Not present | None manufactured |
+| X1 Structural analysis | Yes | Yes | Fully represented | Counts and assumptions retained |
+| X2 Main attacks | Yes | Yes | Fully represented | All Table 2 entries |
+| X3 WASP | Yes | Yes | Fully represented with uncertainty | Int./goal semantics not fully defined |
+| X4 Adaptive WA20 | Yes | Yes | Fully represented with uncertainty | Protocol details unavailable |
+| X5 Expert labeling | Yes | Yes | Fully represented | Roster discrepancies retained |
+| X6 Utility/caching/overhead | Yes | Yes | Fully represented | No unsupported wall-clock addition |
+| Figure 1 | Yes, visual | Yes | Fully represented | Motivating scenario |
+| Figure 2 | Yes, visual | Yes | Fully represented | Contextual action meaning |
+| Figure 3 | Yes, visual | Yes | Fully represented | Architecture |
+| Figure 4 | Yes, visual | Yes | Fully represented | Three cases |
+| Figure 5a–b | Yes, visual | Yes | Represented with visual limits | No exact unlabeled curve values |
+| Figure 6a–b | Yes, visual | Yes | Represented with visual limits | Cache trends, no invented percentages |
+| Figure 7 | Yes, visual | Yes | Fully represented | Two layouts, three-template caption distinction |
+| Figure 8 | Yes, visual | Yes | Represented with uncertainty | Model identities conflict |
+| Figure 9 | Yes, visual | Yes | Represented with visual limits | Exact unlabeled site bars omitted |
+| Figure 10a–d | Yes, visual | Yes | Fully represented substantively | Component/cost interpretation qualified |
+| Table 1 | Yes, visual/text | Yes | Fully represented | Injection-free conditions |
+| Table 2 | Yes, visual/text | Yes | Fully represented | Means, σ, dashes preserved |
+| Table 3 | Yes, visual/text | Yes | Fully represented | Counts and adaptive rates |
+| Table 4 | Yes, visual/text | Yes | Fully represented substantively | All action names and material footnote |
+| Table 5 | Yes, visual/text | Yes | Fully represented | Models and snapshot uncertainty |
+| Table 6 | Yes, visual/text | Yes | Fully represented | Three evaluation snapshots |
+| Definition 2.1 | Yes | Yes | Fully represented | Injection-free does not mean error-free |
+| E1–E4 tree/capability/path expressions | Yes | Yes | Fully represented | Symbols and proof role |
+| E5–E7 precision/recall/F1 | Yes | Yes | Fully represented | Formulas and meanings |
+| Numbered algorithms/pseudocode | Checked | Yes | Not present | Procedure explained from prose |
+| Principal contributions | Yes | Yes | Fully represented | Conceptual, method, system, empirical |
+| Author-stated limitations | Yes | Yes | Fully represented substantively | Separated from analyst observations |
+| Appendix A reference | Reference and relevant table inspected | Partly | Uncertain organization | Action table supplied; explicit appendix heading not visible |
+| Appendix B reference | Reference and relevant tables inspected | Partly | Uncertain organization | Snapshot tables supplied; roster incomplete/inconsistent |
+| References [1]–[100] | Supplied text inspected; p. 14 visual | Partly | Deliberately compressed | Bibliography not independently verified or reproduced |
+| Supplied supplements | None | Accounted for | Not supplied | No separate supplement reviewed |
+
+Missing or inaccessible material
+
+No physical page is missing within the supplied 1–15 sequence. Visual renderings for pages 11–13 are unavailable, so layout and typography on those pages were not visually checked. Separate supplementary material, source code, raw trajectories, annotation files, full prompts, and original experiment logs were not supplied for review. Named Appendix A/B headings are not visible, although the likely relevant final-page action and snapshot tables are available. No unseen artifact is assumed to contain missing methods details.
+
+Uncertain interpretations
+
+The labeler roster conflicts across Figure 8, nearby prose, and Table 5. The meaning of Int. and the precise distinction between WASP Goal 0 and Goal 1 are not fully specified in the supplied discussion. The relationship among the 1,500+ overview, domain counts, and unique-site denominators is incompletely explained. Initial reward-weighted model-screening TSR and Table 2 baseline TSR are not fully reconciled. The universal identifier-targeting proof wording conflicts with the navigation/control categories. Exact cache-curve values, exact unlabeled model/site bar values, and a complete permission ordering are unavailable. None of these uncertainties was silently repaired.
+
+Deliberately compressed material
+
+Repeated shopping examples, repeated claims in the abstract/introduction/conclusion, author contact addresses, routine bibliography details, and fine-grained descriptions of every action parameter were compressed. All action names and the consequential goto footnote were retained. References were used only to describe the authors' positioning, not to import outside findings. Unlabeled plot coordinates were described qualitatively rather than estimated where exact prose or table values were available. Framework interface details were consolidated: attack.step invokes runtime attack behavior and returns a flag; attack.success checks outcome from the next action/observation; run_defense receives observation representations and returns a restriction; run_experiment evaluates complete tasks; defense_harness tests recorded successful steps.
+
+Potential omissions
+
+No known substantive numbered figure, table, main section, supplied mathematical definition, or distinct reported analysis group has been left unaccounted for in this inventory. Exact numerical values that exist only as unlabeled plot positions are not reconstructed, and unresolved model identities remain unresolved. This establishes coverage of the supplied material at the stated level of compression, not literal preservation of every word, independent verification of the experiments, or completeness relative to artifacts that were not provided.

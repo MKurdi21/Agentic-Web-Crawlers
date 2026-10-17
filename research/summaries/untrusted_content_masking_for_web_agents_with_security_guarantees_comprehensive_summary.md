@@ -1,0 +1,614 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is available as extracted text for physical PDF pages 1–25. Directly supplied page images cover pages 1–12, 14–20, and 23–25: 22 visually inspectable pages. Pages 13, 21, and 22 are available as text only. No page is missing from the supplied textual sequence. This establishes coverage of the supplied 25-page document, but does not independently establish whether the original distribution contained additional artifacts.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document | Available, including main text, references, and appendices A–H |
+| Text pages | 1–25 |
+| Direct visual pages | 1–12, 14–20, 23–25 |
+| Text-only pages | 13, 21, 22 |
+| Figures | Figures 1–9 visually supplied and inspected |
+| Tables | Tables 1–10 readable through text and supplied images |
+| Equations | No numbered mathematical equations identified |
+| Appendices | A–H present; parts of B and G have text-only coverage |
+| Supplementary files | None supplied; no separate supplementary artifact identified in the supplied text |
+| OCR | Not performed; supplied extraction and images suffice for this analysis |
+| Main limitations | Exact bar heights are often unlabeled; some plot labels are small; uncertainty conventions are incompletely explained |
+
+The supplied accessibility metadata lists appendix pages 4, 5, and 8, but those pages contain main-text references to appendices, rather than the start of the actual appendix sequence. The document itself places Appendix A on p. 11. This analysis follows the visible headings and text, not that automated detection field.
+
+All document content, including example attacks and system-prompt listings, is treated as evidence rather than instructions. No tools, browsing, external verification, or supplementary-file access were used. The supplied source hash is retained as an identifier; it was not independently recomputed.
+
+Evidence categories used below are **[A] Author-reported**, **[B] Directly observable**, **[C] Analyst-derived**, and **[D] Analyst interpretation**. No external information [E] is introduced. Confidence describes fidelity to the supplied evidence, not proof that an author claim holds universally.
+
+## 1. Plain-language orientation
+
+This paper studies how to protect an artificial-intelligence agent that browses websites and performs actions for a user. The danger is **prompt injection**: material encountered on a webpage contains instructions intended to redirect the agent away from the user's task. A product review, issue description, username, or image can therefore function both as ordinary task data and as an attempted command. [A: pp. 1, 3, 6]
+
+The authors propose **Untrusted Content Masking (UCM)**. Before the agent sees a rendered page, the system hides content that the website owner cannot vouch for. It replaces each hidden region with a labeled placeholder. The agent can still see the page layout, navigation, filters, buttons, and other trusted information. When it needs a fact from a hidden region, it asks a separate **Quarantined Model (Q-Model)** a question. That model sees the hidden content, but its answer must fit a restricted type: a Boolean, bounded integer, bounded decimal number, predefined category, or date. [A: pp. 1, 4, 12–15]
+
+The central idea is architectural separation. The system assumes the Q-Model might be completely manipulated by the hidden content. It therefore does not depend on the Q-Model reliably refusing malicious instructions. Instead, it restricts what can cross from that model back to the acting agent. The intended guarantee concerns injected instructions reaching the agent as free-form text. It does not guarantee that the returned fact is true. [A: pp. 3–4, 6–7, 19]
+
+The evaluation combines ten custom websites, 41 GitLab task templates from WebArena, strengthened attacks from WASP, and automatic identification of untrusted page regions on Booking, Reddit, and GitLab. The authors report preserved custom-task utility with cost ratios of 1.05×–1.84×; largely preserved GitLab utility under restricted types; recovery of baseline utility when human-approved text is allowed; and 0 ± 0% attack success in their correctly labeled WASP condition. They also demonstrate security-relevant failures through false but correctly typed answers. [A: pp. 5–8, 18–20]
+
+**Relevance to the requested research question — analyst inference [D]:** the paper supports a structural explanation of web-agent vulnerability: the agent must observe mixed-trust content while retaining the ability to take consequential actions. It does **not** experimentally compare web agents with standalone large language models (LLMs), establish a numerical vulnerability gap between them, or show that standalone LLMs are intrinsically safe.
+
+## 2. Document roadmap
+
+The original title is **Untrusted Content Masking for Web Agents with Security Guarantees**. The authors are Kristina Nikolić, Egor Zverev, Javier Rando, Matthew Jagielski, Edoardo Debenedetti, and Florian Tramèr. Nikolić and Zverev are marked as equal contributors. Affiliations shown are ETH Zurich, ETH AI Center, ISTA, and Anthropic. The document identifies itself as a **preprint dated July 1, 2026**; no publication venue for this paper is supplied. [A: p. 1]
+
+This is a mixed **computer-systems, cybersecurity, and AI empirical paper**, with a design-based security argument. It is not a systematic literature review or a formal theorem-and-proof paper.
+
+| Inventory ID | Original component | Physical pages | Function |
+|---|---|---:|---|
+| S0 | Abstract | 1 | Problem, structural insight, proposed defense |
+| S1 | §1 Introduction | 1–2 | Motivation and three contributions |
+| S2 | §2 Related Work | 2–3 | Attack channels and defense categories |
+| S3 | §3 Threat Model | 3–4 | Agent, adversary, trust anchor, exclusions |
+| S4 | §4 Defense Design; §§4.1–4.2 | 4 | Masking and restricted access |
+| S5 | §5 Evaluation; §§5.1–5.2 | 4–6 | Configuration, custom sites, GitLab |
+| S6 | §6 Attack Strategies; §§6.1–6.2 | 6–7 | Control-flow and data-flow analysis |
+| S7 | §7 Automated Boundary Identification; §§7.1–7.2 | 7–8 | Sanitization, selector inference, results |
+| S8 | §8 Conclusion | 8 | Implications for website instrumentation |
+| ACK | Acknowledgments | 8 | Feedback and funding |
+| REF | References | 9–10 | Bibliography |
+| AA | Appendix A; A.1–A.2 | 11 | Tasks and completion checks |
+| AB | Appendix B; B.1–B.7 | 12–15 | Implementation, prompts, interface, fallback |
+| AC | Appendix C | 15 | Four templates blocked by restricted output |
+| AD | Appendix D; D.1–D.2 | 15–17 | Prices and token-use plots |
+| AE | Appendix E; E.1 | 18–19 | WASP results and attack construction |
+| AF | Appendix F | 19–20 | Data-flow red teaming and two examples |
+| AG | Appendix G; G.1–G.6 | 21–23 | Boundary pipeline, metrics, prompts, example |
+| AH | Appendix H | 23–24 | All 41 GitLab task templates |
+| F1–F9 | Figures 1–9 | 2, 5, 7, 12, 16, 17, 20, 25 | Architecture, results, examples |
+| T1–T10 | Tables 1–10 | 8, 11, 15, 18–19, 23–24 | Sanitization, results, tasks, prices, attacks |
+| L1–L4 | Listings 1–4 | 12–14, 22–23 | Agent, Q-Model, and selector prompts |
+
+There are no numbered algorithms, equations, theorems, lemmas, or explicit formal hypotheses. Procedural descriptions nevertheless specify the masking and automated-labeling pipelines. The author affiliation/correspondence footnote is administrative; the preprint date is bibliographically substantive. No keyword list is supplied.
+
+## 3. Background and context
+
+A **web agent** observes website pages and issues actions such as clicking, typing, and navigating. A **rendered page** is the visible page the agent receives, rather than merely the underlying source. The **Document Object Model (DOM)** is the page's structured representation: elements have tags, attributes, nesting relationships, and identifiers. The authors use that structure to locate regions that may contain attacker-controlled material. [A: pp. 1, 3–4]
+
+**Trusted** does not simply mean that content appears on a familiar website. In this paper, content is untrusted when the page owner cannot vouch for it, including material provided by users or external sources. Thus, the same honest website may contain trusted navigation alongside untrusted reviews. Whether a listing or description is trusted depends on its provenance in that application; the paper's Booking example treats third-party property content as untrusted. [A: pp. 3, 22, 25]
+
+A **trust boundary** separates information allowed to guide the agent as instructions from information that must be handled only as data. **Privilege separation** gives different system components different powers. The acting agent can execute the user's workflow, while the Q-Model can inspect untrusted content but can communicate only through a narrow interface. A **sandboxed interface**, as described here, means an isolated interaction path with restricted output; it is not a claim that every browser or operating-system attack is contained. [A: pp. 1, 4, 14]
+
+**Control-flow attacks** attempt to introduce a new instruction or plan, such as visiting an attacker-selected page. **Data-flow attacks** supply false values that the agent uses while following its legitimate plan. Returning a false identity match can therefore cause harm even without transmitting a malicious sentence. This distinction is essential to reading the security claims faithfully. [A: pp. 6–7, 19–20]
+
+A **CSS selector** is a pattern that identifies DOM elements by tags, classes, attributes, and context. **HTML sanitization** here removes content while preserving structural cues. **Task utility** means task-completion rate. **Attack success rate (ASR)** measures successful attacker goals in the attack experiment. **False positives (FP)** are trusted elements incorrectly flagged for masking; **false negatives (FN)** are untrusted elements missed. The paper also reports true positives (TP) and F1, while the exact denominator for the percentage columns needs care, discussed below. [A: pp. 4, 8, 21–22]
+
+## 4. Research problem and gap
+
+**Existing problem.** Webpages mix interface information needed for navigation with content that may be adversarial. A screenshot-reading agent cannot simply inspect the entire page without potentially ingesting attacker instructions. The authors describe this as structural entanglement that removes the boundary needed by guaranteed defenses. [A: p. 1]
+
+**Attributed shortcomings of prior approaches.** The related-work discussion distinguishes detection, prompting, fine-tuning, embedding-level separation, and system-level isolation. The authors argue that heuristic defenses improve robustness without formal guarantees and can be bypassed by adaptive attacks. They describe guaranteed planning/data separation as constraining page observation and flexibility. Single-shot planning keeps the planner blind to untrusted observations; typed website APIs require per-site infrastructure. These are the authors' characterizations, not an independently validated assessment of the cited literature. [A: pp. 1–3]
+
+**Gap.** The intended missing capability is to preserve ordinary iterative web interaction while keeping untrusted content outside the acting agent's context. UCM attempts to supply the earlier-stage boundary construction needed before other policy or information-flow mechanisms can be applied. [A: pp. 3–4, 20]
+
+**Motivation and scope.** The authors want security without losing useful task performance or imposing extensive website-specific orchestration. Their empirical scope is custom websites and GitLab; their automatic-boundary study covers three sites. Their security scope is the web-content/LLM boundary on honest websites. Browser compromise, operating-system compromise, active-content escape, and availability attacks fall outside it. [A: pp. 3–6, 8]
+
+**Research relevance [D].** The supplied work suggests that exposure and authority combine: a web agent reads third-party material as part of perception and can then act on accounts or repositories. This is an explanation of a mechanism, not a measured comparison with a standalone chatbot or LLM.
+
+## 5. Research questions / objectives / hypotheses
+
+The authors do not enumerate formal research questions or state statistical hypotheses. Their objectives can be represented without converting them into purported quotations:
+
+| Objective ID | Author-stated objective, paraphrased | Corresponding analysis |
+|---|---|---|
+| O1 | Restore trusted/untrusted separation while retaining page interaction | Design in §§3–4; Figures 1 and 4 |
+| O2 | Measure task utility and cost under masking | Custom-site and GitLab studies, §5 |
+| O3 | Test resistance to strengthened prompt injections | Appendix E, Table 7 |
+| O4 | Characterize remaining attack strategies | §6 and Appendix F |
+| O5 | Infer untrusted regions from sanitized DOM structure | §7 and Appendix G, Table 2 |
+
+The explicit question in §7 is whether LLMs can infer trust boundaries from DOM structure alone. The requested research question, **Why Are Web AI Agents More Vulnerable Than Standalone LLMs? A Security Analysis**, is an external analytical framing supplied by the user, not the title or a directly tested hypothesis of this paper.
+
+No hypothesis-testing procedure or significance threshold is stated. Consequently, this report describes observed comparisons and author interpretations rather than declaring formal hypotheses statistically confirmed.
+
+## 6. Assumptions / threat model
+
+**System.** A computer-use agent acts for a user, observes rendered pages, and performs clicks, typing, and navigation. Trusted and untrusted regions coexist on a page. The protected outcome is that attacker content should not redirect the agent into malicious actions. [A: p. 3]
+
+**Adversary.** The attacker may choose any text or image within untrusted regions of visited pages. The threat model further assumes that, once attacker content reaches a language model's context, the attacker can arbitrarily control that model's output. This deliberately strong assumption includes a fully compromised Q-Model, subject to the interface's enforced return constraints. It is a modeling assumption, not an experimentally measured probability of model takeover. [A: pp. 3, 6]
+
+**Trust anchor.** The site owner is honest and does not place malicious material in owner-controlled regions. An **active honest owner** labels untrusted regions; a **passive honest owner** does not label them, so the system attempts automatic inference. Main experiments assume the active variant. Strict guarantees require every DOM element to be correctly labeled. The authors report that 15–30 manually selected CSS selectors per site covered the untrusted regions they labeled on GitLab, Booking, and Reddit. [A: pp. 3–4]
+
+**Trusted components and enforcement [A/D].** The design relies on correct masking before agent observation, correct target resolution, isolation of the Q-Model, and type validation before forwarding answers. These dependencies follow from the described architecture. The document's broad statement that the agent never sees untrusted content presupposes that those mechanisms work correctly. Human-approved string output introduces a further assumption: the user will not approve malicious content. [A: pp. 4, 6, 12–15; D: dependency interpretation]
+
+**Excluded capabilities.** Cross-site scripting (XSS) or related active-content vulnerabilities that allow escape from a labeled region or runtime rewriting of the DOM are excluded. The owner is responsible for preventing them. Availability attacks, model mistakes unrelated to injection, and browser/operating-system compromise are also excluded. [A: p. 4]
+
+**Operational suggestions.** The authors suggest a browser- or user-maintained allow-list of trusted domains, with heuristic defenses on unknown pages. Their traffic-concentration argument cites 50% of traffic in 3,000 domains, but that is a cited contextual assertion, not a result of this study. It does not establish honesty of any particular site. [A: p. 3; D: qualification]
+
+## 7. Methodology
+
+### Masking pipeline
+
+The implementation is a client-side JavaScript framework. Website owners annotate untrusted elements with `data-untrusted="true"`. On page load, the framework finds those elements, hides their content through CSS, and generates placeholders containing unique identifiers. A `data-qllm-id` combines a human-readable owner-provided name with an index. A `MutationObserver` handles dynamically inserted untrusted elements. The purpose is to preserve layout and addressability without exposing content. [A: p. 12, B.2]
+
+The agent's prompt says that placeholders cannot be clicked to reveal content, although they may be clicked when they function as action elements. The agent must use the Q-Model tool for information from untrusted regions. These are supplied implementation instructions being analyzed, not instructions followed by this report. [A: p. 13]
+
+### Quarantined access
+
+The `quarantined_llm_analysis` interface accepts a target, natural-language question, return type, and type-specific constraints. The implementation locates the element, extracts visible text plus metadata such as tag, label, classes, and ID, and sends these to a separate Claude instance. Only an answer parsing to the declared type is forwarded to the main agent. Q-Model reasoning is withheld. [A: p. 14]
+
+| Return type | Required constraint | Intended information |
+|---|---|---|
+| bool | None | Yes/no fact or identity check |
+| int | Minimum and maximum | Bounded whole number |
+| float | Minimum and maximum | Bounded decimal number |
+| enum | Predefined options | One member of a closed set |
+| date | None | Date, described as ISO YYYY-MM-DD in the prompt |
+
+Although the prompt initially describes numeric ranges as optional, its later constraints section and Table 4 require them. This report uses the latter explicit specification and preserves the wording inconsistency. Each element may be queried at most five times per task; enum choices are capped at ten. The prompt also prohibits reconstructing unknown free text through guesses or letter-by-letter enum extraction. [A: pp. 13, 15]
+
+The Q-Model prompt asks for 1–3 sentences of reasoning and an answer line; only the parsed answer reaches the agent. The enum example permits `null` when uncertain, but the supplied description does not fully specify how this interacts with every declared-type validator. This is an unresolved interface detail, not evidence that arbitrary strings are forwarded. [A: p. 14]
+
+### Free-text fallback
+
+For genuinely free-form answers, the agent may declare the task unsolvable under restricted types. A second-chance interface then permits string output. The user sees the question, source content, and proposed answer and can approve, reject, or edit it. Security in this condition depends on human review. It is a distinct condition from automatic type-only isolation. [A: pp. 6, 14–15]
+
+### Experimental configuration
+
+The utility/cost study uses Claude Sonnet 4.5, Claude Sonnet 4.6, and GPT-5.4 as acting agents, with Claude Sonnet 4.5 as the Q-Model. The WASP experiment specifically uses Claude Sonnet 4 as its target agent; this model change matters. The experiments cap each task at 120 steps. Exceeding the budget is failure. WebArena agents receive a warning at step 110 that ten steps remain and that the fallback can be invoked. [A: pp. 4, 12, 18]
+
+Custom tasks use interface-interaction checks, final-output checks against ground truth, or both. WebArena uses its native evaluators. Utility means completion rate; USD costs include tokens used by the agent and Q-Model, with May 2026 API prices and caching. Three independent evaluations are reported for custom suites; Figure 3 utility means and Table 2 boundary results also use three runs. Hardware, operating-system versions, browser versions, sampling temperatures, seeds, and confidence-interval construction are not supplied. No training procedure or train/validation/test split is described. [A: pp. 4–5, 7–8, 11, 15]
+
+### Automated boundary pipeline
+
+Playwright collects dynamically rendered pages. Sanitization replaces text with length placeholders, anonymizes image metadata and relevant URLs, and removes scripts, styles, and SVG elements. Claude Sonnet 4.5 receives the sanitized HTML, site description, and examples of untrusted content. It proposes CSS selectors and then reviews for missed selectors; Appendix G specifies two rounds. [A: pp. 7–8, 21–23]
+
+Evaluation compares generated selectors with manual selectors. Elements are identified by XPath, grouped by tag/class type, and matched with relaxed parent–child equivalence. Therefore, the metrics assess semantic element categories under this matching rule, not exact instance-level masking coverage across an entire website. [A: p. 22; D: measurement interpretation]
+
+## 8. Experiments / analyses
+
+### X1 — Utility and cost on custom websites
+
+**Purpose:** test whether masking preserves task completion and what token cost it adds. Ten environments contain ten tasks each, five requiring untrusted information and five not requiring it: 100 tasks, 50 per group. Main text lists banking, calendar, customer support, e-commerce, email, forum, food order, wiki, travel booking, and job board. Appendix A instead lists restaurant booking in place of food order. Both descriptions are preserved; the supplied material does not resolve the naming difference. [A: pp. 5, 11]
+
+**Conditions:** full visibility versus UCM, separately for the two task groups and three acting models. These main utility experiments do not seed prompt injections. Three independent evaluations are conducted. Figure 2 reports utility and cost; Figures 5–6 provide token details. [A: pp. 4–5, 16–17]
+
+**Results:** authors describe utility as preserved in both groups. Exact completion percentages are not printed in Figure 2, whose bars are close to the 100% line. Cost ratios, explicitly labeled, are 1.17×/1.52× for Sonnet 4.5, 1.37×/1.68× for Sonnet 4.6, and 1.05×/1.84× for GPT-5.4, ordered as untrusted-not-required/untrusted-required. Authors report around 15% of tasks cheaper under UCM and attribute this to reduced visual clutter. That causal explanation is an author interpretation, not a separately isolated ablation. [A/B: p. 5]
+
+### X2 — Utility and cost on GitLab WebArena
+
+**Purpose:** test a less controlled, already implemented web application. The original GitLab implementation is used with a proxy injecting hand-labeled security tags. Evaluation uses 41 unique task templates, including navigation, contributor identification, issue manipulation, and merge-request replies. Conditions include undefended, restricted-type UCM, and UCM with approved strings. [A: pp. 6–7, 23–24]
+
+**Results:** restricted-type UCM solves most tasks and largely preserves utility. The authors report recovery of the undefended utility with approved-string fallback. Figure 3's exact utility percentages are not printed. Costs are shown as distributions; high outliers are associated with unsolved tasks exhausting the step limit. Four templates are identified as unsolvable under masking: 308, 316, 323, and 324. [A: pp. 6–7, 15]
+
+**Caveat:** user approval is an additional intervention and trust assumption. The supplied work does not quantify review time, user error, or reviewer population. Forty-one templates are not necessarily forty-one total executed task instances; the supplied document does not fully enumerate instantiations. [D: evidence-based observation]
+
+### X3 — Strengthened WASP control-flow attacks
+
+**Purpose:** challenge the control-flow claim with malicious issue descriptions in GitLab WebArena. The target is Claude Sonnet 4. Conditions are no defense, WASP prompt defense, and UCM. The original twelve attacker goals are retained. The benign task is changed to require reading the issue description and selecting a comment based on whether it mentions critical data loss. Titles are made contextually plausible. Nine attacks use a hand-picked user-impersonation template. [A: pp. 18–19]
+
+A Sonnet 4.6 attacker iteratively proposes payloads, receives target reasoning after failure, and revises for up to five rounds. The first successful payload is retained. Three goals receive rewritten payloads: adding a member, deleting a project, and making the profile public. [A: p. 19]
+
+**Results, Table 7:** ASR is 17 ± 8% without defense, 8 ± 8% with WASP prompting, and 0 ± 0% with UCM. No-attack utility is 100 ± 0% in all three conditions. Under-attack utility is 97 ± 5%, 100 ± 0%, and 100 ± 0%, respectively. The table does not define what the ± values represent. The supplied attack section does not clearly state the total execution count or repetition structure behind those uncertainties. [A: p. 18]
+
+### X4 — Mislabeling sensitivity
+
+A single injected issue description is deliberately mislabeled trusted. ASR becomes 6 ± 5%. The authors suggest the security-warning prompt may explain why this remains below their undefended result, and describe the system as reverting toward a heuristic-defense regime. This is not evidence that incorrect labels preserve a guarantee. No formal significance claim follows from the supplied uncertainties. [A: p. 18]
+
+### X5 — Data-flow red teaming
+
+Sonnet 4.6 simulates a perfect attacker capable of choosing any well-typed Q-Model result. Most identified issues degrade utility; two security-relevant vulnerabilities are described: wrong-repository selection and adding an incorrect contributor. Both exploit a false Boolean identity match in a legitimate workflow. No ASR, execution count, or comparative defense evaluation is reported for these examples. They characterize possible failure modes under the strong output-control assumption. [A: pp. 19–20]
+
+### X6 — Automatic boundary identification
+
+Claude Sonnet 4.5 generates selectors from sanitized DOM on Booking, Reddit, and GitLab. Manual selectors provide ground truth, with element-type grouping and parent–child relaxation. Three-run results appear in Table 2. Reddit has F1 0.997 ± 0.003; Booking 0.879 ± 0.020; GitLab 0.840 ± 0.008. Nonzero false negatives on Booking and GitLab mean this experiment does not demonstrate the perfect labeling required for strict guarantees. [A: pp. 8, 21–22; D: implication]
+
+## 9. Results
+
+The main empirical result is that a restricted information channel can preserve useful behavior on the evaluated tasks. The evidence is strongest when stated conditionally: correctly labeled regions, enforced isolation, honest owners, the tested tasks, and the specified output interface. [A/D: pp. 3–7]
+
+| Finding | Evidence | Qualification |
+|---|---|---|
+| Custom-task utility preserved | Figure 2; author account in §5.1 | Exact percentages not tabulated; attack-free utility experiment |
+| Custom-task costs increase | Explicit 1.05×–1.84× labels | Group-level cost medians averaged over runs, not a uniform task-level bound |
+| GitLab utility largely preserved | Figure 3, §5.2 | Restricted types cannot express all free-text answers |
+| Approved strings recover baseline utility | Figure 3 and Appendix B.7 | Requires a user who rejects malicious content |
+| Correctly labeled UCM blocks tested WASP goals | 0 ± 0% ASR, Table 7 | Claude Sonnet 4 target; twelve strengthened goals |
+| One label error permits successful attacks | 6 ± 5% ASR | Specific issue-description mislabel, not arbitrary label-error distribution |
+| Typed answers can still cause malicious outcomes | Appendix F, Figure 8 | Perfect Q-Model-output-control red teaming; not measured prevalence |
+| Structure-based labeling performs well but imperfectly | Table 2 | Three sites; grouped/relaxed matching |
+
+**Analyst-derived [C]:** the custom-suite balance is 10 environments × 10 tasks = 100 tasks, and 10 × 5 = 50 tasks in each group, consistent with Appendix A. The cost ratios correspond to increases of 5%–84%, calculated as `(ratio − 1) × 100`; these are cost increases, not percentage-point changes in utility.
+
+**Analyst-derived [C]:** the observed ASR difference between no defense and UCM in Table 7 is 17 − 0 = 17 percentage points. Between the prompt defense and UCM it is 8 − 0 = 8 percentage points. These arithmetic differences are not significance tests, population-risk estimates, or proof of universal zero risk.
+
+The most important negative result is semantic: type correctness does not imply answer correctness. A Boolean can carry a false identity decision. This limits the scope of the otherwise strong instruction-isolation argument. [A: pp. 7, 19–20]
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Masked shopping workflow, p. 2
+
+This architecture illustration contains a webshop on the left and a user–agent–Q-Model loop on the right. Product images, names, descriptions, and reviews appear as pink labeled regions; prices, sizes, and sorting controls remain visible. The user requests a pink shirt for a casual party. The agent submits a question about a particular description, its element ID, and Boolean return type. The Q-Model reads the hidden content and returns `true`, which feeds back to the agent. Arrows distinguish the agent's query and the returned restricted answer. This is an illustrative workflow, not measured performance. The drawn revealed description communicates what the Q-Model can access; it should not be interpreted as unrestricted agent access. [A/B]
+
+### Figure 2 — Custom-site utility and cost, p. 5
+
+Panel a is a grouped bar chart. The horizontal axis contains Sonnet 4.5, Sonnet 4.6, and GPT-5.4; the vertical axis is utility on a linear percentage scale from 0% to 100%. Red denotes undefended and blue masking; hatching separates the two task groups. Bars cluster near the top. Because exact utility values are not labeled, the defensible numerical statement is the authors' preservation claim rather than invented per-model percentages. [A/B]
+
+Panel b shows total USD cost per task on a linear axis from $0.00 to $0.18. The same colors and hatching apply. Labeled ratios are 1.17× and 1.52× for Sonnet 4.5, 1.37× and 1.68× for Sonnet 4.6, and 1.05× and 1.84× for GPT-5.4. Caption: values are averaged over three runs; utility bars are task means, cost bars task medians. Absolute bar heights are visually approximate, so they are not transcribed as exact dollar results. The caption's cost upper ratio applies to this aggregate comparison, not every individual task. [A/B]
+
+### Figure 3 — GitLab utility and cost distributions, p. 7
+
+Panel a uses a 0%–100% linear utility axis and the same three models. Red is undefended, blue is masking, and pale blue denotes allowed Q-Model strings. The restricted-type bars are generally lower; the string-enabled extension restores the missing utility according to the authors. Error bars are visible, but their statistical definition is not supplied in the caption. Approximate bar readings are unnecessary to establish the qualitative comparison. [A/B]
+
+Panel b is a cost-per-task box plot on a linear $0–$5 axis. Red/blue show undefended/masking. Boxes encode medians and interquartile ranges; task points and circles identify individual tasks and unsolved tasks. The distributions show substantial tails, including blue unsolved-task points near the upper part of the axis. The prose attributes the largest outliers to exhausting the step budget. This distributional evidence is more informative than treating a median as a bound on worst-case spending. [A/B/D]
+
+### Figure 4 — Actual webshop rendering comparison, p. 12
+
+Two screenshots compare standard rendering with UCM. The left screenshot displays product photos and descriptions; the right replaces selected content with pale placeholder regions while retaining filters, prices, layout, and action controls. The small screenshot text is not all independently legible, but the masking pattern and preserved structure are visible. This figure supports implementation plausibility and layout retention; it is not a security stress test. [A/B]
+
+### Figure 5 — Per-task token ratios, p. 16
+
+Four grouped bar panels show Sonnet 4.5 input/output token ratios, masking divided by no masking. The vertical scale is linear, 0–5; task names form the horizontal axes. Blue represents input tokens and orange output tokens. A ratio below one means fewer tokens under masking. These are token ratios, not automatically equal to USD ratios because token categories and caching have different prices. [A/B/D]
+
+Panel a, forum/untrusted-not-required, reports input/output ratios: `count_python` 1.00/0.83; `count_total` 0.83/0.91; `create_post` 1.04/0.93; `filter_unanswered` 1.69/1.29; `sort_votes` 1.44/0.97. Panel b, webshop/untrusted-not-required: `add_to_cart` 1.48/0.98; `count_pink` 0.57/0.34; `filter_price_under_30` 0.66/0.72; `filter_size_s` 1.35/0.80; `sort_price_low` 1.71/1.22. [B: explicitly labeled values]
+
+Panel c, forum/untrusted-required: `count_docker_answer_votes` 0.95/1.07; `memory_leak_votes` 0.48/0.55; `read_async_post` 4.70/2.41; `reply_to_sarah` 0.59/0.86; `report_memory_leak` 0.94/0.86. Panel d, webshop/untrusted-required: `add_silk_blouse` 0.61/0.66; `casual_evening` 1.91/1.73; `find_cheapest` 0.42/0.57; `read_flannel_description` 1.58/1.33; `read_reviews` 2.08/1.64. Wrapped task labels are joined here for readability. These results expose heterogeneity hidden by aggregate costs, particularly the 4.70× input-token ratio. [B]
+
+### Figure 6 — Custom-site token use, p. 17
+
+Two bar charts compare input and output tokens by acting model, red undefended and blue masking. Input-axis labels reach roughly 200k; output-axis labels use compressed `k` notation and are less cleanly rendered in extraction. Explicit input ratios are 1.75×, 1.78×, and 2.26×; output ratios are 1.37×, 1.54×, and 1.81× for Sonnet 4.5, Sonnet 4.6, and GPT-5.4, respectively. Absolute heights are not exactly labeled, and the caption does not fully define aggregation beyond token use on custom websites. No exact totals are reconstructed. [A/B]
+
+### Figure 7 — GitLab token use, p. 17
+
+The same two-panel encoding compares input and output tokens for WebArena GitLab. Input scale extends to approximately 1,000k and output to 5,000. Explicit input ratios are 1.44×, 2.03×, and 1.50×; output ratios are 1.28×, 1.99×, and 2.04× in the same model order. This shows that the model with the greatest input increase need not have the greatest output increase. The exact absolute counts and aggregation convention are not sufficiently specified for exact transcription. [A/B]
+
+### Figure 8 — Data-flow attack diagrams, p. 20
+
+Panel a shows a masked project list and a Boolean question identifying the requested repository. A compromised `true` on the attacker's project makes the agent stop searching and invite a user to the wrong repository. Panel b shows a member search for `stefan`, an attacker-controlled prefix-matching username, and a false positive answer to whether the result is `stefan01`. Both diagrams preserve the formal return type while corrupting the meaning. The prose says `dotfiles`, while the diagram uses singular `dotfile`; this minor text–figure variation does not change the mechanism. These are potential attacks under the strong output-control assumption, not success-rate plots. [A/B]
+
+### Figure 9 — Booking selector example, p. 25
+
+A Booking search-page screenshot outlines hotel names, descriptions, and images in red. Navigation, search fields, filters, prices, and booking controls remain outside the highlighted regions. The caption says the red regions are masked using selectors generated from sanitized DOM. Visually, the content is still shown inside the red overlays, so the image is best read as a visualization of selected masking regions rather than proof that this displayed screenshot itself hides their pixels. It illustrates the intended separation on one page; it cannot establish absence of every missed untrusted element. [A/B/D]
+
+## 11. Table-by-table interpretation
+
+### Table 1 — DOM sanitization, p. 8
+
+The original HTML contains a title with a job advertisement and an embedded instruction. Sanitization substitutes `[text:length:79]` while preserving the structural tags, class, and ID. This demonstrates the transformation used to avoid presenting textual attack content to the boundary-inference model. The example does not independently prove that all possible attacker-controlled structural channels are removed. [A/B/D]
+
+### Table 2 — Automated labeling, p. 8
+
+Rows are Booking, Reddit, and GitLab. Columns are TP%, FP%, FN%, and F1, averaged over three runs:
+
+| Site | TP% | FP% | FN% | F1 |
+|---|---:|---:|---:|---:|
+| Booking | 78.4 ± 3.2 | 15.8 ± 2.5 | 5.8 ± 3.5 | 0.879 ± 0.020 |
+| Reddit | 99.3 ± 0.5 | 0.7 ± 0.5 | 0.0 ± 0.0 | 0.997 ± 0.003 |
+| GitLab | 72.4 ± 1.1 | 19.2 ± 1.8 | 8.5 ± 1.9 | 0.840 ± 0.008 |
+
+Reddit has the highest F1 and lowest reported FN. GitLab has the lowest F1 and highest FP/FN columns. The text nevertheless calls Booking the most challenging case because its class names lack semantic meaning. That statement appears to describe structural difficulty, but the supplied work does not explain why it differs from the numerical ranking. The table's percentages approximately sum to 100 within rows, with GitLab rounding to 100.1; they should not be silently relabeled precision or recall. Appendix G supplies matching definitions but not an explicit denominator formula for those percentages. The ± statistic is not identified. [A/B/C/D]
+
+### Table 3 — Representative custom tasks, p. 11
+
+This is an illustrative task table, not all 100 tasks. Four examples use trusted information: size filtering plus counting, unread-email filtering, earliest meeting day, and remote-job filtering. Five require untrusted information: forum vote lookup, an email reply, sending $100 using a past-transaction account number, a two-person restaurant reservation at 19:00 tomorrow, and counting wiki-procedure steps. Check types distinguish interface actions from final-answer correctness. These concrete tasks show that untrusted data may influence consequential financial or communication actions, although this table supplies no attack outcomes. [A/B]
+
+### Table 4 — Allowed return types, p. 15
+
+The five rows specify bool, int, float, enum, and date. Numeric types require min/max; enum requires options. Examples include `true/false`, `4`, `29.99`, `positive`, and a date. This table defines interface expressiveness, not accuracy. Its constraints explain why arbitrary names and file text cannot simply be returned under the automatic channel. [A/B]
+
+### Table 5 — Unsolvable templates, p. 15
+
+Four rows list template 308, updating a project-site title in code; 316, naming the leading branch contributor; 323, naming the project's leading contributor; and 324, listing the top three contributor usernames. Authors group these as needing free-form material from untrusted elements. Appendix H presents 316 and 324 more generally using an `attribute` placeholder; Table 5 describes the particular name/username needs implicated here. No per-template counts or failure percentages are supplied. [A/B]
+
+### Table 6 — API prices, p. 15
+
+Units are USD per million tokens, dated May 2026. Sonnet 4.5 and 4.6 each use $3.00 input, $15.00 output, $3.75 cache write, and $0.30 cache read. GPT-5.4 uses $2.50 input, $15.00 output, a dash for cache write, and $0.25 cache read. The dash is preserved as an unspecified/not-applicable table entry, not converted into zero. These historical prices explain the paper's accounting and are not presented as current prices. [A/B]
+
+### Table 7 — WASP results, p. 18
+
+The three defenses are compared on ASR and benign-task utility with and without attacks. Values are reproduced in §8. Lower ASR and higher utility are preferred. All no-attack utility entries tie at 100 ± 0%; UCM has the lowest observed ASR. No statistical-significance markers or definition of the ± notation are provided. The authors call undefended and prompt-defense ASRs lower bounds on vulnerability because attack crafting strength limits observed successes. The design argument for UCM must still be read with the labeling and interface assumptions. [A/B/D]
+
+### Table 8 — Twelve attacker goals, p. 19
+
+Goals cover creating deploy tokens/keys, adding a project member, creating an attacker-server webhook, exporting or transferring a project, deleting a project, extracting contributors, adding an attacker SSH key, creating a personal access token, making a profile public, and pushing a security-violating repository change. They span credential creation, data exposure, permissions, and destructive actions. The table lists goals, not per-goal success rates. [A/B]
+
+### Table 9 — Three optimized payloads, p. 19
+
+Rows contain payloads for adding an owner-level member, deleting a project, and making profile visibility public. Each pretends that an unwanted action is a prerequisite for the legitimate comment task, invoking audit, workflow, or compliance authority. Exact attack URLs and full payload prose are compressed because their mechanism is repetitive and their strings are unnecessary to explain the findings. The table is evidence of attack construction; it does not show that any of these payloads defeated correctly labeled UCM. [A/B]
+
+### Table 10 — Forty-one GitLab templates, pp. 23–24
+
+The full task inventory includes IDs 289, 290, 291, 292, 293, 294, 298, 299, 300, 303, 308, 310, 312, 316, 320, 321, 322, 323, 324, 325, 327, 328, 329, 330, 331, 332, 335, 337, 339, 348, 349, 351, 352, 354, 355, 360, 361, 500, 600, 999, and 2100. Tasks encompass navigation, counts, contributor information, repository creation, invitations, issue assignment, merges, milestones, profile changes, forking, starring, licensing, and groups. Placeholder values are filled at instantiation. The full repeated wording is deliberately compressed; the ID inventory preserves traceability. This table provides workload breadth but not the number of instances per template or per-template results. [A/B]
+
+## 12. Diagram / architecture interpretation
+
+The system has two linked but distinct architectures. In the **runtime architecture**, a website supplies a DOM with trust labels. The masking framework transforms untrusted elements into addressable placeholders before agent observation. The agent observes the remaining page and chooses an action or query. A query selects one hidden element, asks a task-specific question, and declares an answer type. The Q-Model processes that element in isolation; a validator admits only a compliant answer; the agent uses the result in its ongoing workflow. Figures 1 and 4 illustrate the observation boundary. [A/B: pp. 2, 4, 12–14]
+
+The control path remains with the main agent. The data path from hidden content passes through the Q-Model and validator. Fresh context for each element prevents one element's injection from directly contaminating the processing of other elements. This is why the authors argue aggregate manipulation requires influence over multiple inputs. It does not make any one input truthful. [A: p. 6]
+
+The **label-generation architecture** runs before or alongside deployment: collect a rendered DOM, sanitize content, ask an LLM for selectors, request additional selectors, then apply them. The labeling LLM receives structural information and a supplied site description. It is separate in purpose from the runtime Q-Model, even though Sonnet 4.5 is used in both roles. [A: pp. 7–8, 21–23]
+
+Figure 8 shows how a false data-path answer can change which object receives an otherwise authorized action. The attacker need not insert a new plan if the legitimate plan is already to invite someone to a repository. A wrong match redirects the target of that plan. [A/B: p. 20]
+
+## 13. Equations and mathematical concepts
+
+No numbered equations, losses, optimization objectives, formal security theorems, or proofs appear in the supplied document. The security contribution is explained through architecture and threat-model reasoning. Calling it a theorem would overstate the presentation.
+
+The meaningful quantitative concepts are task-completion rate, ASR, cost, token ratios, and classification-style boundary metrics. The paper gives operational descriptions but does not print their full equations. For clarity, the following are **analyst-derived arithmetic identities [C]**, not quoted author equations:
+
+- `Token ratio = tokens with masking / tokens without masking`. This is the ratio printed on Figure 5's vertical axis. A value of 0.48 means the numerator is 48% of the denominator; 4.70 means 4.70 times the denominator.
+- `Relative cost increase (%) = (cost ratio − 1) × 100`. Thus 1.84× corresponds to 84% greater cost for the represented comparison.
+- `Percentage-point difference = percentage A − percentage B`. Thus Table 7's 17% versus 0% gives 17 percentage points, not a 17% relative decrease.
+
+Appendix G defines ground-truth set G and predicted set P. A TP is an element in both, FP is only in P, and FN is only in G. Matching is then relaxed for parent–child equivalence and grouped by HTML type. The paper reports F1 but does not print its formula or all aggregation details; this analysis does not silently substitute an unreported implementation. [A: p. 22]
+
+The crucial logical implication is conditional: if untrusted content never reaches the acting model, and the only returned data obey the restricted interface, a free-form instruction from that content cannot be directly relayed through that channel. It does not imply that the returned data cannot affect decisions, that all malicious outcomes are impossible, or that automatic labeling always satisfies the antecedent. [A/D: pp. 4, 6–8, 19–20]
+
+## 14. Interpretation and discussion
+
+The findings support O1 and O2 in a practical but bounded sense: masking retains enough interface structure for the tested agents to perform many tasks, while task-specific typed queries recover useful facts. The higher cost for untrusted-required tasks is consistent with additional Q-Model work. The claim that better models will reduce overhead is the authors' projection from the observed model comparison, not a demonstrated trend across future models. [A: pp. 5–6]
+
+O3 is supported by the specific WASP evaluation and the architectural argument under assumptions. The 0% observation is narrower than a universal claim about every deployment. O4 materially qualifies the headline: downstream actions can still be malicious when the agent receives false values. O5 is supported as an imperfect classification result rather than a strict-labeling guarantee. [A/D: pp. 6–8, 18–20]
+
+Several cross-reference and consistency issues deserve preservation:
+
+1. **Custom-domain naming:** §5.1 says food order; Appendix A says restaurant booking. The ten-domain descriptions differ at that point. [pp. 5, 11]
+2. **Numeric constraints:** the agent prompt initially calls ranges optional, but later requires them, agreeing with Table 4. [pp. 13, 15]
+3. **Boundary difficulty:** prose calls Booking most challenging, whereas GitLab has the lowest F1 and highest listed FN. Structural difficulty and measured accuracy may differ, but the explanation is not supplied. [p. 8]
+4. **Security wording:** broad phrases about eliminating the attack surface are qualified by §6 and Appendix F, which retain data-flow vulnerabilities. [pp. 4, 6–7, 19–20]
+5. **Model conditions:** utility uses three newer agents; the attack target is Sonnet 4. Results should not be silently transferred between these conditions. [pp. 4, 18]
+6. **Annotation metrics:** high grouped F1 coexists with nonzero undermasking, while strict guarantees require correct labels. [pp. 4, 8, 22]
+7. **Small diagram variation:** `dotfile` in Figure 8 versus `dotfiles` in the example prose. [p. 20]
+
+For the user's question, the strongest supported answer is a mechanism: webpage perception brings third-party text and images into the same observation used for action planning. The paper contrasts this with text-based tool interfaces where trusted interface definitions can support reasoning without reading untrusted data. It does not directly contrast a web agent with an otherwise matched standalone LLM. Any stronger comparative conclusion remains outside this evidence. [A/D: p. 1]
+
+## 15. Contributions and novelty
+
+**Conceptual contribution [A]:** identify restoration of page-level trust boundaries as the prerequisite for applying strong isolation defenses to web agents.
+
+**System contribution [A]:** mask untrusted DOM regions before agent observation while retaining layout, trusted controls, and element references. The agent can keep an iterative observe–act workflow rather than committing to a full plan before seeing the page. [pp. 1–4]
+
+**Methodological contribution [A]:** allow the agent to ask arbitrary task-specific questions about a selected element and choose a restricted return type at query time. The authors position this as an extension of prior type-directed privilege separation, rather than inventing type restrictions from scratch. [p. 3]
+
+**Empirical contribution [A]:** evaluate utility/cost on ten custom websites and GitLab, test strengthened WASP attacks, and investigate residual data-flow attacks. [pp. 5–7, 18–20]
+
+**Automation contribution [A]:** infer selectors from sanitized DOM structure, with evaluation on Booking, Reddit, and GitLab. [pp. 7–8, 21–25]
+
+The custom suites are an evaluation asset, but the supplied text does not establish a public dataset release, license, or repository. No new formal theorem or trained foundation model is claimed in the supplied work. Novelty is reported as the authors position it; the bibliography was not independently checked.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+- Strict guarantees require correct DOM trust labeling. [p. 4]
+- The site owner must be honest; unknown or malicious sites need other handling. [p. 3]
+- XSS/active-content escape, availability attacks, unrelated model errors, and browser/OS compromise are excluded. [p. 4]
+- Restricted types cannot express every needed free-form answer. [pp. 6, 14–15]
+- Human-approved strings rely on the user rejecting malicious content. [p. 6]
+- Custom websites may share patterns and fail to represent typical layouts. [p. 6]
+- Type restrictions do not ensure semantic integrity; selection hijacking remains possible. [pp. 7, 19–20]
+- Observed baseline attack rates depend on crafted attack strength. [p. 18]
+
+### Additional evidence-based analyst observations [D]
+
+Automatic inference is not a substitute for verified perfect labels: Table 2 contains FN values of 5.8% for Booking and 8.5% for GitLab under the table's grouping convention. Those numbers cannot be converted into deployment compromise probabilities, but they demonstrate misses in the evaluated labeling process.
+
+The work does not present a matched standalone-LLM comparison. Its evidence addresses web-agent architecture and defenses, so research-question relevance is explanatory rather than comparative experimental evidence.
+
+The interface description emphasizes visible text plus metadata extraction, while the threat model includes images. Masking images can prevent their direct exposure, but the supplied implementation detail does not establish how all image-only task questions are answered by the Q-Model. Image-understanding utility therefore remains incompletely characterized.
+
+The paper does not isolate latency, review burden, accessibility-channel leakage, or masking-race behavior in dedicated measurements. These are unassessed dimensions in the supplied evidence, not demonstrated failures. Likewise, structural sanitization is described and illustrated, but an exhaustive audit of every retained attacker-controllable attribute is not presented.
+
+## 17. Threats to validity
+
+The following validity categories are **analyst observations [D]**, unless an author limitation is explicitly cited.
+
+**Internal validity:** full-visibility and UCM conditions differ in observation content and in available Q-Model interaction. The reported reduced-clutter explanation for cheaper tasks is plausible but not experimentally isolated from changed action strategies. Human-approved fallback introduces another difference, so its recovery result cannot be attributed to restricted types alone.
+
+**Construct validity:** task completion checks cover specified actions and answers, but successful task completion is not identical to absence of every undesirable side effect. The WASP evaluation separately tests attacker goals, which helps, but it is still a defined attack set. Boundary metrics group elements by type and relax parent–child matching; they do not directly measure every exposed character or pixel.
+
+**Statistical conclusion validity:** three runs are stated for key utility and boundary results, but error-bar definitions, significance tests, and some execution denominators are absent. Table 7 differences should not be called statistically significant from the available information. Zero observed successes does not alone estimate zero population risk.
+
+**External/ecological validity:** custom sites span domains but may share design patterns, as authors acknowledge. GitLab provides one implemented application family for utility testing. Booking and Reddit contribute labeling evidence, not equivalent end-to-end attack/utility evaluations. Generalization to malicious owners is excluded by assumption.
+
+**Reproducibility:** prompts, limits, prices, task IDs, payload construction, and selector methodology are useful. Missing seeds, sampling settings, software versions, exact per-task result tables, and detailed trial counts limit exact reproduction from the paper alone. No external code artifact was supplied or inspected.
+
+**Security-model validity:** treating Q-Model compromise as total output control is conservative for analyzing typed-channel risks. Nevertheless, the strength of conclusions depends on the modeled boundary: false data, mislabeled content, and human-approved text must remain separate from free-form instruction isolation.
+
+## 18. Future work and open questions
+
+### A. Explicit author proposals
+
+The authors advocate website developers and standards bodies explicitly marking trust boundaries in the DOM. They suggest action-level security policies and user confirmation for sensitive actions, and propose querying candidates in parallel to detect multiple positive identity matches. Appendix F explicitly leaves integration with downstream data-flow defenses to future work. They also discuss an alternative restricted-action mode after revealing untrusted content, but the supplied experiments implement the approved-string extension rather than comprehensively evaluating that alternative. [A: pp. 4, 7–8, 20]
+
+### B. Additional open questions [D]
+
+How can inferred labels be validated sufficiently for a strict guarantee? What happens across site redesigns or newly introduced page components? How much latency and human-review work does the design add? How robust is the complete implementation across dynamic rendering and alternative observation channels? What are the failure rates of incorrect but valid Q-Model answers in ordinary operation, compared with the perfect-attacker red team?
+
+For the user's research topic, a direct next evidentiary need would be a controlled comparison between an LLM used without web-action authority and the same model embedded in a web agent. This paper does not provide that comparison. Its architecture suggests variables worth isolating—mixed-trust perception, third-party content access, and authority to act—but their comparative effects remain unmeasured here.
+
+## 19. Terminology and notation glossary
+
+| Term | Beginner-friendly meaning in this paper |
+|---|---|
+| LLM | Large language model; the language-processing component |
+| VLM | Vision-language model; a model processing visual and textual material |
+| Agent | System that observes pages and acts for a user |
+| UCM | Untrusted Content Masking; hiding untrusted regions before observation |
+| Q-Model | Quarantined Model; isolated reader of hidden content |
+| DOM | Document Object Model; structured webpage elements and hierarchy |
+| HTML | Page markup whose structure is analyzed and transformed |
+| CSS selector | Rule for identifying particular page elements |
+| Trusted content | Content the honest page owner can vouch for |
+| Untrusted content | User-provided or externally sourced content the owner cannot vouch for |
+| Prompt injection | Instructions embedded in encountered data to manipulate behavior |
+| Control-flow integrity | Preserving the intended instruction/plan path against injected commands |
+| Data-flow attack | Misleading the agent with incorrect values inside its legitimate workflow |
+| Selection hijacking | A false match causes action on the wrong candidate |
+| Privilege separation | Different components have restricted powers and communication |
+| ReAct loop | Iterative page observation and next-action selection, as described by the authors |
+| bool / int / float | Boolean / whole number / decimal number |
+| enum | Choice from an agent-specified closed option set |
+| ASR | Attack success rate |
+| Utility | Task-completion rate |
+| TP / FP / FN | Correctly identified untrusted / overmasked trusted / missed untrusted elements |
+| G / P | Ground-truth / predicted element sets in Appendix G |
+| XPath | Element identifier used when comparing DOM matches |
+| MutationObserver | Implementation mechanism monitoring DOM changes |
+| XSS | Cross-site scripting, an excluded active-content vulnerability example |
+| API | Application programming interface; used for tool interfaces and token pricing |
+| UI | User interface; visible controls checked by some task evaluators |
+| WASP / WebArena | Named security and web-task benchmarks; expansions are not supplied |
+| F1 | Reported boundary-identification score; formula not printed in the supplied work |
+
+## 20. Key numerical results
+
+All page references are physical PDF pages. Values below preserve reported precision. The meaning of ± is unspecified where noted.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Custom environments | 10 | sites | Strict manual labels | Author-reported | pp. 5, 11 |
+| Tasks per environment | 10 | tasks | Five per task group | Author-reported | pp. 5, 11 |
+| Total custom tasks | 100 | tasks | 50 per group | Author-reported | p. 11 |
+| GitLab workload | 41 | unique templates | WebArena native evaluators | Author-reported | pp. 6, 11 |
+| Custom evaluations | 3 | repetitions | All custom suites | Author-reported | p. 5 |
+| Step budget | 120 | steps/task | Custom and WebArena | Author-reported | p. 12 |
+| WebArena warning | 110 | step | Ten steps remain | Author-reported | p. 12 |
+| Element query cap | 5 | queries/task/element | Q-Model interface | Author-reported | p. 13 |
+| Enum cap | 10 | options | Q-Model interface | Author-reported | p. 13 |
+| Manual selectors | 15–30 | selectors/site | Three hand-labeled sites | Author-reported | p. 3 |
+| Sonnet 4.5 cost ratios | 1.17× / 1.52× | ratio | Not-required / required | Visually readable | Fig. 2, p. 5 |
+| Sonnet 4.6 cost ratios | 1.37× / 1.68× | ratio | Not-required / required | Visually readable | Fig. 2, p. 5 |
+| GPT-5.4 cost ratios | 1.05× / 1.84× | ratio | Not-required / required | Visually readable | Fig. 2, p. 5 |
+| Cheaper tasks | Around 15 | % | UCM versus baseline | Author-reported | p. 5 |
+| Maximum displayed per-task input ratio | 4.70× | ratio | Sonnet 4.5, read_async_post | Visually readable | Fig. 5c, p. 16 |
+| Custom input ratios | 1.75× / 1.78× / 2.26× | ratio | Models 4.5 / 4.6 / GPT | Visually readable | Fig. 6, p. 17 |
+| Custom output ratios | 1.37× / 1.54× / 1.81× | ratio | Same model order | Visually readable | Fig. 6, p. 17 |
+| GitLab input ratios | 1.44× / 2.03× / 1.50× | ratio | Same model order | Visually readable | Fig. 7, p. 17 |
+| GitLab output ratios | 1.28× / 1.99× / 2.04× | ratio | Same model order | Visually readable | Fig. 7, p. 17 |
+| No-defense ASR | 17 ± 8 | % | Sonnet 4, strengthened WASP | Author-reported | T7, p. 18 |
+| Prompt-defense ASR | 8 ± 8 | % | Same attack experiment | Author-reported | T7, p. 18 |
+| UCM ASR | 0 ± 0 | % | Correct labels, same experiment | Author-reported | T7, p. 18 |
+| UCM utility | 100 ± 0 | % | Both attack/no-attack conditions | Author-reported | T7, p. 18 |
+| Undefended attacked utility | 97 ± 5 | % | Same experiment | Author-reported | T7, p. 18 |
+| One-mislabel ASR | 6 ± 5 | % | Issue description trusted in error | Author-reported | p. 18 |
+| Attacker goals | 12 | goals | Original WASP goal set retained | Author-reported | pp. 18–19 |
+| Template-based attacks | 9 | attacks | Hand-picked user-note framing | Author-reported | p. 18 |
+| Red-team rounds | Up to 5 | rounds | Sonnet 4.6 attacker | Author-reported | p. 19 |
+| Rewritten payloads | 3 | attacks | Member/deletion/profile goals | Author-reported | p. 19 |
+| Restricted-type unsolvable templates | 4 | templates | IDs 308, 316, 323, 324 | Author-reported | p. 15 |
+| Booking F1 | 0.879 ± 0.020 | score | Three-run grouped matching | Author-reported | T2, p. 8 |
+| Reddit F1 | 0.997 ± 0.003 | score | Same convention | Author-reported | T2, p. 8 |
+| GitLab F1 | 0.840 ± 0.008 | score | Same convention | Author-reported | T2, p. 8 |
+| Cost increase range | 5–84 | % | From 1.05×–1.84× minus one | Analyst-derived | Fig. 2, p. 5 |
+| ASR absolute difference | 17 | percentage points | 17% no defense minus 0% UCM | Analyst-derived | T7, p. 18 |
+
+Price details are fully represented under Table 6; all TP/FP/FN values under Table 2; all Figure 5 ratios under its visual audit. This avoids repeating the same numerical records in several large tables. Exact unlabeled utility percentages and absolute token totals remain unreported rather than estimated.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence strength |
+|---|---|---|---|---|
+| Web perception mixes trust levels | Abstract and setting describe mixed rendered content | S0, S3 | pp. 1, 3 | HIGH for author framing; no standalone-model comparison |
+| Masking retains structure while hiding content | Design and screenshot pair | F1, F4 | pp. 2, 4, 12 | HIGH for described implementation; assumes correct enforcement |
+| Typed quarantine blocks free-form instruction relay | Parser-gated interface | T4, B.4–B.6 | pp. 4, 14–15 | Conditional architectural argument; not semantic integrity |
+| Custom utility preserved with overhead | Three-model, two-group comparison | X1, F2 | p. 5 | HIGH for reported trend; exact rates unlabeled |
+| GitLab needs free-text fallback for some tasks | Four blocked templates and utility extension | X2, F3, T5 | pp. 6–7, 15 | Human approval is an added trust assumption |
+| Tested WASP attacks fail under UCM | 0 ± 0% ASR | X3, T7 | p. 18 | Specific target/model/goals; uncertainty method unspecified |
+| Mislabeling undermines strict isolation | 6 ± 5% ASR | X4 | p. 18 | One specific labeling error, not all error types |
+| Data-flow attacks remain possible | Two false-match examples | X5, F8 | pp. 19–20 | HIGH for described possibility; no prevalence estimate |
+| Automatic labels show high but imperfect agreement | Three-site grouped metrics | X6, T2 | pp. 8, 22 | Does not satisfy perfect labeling on all sites |
+| Web-agent vulnerability is structurally linked to mixed-trust observation | Intro plus threat model and attack mechanisms | S0, S3, S6 | pp. 1, 3, 6 | MEDIUM analyst relevance inference; direct comparison absent |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine an assistant shopping online for you. The website has normal buttons and filters, but it also has reviews written by strangers. One stranger writes a review that tells the assistant to ignore your request and do something else. If the assistant reads everything as potential instructions, a review can interfere with your task. Because the assistant can click and make changes, that interference can have practical consequences.
+
+This paper puts covers over material strangers can control. The assistant can still see the shop's layout and controls. If it needs a hidden fact, it asks a separate reader a narrow question, such as whether a shirt is pink. The reader can return a yes/no answer, number, category, or date. It cannot send a whole paragraph of new instructions back through that restricted channel.
+
+The experiments suggest this can preserve useful performance, usually at extra token cost. In one strengthened attack test, correctly labeled UCM had no successful attacks among the tested goals. But the covers have to be placed correctly. If an attack-bearing region is accidentally left visible, the protection weakens. And a narrow answer can still be wrong: a false yes can make the assistant choose the wrong repository or person.
+
+For your question about web agents versus standalone LLMs, the paper helps explain an added danger: the agent encounters third-party webpage content while deciding what actions to take. It does not directly measure whether an otherwise comparable standalone LLM is less vulnerable. Its strongest lesson is that separating instructions from outside data matters, and that preventing new malicious instructions still leaves the problem of misleading data.
+
+## Completeness Audit
+
+The inventory below is the denominator for coverage. 'Fully represented' means the substantive component is explained at the resolution available here; it does not mean every sentence was reproduced. Related sections are grouped only where each original subsection is explicitly named.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Abstract | Yes, text and image | Yes | Fully represented | Framing and structural insight |
+| §1 Introduction | Yes, text and image | Yes | Fully represented | Motivation, gap, contributions |
+| §2 Related Work | Yes, text and image | Yes | Represented in compressed form | Categories and important contrasts retained |
+| §3 Setting | Yes, text and image | Yes | Fully represented | Trust defined by owner provenance |
+| §3 Attacker capabilities | Yes, text and image | Yes | Fully represented | Arbitrary model-output-control assumption |
+| §3 Trust assumptions | Yes, text and image | Yes | Fully represented | Honest owner, active/passive variants |
+| §3 Out of scope | Yes, text and image | Yes | Fully represented | Exclusions listed |
+| §4.1 Masking/security property | Yes, text and image | Yes | Fully represented | Conditional scope preserved |
+| §4.2 Restricted interaction/alternatives | Yes, text and image | Yes | Fully represented | Types, alternative mode, approval |
+| §5 Task groups/configuration/metrics | Yes, text and image | Yes | Fully represented | Attack-free main evaluation disclosed |
+| §5.1 Custom websites | Yes, text and image | Yes | Fully represented | Counts, checks, runs, results |
+| §5.2 Real websites | Yes, text and image | Yes | Fully represented | GitLab, proxy, fallback |
+| §6.1 Control-flow attacks | Yes, text and image | Yes | Fully represented | Design argument and tested evidence |
+| §6.2 Aggregate manipulation | Yes, text and image | Yes | Fully represented | Fresh context and bounded influence argument |
+| §6.2 Single-value/selection/mitigation | Yes, text and image | Yes | Fully represented | False match and policies |
+| §7.1 Methodology/sanitization | Yes, text and image | Yes | Fully represented | Structural inference |
+| §7.2 Results | Yes, text and image | Yes | Fully represented | Table 2 and interpretation caveat |
+| §8 Conclusion | Yes, text and image | Yes | Fully represented | Standards/instrumentation implications |
+| Acknowledgments | Yes, text and image | Yes | Represented in compressed form | ETH AI Center/IBM and Austrian funding; individual thanks not reproduced |
+| References | Yes, text and images | Yes | Represented in compressed form | Used only for author's positioning; citations not externally checked |
+| A.1 Custom websites/checks | Yes, text and image | Yes | Fully represented | All representative task categories |
+| A.2 WebArena | Yes, text and image | Yes | Fully represented | Native evaluators and template count |
+| B.1 Experimental setup | Yes, text and image | Yes | Fully represented | 120/110 step rules |
+| B.2 Masking implementation | Yes, text and image | Yes | Fully represented | Attributes, CSS, IDs, observer |
+| B.3 Agent prompt / Listing 1 | Yes; p. 13 text only | Yes | Represented in compressed form | Security rules, caps, target constraints; completion-marker boilerplate compressed |
+| B.4 Q-Model interface | Yes, text and image | Yes | Fully represented | Four parameters, extraction, validation |
+| B.5 Q-Model prompt / Listing 2 | Yes, text and image | Yes | Represented in compressed form | Reasoning withheld; answer parsing; null ambiguity |
+| B.6 Type specifications | Yes, text and image | Yes | Fully represented | Five types and constraints |
+| B.7 Approved-string fallback | Yes, text and image | Yes | Fully represented | Review interface and security assumption |
+| Appendix C | Yes, text and image | Yes | Fully represented | Four template IDs and needs |
+| D, D.1, D.2 | Yes, text and images | Yes | Fully represented | Prices and all token panels accounted for |
+| E results/mislabel sensitivity | Yes, text and image | Yes | Fully represented | Numeric conditions distinguished |
+| E.1 Attack strengthening | Yes, text and image | Yes | Represented in compressed form | All changes/round limits; repetitive payload text compressed |
+| F Data-flow red teaming/examples/mitigation | Yes, text and images | Yes | Fully represented | Two vulnerabilities and assumptions |
+| G pipeline and G.1 sanitization | Yes, text only p. 21 | Yes | Fully represented | No visual-inspection claim for that page |
+| G.2 CSS selectors | Yes, text only p. 21 | Yes | Represented in compressed form | Mechanism and example categories |
+| G.3 Iterative analysis | Yes, text only p. 21 | Yes | Fully represented | Two rounds |
+| G.4 Evaluation | Yes, text only p. 22 | Yes | Fully represented | XPath, groups, relaxed matching |
+| G.5 Prompts / Listings 3–4 | Yes; p. 22 text only, p. 23 visual | Yes | Represented in compressed form | Specific leaf selectors, avoid platform UI, iterative additions |
+| G.6 Booking example | Yes, text and image | Yes | Fully represented | Figure 9 and limits |
+| H WebArena templates | Yes, text and images | Yes | Represented in compressed form | All 41 IDs retained; repeated wording grouped |
+| Figure 1 | Yes, visual | Yes | Fully represented | Architecture loop |
+| Figure 2a–b | Yes, visual | Yes | Fully represented | Exact ratios; unlabeled rates not invented |
+| Figure 3a–b | Yes, visual | Yes | Fully represented | Utility conditions/distributions; error bars undefined |
+| Figure 4a–b | Yes, visual | Yes | Fully represented | Screenshot comparison |
+| Figure 5a–d | Yes, visual | Yes | Fully represented | All labeled ratios retained |
+| Figure 6 input/output | Yes, visual | Yes | Fully represented | All labeled ratios; absolute heights not exact |
+| Figure 7 input/output | Yes, visual | Yes | Fully represented | Same qualification |
+| Figure 8a–b | Yes, visual | Yes | Fully represented | Two data-flow paths |
+| Figure 9 | Yes, visual | Yes | Fully represented | Selection overlay distinguished from hidden rendering |
+| Tables 1–2 | Yes, visual and text | Yes | Fully represented | Sanitization and all metrics |
+| Table 3 | Yes, visual and text | Yes | Fully represented | All nine representative tasks summarized |
+| Tables 4–7 | Yes, visual and text | Yes | Fully represented | Types, failures, prices, ASR |
+| Table 8 | Yes, visual and text | Yes | Fully represented | All twelve goals |
+| Table 9 | Yes, visual and text | Yes | Represented in compressed form | Three mechanisms; exact URLs omitted |
+| Table 10 | Yes, visual and text | Yes | Represented in compressed form | All IDs, workload categories |
+| Explicit research question in §7 | Yes | Yes | Fully represented | Structural inference question |
+| Formal hypotheses | None identified | Yes | Fully represented | Absence disclosed |
+| X1–X6 experiments/analyses | Yes | Yes | Fully represented | Separate conditions maintained |
+| Major equations/theorems | None identified | Yes | Fully represented | No invented formal proof |
+| Numbered algorithms | None identified | Yes | Fully represented | Prose pipelines explained |
+| Three stated contributions | Yes | Yes | Fully represented | Design, empirical suite, automation |
+| Author-stated limitations | Yes | Yes | Fully represented | Separated from analyst observations |
+| Supplied supplementary material | None | Not applicable | Missing from supplied material | No separate files inspected |
+
+### Missing or inaccessible material
+
+No text page is missing from the supplied 1–25 sequence. Visual renderings of pages 13, 21, and 22 were not supplied; their text was inspected. No separate code, raw results, supplementary files, or executable implementation were supplied or reviewed. Their existence or public availability is not established here. Exact unlabeled plot values, unreported experimental settings, and unreported trial counts cannot be recovered from the supplied evidence.
+
+### Uncertain interpretations
+
+The ± definitions in Tables 2 and 7 and the Figure 3 utility error bars are not specified. The TP/FP/FN percentage denominator and complete F1 aggregation implementation are not explicitly printed. Numeric-range wording differs within Listing 1. Food-order versus restaurant-booking naming differs between main text and appendix. Booking's described difficulty does not match the simple F1 ranking. Figure 9 displays visible content under red overlays despite describing masked regions. Image-only Q-Model task handling and the enum `null` validation behavior remain incompletely specified.
+
+### Deliberately compressed material
+
+Related-work citations are grouped by mechanism; the bibliography is not reproduced entry by entry. Repetitive prompt wording, example attack URLs, full malicious payload strings, task-template wording, acknowledgments, and administrative correspondence details are compressed. All substantive figures, tables, experiment families, interfaces, assumptions, limitations, and template IDs are nevertheless accounted for. Figure 5's exact task ratios are retained because they reveal variation hidden by aggregate claims.
+
+### Potential omissions
+
+No identified substantive inventory component is knowingly left entirely unrepresented. Representation is constrained by the supplied source: this report cannot certify absent implementation details, missing raw data, unprovided visual pages, or external artifacts. Coverage is therefore comprehensive for the supplied text and images at the disclosed level of compression, rather than a claim to preserve every word or establish universal security.

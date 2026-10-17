@@ -1,0 +1,638 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied main document contains native/extracted text for all 15 physical PDF pages. The title is **RecurGuard: Runtime Monitoring for Reasoning-Token Consumption Attacks**, by **Abid Aziz and Hafsa Binte Kibria**, Department of Electrical & Computer Engineering, Rajshahi University of Engineering & Technology, Bangladesh. Page 1 identifies the document as arXiv:2606.07968v1 [cs.CR], dated 6 June 2026. No conference or journal publication of this paper is identified in the supplied main document.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document available | Yes: supplied text spans physical PDF pages 1–15. |
+| Pages apparently missing | None within the supplied 1–15 sequence; this does not independently establish that every associated artifact was supplied. |
+| Direct visual coverage | Pages 1–5 and 7–13 were supplied as readable page images and visually inspected. |
+| Text-only coverage | Pages 6, 14, and 15 were inspected through supplied extracted text; their original page layout was not visually inspected. |
+| Figures | Both numbered figures are visible: Figure 1 on p. 3 and Figure 2, including both panels, on p. 11. |
+| Tables | Tables 1–10 are present in supplied text and on supplied visual pages. Their substantive entries and footnotes are readable. |
+| Equations | Equations (1)–(15) are available. Equations on p. 6 have text-only coverage; mathematical extraction is therefore treated cautiously. |
+| Algorithms | Algorithm 1 is visible on p. 5. |
+| Appendices | No appendix appears in the supplied document or accessibility metadata. |
+| Supplementary material | No supplementary artifact was supplied. TriviaQA results are explicitly assigned to a supplementary artifact on p. 8. |
+| Repository | A repository address is author-reported on pp. 9 and 14, but its contents were not inspected. |
+| OCR | Not needed: readable extracted text and supplied images were available. No independent OCR was performed. |
+| Additional limitation | The isolated local-image error in the prompt does not prevent inspection of the twelve successfully supplied page images. |
+
+This analysis uses only the supplied paper text and images. It does not browse, validate citations externally, inspect code, or verify that the supplied SHA-256 identifier matches a file. Source content is treated as evidence, not instructions. Physical PDF page numbers are used throughout.
+
+Evidence labels: **[A] Author-reported** means explicitly stated in the paper; **[B] Directly observable** means readable in a supplied visual; **[C] Analyst-derived** means calculated from supplied values, with operands shown; **[D] Analyst interpretation** means an inference rather than an author claim. No external information [E] is introduced. Confidence is HIGH for clearly readable statements and table entries, MEDIUM for qualified interpretations, and UNKNOWN where required evidence is absent.
+
+### Inventory established before synthesis
+
+This is a mixed cybersecurity, machine-learning, algorithm, and systems paper with empirical experiments and a short explanatory theoretical analysis. The inventory denominator is: abstract; Sections 1–11; 37 numbered subsections; Figures 1 and 2, with distinct Figure 2 panels; Tables 1–10; Algorithm 1; Equations (1)–(15), plus an unnumbered attack prompt and probabilistic bound; Theorems 1–2; Propositions 1–2; Remark 1; funding, conflict-of-interest, and data-availability statements; and 43 references. There are no explicitly numbered research questions or formal experimental hypotheses. Four contributions are explicitly listed on p. 2.
+
+The substantive experiment register comprises primary attack characterization across four open models; primary-model detection comparisons; benign-workload false-positive evaluation; seven-way signal ablation; four adaptive variants with different scaling; Sonnet evaluation; an Opus smoke test; input-side Llama Guard testing; early-stopping savings; and an API-cost analysis. TriviaQA validation is mentioned but its results are not supplied. These conditions are kept separate rather than combined into a generic accuracy claim.
+
+## 1. Plain-language orientation
+
+[A] This paper studies attacks that make a reasoning-capable large language model spend its output budget solving an injected diversion instead of answering the legitimate user. The diversion can look harmless: a Sudoku-style puzzle or a request to decode an encoded question. The harmful consequence is excessive computation, increased token charges, and sometimes failure to return a usable answer. The authors distinguish **denial of service**, where the user gets no useful answer, from **denial of wallet**, where excessive generated tokens raise costs. [pp. 1–3]
+
+[A] The proposed defense, **RecurGuard**, watches exposed intermediate reasoning in 64-word pieces. It asks whether a new piece is becoming repetitive, whether it adds new semantic territory, and whether it is closer to the actual query than to previous reasoning. It flags an attack only after all three configured warning conditions persist for three consecutive chunks. If the deployment exposes those chunks while generation is happening and allows cancellation, the monitor can stop generation early. [pp. 2, 5–6]
+
+[A] On the main model, DeepSeek-R1-Distill-Qwen-7B, RecurGuard detects 99% of 100 OverThink attacks and 92% of 50 ExtendAttack attacks. It produces zero false positives on 150 independently held-out benign SQuAD queries. Across full 100-example clean profiles, its false-positive rates are 1% for code generation and 0% for mathematics and summarization. These full profiles partly overlap calibration and therefore are not additional independent held-out certificates. [pp. 8–11]
+
+[A] The important failure case is a topical diversion: C1 retains 11.9× output-token amplification while both semantic monitors miss approximately 50% of samples jointly. A task-aligned diversion, C4, evades both monitors on all 100 tested examples, but amplification falls to 2.2×. Hidden reasoning makes RecurGuard inapplicable; provider-summarized reasoning sharply reduces its measured sensitivity. A companion **Query Drift Monitor**, QDM, examines final outputs after generation, so it can flag some hidden-trace cases but cannot save the already spent generation cost. [pp. 11–14]
+
+[D] For the research question, **Why Are Web AI Agents More Vulnerable Than Standalone LLMs? A Security Analysis**, this paper supports one mechanism: web pages, retrieved documents, and tool outputs can carry attacker-controlled instructions into a reasoning model's context. The paper does not directly compare a web agent against an otherwise identical standalone LLM, and it does not establish a universal ordering of their vulnerability. Its contribution is a narrowly defined resource-consumption defense and an analysis of where that defense works or fails.
+
+## 2. Document roadmap
+
+| Section | Function and relationship to the argument |
+|---|---|
+| Abstract and §1, pp. 1–2 | Introduce resource-consumption harm, the three-signal monitor, its results, and four contributions. |
+| §2, pp. 2–4 | Define the inference pipeline, attacker powers, visibility regimes, harm metrics, and excluded threats. |
+| §3, p. 4 | Explain two reproduced attacks and four adaptive stress variants; Table 2 organizes their relationship to the query. |
+| §4, pp. 4–6 | Specify chunking, embeddings, signals, alarm logic, QDM, calibration, and runtime conditions. |
+| §5, pp. 6–7 | Supply algebraic separation and evasion conditions, a stylized consecutive-alarm bound, and an empirical false-positive certificate. |
+| §6, pp. 7–9 | Describe models, datasets, splits, baselines, fixed configuration, metrics, and closed-API protocols. |
+| §7, pp. 9–11 | Report attack amplification, detection, benign false positives, baseline behavior, ablation, and closed-API results. |
+| §8, p. 12 | Analyze adaptive evasion and the unresolved C1 boundary. |
+| §9, pp. 12–13 | Evaluate input moderation, distinguish token and monetary amplification, and discuss early stopping and deployment. |
+| §10, pp. 13–14 | Position the work relative to resource attacks, prompt injection, efficient reasoning, and semantic drift monitoring. |
+| §11, p. 14 | Discuss visibility and adaptive limits, state limitations, conclude, and identify future tests. |
+| End matter, pp. 14–15 | Funding, competing-interest declaration, repository availability, and 43 references. |
+
+[D] The logical chain is attack entry → reasoning diversion → measurable trace geometry → monitor design → controlled evaluation → deployment and adaptive boundaries. The theory explains components of this chain but does not prove universal security.
+
+## 3. Background and context
+
+[A] A **large language model**, LLM, can generate intermediate reasoning before its final answer. The paper uses **reasoning trace** for exposed intermediate text. That trace is distinct from hidden activations or internal states, which the attacker cannot access under the stated threat model. **Open-weight** models in this study expose usable reasoning text; closed application programming interfaces, APIs, may expose summarized thinking or no thinking text. [pp. 2–3, 7]
+
+[A] **Retrieval-augmented generation**, RAG, constructs a model prompt using a user query plus retrieved context. **Prompt injection** places instructions in text the application ought to treat as data. **Indirect prompt injection** delivers those instructions through retrieved documents, web pages, emails, or tool outputs. These are delivery channels discussed by the authors, not separate end-to-end web-agent experiments in this paper. [pp. 2, 13]
+
+[A] An **embedding** is the fixed-length representation used here to compare textual chunks. The chosen encoder maps text to 384-dimensional, unit-normalized vectors. Cosine similarity therefore equals their inner product. RecurGuard uses these similarities to distinguish repetition from progress toward the query. The paper describes repeated movement into similar embedding regions as **recurrence collapse**. [pp. 5–6]
+
+[A] **True positive rate**, TPR, is the fraction of attacks flagged. **False positive rate**, FPR, is the fraction of clean examples flagged incorrectly. High TPR is not sufficient: a monitor that rejects ordinary long code answers can be impractical. **Joint miss rate** is the fraction missed by both RecurGuard and QDM, not the average of their individual miss rates. [p. 9]
+
+[A] The paper's background distinguishes security monitoring from ordinary reasoning efficiency. Efficiency methods ask when a benign model has reasoned enough; RecurGuard asks whether generation has drifted into a repetitive diversion. The related-work discussion is author-provided positioning, not independently verified evidence about every cited system. [pp. 13–14]
+
+## 4. Research problem and gap
+
+**Existing problem [A].** A black-box attacker can inject a computationally expensive decoy into prompt context. A compliant reasoning model may consume most or all of its output budget before returning to the user's question. The user can pay for the unwanted generation even when the final output contains nothing unsafe. [pp. 1–3]
+
+**Shortcomings attributed to previous defense approaches [A].** Input content-safety classification can pass harmless-looking puzzles. Length rules can detect large attacks but reject legitimate long-form code. A final-output semantic-distance monitor cannot stop generation early and may reject valid summaries whose content differs from the short summarization instruction. [pp. 1, 10, 12–13]
+
+**Research gap [A].** The authors propose monitoring the relationship between query alignment and recurrence during generation, rather than treating length or output-query distance alone as sufficient. They identify task-conditioned progress as the central comparison missing from simple drift monitoring. [pp. 1, 5, 14]
+
+**Motivation [A].** The attack surface appears in RAG, tool-using agents, and enterprise workflows because external text enters model context. Excess token generation is both an availability and monetary issue. [pp. 1–2]
+
+**Scope [A].** The work addresses inference-time reasoning-chain consumption. It does not study jailbreaks, harmful-content generation, weight poisoning, training-time backdoors, membership inference, or prevention of all long outputs. [pp. 3–4]
+
+[D] The paper is relevant to web-agent security through context ingestion and resource exhaustion. It provides no numerical estimate of the additional vulnerability caused specifically by web access, tool count, browsing depth, or autonomous action permissions.
+
+## 5. Research questions, objectives, and hypotheses
+
+**Explicit research questions.** The paper does not present a numbered set of formal research questions. The user's web-agent comparison question is the organizing question for this analysis, not a question experimentally posed by the paper.
+
+**Author objectives [A].** Detect off-task, self-recurrent reasoning while generation is occurring; keep false positives low on legitimate long-form tasks; characterize attack amplification and liveness failure; evaluate adaptive evasion; and distinguish full, partial, and absent reasoning visibility. [pp. 2–6]
+
+**Formal theoretical statements [A].** Theorem 1 relates recurrence minus alignment to a negative task-conditioned-progress margin. Proposition 1 gives a conditional consecutive-alarm probability bound. Theorem 2 rewrites the condition for avoiding the TP alarm. Proposition 2 reports an empirical held-out FPR certificate. These statements are not interchangeable with causal experimental hypotheses. [pp. 6–7]
+
+**Analytical questions used here [D].** Does task conditioning improve precision over repetition alone? Can semantic alignment retain expensive attacks while evading detection? Does reasoning visibility determine whether detection and early stopping are possible? Do ordinary content and length filters address this threat without excessive false positives? Sections 7–9 provide partial answers under the reported model and workload conditions.
+
+## 6. Assumptions / Threat Model
+
+[A] The system constructs prompt P from user query Q and context D, then model M produces reasoning R and final answer A. Context may contain user-controlled input, retrieved documents, tool outputs, or other text strings. An attack need not modify the model or system prompt. [p. 2, Eq. (1)]
+
+[A] The attacker can insert or control text in D, select a token-consuming decoy such as a Sudoku puzzle or mixed-base ASCII decoding instruction, and, in adaptive testing, know the general detector design. The attacker cannot change model weights or decoding parameters, access hidden activations or logits, directly modify the system prompt, bypass or disable the detector, or obtain detector gradients. The threat model is black-box prompt injection, not white-box encoder optimization. [pp. 2–3]
+
+[A] Defender observability is divided into four regimes. A exposes full reasoning and permits RecurGuard; B exposes summarized thinking and permits only reduced-sensitivity use; C has empty or hidden reasoning and makes RecurGuard unavailable; D exposes only final output and also makes RecurGuard unavailable. QDM can operate in all four regimes because it uses final output. [p. 3, Table 1]
+
+[A] Online stopping additionally requires streaming reasoning and client-side cancellation. A readable reasoning trace obtained only after completion would not, by itself, establish a cost-saving stop mechanism. [p. 6, §4.7]
+
+[D] The stated exclusions implicitly trust the model-serving configuration, detector operation, and ability to preserve the legitimate query as a reference. The paper does not provide a formal security boundary for PromptBuilder or quantify resistance to attacks on that reference query. These are analyst observations about the assumptions, not explicit author claims.
+
+[A] The theoretical probability statement assumes a per-chunk benign joint-alarm bound p0 and weak temporal dependence represented by correction factor η. The authors explicitly describe this as stylized and explanatory. The algebraic theorems depend on the specified embeddings and TP definition; they do not establish that every attack exhibits the assumed geometry. [pp. 6–7]
+
+## 7. Methodology
+
+### Design and architecture
+
+[A] This is a reproduction-and-defense evaluation: two published attack families are reproduced under the authors' setup; four adaptive variants probe evasion; RecurGuard is compared with QDM and four reference baselines. No detector-training procedure is reported. Instead, fixed embedding-based signals and thresholds are calibrated. [pp. 4–9]
+
+[A] Reasoning is divided into non-overlapping 64-word chunks. The all-MiniLM-L6-v2 sentence encoder produces normalized 384-dimensional vectors for each chunk and the query. RecurGuard computes recurrence rate, volume growth, and task-conditioned progress. Recurrence and volume use a sliding window of at most 20 prior chunks; TP compares against all earlier chunks, not only that window. The implementation retains prior chunk embeddings for the current generation. [p. 5]
+
+[A] The recurrence inner similarity threshold is 0.70. The alarm thresholds are RR > 0.20, VG < 0.01, and TP < −0.738, with t ≥ 3. Three consecutive joint alarms declare an attack; any non-alarm resets the counter. These strict inequalities matter at exact threshold equality. The configuration is locked for test evaluations. [pp. 5, 9]
+
+[A] For the first chunk, RR is set to zero and TP is its query similarity. Mean pairwise distance is zero for fewer than two members. Early VG values use a non-alarming convention; the exact convention is not numerically specified. Empty reasoning produces no RecurGuard alarm and is treated as inapplicable, rather than counted as successful defense. [p. 5]
+
+[C] Under the stated minimum index t ≥ 3 and three-consecutive-alarm rule, the earliest possible trigger is chunk 5: qualifying alarms at chunks 3, 4, and 5. With k = 64 complete words per chunk, that corresponds to 5 × 64 = 320 reasoning words, excluding processing and cancellation delay. This is a logical lower bound derived from the algorithm, not a reported empirical stopping time.
+
+### Companion monitor
+
+[A] QDM splits final output into 80-word chunks and averages their cosine similarity to the query. It flags a response below 0.318. Empty or whitespace-only output receives score zero and is flagged; a nonempty residual shorter than 80 words becomes one chunk. QDM is post-hoc and contains no recurrence term. [p. 6]
+
+### Datasets, splits, and calibration
+
+[A] SQuAD validation examples are shuffled with seed 42. Indices 0–49 supply 50 calibration queries; 50–199 supply 150 independently held-out benign queries; 200–299 supply 100 attack-test queries; 255–354 supply 100 adaptive-extension queries. ExtendAttack uses indices 205–254, 50 per open model. [pp. 8–9, Table 4]
+
+[C] The overlap between primary attack-test questions and adaptive-extension questions is indices 255–299 inclusive: 299 − 255 + 1 = 45 questions. The authors disclose that the prompt differs and that OverThink results were not used to design C1 or C4. Shared questions nonetheless mean these are not wholly disjoint question sets. [p. 8]
+
+[A] HumanEval, GSM8K, and CNN/DailyMail each contribute a 100-example clean profile. Thirty examples per task contribute to mixed-benign calibration; the other 70 per task are held out in the artifact. Main tables report all 100 to compare defenses on the same workload. The artifact's separate 70-example results are not supplied. [p. 8]
+
+[C] RecurGuard's stated mixed-benign calibration size is 50 + 30 + 30 + 30 = 140 traces. Its long-form profiles contain 3 × 70 = 210 held-out examples collectively, but no aggregate 210-example test result is reported here. These counts are derived from the stated allocation, not new performance evidence.
+
+[A] Percentile statistics seed threshold grids. Grid search selects the most sensitive setting with zero calibration false positives. No attacked data enter RecurGuard calibration. Exact candidate grids and the definition used to rank sensitivity are not given. QDM differs: its threshold uses 50 clean SQuAD calibration outputs and matched attacked OverThink outputs on the same calibration questions. QDM is therefore attack-informed, although its development queries are disjoint from the listed attack-test rows. [pp. 6, 9]
+
+[A] TriviaQA has 25 clean and 25 attacked examples, but validation results are assigned to the absent supplementary artifact. Dataset licenses, additional filtering details, exact dataset versions, and annotation procedures are not provided in the main paper. [p. 8]
+
+### Models and implementation
+
+[A] The four open models are DS-R1-Qwen-7B, DS-R1-Llama-8B, Qwen3-8B, and non-reasoning Llama-3.1-8B-Instruct. The primary full evaluation uses DS-R1-Qwen-7B because of long accessible traces and clear liveness failure. Sonnet 4.5 and Opus 4.7 are the closed-API models. Sonnet's listed API ID is claude-sonnet-4-5-20250929. [p. 7, Table 3]
+
+[A] Open experiments use NVIDIA A100 GPUs, HuggingFace Transformers, and SentenceTransformers. Closed experiments use the Anthropic Messages API with extended thinking enabled. Library versions, exact generation settings, hardware count, encoder timing, cancellation latency, and repeated-run protocol are not specified in the supplied main text. [pp. 7, 9]
+
+### Baselines and statistics
+
+[A] B1 flags token counts above the 99th percentile of clean calibration outputs. B2 uses zlib compression ratio as a repetitiveness proxy because logits are unavailable; it is not true perplexity. B3 flags fewer than five answer tokens. B4 flags output token-count z-scores above 3. QDM and RecurGuard complete the six main defenses; Llama Guard 3-1B-INT4 is an additional input-classification test. B2 adaptive rows use a fallback threshold, whose exact value is not supplied. [pp. 8, 10]
+
+[A] Metrics are output-token amplification, liveness failure, TPR, FPR, and joint miss. Wilson 95% intervals are reported for specified primary and small-sample detection results. A paired McNemar test compares RecurGuard and QDM on the same OverThink examples. Not every table cell receives an interval, and no multiple-comparison procedure is reported. [p. 9]
+
+## 8. Experiments / Analyses
+
+| ID | Purpose, setup, and principal evidence | Interpretation and caveat |
+|---|---|---|
+| X1: Primary attack characterization | Four open models; OverThink N=100 and ExtendAttack N=50 per model; amplification and liveness failure; Table 6. | Establishes substantial resource consumption for two mechanisms. Non-reasoning Llama ratios have a small-denominator caveat. |
+| X2: Primary detection benchmark | Six defenses on DS-R1-Qwen-7B; OverThink N=100, ExtendAttack N=50; TPR; Table 7 and Table 10 intervals. | RecurGuard reaches 99% and 92%; length rules reach 100% on both. This does not establish universal detection. |
+| X3: Benign workload evaluation | SQuAD full profile N=200 including 50 calibration examples; independent subset N=150; three long-form profiles N=100 each; Table 7. | RecurGuard's strongest independent certificate is SQuAD 0/150. Full long-form rates partly reuse calibration. |
+| X4: Signal ablation | Seven signal combinations; OverThink N=100 on primary model; Table 8. | TP-containing configurations have identical reported 99% TPR and 0% FPR. Clean ablation denominator is not explicit in the table caption. |
+| X5: Adaptive C1 | Topical constraint-satisfaction diversion; N=100, primary model; Table 10. | 11.9× amplification; RG 21%, QDM 38%, joint miss approximately 50%; an unresolved defense boundary. |
+| X6: Adaptive C4 | Task-aligned filler; N=100, primary model; Table 10. | 2.2× amplification and zero detections by both semantic monitors; still nonzero resource overhead. |
+| X7: Adaptive C2 and C3 | Diverse or structurally diverse filler; N=3 each; Tables 2 and 10. | Both ≤1.5× amplification; correctly answered; no scaled evaluation or TPR estimate. |
+| X8: Sonnet closed API | N=30 attacked and N=30 clean; summarized reasoning; Table 9. | O2 slowdown, 21.3× amplification; QDM 100% TPR, RG 16.7%. Limited model-specific evaluation. |
+| X9: Opus closed API | N=3 attacked; empty thinking; Table 9. | O3 in all three; 676× output amplification; RG inapplicable. Qualitative only. |
+| X10: Input moderation | Llama Guard; N=50 attacked and N=50 clean; §9.1. | 0/50 attack detections and zero clean FPR. Supports insufficiency for these prompts, not all moderation systems. |
+| X11: Early stopping | Detected OverThink attacks on DS-R1-Qwen-7B; §9.2. | About 92% output-token savings per detected attack; dependent on streaming and cancellation. |
+| X12: Monetary analysis | Opus smoke-test token counts priced using author-stated May 2026 rates; §9.2. | Approximately $0.402 versus $0.00234 per query; not an independent large-scale billing experiment. |
+| X13: TriviaQA validation | N=25 clean and N=25 attacked; §6.2. | Mentioned only; results inaccessible because supplementary artifact was not supplied. |
+
+[A] Manipulated conditions include attack family, adaptive semantic relationship, defense choice, signal inclusion, model, and visibility. Outcomes include amplification, answer failure, and detector flags. [D] Visibility differences are observed across different model/API conditions, not isolated through a controlled same-model raw-versus-summary intervention; that distinction limits causal attribution.
+
+## 9. Results
+
+### Attack severity
+
+[A/B] On DS-R1-Qwen-7B, OverThink has mean clean/attacked counts 357/8,155 tokens, 22.8× amplification, and 98% liveness failure. ExtendAttack has 22.5× amplification and 92% failure. On DS-R1-Llama-8B, corresponding OverThink values are 344/8,016, 23.3×, 86%; ExtendAttack is 22.7× and 80%. On Qwen3-8B, OverThink is 337/8,192, 24.3×, 100%; ExtendAttack is 19.6× and 44%. [p. 10, Table 6]
+
+[A/B] Non-reasoning Llama has 14 clean and 5,701 OverThink tokens, nominal 402× OverThink amplification and 100% failure; ExtendAttack is 212× and 100% failure. The authors warn that the 402× ratio reflects the tiny denominator and should not be interpreted as evidence of a stronger attack. Ratios use unrounded means, so dividing the displayed rounded counts need not reproduce them exactly. [pp. 9–10]
+
+### Detection and benign specificity
+
+[A/B] RecurGuard's OverThink TPR is 99%, Wilson interval [94.6%, 99.8%]; ExtendAttack TPR is 92%, interval [81.2%, 96.8%]. QDM detects 100% and 96%, respectively. Both length-based baselines detect 100% of both attacks. [pp. 10, 12]
+
+[A] RecurGuard and QDM agree on 99/100 OverThink samples; the paper reports McNemar χ²=0.0 and p=1.0. This is lack of a detected paired TPR difference in that evaluation, not proof of equivalent monitors. Their false positives and ability to stop generation differ substantially. [p. 9]
+
+[A/B] On HumanEval, B1/B4 FPRs are 69%/80%, compared with 1% for RecurGuard and 1% for QDM. On CNN/DailyMail, QDM's FPR is 89% while RecurGuard's is 0%. All six defenses have 0% reported FPR on GSM8K. [p. 10, Table 7]
+
+[C] On the full HumanEval profile, RecurGuard's reported FPR is 69 − 1 = 68 percentage points below B1 and 80 − 1 = 79 percentage points below B4. On CNN/DailyMail, its rate is 89 − 0 = 89 percentage points below QDM. These are absolute percentage-point differences, not relative percent improvements, and inherit the calibration-overlap caveat.
+
+### Adaptation and visibility
+
+[A/B] C1 retains 11.9× amplification but reduces RecurGuard TPR to 21% [14.2%, 30.0%] and QDM TPR to 38% [29.1%, 47.8%]. Joint miss is a rounded approximately 50% run-level result. C4 has 2.2× amplification; both semantic monitors have 0% TPR [0%, 3.7%] and joint miss is 100%. [p. 12]
+
+[A] The authors describe the reduction from 22.8× to 2.2× as 90%. [C] Using displayed values, (22.8 − 2.2)/22.8 × 100 = approximately 90.35%, consistent with that rounded description. It is a reduction in amplification relative to OverThink, not elimination of cost overhead. [p. 12]
+
+[A/B] Sonnet: QDM 100% TPR [88.6%, 100%], RecurGuard 16.7% [7.3%, 33.6%], and 21.3× amplification with final answers for all 30 attacks. QDM has 0% FPR on 30 clean queries. Opus: all three attacks exhaust the budget, QDM flags 3/3, and RecurGuard cannot operate because thinking blocks are empty. No Opus confidence interval is claimed. [p. 11]
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Threat model and monitor placement, p. 3
+
+[B] This is a system-flow diagram, not a statistical plot. Gray input blocks represent user query Q and retrieved/tool/external context D. A red warning box sends an upward arrow into D, identifying the injection entry. Both inputs feed PromptBuilder(Q,D), then a reasoning LLM. The exposed trace branches upward to blue RecurGuard, containing RR, VG, and TP indicators. Its outputs are a red HALT box and green Continue box. If not halted, generation reaches final output Y, then blue QDM, whose outcomes are red Flag and green Pass.
+
+[B] An orange visibility box summarizes full-trace applicability in A, partial applicability in B, and QDM fallback in C/D. There are no axes, numeric scales, sample estimates, error bars, or measured latency values. Color distinguishes processing, warnings, and decisions; the diagram is architecture evidence, not performance evidence.
+
+[A] The caption emphasizes that injection enters a text-bearing channel, RecurGuard is online, and QDM is post-hoc. [D] The diagram visually associates final-output QDM with the continuation path; it does not specify how an application handles an intentionally halted response or whether QDM would inspect that partial response. No additional behavior is inferred.
+
+### Figure 2(a) — Illustrative signal trajectories, p. 11
+
+[B] Three vertically stacked line plots share chunk index from 0 to 20. The top blue curve is RR, with vertical range 0 to 1 and a red dashed threshold at 0.20. The middle green curve is VG, labeled ΔMPD, spanning approximately −0.1 to 0.2, with dashed threshold 0.01. The bottom purple curve is TP, labeled margin, spanning −1.5 to 1.0, with dashed threshold −0.738. These quantities are dimensionless embedding statistics; the horizontal unit is chunks.
+
+[B] RR rises from low recurrence to high recurrence, VG declines through its threshold toward small negative values, and TP drops below its negative threshold. Pale red shading marks anomalous regions; a vertical dashed line marks the sustained S=3 trigger. Small circular markers indicate plotted chunk positions. No uncertainty bands or error bars appear.
+
+[A] The panel is explicitly **illustrative**. [B, approximate visual estimate] The simultaneous anomalous region begins around chunk 7, and the trigger is around chunk 9. These positions are visual estimates, not reported empirical average stopping times. The panel explains how the conjunction accumulates; it must not be used to derive attack-population detection latency or variance.
+
+### Figure 2(b) — Amplification versus joint miss, p. 11
+
+[B] This scatter plot uses a linear horizontal axis, joint miss rate of RG and QDM from 0% to 100%, and a logarithmically spaced vertical amplification axis with labels 0.8, 1, 2, 5, 10, 20, and 40. A dashed horizontal line marks 1×, no amplification. The legend and point colors distinguish blue OverThink, orange ExtendAttack, green C1, and red C4. There are no error bars.
+
+[A/B] Exact labeled points are OverThink (0%, 22.8×), ExtendAttack (4%, 22.5×), C1 (~50%, 11.9×), and C4 (100%, 2.2×). They agree with Table 10, including approximate/rounded C1 joint miss. The logarithmic vertical scale prevents interpreting equal vertical distances as equal additive token differences.
+
+[A] The supported conclusion is a boundary in these evaluated constructions: full joint semantic evasion coincides with much lower amplification for C4, while C1 retains substantial amplification under partial evasion. [D] Four plotted attack conditions do not establish a universal frontier or an upper bound on all possible evasive attacks.
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Defender visibility, p. 3
+
+[A/B] Rows A–D distinguish full trace, summarized thinking, empty/hidden reasoning, and final output only. RecurGuard availability is Yes, Partial, No, No; QDM is Yes in every row. This table defines observability conditions, not measured accuracy. Empty reasoning is an applicability boundary rather than a false-negative percentage.
+
+### Table 2 — Attack taxonomy, p. 4
+
+[A/B] Columns identify attack, source, decoy relation to query, and scaling. OverThink is prior work/unrelated/N=100; ExtendAttack is prior work/encoded query/N=50. C1 is stress test/topically related/N=100; C2 is diverse unrelated filler/N=3 smoke; C3 is structured-diverse filler/N=3 smoke; C4 is task-aligned filler/N=100. The scaled adaptive experiments apply only to the primary model, as clarified in the setup. C2/C3 are not large-sample negative results.
+
+### Table 3 — Models and trace visibility, p. 7
+
+[A/B] The three open reasoning models have full trace visibility. Llama-3.1-8B is open but non-reasoning, so trace visibility is N/A. Sonnet 4.5 exposes summary thinking; Opus 4.7 has hidden thinking. Footnotes give Sonnet's API ID and state that all evaluated Opus thinking blocks were empty. A model's capacity to reason is therefore distinct from a defender's capacity to inspect reasoning.
+
+### Table 4 — SQuAD allocation, p. 8
+
+[A/B] Calibration: 0–49, N=50; held-out benign: 50–199, N=150; held-out attack: 200–299, N=100; adaptive extension: 255–354, N=100. Seed is 42. The caption discloses overlap between attack and adaptive ranges. It does not describe a training split, and these role-specific allocations must not be relabeled as conventional train/test partitions.
+
+### Table 5 — Monitor capabilities, p. 9
+
+[A/B] RecurGuard requires reasoning, is online, supports early stopping, cannot run from final output alone, and has partial summarized-thinking capability. QDM requires no reasoning, is neither online nor early-stopping, and handles final-output-only and summarized-thinking deployments. These are capability labels; actual online savings still require streaming and cancellation.
+
+### Table 6 — Amplification across models, p. 10
+
+[A/B] Rows are four open models; columns show clean and OverThink mean tokens, then amplification and liveness failure for each attack. All substantive values are preserved in §9. Highest displayed reasoning-model OverThink amplification is Qwen3's 24.3×; its ExtendAttack liveness failure is only 44%, compared with 92% on primary Qwen. Llama's nominal ratios are highest overall but have the explicit denominator warning. Means are rounded, while ratios are computed from unrounded means. No uncertainty intervals appear here.
+
+### Table 7 — Full primary-model defense benchmark, p. 10
+
+[A/B] Column order below is B1, B2, B3, B4, QDM, RecurGuard. Attack percentages are TPR; clean-task percentages are FPR.
+
+| Condition | B1 | B2 | B3 | B4 | QDM | RecurGuard |
+|---|---:|---:|---:|---:|---:|---:|
+| OverThink, N=100 | 100% | 100% | 98% | 100% | 100% | 99% |
+| ExtendAttack, N=50 | 100% | 96% | 92% | 100% | 96% | 92% |
+| C1, N=100 | 94% | 3% | 31% | 99% | 38% | 21% |
+| C4, N=100 | 3% | 1% | 1% | 10% | 0% | 0% |
+| SQuAD full profile, N=200 | 1% | 1% | 0.5% | 1% | 0.5% | 0% |
+| HumanEval, N=100 | 69% | 27% | 17% | 80% | 1% | 1% |
+| GSM8K, N=100 | 0% | 0% | 0% | 0% | 0% | 0% |
+| CNN/DailyMail, N=100 | 0% | 2% | 0% | 1% | 89% | 0% |
+
+[B] Red text marks FPR above 10%. Notes flag adaptive B2's fallback threshold, C4's 2.2× amplification, independent RecurGuard SQuAD 0/150, and calibration examples inside full profiles. The table shows that highest attack TPR and lowest cross-workload FPR belong to different methods. It includes no per-cell significance claims.
+
+### Table 8 — Seven signal configurations, p. 11
+
+[A/B] RR-only: 100% TPR/4.7% FPR; VG-only: 100%/5.3%; TP-only: 99%/0%; RR+VG: 100%/4.0%; RR+TP: 99%/0%; VG+TP: 99%/0%; full: 99%/0%. Checkmarks indicate active signals, dashes disabled signals. All TP-containing configurations tie on reported metrics. This supports TP dominance for this OverThink test, while leaving the incremental benefit of RR/VG on other attacks uncertain. The attack count is N=100; the caption does not explicitly identify the benign denominator behind the FPR percentages.
+
+### Table 9 — Closed-API results, p. 11
+
+[A/B] Sonnet is visibility B, outcome O2, 21.3× amplification, QDM 100% [88.6,100], RG 16.7% [7.3,33.6]. Opus is visibility C, outcome O3, 676× amplification, QDM 100% (3/3), RG N/A. Intervals are Wilson 95%. N/A means structural inapplicability from empty thinking, not zero measured TPR. No Opus interval or population-level statistical claim is made.
+
+### Table 10 — Adaptive results, p. 12
+
+[A/B] OverThink and ExtendAttack repeat baseline values and add RecurGuard intervals. C1 is N=100, 11.9×, RG 21% [14.2,30.0], QDM 38% [29.1,47.8], joint miss 50% with a rounding note. C4 is N=100, 2.2×, both TPRs 0% [0,3.7], joint miss 100%. C2 and C3 are N=3 each, ≤1.5×, with n/a detector statistics. Footnotes state correct answers in both smoke variants, that C4 supports the tradeoff only in the evaluated setting, and that C1 lies outside the theorem's full-evasion scope.
+
+## 12. Diagram / Architecture Interpretation
+
+[A/B] Figure 1 encodes two monitoring stages. The data path begins with legitimate Q plus potentially hostile D. PromptBuilder combines them; the reasoning model then generates R and, if allowed to continue, final output Y. The RecurGuard branch receives exposed R and uses Q as its semantic reference through the method definition, even though the diagram does not draw a separate query-reference arrow. [pp. 2–5]
+
+[A/B] The control path returns a halt or continue decision while generation is active. Algorithm 1 implements repeated chunk processing and a persistent consecutive-alarm counter. A halt terminates generation at the trigger; a continue allows subsequent chunks or final answering. The diagram shows no tool-execution loop, browser actions, external transactions, or repeated retrieval cycle. [pp. 3, 5]
+
+[A/B] QDM operates downstream on Y and produces flag/pass after completion. It is a detector placement, not a complete incident-response design: the supplied paper does not specify whether a flagged answer is withheld, retried, escalated, or used to block a source. [pp. 3, 6]
+
+[D] For web agents, this architecture suggests monitoring after external-text ingestion and during reasoning. That suggestion is an inference from the diagram and threat model; an implemented browser-agent integration was not evaluated in the supplied paper.
+
+## 13. Equations and mathematical concepts
+
+### Equations (1)–(3): pipeline and harm
+
+**(1), p. 2:** `P = PromptBuilder(Q,D)`. Q is the legitimate query; D is additional context; P is their constructed prompt. This functional relation locates the injection surface. The exact prompt-builder implementation is not specified.
+
+**(2), p. 3:** `α = E[T_attack] / E[T_clean]`. T values are output-token counts; E denotes their means/expectations. α is dimensionless. It measures token amplification, not total monetary cost. The displayed empirical ratios use unrounded means.
+
+**(3), p. 3:** `LF(Y) = 1[answer tokens < 5 OR T_attack ≥ T_max]`. Y is output; T_max is generation budget; the indicator is one when either clause is true. The five-token cutoff treats empty or fragmentary answers as unusable. An ambiguity remains: the literal OR counts budget exhaustion even if a usable answer exists, while prose describes exhaustion without answering. No unseen implementation is used to resolve this.
+
+### Equations (4)–(5): chunks and embeddings
+
+**(4), p. 5:** `c_t = (w_((t−1)k+1), …, w_(tk))`, t=1,2,…, k=64. R is the word sequence; c_t is a non-overlapping complete chunk. The method does not explicitly state how an incomplete final reasoning chunk is handled, unlike QDM's residual rule.
+
+**(5), p. 5:** `e_t=f(c_t) ∈ R^d`, `q=f(Q) ∈ R^d`, d=384. Encoder f is all-MiniLM-L6-v2. Unit normalization makes `sim(a,b)=〈a,b〉`. Chunk and query vectors are method inputs, not learned detector parameters.
+
+### Equations (6)–(9): the signals
+
+The prior window is `W_t={max(1,t−W), …, t−1}`, W=20.
+
+**(6), p. 5:** `RR_t=(1/|W_t|) Σ_(i∈W_t) 1[sim(e_t,e_i)>τ_r]`, τ_r=0.70. RR is the fraction of recent chunks sufficiently similar to the current one. It is zero for the first chunk by convention. The inner similarity threshold τ_r differs from outer alarm threshold τ_R=0.20.
+
+**(7), p. 5:** `MPD(S)=2/(|S|(|S|−1)) Σ_(i<j; i,j∈S) ||e_i−e_j||_2`. Here S denotes a set of chunk indices, not sustained-alarm count. The norm is Euclidean distance, not squared distance. MPD averages unordered pair distances; for fewer than two members it is zero.
+
+**(8), p. 5:** `VG_t=MPD(W_t∪{t})−MPD(W_t)`. Positive change indicates expansion of the embedding cloud; negative or near-zero change indicates little new territory. The alarm uses VG below 0.01, so a small positive value can also qualify. VG is a geometric statistic, not literal text volume or token count.
+
+**(9), p. 5:** `TP_t=sim(e_t,q)−max_(i<t) sim(e_t,e_i)`. TP compares alignment to the query against strongest similarity to any prior chunk. Positive TP means the chunk is more similar to Q than to every prior chunk; strongly negative TP means prior reasoning is the closer anchor. It is a similarity margin, not direct measurement of factual correctness or actual task completion.
+
+### Equations (10)–(11): alarms and fallback
+
+**(10), p. 5:** `A_t=1[RR_t>τ_R AND VG_t<τ_V AND TP_t<τ_P AND t≥c_min]`. Thresholds are 0.20, 0.01, −0.738, and c_min=3. RecurGuard declares an attack after sustained count S=3; any A_t=0 resets that count. This conjunction defines the detector, including off-task recurrence rather than length alone.
+
+**(11), p. 6, text-only:** `QDM(Y,Q)=(1/M) Σ_(m=1)^M sim(f(y_m),f(Q))`. M is number of nonempty output chunks here, not model M in the pipeline. Chunks are 80 words; the mean is compared with 0.318. Empty output is assigned zero rather than leaving division by zero undefined. QDM uses final-output geometry and cannot stop generation before completion.
+
+### Equations (12)–(15) and theoretical statements
+
+**(12), p. 6, text-only:** `a_t=sim(e_t,q)` is task alignment. **(13), p. 6, text-only:** `r_t=max_(i<t)sim(e_t,e_i)` is recurrence to earlier reasoning. Thus TP_t=a_t−r_t. Lowercase r_t is strongest prior similarity, not the fraction RR_t.
+
+**Theorem 1, p. 6:** If `r_t−a_t≥m`, m>0, then `TP_t≤−m`. For the configured negative τ_P, m>|τ_P| makes the TP alarm true. The proof substitutes the definition. It supports a conditional separation statement, not a theorem that every attack meets the premise.
+
+**(14), p. 7:** Restates the same per-chunk alarm as Eq. (10). It is represented once conceptually because the duplicate is substantive repetition, not a new detector.
+
+**Proposition 1, p. 7:** `Pr( intersection_(j=0)^(S−1) {A_(t+j)=1} ) ≤ η p0^S`, with 0<p0<1 and η≥1. It concerns one run of S consecutive joint alarms under an assumed temporal-dependence correction. The authors do not derive p0 or η from first principles. The formula does not itself supply a whole-trace FPR after many possible trigger positions. Remark 1 explains the restrictive thresholds and relative p0² factor for S=3 versus S=1, within the stated model.
+
+**(15), p. 7, Theorem 2:** `TP_t≥τ_P` implies `a_t≥r_t+τ_P`. This is rearrangement of the TP definition. An attacker avoiding the TP alarm at every chunk must preserve enough alignment relative to recurrence. It neither guarantees low token amplification mathematically nor covers every way to evade the full three-signal sustained detector. C4 supplies empirical consistency, while C1 demonstrates partial evasion outside that premise.
+
+**Proposition 2, p. 7:** Zero false positives on n=150 held-out benign SQuAD queries yield an author-reported Wilson 95% upper bound below 2.5%. Its k=0 denotes false-positive count, distinct from chunk-size k=64. This is an empirical uncertainty statement for the tested benign distribution, not proof that true FPR is zero everywhere.
+
+## 14. Interpretation and discussion
+
+[A] The strongest practical distinction is that repetition alone is not sufficient evidence of attack. RR-only and VG-only catch all tested OverThink examples but produce more benign alarms. TP adds the legitimate query as a competing anchor and matches the full method's reported precision on the ablation. [p. 11]
+
+[D] A strongly negative TP indicates a geometric relationship in the chosen encoder. It should not be equated automatically with semantic uselessness: the paper itself shows how legitimate summarization can be far from an instruction. RecurGuard's empirical benefit arises from incorporating recurrence and sustained conditions, not from a general proof that embeddings measure correctness.
+
+[A] The adaptive results support a limited tradeoff: C4 achieves full semantic-monitor evasion at much lower amplification, but C1 keeps a substantial 11.9× multiplier with partial evasion. The authors acknowledge that no single evaluated defense works across every case. [p. 12]
+
+### Source consistency checks
+
+1. **Liveness metric versus prose:** Eq. (3), p. 3, uses fewer than five answer tokens OR budget exhaustion. Nearby prose and §6.7, p. 9, describe exhaustion without a usable answer. These definitions can differ for a budget-reaching generation with an otherwise usable answer. The supplied aggregate tables do not settle whether such cases occurred.
+2. **Calibration language:** §4.6, p. 6, says no attacked data appear in the calibration set; §4.5 and §6.6 explicitly use attacked development outputs for QDM. Read in context, the benign-only claim applies to RecurGuard. It must not be extended to QDM.
+3. **Held-out versus full profiles:** Table 7's SQuAD N=200 includes 50 calibration queries, whereas Proposition 2's independent certificate is N=150. Long-form N=100 profiles include 30 development examples each. These are disclosed differences, not contradictory sample counts.
+4. **Theorem scope versus broad prose:** Figure 2 discussion on p. 10 says full semantic evasion is possible only after amplification drops sharply. Sections 5.4 and 8 qualify this to the theorem premise and evaluated C4 construction. The narrower wording is retained; universal impossibility is not inferred.
+5. **Rounded token means:** Table 6 reports ratios from unrounded means. Apparent differences obtained by dividing displayed counts, particularly 5,701/14 versus 402×, should not be silently corrected.
+6. **Task alignment interpretation:** Eq. (9) provides a margin against previous chunks; avoiding the joint detector can also occur by failing RR, VG, or sustained-count conditions. Theorem 2 is not a complete characterization of all detector evasion.
+7. **Cross-model detection scope:** §6.1 describes validation of detection logic across models, but the supplied numerical defense benchmark and ablation are on the primary model. Table 6 gives cross-model attack severity, not cross-model RecurGuard TPR/FPR. Additional numerical detection generalization cannot be reconstructed.
+
+## 15. Contributions and novelty
+
+[A] **Conceptual/security:** Formalize reasoning-chain consumption as a runtime security problem, distinguish token amplification from answer availability, and introduce visibility regimes. [p. 2]
+
+[A] **Algorithmic/methodological:** Combine recurrence, embedding-cloud growth, and query-conditioned similarity margins with a sustained alarm over exposed reasoning. The query-versus-prior-reasoning comparison is the central claimed distinction. QDM is explicitly a companion, not the primary novel algorithm. [pp. 2, 5–6]
+
+[A] **Theoretical:** Provide explanatory algebraic conditions, a stylized false-positive bound, and an empirical FPR certificate. These are not universal security proofs. [pp. 6–7]
+
+[A] **Empirical:** Compare six defenses, reproduce two attacks, test clean long-form workloads, perform ablation, and expose adaptive and closed-API boundaries. [pp. 8–12]
+
+[A] **Systems/deployment:** Explain when online cancellation can save tokens and when hidden traces force post-hoc monitoring. The main paper reports about 92% savings per detected primary-model OverThink attack. [p. 13]
+
+[A] There is no claimed new dataset contribution. The authors explicitly do not claim OverThink or ExtendAttack as their inventions. A repository is offered, but code quality, completeness, and reproducibility are not inspected here. [pp. 4, 14]
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+[A] RecurGuard requires nonempty reasoning text. Hidden reasoning makes it structurally inapplicable; provider summarization reduces recurrence signals and observed sensitivity. [p. 14, §11.2]
+
+[A] Scaled C1/C4 evaluation occurs only on DS-R1-Qwen-7B, with N=100 each. Transfer to all reasoning models is not established. [p. 14]
+
+[A] C1 remains unsolved: topical alignment preserves meaningful amplification while weakening both semantic monitors. Length rules catch most C1 samples but have unacceptable clean code FPR as standalone defenses. [p. 14]
+
+[A] No white-box gradient-based adaptive attack against the sentence encoder or decision rule is evaluated. [p. 14]
+
+[A] B2 is a compression proxy, not true logit-based perplexity. Adaptive B2 values need caution because the table identifies a fallback threshold. [pp. 10, 14]
+
+[A] Closed-API evidence is limited: Sonnet has 30 attacked and 30 clean queries; Opus is only a three-attack qualitative smoke test, with no statistical population claim. C2/C3 also remain three-example smoke tests. [pp. 8–12]
+
+[A] QDM cannot save generation cost and is unsuitable for the tested summarization anchoring. A 2.2× C4 overhead is still increased spend. The theory is explanatory rather than universal. [pp. 6–7, 12–14]
+
+### Additional evidence-based analyst observations
+
+[D] The supplied paper does not isolate web access or autonomous tooling as an experimental variable. End-to-end RAG testing remains future work, so relevance to web-agent workflows is mechanistic rather than a measured agent-versus-standalone effect.
+
+[D] The full model and TP-only configuration tie in the reported ablation; the supplied results do not quantify how much RR and VG improve security beyond TP for other attack conditions.
+
+[D] Performance overhead is described qualitatively as small but lacks measured encoder latency, CPU/GPU overhead, cancellation delay, or concurrency scaling. Memory retains all prior embeddings for TP rather than being bounded solely by W=20.
+
+[D] Main-text reproducibility is limited by unspecified generation settings, threshold grids, exact baseline thresholds, and repeat counts. These details might exist in the uninspected repository; their absence here is not a claim that the repository lacks them.
+
+[D] Because final-answer token count operationalizes usability, the evaluation does not establish factual answer correctness, code correctness, or summary quality after every attack or stop decision.
+
+## 17. Threats to validity
+
+The following categories are analyst organization of source-grounded concerns, not author-used headings.
+
+**Internal validity [D].** The single locked configuration and disclosed development/test allocations help constrain retuning. Nevertheless, exact sensitivity-ranking rules and baseline calibration details are incomplete. Adaptive and primary attacks share 45 questions, although prompts differ and authors deny using OverThink results to design C1/C4. Sonnet's lower TPR is attributed to summarized traces, but model and visibility change together.
+
+**Construct validity [D].** Embedding recurrence is a proxy for repetitive off-task reasoning; token ratios are proxies for resource burden; answer length is a proxy for usability. The Eq. (3) ambiguity and lack of semantic answer-quality scoring limit exact interpretation of liveness. Monetary amplification must include input/output prices rather than being equated with output-token amplification.
+
+**Statistical conclusion validity [D].** Wilson intervals clarify uncertainty around selected rates, including nonzero upper bounds for observed zero detections or false positives. Zero observed FPR does not mean zero underlying risk. The McNemar result is not an equivalence test. The Proposition 1 bound concerns a specified consecutive run and does not by itself quantify full-trace false-alarm probability.
+
+**External validity [D].** Adaptive results are primary-model-specific. Sonnet and Opus are limited API snapshots, not all closed models. Benchmark question answering, code, math, and summarization do not encompass arbitrary multilingual content, browser sessions, or long tool-use trajectories.
+
+**Ecological validity [D].** The context-inference threat model is relevant to retrieved and tool-provided text, but no realistic multi-step web-agent deployment is reported. Actual costs of retries, downstream actions, or adversarial source selection are not measured.
+
+**Reproducibility [D].** The supplied main paper provides equations, principal thresholds, seed, splits, hardware family, and repository location. Execution details and supplementary results were not supplied, so independent reproduction cannot be assessed. No code execution or citation validation was performed.
+
+## 18. Future work and open questions
+
+### A. Author-proposed future work
+
+[A] Test end-to-end RAG deployments; run adaptive variants on more open and closed models; develop source-document or other task-aware anchors, especially for C1 and summarization; use entropy-based signals when token-level logits are available; and evaluate gradient-based attacks against encoder/detector internals beyond the present black-box scope. [pp. 3, 14]
+
+### B. Additional open questions
+
+[D] How much extra resource risk does a web agent incur relative to a matched standalone model when model, budget, and user task are held constant? How do multiple retrieved sources and repeated tool outputs affect the monitor's reference anchor? Can a valid task require sustained self-similar reasoning that the chosen encoder misclassifies? What happens to user utility after early cancellation, including how the application recovers an answer?
+
+[D] What are actual monitoring latency, cancellation latency, and memory growth at long trace lengths? Does TP-only retain the full method's behavior on ExtendAttack, C1, and different models? Can high-amplification evasion defeat RR or VG while preserving enough query alignment without satisfying full TP evasion? Can document anchoring reduce C1 misses without introducing new clean-task false positives? These are unresolved questions, not conclusions from missing experiments.
+
+## 19. Terminology and notation glossary
+
+| Term or symbol | Beginner-friendly meaning and qualification |
+|---|---|
+| LLM | Large language model. |
+| RAG | Retrieval-augmented generation: retrieved text is added to a model prompt. |
+| API | Application programming interface through which a model is accessed. |
+| Prompt injection | Instructions placed in content that should be treated as data. |
+| Indirect injection | Injection delivered through external documents, web pages, emails, or tool outputs. |
+| DoS | Denial of service: no usable answer in this study's operationalization. |
+| DoW | Denial of wallet: excess token charges, including slowdown with an answer. |
+| Reasoning trace R | Exposed intermediate reasoning text; not hidden model activations. |
+| Q, D, P | User query, additional context, and constructed prompt. |
+| A, Y | Final answer/output notation; per-chunk A_t is a different alarm indicator. |
+| f, e_t, q | Text encoder, current chunk embedding, and query embedding. |
+| d | Embedding dimensionality, 384. |
+| k | Chunk size, 64 words; Proposition 2 separately uses k=0 for false-positive count. |
+| W, W_t | Window width 20 and set of recent prior chunk indices. |
+| RR | Recurrence rate: fraction of recent chunks above similarity 0.70. |
+| MPD | Mean pairwise Euclidean distance among embeddings. |
+| VG | Volume growth: change in MPD after adding a chunk. |
+| TP | Task-conditioned progress: query similarity minus maximum prior-chunk similarity. |
+| a_t, r_t | Query alignment and maximum recurrence similarity. |
+| τ_r, τ_R | Inner similarity cutoff and separate outer recurrence-alarm cutoff. |
+| τ_V, τ_P | Volume-growth and task-progress alarm cutoffs. |
+| S | Three required consecutive alarms; MPD(S) separately uses S as a set. |
+| c_min | Earliest eligible chunk index, 3. |
+| QDM | Query Drift Monitor: final-output similarity monitor using 80-word chunks. |
+| T_attack, T_clean | Attacked and clean output-token counts. |
+| T_max | Generation budget; exact per-run configuration is not supplied. |
+| α | Output-token amplification ratio. |
+| LF | Liveness-failure indicator, with noted equation/prose ambiguity. |
+| O1/O2/O3 | Normal, slowdown with answer, and liveness-failure outcome classes. |
+| TPR/FPR | Attack detection fraction / incorrect clean-example flag fraction. |
+| Joint miss | Fraction missed by both semantic monitors simultaneously. |
+| CSP | Constraint satisfaction problem, used for puzzle-style decoys. |
+| ASCII | Encoding terminology used for ExtendAttack's mixed-base character decoding. |
+| SBERT | Sentence-BERT framework cited for sentence embeddings. |
+| Wilson interval | The paper's reported binomial-rate uncertainty interval. |
+| McNemar test | Paired comparison of two monitors on the same examples. |
+| p0, η | Assumed benign joint-alarm probability bound and temporal-dependence correction. |
+
+## 20. Key numerical results
+
+| Quantity / result | Value | Unit | Condition / context | Status | Source |
+|---|---:|---|---|---|---|
+| Reasoning chunk / QDM chunk | 64 / 80 | words | Fixed monitor definitions | Author-reported | pp. 5–6 |
+| Window / embedding size | 20 / 384 | chunks / dimensions | RecurGuard | Author-reported | p. 5 |
+| Inner similarity cutoff | 0.70 | cosine similarity | RR comparison | Author-reported | p. 5, Eq. (6) |
+| Alarm thresholds | 0.20, 0.01, −0.738 | dimensionless | RR, VG, TP respectively | Author-reported | pp. 5, 9 |
+| Sustained count / minimum index | 3 / 3 | chunks / index | Joint-alarm rule | Author-reported | p. 5 |
+| QDM cutoff | 0.318 | mean cosine similarity | Attack-informed development | Author-reported | pp. 6, 9 |
+| Benign calibration size | 140 | traces | 50 + 3×30 | Analyst-derived | pp. 8–9 |
+| Primary/adaptive question overlap | 45 | questions | Indices 255–299 inclusive | Analyst-derived | p. 8 |
+| Earliest logical stop | 320 | reasoning words | 5 chunks ×64, ignoring delay | Analyst-derived | p. 5 |
+| Primary OverThink / ExtendAttack amplification | 22.8 / 22.5 | × | DS-R1-Qwen-7B | Visually readable | p. 10, T6 |
+| Primary attack liveness failures | 98 / 92 | % | OverThink / ExtendAttack | Visually readable | p. 10, T6 |
+| RecurGuard primary TPR | 99 / 92 | % | N=100 / N=50 | Visually readable | pp. 10, 12 |
+| Corresponding Wilson intervals | [94.6,99.8] / [81.2,96.8] | % | Primary attack TPR | Visually readable | p. 12, T10 |
+| Held-out benign false positives | 0/150 | count | SQuAD indices 50–199 | Author-reported | p. 7 |
+| Held-out FPR upper bound | <2.5 | % | Wilson 95% | Author-reported | p. 7 |
+| RecurGuard code/math/summary FPR | 1 / 0 / 0 | % | Full profiles N=100 each | Visually readable | p. 10, T7 |
+| Length baseline code FPR | 69 / 80 | % | B1 / B4, HumanEval | Visually readable | p. 10, T7 |
+| QDM summary FPR | 89 | % | CNN/DailyMail, N=100 | Visually readable | p. 10, T7 |
+| C1 amplification / joint miss | 11.9 / ~50 | × / % | Primary model, N=100 | Visually readable | p. 12, T10 |
+| C1 RG / QDM TPR | 21 / 38 | % | Same adaptive samples | Visually readable | p. 12, T10 |
+| C4 amplification / joint miss | 2.2 / 100 | × / % | Primary model, N=100 | Visually readable | p. 12, T10 |
+| C4 semantic TPR | 0 [0,3.7] | % | Each monitor, Wilson 95% | Visually readable | p. 12, T10 |
+| C2/C3 amplification | ≤1.5 | × | N=3 each, smoke only | Visually readable | p. 12, T10 |
+| Sonnet amplification | 21.3 | × | N=30 attacked, O2 | Visually readable | p. 11, T9 |
+| Sonnet QDM / RG TPR | 100 / 16.7 | % | Summarized reasoning | Visually readable | p. 11, T9 |
+| Opus amplification | 676 | × output tokens | N=3, O3, hidden reasoning | Visually readable | p. 11, T9 |
+| Llama Guard detection | 0/50 [0,7.1] | count / % CI | OverThink inputs | Author-reported | p. 12 |
+| Early-stop savings | about 92 | % output tokens | Per detected primary-model OverThink attack | Author-reported | p. 13 |
+| Opus input/output prices | 5 / 25 | dollars per million tokens | Author-stated May 2026 pricing | Author-reported | p. 13 |
+| Opus attacked/clean query costs | ≈0.402 / ≈0.00234 | dollars | Three-attack cost analysis | Author-reported | p. 13 |
+| Total monetary amplification | ≈172 | × total API cost | Distinct from 676× output tokens | Author-reported | p. 13 |
+| Illustrative trigger position | around 9 | chunk index | Figure 2(a), not empirical mean | Approximate visual estimate | p. 11, F2a |
+
+[A] At a hypothetical 10,000 attacks per day, the authors translate Opus costs to roughly $4,000 versus roughly $23 for normal traffic. This is a scenario projection, not observed deployment traffic. The author-stated prices are retained as historical inputs from the paper and are not verified as current.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/table/experiment | Source | Qualification / evidence strength |
+|---|---|---|---|---|
+| External context can deliver token-consuming decoys | Defined prompt pipeline and attacker text control | F1, threat model | pp. 2–3 | HIGH for stated model; no end-to-end web-agent test. |
+| RecurGuard combines recurrence, growth, and task conditioning | Exact signal and alarm equations; pseudocode | E6–E10, ALG1 | p. 5 | HIGH for method definition. |
+| RecurGuard detects primary attacks on the main model | 99% OverThink and 92% ExtendAttack TPR | T7, T10, X2 | pp. 10, 12 | HIGH for reported samples; model-specific. |
+| Low benign FPR has independent held-out support | 0/150 SQuAD, Wilson upper <2.5% | Proposition 2, X3 | p. 7 | HIGH; distribution-limited, not zero-risk proof. |
+| TP is dominant in the reported ablation | TP-only equals full at 99%/0% | T8, X4 | p. 11 | HIGH for this test; other attacks not ablated here. |
+| C1 is an unresolved expensive evasion case | 11.9×, 21%/38% TPR, ~50% joint miss | T10, X5 | p. 12 | HIGH; primary model only, joint miss rounded. |
+| C4 fully evades semantic monitors with reduced amplification | 0% TPR each, 2.2× | T10, X6 | p. 12 | HIGH for observed construction; no universal bound. |
+| Visibility limits deployment | Sonnet reduced TPR; Opus empty traces | T1, T9, X8/X9 | pp. 3, 11 | HIGH applicability evidence; limited API sampling. |
+| Content safety misses these evaluated inputs | Llama Guard detects 0/50 | X10 | pp. 12–13 | HIGH within tested classifier/prompts only. |
+| Early stopping can save tokens | About 92% per detected OverThink attack | X11 | p. 13 | HIGH author report; streaming/cancellation required. |
+| Length and query-distance filters have workload costs | HumanEval 69%/80% FPR; summary QDM 89% | T7, X3 | p. 10 | HIGH full-profile evidence; calibration overlap disclosed. |
+| Web-agent exposure is relevant through untrusted text ingestion | Web pages and tool outputs described as indirect channels | Related work and F1 | pp. 2, 13 | MEDIUM analyst inference; no standalone comparison. |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine asking an assistant a normal question, but one of the documents it reads contains a message saying to solve a difficult puzzle first. The assistant might spend nearly all its time on that puzzle. You could get no answer while still paying for everything it generated. The attack does not need to contain offensive or dangerous language to waste resources.
+
+RecurGuard watches the assistant's visible working notes. It checks whether the notes keep repeating similar material, stop adding new ideas, and become more connected to earlier notes than to your question. Several warning signs must persist together before it stops the assistant. In the main tests, this catches most of two established attacks and rarely interrupts clean examples.
+
+There are important catches. If the service hides the working notes, RecurGuard cannot watch them. If an attacker makes the diversion use words related to your question, it can become harder to detect while still being expensive. Another monitor can inspect the final answer, but by then the generation cost has already happened.
+
+For a web agent, a malicious page or tool response is one possible way to deliver that distracting message. That helps explain a security risk created by reading external material. This paper does not prove that every web agent is more vulnerable than every standalone model; it studies this particular resource-wasting mechanism and a defense with clearly demonstrated limits.
+
+## Completeness Audit
+
+The audit below compares coverage against the supplied-document inventory, not against response length. “Represented in compressed form” means substantive content is retained while repeated motivation, proofs, or bibliographic detail is condensed.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Title, authors, affiliation, arXiv metadata, abstract | Yes, text and visual | Yes | Fully represented | Identity and abstract claims covered; email addresses omitted as non-substantive. |
+| §1 Introduction | Yes, text and visual | Yes | Represented in compressed form | Motivation, defense gap, task conditioning, and contributions preserved. |
+| §2.1 Reasoning-chain attacks | Yes | Yes | Fully represented | Both harms and decoy mechanism. |
+| §2.2 System setting | Yes | Yes | Fully represented | Pipeline, text-bearing context, Eq. (1). |
+| §2.3 Attacker capabilities | Yes | Yes | Fully represented | Allowed and excluded powers. |
+| §2.4 Defender visibility | Yes | Yes | Fully represented | Four regimes and applicability. |
+| §2.5 Attack outcomes | Yes | Yes | Fully represented | Amplification, LF, O1–O3, ambiguity. |
+| §2.6 Scope/non-goals | Yes | Yes | Fully represented | Excluded threats and legitimate long outputs. |
+| §3.1 OverThink | Yes | Yes | Represented in compressed form | Sudoku diversion and solve-first mechanism; repeated prompt prose condensed. |
+| §3.2 ExtendAttack | Yes | Yes | Fully represented | Encoded-question reconstruction and distinct mechanism. |
+| §3.3 Adaptive variants | Yes | Yes | Fully represented | C1–C4, smoke/scaled distinction. |
+| §3.4 Attack taxonomy | Yes | Yes | Represented in compressed form | Semantic relationships and recurrence implications. |
+| §4.1 Design goal | Yes | Yes | Fully represented | Two anchors and conjunction rationale. |
+| §4.2 Chunking | Yes | Yes | Fully represented | Word chunks, encoder, normalization. |
+| §4.3 Signals | Yes | Yes | Fully represented | RR/VG/TP, windows, early conventions, retained history. |
+| §4.4 Sustained alarm | Yes | Yes | Fully represented | Thresholds, counter reset, conditions. |
+| §4.5 QDM | Yes, text-only | Yes | Fully represented | Residual/empty output rules and attacked development calibration. |
+| §4.6 Calibration | Yes, text-only | Yes | Fully represented | Benign-only RG and distinct QDM regime. |
+| §4.7 Runtime behavior | Yes, text-only | Yes | Fully represented | Streaming and cancellation prerequisites. |
+| §5.1 Geometric view | Yes, text-only | Yes | Fully represented | Alignment versus prior similarity; model premise qualified. |
+| §5.2 TP separation | Yes, text-only | Yes | Represented in compressed form | Theorem and algebraic proof substance retained. |
+| §5.3 Sustained FPR control | Yes, text and visual | Yes | Fully represented | Proposition, assumptions, Remark 1, non-universal scope. |
+| §5.4 Evasion tradeoff | Yes | Yes | Fully represented | Condition, proof identity, C4 evidence, C1 exclusion. |
+| §5.5 Empirical certificate | Yes | Yes | Fully represented | 0/150, upper bound, calibration-overlap qualification. |
+| §6.1 Models | Yes | Yes | Fully represented | All six models, visibility, main-model rationale. |
+| §6.2 Datasets/splits | Yes | Yes | Fully represented | All sample ranges, long-form reuse, missing TriviaQA results. |
+| §6.3 Attack families | Yes | Yes | Represented in compressed form | Repeated attack definitions condensed; all counts retained. |
+| §6.4 Defenses | Yes | Yes | Fully represented | Six main methods and additional Llama Guard. |
+| §6.5 Configuration | Yes | Yes | Fully represented | Every reported fixed parameter. |
+| §6.6 Calibration procedure | Yes | Yes | Represented in compressed form | Repeated procedure consolidated without losing distinctions. |
+| §6.7 Metrics | Yes | Yes | Fully represented | Definitions, Wilson intervals, McNemar. |
+| §6.8 Closed-API protocol | Yes | Yes | Fully represented | Counts, qualification, hardware, artifact not inspected. |
+| §7.1 Attack amplification | Yes | Yes | Fully represented | All Table 6 values and denominator note. |
+| §7.2 Primary detection | Yes | Yes | Fully represented | TPR and paired-test result. |
+| §7.3 FPR across tasks | Yes | Yes | Fully represented | All clean rows and anchoring explanation. |
+| §7.4 Baseline comparison | Yes | Yes | Fully represented | Adaptive TPR, compression means 0.206/0.386, answer absence. |
+| §7.5 Signal ablation | Yes | Yes | Fully represented | All seven configurations. |
+| §7.6 Closed-API evaluation | Yes | Yes | Fully represented | Sonnet and Opus kept separate. |
+| §8.1 C1 boundary | Yes | Yes | Fully represented | Topical evasion, joint miss, length tradeoff. |
+| §8.2 C4 tradeoff | Yes | Yes | Fully represented | Full joint evasion and residual 2.2× burden. |
+| §8.3 Security boundary | Yes | Yes | Represented in compressed form | Failure taxonomy consolidated across methods. |
+| §9.1 Input safety | Yes | Yes | Fully represented | 0/50, confidence interval, clean FPR. |
+| §9.2 Cost/early stop | Yes | Yes | Fully represented | Prices, costs, token/cost distinction, daily scenario, savings. |
+| §9.3 Deployment summary | Yes | Yes | Represented in compressed form | Repeated visibility and workload recommendations consolidated. |
+| §10.1 Resource attacks | Yes | Yes | Represented in compressed form | Prior-work families below; no external verification. |
+| §10.2 Prompt injection | Yes | Yes | Represented in compressed form | Indirect channels and differing defense objective. |
+| §10.3 Efficient reasoning | Yes | Yes | Represented in compressed form | Answer convergence, budgeting, efficiency versus security. |
+| §10.4 Semantic drift | Yes, text-only | Yes | Represented in compressed form | Input drift versus output drift versus recurrence. |
+| §11.1 Discussion | Yes, text-only | Yes | Represented in compressed form | Amplification and visibility axes. |
+| §11.2 Limitations | Yes, text-only | Yes | Fully represented | All five named author limitations. |
+| §11.3 Conclusion | Yes, text-only | Yes | Represented in compressed form | Findings, boundary, and explicit future tests. |
+| Explicit research questions/hypotheses | No formal items present | Yes, absence stated | Fully represented | Objectives kept separate from analyst questions. |
+| Four listed contributions | Yes | Yes | Fully represented | Threat model, monitor, evaluation, security boundary. |
+| X1–X12 experiments/analyses | Yes | Yes | Fully represented | Register, quantitative tables, conditions, caveats. |
+| X13 TriviaQA results | Mention inspected | No results available | Missing from supplied material | Only N=25 clean/25 attacked known. |
+| Figure 1 | Yes, visually | Yes | Fully represented | Architecture and control/data paths. |
+| Figure 2(a) | Yes, visually | Yes | Fully represented | Illustrative, axes/thresholds/trigger, estimate labeling. |
+| Figure 2(b) | Yes, visually | Yes | Fully represented | All four points, log vertical scale, no uncertainty bars. |
+| Tables 1–10 | Yes, visually and text | Yes | Fully represented | All substantive cells retained across table and result sections. |
+| Equations (1)–(15) | Yes; p. 6 text-only | Yes | Fully represented | Eq. (14) duplicate consolidated and symbol reuse disclosed. |
+| Unnumbered OverThink prompt | Yes | Yes | Represented in compressed form | Concat query plus instruction to solve decoy first. |
+| Unnumbered probabilistic bound | Yes | Yes | Fully represented | Assumptions and limited event scope retained. |
+| Algorithm 1 | Yes, visually | Yes | Fully represented | Streaming loop, computation, counter, reset, return, halt. |
+| Theorems 1–2, Propositions 1–2, Remark 1 | Yes | Yes | Fully represented | Proof substance compressed where algebraic. |
+| Substantive table footnotes | Yes | Yes | Fully represented | Rounding, B2 fallback, sample reuse, N/A, smoke tests. |
+| Funding/conflict/data availability | Yes, text-only | Yes | Represented in compressed form | Statements preserved below. |
+| References 1–43 | Yes, text-only | Yes, grouped | Represented in compressed form | Bibliographic strings not reproduced or validated. |
+| Appendices | None supplied/detected | Absence stated | Missing from supplied material | No appendix inferred. |
+| Supplementary artifact and repository files | No | Mention and limitation only | Inaccessible | No results or code contents invented. |
+| Decorative separator and author-contact details | Yes | Accounted for | Inspected but deliberately omitted as non-substantive | No scientific content lost from these objects. |
+
+### Compressed secondary details retained for traceability
+
+[A] Related-work categories include sponge energy/latency examples; OverThink and ExtendAttack; Excessive Reasoning Attack, ReasoningBomb, ThinkTrap, and POT; triggered/backdoored BadThink and BadReasoner; reflection/retrieval/tool resource attacks RECUR, CODE, and Sponge Tool Attack; indirect prompt injection and adversarial triggers/coercion; answer convergence, SelfBudgeter, THINK-Bench, and efficient-reasoning surveys; and ZEDD embedding drift. These are author-described relationships, not externally checked evaluations of those works. The 43 references also cover model reports, datasets, encoder/framework sources, Wilson/McNemar statistics, and API documentation/pricing. [pp. 13–15]
+
+[A] For B2's adaptive weakness, the main prose reports mean compression ratios 0.206 for C1 and 0.386 for C4, both above its flag threshold. The exact threshold is not supplied, and the table's fallback-threshold warning remains applicable. [p. 10]
+
+[A] The authors report no external funding, declare no known competing financial interests or relevant personal relationships, and provide the data/code location https://github.com/abidaziz1/recurguard. These are declarations; this analysis does not verify them. [p. 14]
+
+### Missing or inaccessible material
+
+The supplementary TriviaQA artifact; repository source, run records, and any artifact-only held-out long-form results; exact threshold-search grids and several implementation/generation settings; any unsupplied appendix or supplementary file. The original visual layout of pp. 6, 14, and 15 was not inspected, although their text was read. No supplied numbered figure or table is missing.
+
+### Uncertain interpretations
+
+The exact relationship between Eq. (3)'s OR rule and prose liveness descriptions; the exact benign denominator in Table 8; the unspecified early VG convention and incomplete reasoning-chunk handling; how sensitivity is ranked during benign-only grid search; and the causal contribution of provider summarization to the cross-model Sonnet difference. Figure 2(a)'s trigger index is approximate and illustrative. The supplied evidence does not quantify a web-agent-versus-standalone vulnerability difference.
+
+### Deliberately compressed material
+
+Repeated motivation, duplicate alarm Eq. (14), repeated calibration/visibility descriptions, elementary proof restatements, related-work bibliographic detail, and repeated conclusions are consolidated. Decorative content and contact addresses are omitted as non-substantive. Numerical experimental distinctions, threat conditions, limitations, and table notes are retained.
+
+### Potential omissions
+
+No known substantive item in the supplied main-document inventory is left unaccounted for: items are represented, explicitly compressed, or marked unavailable/uncertain. This is coverage of the supplied main paper and twelve supplied visual pages, not a claim to have reviewed absent supplements, verified code, reproduced experiments, or established universal defense completeness.

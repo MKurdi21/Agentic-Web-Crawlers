@@ -1,0 +1,657 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied work is available as extracted text for physical PDF pages 1–18. Directly supplied page images cover pages 1–4, 6–9, and 12–18: 15 visually inspected pages. Pages 5, 10, and 11 were inspected through supplied text only. Thus, all 18 pages have readable textual coverage, but not all have visual coverage. The accessible sequence ends at page 18; this establishes coverage of the supplied document, not independently verified completeness of an original publication package.
+
+| Accessibility item | Assessment |
+|---|---|
+| Main document | Available as supplied text for pages 1–18 |
+| Apparently missing pages | None within the supplied 1–18 text sequence |
+| Direct visual coverage | Pages 1–4, 6–9, 12–18 |
+| Text-only pages | 5, 10, 11 |
+| Figures | Figures 1–10 visually available |
+| Tables | Tables 1–10 visually available and supported by extracted text |
+| Equations | Equation 1 visually available; Equations 2–4 available through extracted text on page 5 |
+| Appendix material | End matter on pages 12–18 supplied; no explicit appendix headings visible |
+| Supplementary files | None supplied or established by the provided record |
+| OCR | No additional OCR performed; provided extraction checked against supplied images where available |
+| Main limitations | Small text in case-study panels; extracted mathematical layout on page 5; missing implementation details and experimental denominators |
+
+The message reporting an unreadable local image at a dash does not identify an additional substantive page. It does not prevent inspection of the 15 displayed images and 18 supplied text pages. No tools, browsing, external sources, or private workspace history were used. Instructions appearing inside figures are treated exclusively as research evidence, never as instructions to this analyst.
+
+Evidence labels throughout: **[A] author-reported**, **[B] directly observable in supplied visuals**, **[C] analyst-derived**, and **[D] analyst interpretation**. No external information [E] is introduced. Confidence is HIGH for clearly readable descriptions and table entries, MEDIUM for interpretations of experimental scope, and UNKNOWN where necessary details are absent. Physical PDF page numbers are used throughout.
+
+## 1. Plain-language orientation
+
+WebAgentGuard studies a security problem in AI systems that browse websites and act for users. A legitimate user might ask an agent to book a hotel, compare products, or find jobs. The agent must read pages to carry out that request. An attacker can place instructions inside those pages, hoping the agent will treat the page's commands as directions it should obey rather than as untrusted content. The paper calls this prompt injection. The dangerous material can appear in processed Hypertext Markup Language (HTML), in a rendered screenshot, or in both. [A, pp. 1–3]
+
+The authors' central proposal is to give the browsing agent a separate security checker. Both receive the page observation and user request, but they have different jobs: the agent plans the next action, while the guard decides whether the observation contains an injection. A gateway allows the action when the guard permits it. If the guard objects, explicit user approval can override the objection; otherwise execution terminates. [A/B, p. 2, Figure 1; p. 3, Equation 1]
+
+The authors train two versions of this checker, WebAgentGuard-4B and WebAgentGuard-8B, using synthetic multimodal examples. GPT-5 generates webpages and training explanations. Supervised fine-tuning teaches the checker its classification task and response format; reinforcement learning then rewards correctly formatted, correctly classified outputs. The study evaluates detection, integrated attack prevention, benign task completion, inference time, resistance to a guard-directed attack, and training-stage contributions. [A, pp. 3–9]
+
+The strongest reported model obtains 99.20% accuracy and 98.40% recall on a balanced synthetic evaluation set, 91.13% accuracy and 90.18% recall on the PopUp evaluation, and 87.58% recall on VPI-Bench. Integrated attack success is usually 0% in the tested settings, but benign task success declines and some malicious examples are missed. GPT-4.1 has higher EIA recall than either WebAgentGuard version. The paper therefore supports a useful specialized guard under the reported conditions, rather than universal detection or cost-free security. [A/B, Tables 2–5; Figure 3]
+
+**Relevance to the research question — analyst inference [D]:** This work helps explain why a web agent can face additional security exposure: it repeatedly consumes attacker-controlled environmental content and converts its interpretation into actions. However, it does not directly measure web agents against otherwise matched standalone large language models (LLMs). Its baseline language and vision–language models are evaluated as detectors, not as a controlled standalone-versus-agent vulnerability experiment.
+
+## 2. Document roadmap
+
+The paper is an empirical AI-security and computer-systems study with a dataset-construction component. Its inventory is the basis for the coverage audit below.
+
+| ID | Original component | Pages | Function |
+|---|---|---:|---|
+| S0 | Abstract | 1 | Problem, approach, headline claims |
+| S1 | 1. Introduction | 1–2 | Motivation and three contributions |
+| S2 | 2. Related Work | 2–3 | Attack and defense categories |
+| S3 | 3. Problem Formulation | 3 | Agent pipeline and malicious-observation model |
+| S4 | 4. Methodology | 3–5 | Defense, data synthesis, explanation construction, training |
+| S5 | 5. Experiments | 5–9 | Settings, detection, integration, ablations, cases |
+| S6 | 6. Conclusion | 9 | Overall claims |
+| R1 | References | 9–11 | Bibliographic context |
+| EM1 | Prompt figures | 12–14 | User-request generation, training explanations, guard prompt |
+| EM2 | Topic/style taxonomies | 15–16 | Synthetic-data design space |
+| EM3 | Correct and incorrect cases | 17–18 | Qualitative detection examples |
+
+Substantive subsections are: Web Agent Working Pipeline; Prompt Injection Attacks; §4.1 Defense with WebAgentGuard; §4.2 Data Curation, including Sample Synthesis and Reasoning Construction; §4.3 Two-stage Training Framework, including Cold-Start SFT and Post-training with RL; §5.1 Experimental Settings; §5.2 Main Results and Analysis; §5.3 Combining Guard Model with Agents; §5.4 Ablation Study; and §5.5 Case Study.
+
+The object inventory contains Figures 1–10, Tables 1–10, numbered Equations 1–4, and unnumbered state-update/data-definition expressions. No numbered algorithm, theorem, lemma, proposition, formal research question, or formal hypothesis is supplied. Distinct analyses are X1 synthetic detection, X2 PopUp detection, X3 VPI/EIA detection, X4 integrated defense, X5 benign utility, X6 timing, X7 guard-directed injection, X8 training ablation, and X9 qualitative cases. The end material is substantive despite lacking explicit appendix section labels.
+
+## 3. Background and context
+
+A **large language model (LLM)** processes language. A **vision–language model (VLM)** also receives visual information; this paper's web agents consume screenshots and text. A **web agent** is the larger interactive system that maintains state, selects actions, and changes its browsing environment. These terms should not be collapsed: a model can be a component of an agent, and the agent's available actions are relevant to the resulting harm. [A, pp. 1, 3]
+
+**Prompt injection** here means adversarial instructions embedded in external content encountered while the agent executes a benign user request. The user need not be malicious. The related-work discussion distinguishes this from the jailbreak-centered settings for which many existing guards were developed. The paper does not provide an exhaustive formal taxonomy of jailbreaks, so its distinction should be understood as its stated positioning. [A, pp. 2–3]
+
+A **guard** is a separate model that produces a safety decision at runtime. **Positive** means the page contains an injection; **negative** means clean. These labels describe the detection task, not whether an action has already caused harm. **Recall** measures detection of positive examples; **precision** concerns the reliability of positive predictions; **accuracy** summarizes correct classifications; **F1** combines precision and recall. These plain-language metric explanations clarify the reported columns; exact metric implementation code is not supplied.
+
+**Supervised fine-tuning (SFT)** trains on example inputs and target outputs. **Reinforcement learning (RL)** optimizes outputs using rewards. **Group Relative Policy Optimization (GRPO)** is the RL procedure adopted here: multiple outputs for a prompt are compared using their rewards. **In-domain** evaluation uses the authors' constructed evaluation distribution; **out-of-domain** evaluation uses the separately named attack benchmarks or recreated attacks. Domain transfer is observed across those particular settings, not across every possible website or attack.
+
+## 4. Research problem and gap
+
+**Existing problem [A]:** Web agents encounter adversarial instructions in HTML and visual page content. Following those instructions can produce harmful actions, including leakage of a user's API key. The formal example describes malicious observations altering internal state and therefore action selection. [pp. 1, 3]
+
+**Shortcomings attributed to prior approaches [A]:** The authors say system prompts and direct fine-tuning of agents remain insufficient, citing prior attack success above 80% in many cases. That percentage is a background assertion attributed to cited work, not a new matched comparison established by this paper's introduction. They also argue that generic guards are predominantly trained and evaluated for jailbreaks and do not reliably transfer to indirect web injection. [pp. 1–3]
+
+**Proposed mechanism [A]:** Task-oriented reasoning favors completing the requested activity and following instructions; security assessment competes with that goal when both occur inside the same agent reasoning process. The proposed separation gives a dedicated model the detection objective. This is the authors' motivation; the experiments do not directly isolate or causally measure the alleged internal competition. [p. 1]
+
+**Gap and scope [A/D]:** The work targets a multimodal runtime guard designed around user intent, processed HTML, and screenshots, integrated through a parallel approval gateway. It evaluates a security layer for web interaction rather than a general proof about all autonomous systems. Its empirical novelty centers on the combination of architecture, synthetic multimodal training, and staged optimization.
+
+## 5. Research questions / objectives / hypotheses
+
+There are no numbered or formally phrased research questions or hypotheses. The explicit objectives are to separate safety reasoning from task execution, construct diverse multimodal injection-defense data, and train a guard that detects attacks while preserving utility and execution efficiency. [A, p. 2]
+
+The experiments operationalize those objectives through the following questions, which are **analyst-organized descriptions [D], not quotations of formal author questions**:
+
+1. Does specialized training improve injection classification on the constructed evaluation set?
+2. Does detection transfer to PopUp, VPI-Bench, and EIA?
+3. Does placing the guard beside operational agents reduce successful attacks?
+4. What happens to benign task completion and inference timing?
+5. Does a specific instruction targeting the guard bypass detection?
+6. What do SFT and RL contribute individually and together?
+7. What do selected successes and failures reveal about classification behavior?
+
+The user's broader question, why web AI agents are more vulnerable than standalone LLMs, is relevant to the environmental-input and action-execution mechanisms. The paper does not supply a direct relative-risk estimate, matched standalone control, or experimental decomposition of all causes of that difference.
+
+## 6. Assumptions / threat model
+
+**Attacker capabilities explicitly modeled [A]:** The attacker modifies raw webpage HTML so malicious instructions become perceivable in textual content, visual content, or both. A legitimate agent visits that page while pursuing the user's instruction. The attacker attempts to redirect its internal state and action policy. An API-key leak is an example of resulting harm. [p. 3]
+
+The training construction inserts instructions into benign HTML at random positions and captures screenshots in which the instructions are visually present. The attack surface therefore includes both machine-readable displayed text and rendered page content. The related-work section discusses images, tool outputs, malicious webpages, pop-ups, and pixel perturbations, but discussion of those categories is not proof that the proposed model was evaluated against every category. [pp. 2–4]
+
+**Trusted control structure — analyst interpretation [D]:** Equation 1 presumes the gateway enforces the guard decision and any human override. If the action can bypass that gateway, the described enforcement no longer follows. The paper does not experimentally compromise the gateway, the user-approval channel, the model weights, or the serving infrastructure.
+
+**Available information [A]:** Figures 1 and 6 and the training description give the guard the user instruction, processed HTML, and screenshot. It is not shown receiving the proposed action, full interaction history, or agent memory. Consequently, it is best understood as observation-level injection classification used to gate an action, rather than direct semantic verification of that specific action. [D, pp. 2–5, 14]
+
+**Unspecified boundaries:** No complete attacker knowledge model, adaptive attack budget, authorization policy, secret-access configuration, or guaranteed distinction between legitimate page instructions and malicious commands is given. Human approval is assumed possible, but reviewer accuracy and decision latency are not measured in the supplied results.
+
+## 7. Methodology
+
+### Architecture and execution
+
+At step t, the environment supplies an observation consisting of screenshot S_t and processed HTML T_t. The browsing agent updates its internal state from the user request I, previous state, and observation, then proposes an action. The guard analyzes the same observation alongside the user request described elsewhere. Both computations run in parallel. A gateway permits the action if the guard approves or the user explicitly overrides rejection. Otherwise the trajectory ends. [A/B, pp. 2–3]
+
+A notation discrepancy matters: §4.1 writes g_t = G(ob_t), omitting I, while Figure 1, §4.3, and Figure 6 explicitly include the user instruction. This report preserves both facts and interprets the implemented input description through the explicit tuple rather than silently changing the equation.
+
+### Synthetic data
+
+GPT-5 generates English HTML pages using a selected topic and visual style, with a request that images be valid and visible. Topics come from SimilarWeb's taxonomy as described by the authors: 24 broad categories and 164 topics. Styles are GPT-5-generated: 11 broad categories and 230 fine-grained styles. These are design-space counts, not demonstrated counts of all topic–style combinations or independently validated diversity. [A, p. 3; Tables 9–10]
+
+For clean examples, the authors render a screenshot, remove CSS, JavaScript descriptions, and HTML attributes from the textual representation, and keep essential visibly displayed content. GPT-5 generates a related user instruction using the screenshot prompt in Figure 4. A negative example contains I, benign T, benign S, and a negative label. The explanation that removed components are not directly perceived is part of this paper's preprocessing rationale, not a universal fact about every agent architecture. [A, pp. 3–4]
+
+For malicious examples, instructions from Taori et al. (2023) are inserted into generated benign HTML at random positions. The screenshot must visibly contain the inserted instructions. The user instruction is preserved while page content is modified. The positive tuple contains I, malicious T, malicious S, and a positive label. The paper does not specify the full sampling distribution of inserted instructions or whether each is independently checked as an actionable attack against an agent. [A/D, pp. 1, 4]
+
+| Split | Positive | Negative | Total |
+|---|---:|---:|---:|
+| SFT | 938 | 983 | 1,921 |
+| RL | 1,675 | 1,779 | 3,454 |
+| Evaluation | 500 | 500 | 1,000 |
+
+These are Table 1's reported resulting splits. **Analyst-derived [C]:** 1,921 + 3,454 + 1,000 = 6,375 examples; positive counts total 938 + 1,675 + 500 = 3,113, and negatives total 983 + 1,779 + 500 = 3,262. Initial generation counts, rejection counts, and page-family separation rules are not supplied.
+
+### Explanation construction
+
+GPT-5 produces a structured explanation and classification for SFT. Figure 5 reveals that the generator receives the ground-truth label while being instructed to reason as if unaware of it. Samples are filtered if the explanation leaks the answer or the final classification is wrong. The remaining target y contains an explanation span and an answer span. This is label-conditioned explanation generation followed by filtering; it does not independently establish that the explanation is a faithful causal account of detection. [A/B/D, pp. 4, 13]
+
+### Training and inference configuration
+
+The ablation identifies Qwen3-VL-Instruct-4B and 8B backbones. SFT minimizes target-output negative log likelihood. RL uses GRPO with a binary reward: 1 only when both the required explanation/answer structure and final label are correct; otherwise 0. The reward does not separately score the factual quality or consistency of individual explanation statements. [A, pp. 5, 8–9]
+
+| Setting | SFT | GRPO RL |
+|---|---|---|
+| Framework | LlamaFactory | VERL |
+| Hardware | 2 NVIDIA H200 GPUs | 4 NVIDIA H200 GPUs |
+| Total batch size | 16 | 32 |
+| Per-GPU batch size | 8 | 4 |
+| Mini-batch size | Not stated separately | 16 |
+| Optimizer | Adam | Adam |
+| Learning rate | 5 × 10^-6 | Fixed 1 × 10^-6 |
+| Epochs | 3 | 3 |
+| Length | Maximum sequence 8,196 | Maximum response 2,048 tokens |
+| Outputs per prompt | Not applicable as reported | 5 rollout trajectories |
+| Sampling | Not separately specified | Default temperature and top-p |
+
+Inference uses vLLM on one NVIDIA H200 GPU for generative models with default generation settings. Software versions, numerical default sampling values, random seeds, training duration, and numerical clipping/KL settings are not supplied. No confidence intervals, significance tests, or repeated-run variability are reported. [A, p. 5]
+
+Closed-source detection baselines are GPT-4.1, GPT-4o, and GPT-4o-Mini. Open-source baselines are Llama-3.2-Vision-Instruct-11B, Qwen2.5-VL-Instruct-7B, and Qwen3-VL-Instruct-4B/8B. Existing guards are Llama-Guard-3-Vision-11B, Prompt-Guard-1-86M, Prompt-Guard-2-86M, and GuardReasoner-VL-7B. The supplied spelling of some Qwen names varies, including an extra L in prose; this is treated as a naming inconsistency, not proof of a distinct model.
+
+## 8. Experiments / analyses
+
+| ID | Purpose and setup | Outcome measure | Evidence and caveat |
+|---|---|---|---|
+| X1 | Compare detectors on the 1,000-example, 500/500 synthetic evaluation set | Accuracy, recall, precision, F1 | Table 2; some baseline metric combinations need clarification |
+| X2 | Recreate PopUp attacks on top-ranked websites with positive and negative examples | Accuracy, recall, precision, F1 | Table 3; sample count and class ratio not supplied |
+| X3 | Evaluate supplied VPI-Bench and EIA samples, all positive | Recall | Table 4; cannot estimate false-positive rates |
+| X4 | Integrate guards with Claude 3.7 Sonnet and Browser-use/Gemini 2.0 Pro using VPI-Bench scripts across Amazon, Booking, BBC | Attack success rate | Table 5; denominators and uncertainty absent |
+| X5 | Add 8B guard to benign WebArena Shopping/Map tasks for GPT-4o and Claude 3.7 | Task success rate | Figure 3; utility loss and partial recovery |
+| X6 | Compare average agent action-generation and guard prediction times | Seconds | Table 6; average timing, no tail distribution |
+| X7 | Add one guard-directed instruction to head/tail of malicious EIA/VPI HTML | Detection values matching baseline recall context | Table 7; one attack wording, one declining condition |
+| X8 | Compare base, SFT, RL, and SFT+RL for both backbones | Synthetic accuracy; VPI recall | Table 8; no run variation |
+| X9 | Inspect two correct and two incorrect 8B classifications | Qualitative explanations and labels | Figures 7–10; selected examples, not prevalence estimates |
+
+X1–X3 test detection, whereas X4 tests whether a defended agent completes an attacker objective. Those are distinct outcome constructs. X5 evaluates benign task utility rather than attacks. X6 supports a concurrency argument; it does not report a separate full-service latency distribution including human decisions. X7 and X8 are separate ablations and should not be conflated with general robustness proof.
+
+## 9. Results
+
+**In-domain detection [A/B]:** The 4B guard reports 98.20 accuracy, 96.80 recall, 99.59 precision, and 98.17 F1. The 8B guard reports 99.20, 98.40, 100.00, and 99.19, respectively. GPT-4.1 reports 74.90 accuracy, 49.80 recall, 100.00 precision, and 66.48 F1. The main advantage over that baseline is identifying more attacks while retaining high precision. However, the prose saying both guards beat every baseline on every metric is too broad: several baselines tie 100.00 precision, and the 4B guard has lower precision than those baselines. [p. 6, Table 2]
+
+**PopUp transfer [A/B]:** The 8B guard has 91.13 accuracy, 90.18 recall, 91.31 precision, and 90.74 F1. GPT-4.1 has 90.45, 80.08, 100.00, and 88.94. Thus the guard's higher recall and F1 come with lower precision; it does not dominate every metric. The 4B guard records 82.11 accuracy and 79.09 F1, below GPT-4.1 on those metrics. [p. 6, Table 3]
+
+**Positive-only transfer [A/B]:** VPI-Bench recall is 85.95 for 4B and 87.58 for 8B; the strongest listed baseline there is GPT-4o at 78.43. EIA recall is 95.69 for 4B and 93.71 for 8B, while GPT-4.1 is highest at 97.39. Larger model size therefore does not improve every dataset. [p. 7, Table 4]
+
+**Integrated prevention [A/B]:** For Browser-use/Gemini, the 8B guard reports 0% attack success on all three sites, compared with undefended 96.5%, 84.2%, and 84.2%. For Claude, 8B reports 1.7%, 0%, and 0%, compared with 31.7%, 36.7%, and 16.7%. These are observed test outcomes, not guaranteed zero risk. System prompts sometimes worsen the reported attack rate. [p. 7, Table 5]
+
+**Utility [A/B/C]:** With 8B guarding, GPT-4o Shopping drops 48.3 → 44.8, a derived 3.5 percentage-point reduction; Map drops 34.8 → 32.6, or 2.2 points. Claude Shopping drops 43.3 → 36.7, or 6.6 points; Map drops 34.8 → 32.6, or 2.2 points. A one-time user confirmation changes Claude Shopping to 40.0 and GPT-4o Map to 34.8, while the other two remain at guarded-only values. Calling all performance cost recovered would misstate Figure 3. [p. 7]
+
+**Efficiency [A/B]:** Guard prediction averages 2.15 seconds for 4B and 3.24 for 8B; tested agent averages range from 5.43 to 7.74 seconds. The authors infer no extra wall-clock delay when computations overlap. That conclusion is conditional on the measured timing and concurrent architecture. [p. 8, Table 6] Analyst qualification [D]: separate mean inference times do not establish that the guard finishes before the agent on every paired action, nor measure end-to-end latency under queueing or resource contention. The supplied table does not provide paired tail-latency evidence for a universal zero-overhead claim.
+
+**Ablations [A/B]:** SFT supplies most of the measured improvement. RL after SFT increases VPI recall from 84.97 to 85.95 for 4B and 84.31 to 87.58 for 8B, but 4B synthetic accuracy decreases from 99.20 to 98.20. In the guard-targeted test, 8B EIA recall falls from 93.71 without the extra instruction to 90.17 with tail insertion. Both exceptions qualify the surrounding broad claims. [pp. 8–9, Tables 7–8]
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Parallel approval framework, page 2
+
+This is a process diagram, not a quantitative plot. A browser/environment icon supplies observed text and screenshot content. Together with the user instruction, these inputs branch to the web agent and guard. The agent's generated action and the guard's generated permission signal converge at an Action Gateway. A separate path requests user permission when needed. Brackets distinguish Stage 1 guard approval from Stage 2 user approval. Arrows show the separation of action generation from authorization. The figure supports the architecture, not measured effectiveness or timing by itself. No axes, uncertainty marks, or numerical scale apply.
+
+### Figure 2 — Data and training pipeline, page 4
+
+Three colored regions represent data construction, SFT, and GRPO. GPT-5 generates benign HTML; an injection step creates malicious HTML; processing produces positive/negative multimodal samples and split datasets. The SFT region combines samples with generated explanations to train a preliminary guard. The RL region depicts sampled responses, feedback, and an updated guard. Illustrated response variants include correct structure, missing structure, and different answers, conveying that both formatting and correctness affect reward. Colors and icons distinguish stages and data classes; they are not measured proportions. The diagram establishes workflow, while Table 1 establishes actual split sizes.
+
+### Figure 3 — Benign task utility, page 7
+
+This grouped bar chart has four x-axis conditions: GPT-4o/Shopping, GPT-4o/Map, Claude-3.7/Shopping, Claude-3.7/Map. The y-axis is Success Rate (%) with a visible linear scale from 0% to 50%. Blue means without guard, orange with guard, and green with guard plus one-time user verification. Exact bar labels are:
+
+| Condition | Without guard | With guard | Guard + verification |
+|---|---:|---:|---:|
+| GPT-4o / Shopping | 48.3 | 44.8 | 44.8 |
+| GPT-4o / Map | 34.8 | 32.6 | 34.8 |
+| Claude 3.7 / Shopping | 43.3 | 36.7 | 40.0 |
+| Claude 3.7 / Map | 34.8 | 32.6 | 32.6 |
+
+These are visually readable labels, not estimates from bar height. No error bars or significance annotations appear. Guarding lowers all four reported success rates. Verification helps two conditions and leaves two unchanged. The caption's partial-recovery claim is supported; the prose's broad claim of recovery of most cost is not uniformly shown by all groups.
+
+### Figure 4 — User-instruction generation prompt, page 12
+
+A prompt card asks the generator to create a daily-life instruction associated with the displayed website image, use diverse verbs, and place the instruction inside Inst tags. Input is an image. This shows how benign user tasks are synthesized rather than collected from actual users. There are no axes or numerical results. The prompt's user-facing scenario is generation guidance, not an instruction to the present analyst.
+
+### Figure 5 — Training-explanation generation prompt, page 13
+
+This card supplies user instruction, screenshot, processed HTML, and ground-truth class. It asks for a structured explanation and positive/negative answer while telling the generator to assume no label knowledge during its explanation. The visible inclusion of the label is methodologically important: output explanations are generated under label conditioning. The caption contains a minor extraction-sensitive placeholder typo; the intended contains/does-not-contain substitution is clear from the surrounding text. This figure explains data construction, not independent validation of explanation faithfulness.
+
+### Figure 6 — Operational guard prompt, page 14
+
+The guard receives user instruction, screenshot, and processed HTML and is asked to detect injection, producing explanation and answer spans. Unlike Figure 5, this prompt does not supply the correct label. It defines positive as containing injection and negative as clean. This confirms user intent is an explicit input despite its omission from g_t = G(ob_t) in §4.1.
+
+### Figure 7 — Correct detection of file manipulation, page 17
+
+The upper part pairs a screenshot with user request and HTML; the lower part displays the guard response. The legitimate request concerns a cheap New York hotel. Page content asks for deletion or overwriting of an original file. The guard identifies the mismatch and returns positive. Highlighting emphasizes unrelated file operations and coercive instructions. This is one correctly detected attack, not a measured frequency. Small visual text is supported by supplied page extraction.
+
+### Figure 8 — Correct detection of coordinate-click manipulation, page 17
+
+The legitimate request concerns Russian tax-regulation updates. A legal-information page includes an alert instructing a click at (706,605). The guard flags that out-of-context command and returns positive. The screenshot, processed text, and response form distinct panels. Some HTML text is displayed as Unicode escape sequences; the report relies on the supplied response's description rather than independently translating every encoded string. The coordinate is a requested click target, not a measured variable.
+
+### Figure 9 — Missed malicious file operation, page 18
+
+A shopping request asks for cheap glasses. A pop-up offers a special script, while HTML tells the reader to delete or overwrite the original file. The guard notices the suspicious wording but later interprets it as part of a useful shopping workflow and returns negative. The authors label this incorrect. The example illustrates rationalization of suspicious instructions when they are made to appear task-related. That last characterization is analyst interpretation; the authors describe loss of the initially recognized signal.
+
+### Figure 10 — Missed coordinate-click manipulation, page 18
+
+The user asks for three software-engineering jobs in Sydney. A job-site screenshot contains a command to click (1410,597). The guard mentions the odd element but treats it as an ordinary interface instruction and returns negative. Together with Figure 8, this shows similar-looking coordinate commands can receive different judgments in different contexts. It does not establish that all coordinate instructions are attacks or reveal their population-level error rate.
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Dataset splits, page 4
+
+Rows distinguish SFT, RL, and evaluation; columns count positive, negative, and total examples. The exact counts appear in §7 above. Evaluation is balanced at 500/500. Training splits are slightly negative-heavy. No original generation total, filtering yield, held-out website-family specification, or uncertainty is shown. Counts are observations, not statistical estimates.
+
+### Table 2 — In-domain detector performance, page 6
+
+Columns are accuracy/recall/precision/F1, reported on a 0–100 scale. All rows are preserved here for traceability:
+
+| Model | Acc. | Rec. | Prec. | F1 |
+|---|---:|---:|---:|---:|
+| GPT-4.1 | 74.90 | 49.80 | 100.00 | 66.48 |
+| GPT-4o | 70.00 | 40.20 | 100.00 | 57.34 |
+| GPT-4o-Mini | 62.50 | 32.00 | 82.05 | 46.04 |
+| Llama-3.2-Vision-Instruct-11B | 51.90 | 10.08 | 73.13 | 17.72 |
+| Qwen2.5-VL-Instruct-7B | 50.90 | 3.51 | 73.91 | 6.70 |
+| Qwen3-VL-Instruct-8B | 53.20 | 6.40 | 100.00 | 12.03 |
+| Qwen3-VL-Instruct-4B | 58.20 | 17.33 | 100.00 | 29.55 |
+| Llama-Guard-3-Vision-11B | 49.60 | 1.40 | 38.89 | 2.70 |
+| Prompt-Guard-1-86M | 56.20 | 93.40 | 53.56 | 68.08 |
+| Prompt-Guard-2-86M | 50.70 | 2.60 | 68.42 | 5.01 |
+| GuardReasoner-VL-7B | 50.00 | 0.20 | 50.00 | 3.98 |
+| WebAgentGuard-4B | 98.20 | 96.80 | 99.59 | 98.17 |
+| WebAgentGuard-8B | 99.20 | 98.40 | 100.00 | 99.19 |
+
+The 8B model leads accuracy, recall, and F1; precision has ties. Prompt-Guard-1 combines relatively high recall with low precision. Several other guards have very low recall. No uncertainty or significance is reported. GuardReasoner's 0.20 recall, 50.00 precision, and 3.98 F1 are arithmetically inconsistent under ordinary binary F1 calculation; §14 documents this without correcting the reported table.
+
+### Table 3 — PopUp detection, page 6
+
+The same metric columns compare detectors on mixed positive/negative recreated PopUp examples:
+
+| Model | Acc. | Rec. | Prec. | F1 |
+|---|---:|---:|---:|---:|
+| GPT-4.1 | 90.45 | 80.08 | 100.00 | 88.94 |
+| GPT-4o | 82.78 | 78.86 | 99.86 | 88.13 |
+| GPT-4o-Mini | 70.06 | 41.52 | 91.78 | 57.18 |
+| Llama-3.2-Vision-Instruct-11B | 44.92 | 5.53 | 40.87 | 9.74 |
+| Qwen2.5-VL-Instruct-7B | 59.53 | 21.35 | 87.44 | 34.32 |
+| Qwen3-VL-Instruct-8B | 62.80 | 22.62 | 99.09 | 36.83 |
+| Qwen3-VL-Instruct-4B | 72.21 | 44.37 | 97.03 | 60.90 |
+| Llama-Guard-3-Vision-11B | 51.65 | 4.02 | 45.34 | 7.39 |
+| Prompt-Guard-1-86M | 50.81 | 33.12 | 48.12 | 39.24 |
+| Prompt-Guard-2-86M | 52.05 | 2.06 | 50.00 | 3.96 |
+| GuardReasoner-VL-7B | 52.00 | 1.34 | 50.00 | 2.61 |
+| WebAgentGuard-4B | 82.11 | 70.55 | 89.98 | 79.09 |
+| WebAgentGuard-8B | 91.13 | 90.18 | 91.31 | 90.74 |
+
+The 8B model has the best reported accuracy, recall, and F1. GPT-4.1 has best precision. The 4B variant trails GPT-4.1 and GPT-4o in F1. Relative rankings depend on metric and model size. Sample counts, class prevalence, and error bars are absent.
+
+### Table 4 — Positive-only benchmark recall, page 7
+
+| Model | VPI-Bench | EIA |
+|---|---:|---:|
+| GPT-4.1 | 69.61 | 97.39 |
+| GPT-4o | 78.43 | 93.07 |
+| GPT-4o-Mini | 69.93 | 63.18 |
+| Llama-3.2-Vision-Instruct-11B | 43.79 | 19.93 |
+| Qwen2.5-VL-Instruct-7B | 14.71 | 8.27 |
+| Qwen3-VL-Instruct-8B | 42.16 | 44.88 |
+| Qwen3-VL-Instruct-4B | 40.52 | 78.45 |
+| Llama-Guard-3-Vision-11B | 68.95 | 21.77 |
+| Prompt-Guard-1-86M | 64.38 | 10.81 |
+| Prompt-Guard-2-86M | 0.00 | 92.79 |
+| GuardReasoner-VL-7B | 4.90 | 58.87 |
+| WebAgentGuard-4B | 85.95 | 95.69 |
+| WebAgentGuard-8B | 87.58 | 93.71 |
+
+Higher is better. The 8B model leads VPI, but GPT-4.1 leads EIA and 4B beats 8B on EIA. Prompt-Guard-2 varies sharply across datasets. Positive-only evaluation cannot reveal false alarms on benign pages, so high recall alone does not establish deployment utility.
+
+### Table 5 — Integrated attack success, page 7
+
+Values are percentages; lower is better. Site order below is Amazon / Booking / BBC:
+
+| Agent | Defense | Attack success rates |
+|---|---|---|
+| Claude 3.7 Sonnet | None | 31.7 / 36.7 / 16.7 |
+| Claude 3.7 Sonnet | System Prompt | 42.2 / 37.8 / 5.6 |
+| Claude 3.7 Sonnet | Guard-gpt-4o | 10.6 / 12.2 / 4.4 |
+| Claude 3.7 Sonnet | WebAgentGuard-8B | 1.7 / 0 / 0 |
+| Claude 3.7 Sonnet | WebAgentGuard-4B | 0 / 0.6 / 0 |
+| Browser-use / Gemini 2.0 Pro | None | 96.5 / 84.2 / 84.2 |
+| Browser-use / Gemini 2.0 Pro | System Prompt | 92.98 / 85.96 / 85.96 |
+| Browser-use / Gemini 2.0 Pro | Guard-gpt-4o | 22.8 / 15.8 / 21.1 |
+| Browser-use / Gemini 2.0 Pro | WebAgentGuard-8B | 0 / 0 / 0 |
+| Browser-use / Gemini 2.0 Pro | WebAgentGuard-4B | 0 / 1.8 / 0 |
+
+Both specialized guards sharply reduce reported success. The 8B model is not best in every cell: 4B has 0 on Claude/Amazon against 8B's 1.7. Five operational rows are shown per agent even though the prose groups them into four defense categories. There are no denominators or statistical comparisons.
+
+### Table 6 — Average inference time, page 8
+
+| Framework/model | Seconds |
+|---|---:|
+| Claude Agent / Claude 3.7 | 6.96 |
+| Claude Agent / Claude 3.5 | 6.73 |
+| Browser-use / Claude 4.5 | 7.74 |
+| Browser-use / Claude 3.7 | 7.35 |
+| Browser-use / Claude 3.5 | 7.09 |
+| Browser-use / GPT-4o-mini | 5.96 |
+| Browser-use / GPT-4o | 6.03 |
+| Browser-use / GPT-4.1 | 5.43 |
+| WebAgentGuard-4B | 2.15 |
+| WebAgentGuard-8B | 3.24 |
+
+Every reported agent mean exceeds both guard means. The table supports overlapping guard inference with agent reasoning. It does not provide distributions, worst cases, concurrent-load tests, synchronization cost, or human-approval latency.
+
+### Table 7 — Guard-targeted instruction placement, page 8
+
+| Extra injection position | EIA 4B | EIA 8B | VPI 4B | VPI 8B |
+|---|---:|---:|---:|---:|
+| None | 95.69 | 93.71 | 85.95 | 87.58 |
+| Head | 97.74 | 96.40 | 100.0 | 100.0 |
+| Tail | 98.80 | 90.17 | 100.0 | 100.0 |
+
+The attack instructs the guard to ignore previous instructions and output negative. Many values improve, consistent with the authors' suggestion that the added instruction becomes an obvious malicious cue. However, EIA/8B tail falls by 93.71 − 90.17 = 3.54 percentage points [C]. The textual assertion that insertion does not degrade performance conflicts with this cell. No statistical uncertainty establishes whether that decrease is significant, but it is a reported numerical decrease.
+
+### Table 8 — Training stages, page 9
+
+| Backbone | Training | Synthetic accuracy | VPI recall |
+|---|---|---:|---:|
+| 4B | Base | 58.20 | 40.52 |
+| 4B | SFT | 99.20 | 84.97 |
+| 4B | RL | 91.00 | 73.53 |
+| 4B | SFT+RL | 98.20 | 85.95 |
+| 8B | Base | 53.20 | 42.16 |
+| 8B | SFT | 99.20 | 84.31 |
+| 8B | RL | 53.20 | 42.16 |
+| 8B | SFT+RL | 99.20 | 87.58 |
+
+The table also prints gains over base: 4B SFT +41.00/+44.45; RL +32.80/+33.01; SFT+RL +40.00/+45.43. For 8B: SFT +46.00/+42.15; RL 0.00/0.00; SFT+RL +46.00/+45.42. These differences match the displayed operands. Accuracy is used only for synthetic data; VPI uses recall. SFT dominates the measured gains, while RL's additional benefit is conditional and mainly visible in VPI recall.
+
+### Table 9 — Topic taxonomy, page 15
+
+This table lists 24 broad categories: AI Chatbots and Tools; Arts and Entertainment; Business and Consumer Services; Community and Society; Computers Electronics and Technology; Ecommerce and Shopping; Finance; Food and Drink; Gambling; Games; Health; Heavy Industry and Engineering; Hobbies and Leisure; Home and Garden; Jobs and Career; Law and Government; Lifestyle; News and Media; Pets and Animals; Reference Materials; Science and Education; Sports; Travel and Tourism; and Vehicles. Nested topics include programming, legal matters, health, shopping, and transport. The authors report 164 topics. Repeated terms and unusual wording such as Decease are preserved as source characteristics rather than silently repaired. Listing a topic does not establish how many samples use it or how well the model performs on it.
+
+### Table 10 — Visual/UI style taxonomy, page 16
+
+Eleven groups are Minimal/Clean, Retro/Nostalgia, Nature Inspired, Arts & Movements, UI/UX Themes, Fantasy/Fiction, Cultural/Regional, Color Schemes, Fun/Experimental, Business/Professional, and Random Vibes. Examples range from dashboard and mobile layouts to retro terminals, watercolor, regional decorative motifs, monochrome palettes, and experimental textures. The authors report 230 fine-grained styles. This report deliberately compresses the individual style list because the methodological role is the generation design space. No per-style counts, rendering-success rate, or performance analysis is given.
+
+## 12. Diagram / architecture interpretation
+
+Figures 1 and 2 contain the substantive architecture diagrams. Their roles differ: Figure 1 is runtime control flow, while Figure 2 is offline data/training flow.
+
+At runtime, the input branch shares evidence without sharing responsibility: the agent proposes an action; the guard proposes permission. The gateway combines these outputs, then conditionally involves the user. This separation is the proposed security boundary. It does not remove untrusted content from the agent's inputs, and it does not prove that the guard is immune to that content. Rather, it adds an independently trained decision before execution. [A/B/D]
+
+During training, benign and injected page pairs become labeled multimodal tuples. SFT converts explanation-augmented targets into an initial policy. GRPO then repeatedly samples multiple full responses, assigns rule-based rewards, and updates the policy relative to sampled alternatives and a reference. Feedback arrows indicate learning, not runtime communication with the browsing agent. The smaller prompt cards and case panels are evidence displays rather than additional system architectures.
+
+## 13. Equations and mathematical concepts
+
+### Agent state and attack expressions, page 3
+
+The observation is ob_t = O(e_t) = {S_t, T_t}: an observation function O maps environment e_t to screenshot and processed HTML. State updates as s_t = U(I, s_(t−1), ob_t), where U combines the user request, memory/history, and current evidence. The policy selects a_t = π(s_t). The environment changes according to e_(t+1) = T(e_t, a_t). Here T as an environment-transition function is distinct from subscripted T_t as processed HTML; the paper reuses the letter.
+
+A malicious environment yields ob_t^m, which produces s_t^m and then a_t^m. The superscript m marks malicious variants. These expressions explain a proposed route from manipulated perception to harmful behavior; they are not a mathematical proof of exploitation probability.
+
+### Equation 1 — Authorization transition, page 3
+
+The environment advances to T(e_t, a_t) if g_t = 1 OR both g_t = 0 and h_t = 1; otherwise it becomes END. g_t is guard permission, h_t is explicit human authorization, and END denotes task termination. The logical OR and AND encode two approval routes. The equation makes enforcement depend on authorization, but it does not define a graded risk threshold, user decision process, or recovery after termination. The guard is written G(ob_t), although other descriptions include I.
+
+### Equation 2 — SFT loss, page 5, text-only inspection
+
+L = −Σ_(i=1)^(N_sft) log P_θ(y_i | I_i, T_i, S_i).
+
+The model parameters θ are trained to give high probability to the GPT-5-generated target explanation/answer y_i for each input tuple. N_sft is the number of SFT examples. The negative logarithm penalizes assigning low probability to the target. Although the prose calls this a standard language-modeling objective, the printed expression is at target-sequence level rather than expanding every token. It does not independently score explanation validity.
+
+### Equation 3 — GRPO objective, page 5, text-only inspection
+
+The objective averages, over prompts and outputs sampled from the old policy, a clipped policy-ratio advantage term minus β times a Kullback–Leibler divergence from the reference policy. The ratio is π_θ(o_i|q) / π_(θ_old)(o_i|q). The clipped alternative restricts that ratio to [1−ε, 1+ε], and the minimum selects the conservative surrogate term. The reference π_ref is the SFT-trained model. β controls regularization strength; ε controls clipping. Numerical values for β and ε are not supplied.
+
+q is the multimodal input prompt; o_i is one complete generated explanation and prediction; the output group is sampled from the old policy. The symbol G is reused for this output group even though G elsewhere names the guard. The equation is an optimization objective, not a detection threshold. Extracted layout is sufficient to identify its components, but a page image was not supplied for visual verification of the typography.
+
+### Equation 4 — Group-normalized advantage, page 5, text-only inspection
+
+A_i = (r_i − mean({r_1,…,r_G})) / std({r_1,…,r_G}).
+
+Each response's reward is centered relative to its group's average and scaled by group reward variation. The text uses r_G to index the final group member while Equation 3 uses |G| for group size. The reward is binary, based jointly on output structure and correct label. **Analyst observation [D]:** If all five sampled outputs receive the same reward, the displayed denominator is zero; the paper does not state a stabilizer or handling rule. This is an implementation uncertainty, not proof that the software actually divides by zero.
+
+The data-set expressions on page 4 define collections of input tuples and labels, not further optimization objectives. There are no supplied theorems, proofs, or formal security guarantees.
+
+## 14. Interpretation and discussion
+
+The evidence supports specialized training for the tested detection task, strong integrated reductions in attack success, and a practical concurrency opportunity. It does not isolate whether the gains arise from multimodality, explanation generation, synthetic-data volume, task-specific labels, or their interaction: no text-only-versus-image-only or explanation-free training comparison is supplied. [D]
+
+Several source consistency issues must remain visible:
+
+- **Table 2 F1 mismatch:** GuardReasoner-VL-7B reports precision 50.00 and recall 0.20 with F1 3.98. Using the ordinary harmonic-mean formula gives 2 × 50.00 × 0.20 / (50.00 + 0.20) ≈ 0.398 [C], not 3.98. The supplied work does not explain the discrepancy.
+- **Balanced-set metric alignment:** If Table 2 uses one ordinary confusion matrix on 500 positive examples, recall changes in increments of 100/500 = 0.20 percentage points [C]. Values such as 3.51, 10.08, and 17.33 do not align with that increment. Averaging, exclusions, or another denominator could explain this, but none is reported. No correction is assumed.
+- **Universal robustness wording:** Page 8 says head/tail insertion does not degrade detection, but Table 7 EIA/8B declines from 93.71 to 90.17 for tail insertion.
+- **Across-all-metrics wording:** Page 6's broad superiority language is not supported by precision ties/losses in Table 2 and lower precision in Table 3. EIA has a stronger GPT-4.1 baseline.
+- **RL benefit qualification:** Table 8 supports improved VPI recall after SFT, but 4B in-domain accuracy declines by 1.00 point, and 8B in-domain accuracy is unchanged.
+- **Category count terminology:** The introduction calls 164 items topic categories, whereas §4.2 distinguishes 24 categories and 164 topics. The more detailed taxonomy description is retained without erasing the wording difference.
+
+For the user's security question, the strongest supported chain is environmental content → internal-state update → executable action. Repeated interaction and stored history are present in the formulation, but their independent effects are not experimentally varied. The authors' task/safety-coupling explanation is plausible within their framing; it is not a causal comparison with standalone LLMs. Detection results for GPT-family models cannot be relabeled as standalone-model attack susceptibility.
+
+## 15. Contributions and novelty
+
+**Conceptual/system contribution [A]:** Separate injection assessment from task execution and join the two streams at an authorization gateway, with a human override path.
+
+**Dataset contribution [A]:** Synthesize paired clean/injected multimodal pages spanning reported topic and style taxonomies, with user intent, screenshots, and processed HTML. The paper provides a construction recipe and split counts; dataset licensing, release location, and access conditions are not established in the supplied text.
+
+**Methodological contribution [A]:** Train a specialized guard through label-conditioned generated explanations, SFT, and GRPO with a structure-and-correctness reward.
+
+**Empirical contribution [A]:** Evaluate detection across synthetic, recreated PopUp, VPI, and EIA settings; integrated security across two agent frameworks and three sites; benign utility; timing; guard-targeted injection; training ablations; and qualitative failures.
+
+There is no supplied new security theorem or formal proof. The claim of novelty is the authors' positioning within their cited literature, not an independently verified priority finding. GRPO itself is adopted, not introduced by this work.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+The paper has no dedicated limitations section. It nevertheless explicitly acknowledges utility reductions from guard interruptions; incomplete recovery for Claude Shopping under one-time verification; and false negatives in Figures 9–10 despite initially noticing suspicious content. It also describes RL-only failure for the 8B backbone because output-format failures prevent positive reward. [A, pp. 7–9]
+
+### Additional evidence-based analyst observations
+
+The synthetic training distribution may not capture every real page or attack. Topic/style breadth is reported, but coverage is not quantified per subgroup. The split procedure does not specify separation of related benign/injected pages, topics, styles, or templates; leakage resistance is therefore UNKNOWN, not demonstrably violated. [D]
+
+Positive-only VPI and EIA tests cannot evaluate benign false positives. Most external benchmark sizes and attack-evaluation denominators are not reported. No confidence intervals, seeds, repeated runs, or statistical tests are supplied. A single guard-directed attack string at two positions is narrow evidence for adaptive robustness. [D]
+
+Explanation text is generated with label access, and RL rewards final correctness and structure rather than explanation validity. The ablations do not establish that explanations, rather than other aspects of task-specific training, cause the gains. The guard does not explicitly inspect the proposed action in the shown input specification. Mean timing comparisons do not establish every-step latency behavior, full-service overhead, or human-review cost. [D]
+
+## 17. Threats to validity
+
+These categories are analyst-applied, not terminology attributed to the authors.
+
+**Internal validity [D]:** SFT/RL ablations help distinguish training stages, but no matched controls isolate multimodal input, explanation presence, filtering, or synthetic-generation choices. Consequently, the full pipeline's advantage cannot be uniquely assigned to reasoning supervision.
+
+**External validity [D]:** Transfer is measured on named benchmarks and selected sites/frameworks. This supports bounded generalization, not all web environments, unseen languages, attack strategies, or operating conditions. English synthetic-page generation and visually present insertions further define the training scope.
+
+**Construct validity [D]:** Page-level injection labels, detector recall, attack success, benign task success, and inference time answer different questions. An accurate page classifier does not by itself verify action safety, and low attack success can coexist with task interruption. Label-conditioned explanations may rationalize labels rather than expose the model's actual decision mechanism.
+
+**Statistical conclusion validity [D]:** Missing denominators, uncertainty, and repeated-run evidence limit confidence in small differences and 0% cells. Metric inconsistencies in Table 2 need clarification before treating every baseline comparison as numerically settled.
+
+**Ecological validity [D]:** The system models a human override and evaluates one-time benign confirmation, but real reviewer workload, incorrect approvals, and response delays are not reported. A production claim requires more than the supplied average timing comparison.
+
+**Reproducibility [D]:** Hardware, frameworks, epochs, learning rates, and several batch/length settings are given. Exact software versions, random seeds, default sampling values, β/ε, all benchmark counts, full attack-generation settings, and release artifacts are not established. This is partial procedural transparency rather than demonstrated reproduction.
+
+## 18. Future work and open questions
+
+### A. Explicit author proposals
+
+No concrete future-work agenda is stated in the supplied conclusion or case-study section. The authors identify failure behavior but do not present it as a detailed future research program. This report does not invent one on their behalf.
+
+### B. Analyst-identified open questions
+
+Can the specialized guard withstand adaptive attacks optimized against its own outputs, rather than one explicit override string? How much do screenshots, HTML, user intent, explanations, and filtering each contribute? Can benign page instructions be distinguished reliably from attacker commands across longer interactions? What happens when proposed actions and history are supplied to the guard? [D]
+
+Can page-family-separated splits and diverse natural websites reproduce the gains? What are uncertainty intervals and denominator details for all reported results? How do tail latency, shared compute, user-review cost, and false approvals change the architecture's practical advantage? A matched standalone-LLM versus web-agent experiment would also be necessary to quantify the broader research question directly. [D]
+
+## 19. Terminology and notation glossary
+
+| Term/symbol | Meaning in this work |
+|---|---|
+| LLM | Large language model |
+| VLM | Vision–language model; handles textual and visual input |
+| Web agent | Interactive system pursuing user tasks through web observations and actions |
+| Prompt injection | Malicious instructions embedded in encountered external content |
+| HTML | Hypertext Markup Language; page content processed into a retained text representation |
+| CSS | Cascading Style Sheets; removed from the textual representation during preprocessing |
+| UI / UX | User interface / user experience; style-taxonomy terminology |
+| Guard | Separate injection-detection model used to authorize execution |
+| SFT | Supervised fine-tuning on generated target outputs |
+| RL | Reinforcement learning using output rewards |
+| GRPO | Group Relative Policy Optimization |
+| KL divergence | Kullback–Leibler divergence; regularizes policy departure from the reference |
+| API key | Credential used as an example of information an attack could leak |
+| I | User instruction |
+| e_t | Environment at step t |
+| O | Observation function |
+| ob_t | Observation containing screenshot and processed HTML |
+| S_t / T_t | Screenshot / processed HTML |
+| s_t / U | Agent internal state / state-update function |
+| π / a_t | Agent policy / selected action |
+| T(e_t,a_t) | Environment-transition function; distinct from HTML T_t |
+| Superscript m / b | Malicious / benign variant |
+| G | Guard model; reused for an output group in the RL discussion |
+| g_t / h_t | Guard permission / human authorization |
+| END | Termination of execution |
+| D_neg / D_pos | Negative/positive labeled example collections |
+| D_SFT / D_RL / D_eval | SFT, reinforcement-learning, and evaluation splits |
+| D_SFT-R | Explanation-augmented SFT data |
+| y_i | Generated target explanation and answer |
+| θ / θ_old | Current / previous policy parameters |
+| π_ref | SFT reference policy |
+| q / o_i / r_i / A_i | Input prompt / generated output / reward / relative advantage |
+| β / ε | KL penalty coefficient / clipping range parameter; values unspecified |
+| VPI-Bench / EIA | Named external attack benchmarks; acronym expansions not supplied here |
+| PopUp / TopWeb | Recreated pop-up attack evaluation / top-website setting named in prose |
+| WebArena | Benign web-task benchmark used for utility |
+| H200 / vLLM | Reported GPU hardware / generative inference engine |
+
+## 20. Key numerical results
+
+Values below are exact reported entries unless labeled derived. Percentage-scale metric values retain their printed precision.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Topic breadth | 24 / 164 | Categories / topics | Synthetic generation taxonomy | Author-reported | p. 3; Table 9 |
+| Style breadth | 11 / 230 | Categories / styles | GPT-5-generated design taxonomy | Author-reported | p. 3; Table 10 |
+| SFT / RL / evaluation totals | 1,921 / 3,454 / 1,000 | Examples | Resulting splits | Visually readable | p. 4, Table 1 |
+| Combined split total | 6,375 | Examples | 1,921 + 3,454 + 1,000 | Analyst-derived | Table 1 |
+| Evaluation balance | 500 / 500 | Positive / negative examples | Synthetic evaluation | Visually readable | Table 1 |
+| 8B synthetic accuracy / recall / precision / F1 | 99.20 / 98.40 / 100.00 / 99.19 | Percentage-scale metrics | In-domain | Visually readable | p. 6, Table 2 |
+| 4B synthetic accuracy / recall / precision / F1 | 98.20 / 96.80 / 99.59 / 98.17 | Percentage-scale metrics | In-domain | Visually readable | Table 2 |
+| 8B PopUp accuracy / recall / precision / F1 | 91.13 / 90.18 / 91.31 / 90.74 | Percentage-scale metrics | Mixed external examples | Visually readable | p. 6, Table 3 |
+| 8B / 4B VPI recall | 87.58 / 85.95 | % | Positive-only | Visually readable | p. 7, Table 4 |
+| GPT-4o VPI recall | 78.43 | % | Strongest listed baseline on VPI | Visually readable | Table 4 |
+| GPT-4.1 / 4B / 8B EIA recall | 97.39 / 95.69 / 93.71 | % | Positive-only | Visually readable | Table 4 |
+| Browser-use undefended attack success | 96.5 / 84.2 / 84.2 | % | Amazon / Booking / BBC | Visually readable | Table 5 |
+| Browser-use + 8B attack success | 0 / 0 / 0 | % | Same three sites | Visually readable | Table 5 |
+| Claude + 8B attack success | 1.7 / 0 / 0 | % | Same three sites | Visually readable | Table 5 |
+| Claude Shopping success | 43.3 / 36.7 / 40.0 | % | No guard / guard / verification | Visually readable | Figure 3 |
+| Claude Shopping guard loss | 6.6 | Percentage points | 43.3 − 36.7 | Analyst-derived | Figure 3 |
+| Guard inference time | 2.15 / 3.24 | Seconds | 4B / 8B average | Visually readable | p. 8, Table 6 |
+| Agent inference range | 5.43–7.74 | Seconds | Reported agent means | Author-reported | p. 8 |
+| EIA/8B no injection / tail | 93.71 / 90.17 | % detection recall context | Guard-directed attack | Visually readable | Table 7 |
+| EIA/8B tail decrease | 3.54 | Percentage points | 93.71 − 90.17 | Analyst-derived | Table 7 |
+| 4B VPI SFT / SFT+RL | 84.97 / 85.95 | % recall | Training ablation | Visually readable | p. 9, Table 8 |
+| 8B VPI SFT / SFT+RL | 84.31 / 87.58 | % recall | Training ablation | Visually readable | Table 8 |
+| SFT learning rate / epochs | 5 × 10^-6 / 3 | Rate / epochs | Two H200 GPUs | Author-reported | p. 5 |
+| RL learning rate / epochs | 1 × 10^-6 / 3 | Rate / epochs | Four H200 GPUs | Author-reported | p. 5 |
+| Rollout group | 5 | Outputs per prompt | GRPO | Author-reported | p. 5 |
+
+No approximate visual estimates are used in this report's numerical conclusions.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/Table/Experiment | Source | Qualification / Evidence Strength |
+|---|---|---|---|---|
+| Parallel guarding separates detection from action planning | Shared inputs, separate action/signal paths, approval rule | Figures 1–2; Equation 1 | pp. 2–4 | HIGH for described architecture; no causal isolation of reasoning separation |
+| Specialized training yields strong synthetic detection | 8B 99.20 accuracy, 98.40 recall | Table 2, X1 | p. 6 | HIGH for entries; some baseline metrics inconsistent |
+| Transfer occurs across tested distributions | PopUp 90.74 F1; VPI 87.58 recall | Tables 3–4, X2–X3 | pp. 6–7 | HIGH for entries; limited benchmark scope |
+| The model does not lead every setting | GPT-4.1 EIA 97.39 versus 8B 93.71 | Table 4 | p. 7 | HIGH; qualifies broad superiority wording |
+| Integration reduces successful attacks | Browser-use 8B 0/0/0 versus 96.5/84.2/84.2 | Table 5, X4 | p. 7 | HIGH for reported rates; denominator and uncertainty absent |
+| Guarding has a benign utility cost | All four guarded bars below unguarded bars | Figure 3, X5 | p. 7 | HIGH; verification only partly recovers |
+| Parallel computation can hide guard inference | Guard means below all agent means | Table 6, X6 | p. 8 | MEDIUM for general latency inference; averages only |
+| Guard-directed robustness is conditional | Several improvements; EIA/8B tail decreases | Table 7, X7 | p. 8 | HIGH for values; narrow attack family |
+| SFT supplies most training benefit | Large base-to-SFT gains; 8B RL-only unchanged | Table 8, X8 | pp. 8–9 | HIGH for ablation; mechanism not fully isolated |
+| Suspicious evidence can be dismissed | Incorrect negative outputs after noticing commands | Figures 9–10, X9 | pp. 9, 18 | HIGH for selected cases; no prevalence estimate |
+| Web interaction creates an input-to-action security pathway | Malicious observation changes state and action | Problem formulation | p. 3 | MEDIUM as research relevance inference; no standalone comparison |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine asking a computer assistant to find a cheap hotel. To help you, it opens a website. The website secretly tells it to overwrite a file. The problem is that the assistant has to read websites to do its job, but some websites contain instructions from people who should not control it. If it mistakes those instructions for something it should obey, a reading mistake can turn into a real action.
+
+This paper adds a second AI whose only job is to look for that trick. The main assistant plans what to do next while the checker reads the same page and your request. A gate waits for permission before allowing the action. If the checker objects, a person can approve it, or the task stops.
+
+The researchers trained their checker on generated pages with and without hidden instructions. It detected many attacks and greatly reduced successful attacks in their tests. But it sometimes missed malicious commands, sometimes interrupted harmless tasks, and was not best on every benchmark. Running the checker beside the assistant could hide its processing time in the tested setup, but that does not mean every possible deployment has no extra delay.
+
+For the broader question about web agents versus standalone language models, the useful lesson is that browsing adds untrusted material and opportunities to act on it. This paper shows and tests defenses for that situation. It does not directly run the controlled comparison needed to prove exactly how much more vulnerable web agents are.
+
+## Completeness Audit
+
+The inventory denominator is all supplied sections/subsections, Figures 1–10, Tables 1–10, Equations 1–4 and pipeline expressions, nine analysis groups, three contribution groups, acknowledged qualifications, references, and substantive end matter. Reviewed does not mean independently reproduced or externally validated.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Abstract | Yes, text + visual | Yes | Fully represented | Motivation, method, headline claims qualified |
+| §1 Introduction | Yes, text + visual | Yes | Fully represented | Includes coupling rationale and contributions |
+| §2 Related Work | Yes, text + visual | Yes | Represented in compressed form | Categories and attributed shortcomings; no external literature validation |
+| §3 Web Agent Working Pipeline | Yes, text + visual | Yes | Fully represented | States, observations, actions, transition |
+| §3 Prompt Injection Attacks | Yes, text + visual | Yes | Fully represented | HTML attacker and malicious-state pathway |
+| §4.1 Defense | Yes, text + visual | Yes | Fully represented | Gateway, override, notation discrepancy |
+| §4.2 Sample Synthesis | Yes, text + visual | Yes | Fully represented | Generation, processing, paired classes, splits |
+| §4.2 Reasoning Construction | Yes, text + visual | Yes | Fully represented | Label-conditioned generation and filtering |
+| §4.3 Cold-Start SFT | Yes, text only | Yes | Fully represented | Equation and rationale; typography not visually checked |
+| §4.3 Post-training with RL | Yes, text only | Yes | Fully represented | GRPO, reward, uncertainties |
+| §5.1 Implementation Details | Yes, text only | Yes | Fully represented | Reported hardware and hyperparameters |
+| §5.1 Datasets / Metrics / Baselines | Yes, text; visual continuation | Yes | Fully represented | Positive-only versus mixed evaluation preserved |
+| §5.2 In-domain | Yes, text + visual | Yes | Fully represented | All table rows and inconsistencies |
+| §5.2 Out-of-domain | Yes, text + visual | Yes | Fully represented | PopUp, VPI, EIA distinguished |
+| §5.3 Defense Performance | Yes, text + visual | Yes | Fully represented | Two frameworks, three sites, all rates |
+| §5.3 Agent Utility | Yes, text + visual | Yes | Fully represented | Four conditions, three settings |
+| §5.3 Agent Efficiency | Yes, text + visual | Yes | Fully represented | Means and conditional concurrency inference |
+| §5.4 Guard-targeted Robustness | Yes, text + visual | Yes | Fully represented | Attack type, position, declining cell |
+| §5.4 Training Contributions | Yes, text + visual | Yes | Fully represented | Both backbones and all conditions |
+| §5.5 Case Study | Yes, text + visual | Yes | Fully represented | Two successes and two failures |
+| §6 Conclusion | Yes, text + visual | Yes | Fully represented | Broad claims checked against results |
+| References, pp. 9–11 | Yes; 10–11 text only | Yes | Represented in compressed form | Context categories; bibliographic entries not individually reproduced |
+| Formal research questions | No formal items present | Accounted for | Not present in supplied material | Objectives distinguished from analyst questions |
+| Formal hypotheses | No formal items present | Accounted for | Not present in supplied material | No invented hypotheses |
+| X1–X9 experiments/analyses | Yes | Yes | Fully represented | Register and linked evidence |
+| Figure 1 | Yes, visually | Yes | Fully represented | Runtime architecture |
+| Figure 2 | Yes, visually | Yes | Fully represented | Training/data pipeline |
+| Figure 3 | Yes, visually | Yes | Fully represented | Exact labels, axes, legend, no errors shown |
+| Figures 4–6 | Yes, visually | Yes | Fully represented | Prompt purposes and label distinction |
+| Figures 7–8 | Yes, visually + text | Yes | Fully represented | Successful classifications |
+| Figures 9–10 | Yes, visually + text | Yes | Fully represented | False negatives and suspicious cues |
+| Table 1 | Yes, visually | Yes | Fully represented | Split/class counts |
+| Tables 2–4 | Yes, visually | Yes | Fully represented | All model/metric entries |
+| Tables 5–8 | Yes, visually | Yes | Fully represented | Rates, timings, robustness, training |
+| Table 9 | Yes, visually | Yes | Represented in compressed form | All broad categories; fine topics compressed |
+| Table 10 | Yes, visually | Yes | Represented in compressed form | All broad categories; fine styles compressed |
+| Equation 1 | Yes, visually | Yes | Fully represented | Authorization logic |
+| Equations 2–4 | Yes, text only | Yes | Fully represented with uncertainty | No visual typography verification |
+| Unnumbered pipeline/data expressions | Yes | Yes | Represented in compressed form | Symbols and tuple construction explained |
+| Algorithms/pseudocode | None supplied | Accounted for | Not present in supplied material | Workflow diagrams substitute for numbered algorithm |
+| Theorems/lemmas/proofs | None supplied | Accounted for | Not present in supplied material | No formal guarantee claimed |
+| Three principal contributions | Yes | Yes | Fully represented | Framework, data, specialized model |
+| Author-acknowledged qualifications | Yes | Yes | Fully represented | Utility loss, failure cases, RL-only problem |
+| Dedicated limitations section | None supplied | Accounted for | Not present in supplied material | Analyst observations separated |
+| End matter pp. 12–18 | Yes, visually + text | Yes | Represented, some taxonomy compression | No invented appendix headings |
+| Supplementary files | None supplied | Accounted for | Not supplied | No supplementary review claimed |
+| Substantive footnotes | Yes | Yes | Represented in compressed form | Equal contribution, affiliations, venue, SimilarWeb source |
+| Repeated formatting header | Yes | Accounted for | Inspected but deliberately omitted as repetitive | Template header is not a scientific result |
+
+### Missing or inaccessible material
+
+No supplied text page from 1–18 is missing. Visual renderings for pages 5, 10, and 11 are unavailable. No separate supplementary files, model weights, executable implementation, dataset release package, or complete experiment logs are supplied. Their existence or availability outside this input was not investigated. Unreported seeds, software versions, attack denominators, generation defaults, confidence intervals, filtering counts, split-separation details, and several RL settings cannot be assessed from the supplied work.
+
+### Uncertain interpretations
+
+Equation 3's typography is text-only; G is overloaded between guard and output group. The guard equation omits user instruction despite other descriptions including it. Handling of zero reward variance is unspecified. Table 2 contains a clear F1 arithmetic discrepancy and recall values needing denominator/aggregation clarification. Table 7 conflicts with universal no-degradation wording. Topic-category terminology varies. Small case-study text was cross-read with the provided extraction, rather than treated as perfectly legible at every pixel.
+
+### Deliberately compressed material
+
+Individual bibliography entries, fine-grained topic/style inventories, repeated page headers, author contact details, and full generated explanation passages are compressed. Their scientific roles are represented. All numerical performance tables are retained, while selected prompt wording and case explanations are paraphrased to avoid repetitive transcription. No figure is treated as decorative merely because it appears in end matter.
+
+### Potential omissions
+
+No known substantive object in the supplied inventory is left unrepresented. This statement concerns documented coverage, not proof of perfect transcription or completeness of an original publication package. Unspecified methodological information remains explicitly unknown, and unavailable page visuals were not claimed as inspected.

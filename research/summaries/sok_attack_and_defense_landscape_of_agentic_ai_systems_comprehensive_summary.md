@@ -1,0 +1,414 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied main document is available as extracted text for physical PDF pages 1–21. Direct visual inspection is available for pages 1, 2, 4, 5, 6, 7, 8, 9, 10, 12, 13, 18, and 20. Pages 3, 11, 14, 15, 16, 17, 19, and 21 were inspected through their supplied text only. This distinction matters: text-only inspection can establish what a paragraph says, but cannot independently establish its original layout or the appearance of an unrendered object. The failed local-image message does not prevent inspection of the images actually displayed in the prompt.
+
+The document comprises a proceedings cover, the article, ethical and open-science statements, references, and Appendix A. The accessibility metadata says that no appendix pages were detected; nevertheless, Appendix A is explicitly present in the supplied text on page 21. The document itself therefore overrides that detection result. No separate supplementary files are supplied or clearly required by the article. The open-science statement says the work generates no computational research artifacts requiring sharing or evaluation.
+
+Figures 1–4 are visually available and readable as conceptual diagrams. Tables 1–2 are visually available and readable, with supplied text assisting exact row interpretation. No substantive numbered equation, theorem, algorithm listing, or quantitative experimental plot appears in the supplied material. Optical character recognition was not necessary: native text and page renderings were supplied. Dense figure labels are interpreted with the accompanying text; exact individual edge assignments are not invented when the nearby prose provides a clearer explanation. The supplied sequence appears to contain the entire article through its concluding appendix, but file completeness and the supplied SHA-256 identifier were not independently verified.
+
+Evidence labels used below are [A] AUTHOR-REPORTED, [B] DIRECTLY OBSERVABLE, [C] ANALYST-DERIVED, and [D] ANALYST INTERPRETATION. No external information is introduced. HIGH confidence indicates clear supplied evidence, MEDIUM indicates a qualified synthesis or interpretive mapping, and UNKNOWN indicates something the supplied work does not establish. All page references use physical PDF pages, including the cover, rather than proceedings page numbers.
+
+## 1. Plain-language orientation
+
+This paper studies the security of AI agents: systems that combine a large language model, or LLM, with software that remembers information, chooses tools, and acts in an environment. A standalone language model can produce a problematic answer. An agent can also use that answer to select a website, send information, change a file, call a service, or execute code. The paper's central concern is the security of that whole connected system. [A; pp. 2–4]
+
+The authors construct a systematization of knowledge, abbreviated SoK. They organize existing literature into agent design dimensions, attacker categories, attack vectors, security risks, and defense mechanisms. They report reviewing 128 papers, including 51 attack methods and 60 defense methods, with remaining works covering both or presenting cases without new methods. These are review-corpus counts, not measurements of attack success or agent vulnerability. [A; p. 3]
+
+Their main finding is a systems argument: flexibility creates more entry points, more opportunities for model errors or malicious instructions to influence execution, and more serious consequences when agents have sensitive access and powerful actions. Defenses therefore need to cover interactions among components, not merely improve the model or filter the initial user prompt. [A; pp. 6–8, 15]
+
+For the research question, 'Why Are Web AI Agents More Vulnerable Than Standalone LLMs?', the paper supplies an explicit conceptual comparison of agentic systems with standalone LLMs, especially their expanded interfaces and amplified consequences. It does not run a controlled web-agent-versus-standalone-model experiment or estimate a universal vulnerability multiplier. Applying its general framework specifically to web agents is analyst inference, although browsers, web content, URL fetching, and web services are explicit examples in the paper. [D; HIGH confidence in relevance, UNKNOWN confidence in any numerical comparative effect]
+
+## 2. Document roadmap
+
+The document inventory is as follows. Physical page 1 is the USENIX proceedings cover. The abstract and §1 Introduction begin on page 2; contributions continue onto page 3. Section 2 Overview on page 3 explains scope, review methodology, and differences from earlier surveys. Section 3 AI Agent and Security Implications includes §3.1 AI Agents on pages 3–4 and §3.2 Agent Design Dimensions on pages 4–5. Section 4 Attack Landscape of AI Agents includes §4.1 Threat Model and Attack Vectors on pages 5–6, §4.2 Security Risks on pages 6–7, and §4.3 System-level Analysis of Agent Risks on pages 7–8.
+
+Section 5 Defense Landscape occupies pages 8–15: §5.1 Security Goals; §5.2 Runtime Protection, with input guardrails, output guardrails, information flow control and taint tracking, monitoring, and human-in-the-loop validation; §5.3 Secure By Design, with privilege separation and formal verification; §5.4 Identity and Access Management, with identity, access control, and credential management; §5.5 Component Hardening; and §5.6 Defense Design Principles. Section 6 Conclusion and the acknowledgment appear on page 15. Ethical Considerations spans pages 15–16; Open Science is on page 16. References run from pages 16–21. Appendix A, Connection with MITRE ATLAS, appears on page 21.
+
+The substantive visual inventory is F1/Figure 1, agent structure, page 4; F2/Figure 2, attack vectors and risks, page 6; F3/Figure 3, design-to-risk relationships, page 7; F4/Figure 4, defense placement, page 9; T1/Table 1, design flexibility, page 5; and T2/Table 2, defense mechanisms and covered risks, page 10. These stable identifiers are used in the coverage record. No formal research-question numbering, hypotheses, numbered mathematical results, pseudocode, or original experiment series is supplied.
+
+## 3. Background and context
+
+An LLM is the neural component that processes a task and generates plans, responses, or tool-use decisions. The authors define an AI agent as a hybrid software system combining traditional software components with neural components. They tailor this definition to security analysis and explicitly do not claim that it is superior to earlier definitions. An agent's decision-making core comprises both its LLM and its workflow. [A; pp. 3–4]
+
+Memory stores internal knowledge and historical action trajectories, including past observations and experiences. Tools are symbolic functions through which the agent interacts with its environment. The authors distinguish read, write, and execute actions: retrieving a file differs from modifying it, sending an email, or executing a command. The environment can be a browser, computer, domain-specific application, third-party service, or external retrieval source. [A; pp. 3–4]
+
+Retrieval-augmented generation, or RAG, supplies retrieved information to model processing. Internal RAG appears within memory in Figure 1; external RAG appears among environmental resources. The Model Context Protocol, or MCP, is cited as a standardized way to implement tools. Neither RAG nor MCP is itself presented as a guarantee of trustworthiness. [A/B; pp. 4–6]
+
+Prompt injection means attacker-provided instructions attempting to redirect behavior. Direct injection reaches the agent through direct input; indirect injection is carried by material such as an external page or document that the agent later retrieves. The important distinction is where the adversarial influence enters, rather than whether the text looks like an ordinary conversation. Tool poisoning can involve malicious tool names, descriptions, or implementation code. Memory poisoning changes stored material that influences future behavior. [A; pp. 5–6]
+
+Confidentiality means restricting information access to authorized entities; integrity means protecting data and actions against unauthorized changes; availability means keeping resources and services usable. The authors add contextual security: keeping the agent's changing context aligned with the intended task and controlling which context elements are admissible and how they are prioritized. [A; p. 8]
+
+## 4. Research problem and gap
+
+The existing problem is that agent capability depends on connections among models, memory, tools, interfaces, and external environments, while attacks can exploit those same connections. The authors cite incidents involving private repositories, remote code execution, document and email exfiltration, exposed chats and credentials, and web-agent access to personal banking accounts. These incidents motivate the review; this paper does not reproduce them or independently measure their frequency. [A; p. 2]
+
+According to the authors, earlier LLM-security surveys concentrate on model-level threats. Agent-focused surveys often concentrate on particular vectors, agent categories, or components. Even surveys that discuss interactions tend to emphasize model-based defenses. The claimed gap is a unified treatment of component risks, cross-component amplification, and defenses that combine model and system mechanisms. This assessment of prior literature is author-reported rather than an independent judgment of all cited surveys. [A; pp. 2–3]
+
+The scope is security risks unique to agents or significantly amplified by agentic operation compared with traditional software and standalone LLMs. Existing LLM problems such as hallucination remain relevant when autonomy and environmental access increase their consequences. Attacks on model internals, such as model inversion, are excluded when they do not fundamentally worsen under the assumed inference-time input/output interface. [A; p. 3]
+
+The target research question is therefore best decomposed into exposure, propagation, and consequence. More external interfaces create exposure; dynamically interpreted context and model-directed workflows permit propagation; sensitive resources and environment-modifying tools increase consequences. This three-part wording is an analyst synthesis of the authors' R1–R7 framework, not terminology introduced by the paper. [D; pp. 6–8]
+
+## 5. Research questions, objectives, and hypotheses
+
+The paper does not state formally numbered research questions or testable hypotheses. Its explicit objectives are to characterize agent design dimensions, organize attack vectors and security risks, systematize defenses, and identify limitations and open challenges. It also aims to provide guidance for developers and researchers through a holistic systems perspective. [A; pp. 2–3]
+
+The user-supplied question about web agents is an analytical lens applied here. The supported answer concerns mechanisms and conditions: an agent that reads arbitrary web content, dynamically plans actions, retains memory, accesses private resources, and executes tools has more ways to be influenced and more ways to cause harm than the response-only endpoint in the paper's illustrative design spectrum. An agent need not occupy the most flexible level on every dimension. [D; pp. 4–7]
+
+No hypothesis is statistically confirmed or rejected. The article's contribution is an organizing framework supported by literature examples, not a causal experiment establishing that every web agent is more vulnerable than every standalone deployment. [A/D; pp. 3, 16]
+
+## 6. Assumptions / Threat Model
+
+The system model includes user interaction, one or more LLMs, an agent workflow, memory, tools, and an external environment. Multi-agent systems contain multiple such decision-making cores, each with its own memory, prompts, and tool sets. Trust is not uniform: external documents, third-party tools, stored knowledge, credentials, and planning components can occupy different trust positions. [A/B; pp. 3–6]
+
+An external adversary cannot directly interact with the agent but can manipulate resources it retrieves, including public pages and documents. Associated vectors are V1 indirect prompt injection, V2 malicious data injection, and V3 tool poisoning. Malicious data injection includes dangerous data beyond instructions, such as malicious packages or manipulated financial parameters. The authors call this external model constrained but highly realistic. [A; p. 5]
+
+A user-level adversary supplies malicious input directly or poisons otherwise benign user input. V4 direct prompt injection asks for unauthorized actions prohibited by the system prompt. An internal adversary has access to components, potentially as a developer or third-party provider. V5 model poisoning embeds hidden malicious behavior; V6 memory poisoning directly manipulates stored content. The authors describe internal compromise as the most difficult category to achieve in practice, but do not provide a measured difficulty comparison. [A; pp. 5–6]
+
+The threat taxonomy identifies capabilities, not a single experimental attacker with one fixed knowledge budget, query budget, success criterion, or access configuration. Those parameters are not specified for a unified evaluation because none is conducted. Likewise, the paper does not establish that all tools, planners, memory stores, or users are trusted by default. Defenses explicitly attempt to constrain trust between these components. [D; pp. 5–6, 12–14]
+
+The ethical statement assumes that the security community will primarily use the work defensively and that comprehensive guidance will improve deployments. These are declared assumptions about impact, not measured outcomes. [A; p. 16]
+
+## 7. Methodology
+
+The study is a cybersecurity SoK and literature-based analytical survey. Its first step is to define agent structure and design dimensions using existing definitions and real implementations. Those dimensions ground a component-level and system-level risk taxonomy. The authors also consult the OWASP Top 10 for LLM Applications and the MITRE ATLAS matrix, then organize defenses using defense-in-depth informed by traditional system security. OWASP and MITRE are named source frameworks; this report does not add their external contents. [A; p. 3]
+
+The reported search covers academic literature and web documents from 2023 through October 2025. Four keyword dimensions are described: general terminology such as agent security; OWASP-defined risks such as prompt injection and memory poisoning; component terms such as RAG security and tool security; and traditional-security adaptations such as isolation and access control. Priority venues include USENIX Security, IEEE Security and Privacy, CCS, NDSS, NeurIPS, ICLR, and ICML, alongside high-impact preprints, industry whitepapers, and common vulnerabilities and exposures, or CVEs. Standalone-model work is manually excluded to focus on agents. [A; p. 3]
+
+The resulting review contains 128 papers, including 51 attack methods and 60 defense methods. The authors describe the remaining works as addressing both attacks and defenses or cases without new methods. They do not provide a study-by-study screening ledger, database list, full query strings, retrieved-record count, duplicate count, reviewer agreement, or formal quality score in the supplied document. The breadth of the bibliography does not supply those missing procedural details. [A/D; p. 3]
+
+There are no training runs, datasets with train/validation/test splits, hardware configurations, hyperparameter searches, random seeds, statistical tests, experimental baselines, or reported confidence intervals for an original evaluation. The open-science statement explicitly says the work conducts no experiments, user studies, empirical evaluations, software development, data collection, or computational analysis. Review counts should consequently remain separate from experimental sample sizes. [A; p. 16]
+
+A temporal qualification matters: the stated review endpoint is October 2025, yet reference [145] on page 20 is identified as arXiv:2511.17959 and is discussed as recent work on page 12. This is a document-internal mismatch between a stated search period and an included citation identifier. The supplied material does not explain whether a later update occurred, and the discrepancy is not silently reconciled. [D; pp. 3, 12, 20]
+
+## 8. Experiments / Analyses
+
+There are no original experiments. The following register separates the paper's substantive analytical activities rather than inventing experimental setups.
+
+| Analysis | Purpose and procedure | Evidence object | Output and caveat |
+|---|---|---|---|
+| X1: Agent structure | Describe components and their execution relationships using existing definitions and implementations | §3.1; F1 | A hybrid-system model; not a benchmark architecture implemented by this paper |
+| X2: Design space | Classify flexibility along seven dimensions with three illustrative levels | §3.2; T1 | An orthogonal design framework; levels are examples on continua, not measured scores |
+| X3: Threat taxonomy | Group attacker capabilities into external, user-level, and internal categories | §4.1; F2 | Six vectors V1–V6; no attack-success measurements |
+| X4: Risk synthesis | Classify entry-point, model, and consequence risks and connect them | §§4.2–4.3; F2–F3 | R1–R7 plus additional risks; qualitative relationships |
+| X5: Defense synthesis | Categorize mechanisms, design choices, limitations, and coverage | §5; F4; T2 | A defense landscape; listed coverage does not establish universal effectiveness |
+| X6: Framework crosswalk | Map agent vectors and risks to MITRE ATLAS categories | Appendix A | A conceptual mapping, not validated detection coverage |
+| X7: Ethics and openness | Discuss stakeholders, misuse, assumptions, and artifact status | pp. 15–16 | Public-source analytical work with acknowledged impact uncertainties |
+
+For X1–X6, comparison consists of conceptual categories and cited examples. There are no manipulated variables, randomized groups, repeated trials, or standardized performance metrics. The paper's review corpus is the evidence base, while its taxonomies are the analytical outputs. The discussion of existing defenses reports their intended mechanisms; it does not reproduce their experiments or normalize their results across conditions. [A/D; pp. 3, 16]
+
+## 9. Results
+
+The first main result is a seven-dimensional design space. Input trust, memory, and tool diversity expand the attack surface. Workflow flexibility chiefly influences wrong instruction following, unsafe data flow, and hallucination-related action. Access sensitivity, action power, and user-interface capability affect the severity and channels of downstream consequences. These are qualitative mappings, not fitted effect sizes. [A; pp. 4–7]
+
+The second result is a separation of attack vectors from security risks. V1–V6 describe how influence enters; R1–R7 describe weaknesses or harmful outcomes. R1 heterogeneous untrusted interfaces exposes entry points. R2 wrong instruction following, R3 unconstrained/unsafe data flow, and R4 hallucination and model mistakes describe model-associated problems. R5 private data leakage, R6 unintended/unauthorized action and data corruption, and R7 resource drain and denial-of-service describe consequential harms. This distinction prevents treating every harmful outcome as simply another prompt-injection category. [A; pp. 5–8]
+
+The third result is cascading amplification. Attacker-controlled external content can exploit model behavior, which can then influence tool calls, leak sensitive information, alter stored resources, or consume excessive resources. The paper gives automatic URL fetching as an example of an output/rendering path that can leak information through request parameters. It also describes package hallucination becoming dangerous when attackers register malicious packages with names a model invents. Neither example has an attack rate or monetary loss measured in this paper. [A; pp. 6–8]
+
+The fourth result is a defense landscape spanning runtime checks, architectural separation and verification, identity and access management, and component hardening. Defense-in-depth, least privilege, and complete mediation guide combinations of these mechanisms. No mechanism is presented with a paper-wide quantitative guarantee of sufficient protection. [A; pp. 8–15]
+
+Two reporting inconsistencies qualify the synthesis. Page 3 claims nine security risk categories, whereas the explicitly numbered taxonomy and Figures 2–3 contain seven, R1–R7. Page 7 separately discusses proprietary-information theft and side channels, but does not explicitly number these as R8–R9 or state that they resolve the count. Page 3 also describes three defense categories, while the detailed organization and Table 2 distinguish identity and access management as an additional category. Both formulations are preserved rather than forced into agreement. [A/B/D]
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — Agent structure, physical page 4
+
+This is an architecture diagram, not a statistical plot. It has no axes, units, numerical scale, error bars, or quantitative comparisons. The agent boundary contains a user interface, the LLM and workflow core, memory, and an action inset. A user sits above the interface, other agents connect from the left, and a tool links the agent to an external-environment block on the right. The environment lists web, computer, domain-specific, third-party, and external-RAG resources. [B]
+
+Memory contains internal RAG, session trace/long-term storage, and tool/system credentials. The action inset distinguishes read/retrieval, write/update/respond, and execute/actions/code execution. The LLM/workflow core includes planner and actor roles. Arrows indicate interaction among interface, reasoning core, memory, and tools. The caption clarifies that LLM and workflow jointly govern planning and execution and that multi-agent systems replicate such cores. [A/B]
+
+The figure supports the paper's systems scope: security-relevant information and authority reside in multiple connected places. It does not imply that every real agent has every shown resource or the same implementation. Its colors separate regions but do not encode measured trust scores. [D]
+
+### Figure 2 — Attack entry points and risks, physical page 6
+
+This conceptual overlay reuses the agent/environment layout. Black boxes and arrows represent components and data flow; purple boxes and arrows identify attack vectors; red boxes identify security risks. V4 appears at direct user input, V1 and V2 at the external environment, V3 at the tool, V5 at the model, and V6 at memory. [A/B]
+
+R1 labels untrusted interfaces; R2–R4 are grouped at the LLM; R5–R7 are shown at several consequence-bearing regions, including interface, memory, and environment. This placement is substantively important: private-data exposure and unauthorized state changes are not confined to the final response. A tool, memory update, or environment interaction can be the harmful endpoint. [B/D]
+
+There are no panels with numerical results, axes, units, sample sizes, or success percentages. The figure is a taxonomy illustration rather than a demonstration that every shown attack succeeds against every component. The caption and prose agree on six vectors and seven numbered risks. [A/B]
+
+### Figure 3 — Design dimensions and interacting risks, physical page 7
+
+The top band contains the seven design dimensions. The lower risk region contains R1, a model-risk group containing R2–R4, and consequence risks R5–R7. Orange connections associate dimensions with risks; connections among risk groups illustrate amplification. There are no quantitative edge weights or probabilities. [B]
+
+The nearby text supplies the most reliable reading of the dense links: input trust, memory, and tools increase R1; workflow drives R2–R4; access sensitivity, action, and user interface affect consequence severity. The figure and §§4.3–5.1 connect confidentiality, integrity, and availability to those consequences. Individual arrows are not interpreted as an exhaustive or exclusive causal graph. [A/B/D]
+
+The figure supports qualitative reasoning about capability combinations. It does not justify summing dimension levels into a vulnerability score, estimating a multiplicative risk factor, or ranking implementations without additional evidence. [D]
+
+### Figure 4 — Defense placement, physical page 9
+
+This is a defense architecture map. The agent boundary contains the interface, LLM/workflow core, and memory; the environment separates external data from private data. Tools mediate retrieval and execution. Repeated defense icons mark multiple intervention points, and a legend distinguishes runtime protection, secure-by-design, identity and access management, and component hardening. [B]
+
+Runtime symbols include input/output guardrails, information flow control and taint tracking, monitoring, and human validation. Architectural symbols include privilege separation and formal verification. Identity/access symbols include identity management, credentials, and access control. Shield-like symbols represent component hardening. [A/B]
+
+The visual emphasizes layered placement across boundaries, flows, and resources rather than a single protective wrapper around the model. It does not present a deployed system, measured overhead, verified implementation, or numeric coverage guarantee. Table 2 and the prose explain what the symbols are intended to address. [D]
+
+## 11. Table-by-table interpretation
+
+### Table 1 — Agent flexibility dimensions, physical page 5
+
+Rows are design dimensions; columns are least, moderately, and most flexible representative levels. There are no units, experimental baselines, statistical tests, best/worst performance values, or missing-value codes. Citation numbers identify examples rather than results.
+
+| Dimension | Level 1: least flexible | Level 2: moderately flexible | Level 3: most flexible |
+|---|---|---|---|
+| Input trust | No external data | Predefined external data | Arbitrary external data |
+| Access sensitivity | No sensitive data | Predefined sensitive data | Arbitrary sensitive data |
+| Workflow | Simple chatbot | Fixed, developer-defined | Dynamic, LLM-defined |
+| Action | LLM response only | Response and retrieval | Response, retrieval, execution |
+| Memory | No memory | Transient session memory | Persistent memory across sessions |
+| Tool | No tool | Known tools | Arbitrary tools |
+| User interface | Text-only | Web-based image preview | Interactable web elements |
+
+The caption states that dimensions are orthogonal: one agent can occupy different positions on different dimensions. The text further treats them as continua, with three levels shown for simplicity. Greater flexibility is therefore a design description, not a single measured security rating. In the input-trust row, increased flexibility corresponds to lower assumed source trust, so the heading must not be misread as saying that more flexibility means more trustworthy input. [A; pp. 4–5]
+
+### Table 2 — Defense mechanisms and covered risks, physical page 10
+
+Columns give category, mechanism, representative works, and covered risks. Rows describe intended mitigation scope, not comparative efficacy. Several cells visually span multiple rows; the prose helps confirm the shared risk assignments. No accuracy, attack-success rate, latency, cost, uncertainty interval, or statistical significance is reported.
+
+| Mechanism | Listed or prose-supported risk coverage | Representative examples |
+|---|---|---|
+| Input guardrail | R1 | Prompt Guard2, PromptShield, DataSentinel, PromptArmor, URL allowlist |
+| Output guardrail | R2, R4, R5, R6 | CodeShield, Task Shield, GuardAgent, Agrail, Conseca, Progent |
+| Information flow control and taint tracking | R3, R5, R6 | Permissive, MELON, RTBAS, AgentArmor, PFI, CaMeL, FIDES, ACE, PrivacyChecker |
+| Monitoring | R5, R6, R7 | AgentAuditor, AgentMonitor, SentinelAgent |
+| Human-in-the-loop | R5, R6, R7 | Wu et al.; shared table coverage clarified by §5.2.5 |
+| Privilege separation | R2, R3 | AirGapAgent, f-secure, CaMeL, FIDES, PFI, IsolateGPT, ACE, IPIGuard, DRIFT |
+| Formal verification | Secure-by-design shared coverage; properties elaborated in text | Formal-LLM, VeriSafeAgent, ShieldAgent |
+| Identity management and access control | R5, R6, R7 | Authenticated delegation, SAGA, Agent network protocol; ControlNet, Honeybee, Bedrock |
+| Credential management | R5 | Token vault |
+| Model hardening | R2, R4 | SecAlign, StruQ, Instruction Hierarchy, InstructionalAgent |
+| Tool hardening | R1 | Anthropic Connectors, ETDI, MCP Context Protector, MCP Safety Audit, MCIP |
+
+The table's identity/access block calls R6 'Unintended/Unconstrained Action' whereas the main taxonomy uses 'Unintended/Unauthorized Action.' This is a terminology inconsistency, not evidence for a separate risk category. The table's representative list is compressed here; no listed method is promoted to a universal solution. [A/B/D]
+
+## 12. Diagram / Architecture
+
+Figures 1–4 collectively describe an execution-and-security chain. A user supplies a task through the interface. The LLM/workflow core plans and sequences actions, queries memory, and invokes tools. Tools read or modify external resources. Retrieved results re-enter subsequent model processing, creating an iterative interaction rather than a one-way answer generator. The paper's file-update illustration explicitly sequences reading, generating replacement content, and writing. [A; p. 4]
+
+The security-relevant feedback is that data acquired while acting can influence later decisions. External content, stored knowledge, and tool descriptions can enter contexts used for planning. Credentials and private resources give actions authority. Thus, a malicious instruction in a lower-trust source can potentially influence a higher-impact operation when boundaries do not constrain the flow. This is an analyst synthesis of the described architecture and risks, not an additional implemented exploit. [D; pp. 4–8]
+
+Defense placement follows those paths. Input checks screen incoming material; output checks inspect responses and tool actions; information flow control follows data across operations; monitoring observes whole trajectories; approval mechanisms defer selected decisions to users. Architectural separation tries to prevent untrusted parsing from controlling planning. Identity, access, and credential controls restrict who may act and what resources are available. Component hardening reduces weaknesses at individual nodes. [A; pp. 8–15]
+
+For a web agent, the corresponding analyst interpretation is that retrieved pages are potential inputs, browser/tool actions are outputs with consequences, automatic resource fetching can be an additional transmission path, and authenticated services can enlarge the value of exposed resources. This relevance is conditional on the actual agent's design; the paper does not establish that every browser agent has arbitrary credentials, persistent memory, or code-execution access. [D; MEDIUM confidence]
+
+## 13. Equations and mathematical concepts
+
+No major equation, loss function, optimization objective, theorem, lemma, proof, or mathematical algorithm is supplied. The labels V1–V6 and R1–R7 are identifiers, not algebraic variables. The numbers 1–3 in Table 1 label representative flexibility levels rather than an interval-scaled measurement. Neither multiplication nor averaging of these levels is justified by the paper. [A/B/D]
+
+The main mathematical concept mentioned is an information-flow lattice: classical information flow control assigns security labels from a predefined lattice, propagates labels, and detects prohibited flows. The paper does not specify a concrete lattice, ordering relation, label set, or declassification equation for its own agent architecture. Its purpose is to classify reviewed approaches. [A; pp. 10–11]
+
+Formal verification is discussed as the specification and checking of security or correctness properties. Examples include a domain-specific language over interface-state transitions, pushdown automata constraining plan generation, and declarative rule circuits over action trajectories. These are reported representations in cited systems; the paper does not reproduce their formal definitions or prove a new end-to-end theorem. [A; pp. 12–13]
+
+One useful derived count is 128 − 51 − 60 = 17. This is an ANALYST-DERIVED arithmetic remainder under the paper's described partition of attack-method, defense-method, and remaining works. It is not a newly reported study count, and the paper's mixing of paper counts and method counts makes it inappropriate to infer a more detailed mutually exclusive coding scheme from that subtraction alone. [C; p. 3]
+
+## 14. Interpretation and discussion
+
+The most defensible answer to the research question is that agentic operation changes both exposure and impact. A response-only interface limits the immediate action channel described in Table 1. An agent can encounter attacker-controlled information without a malicious user directly messaging it; it can retain that information; and it can act using tools and permissions. Existing model weaknesses can therefore become mechanisms for affecting resources outside the conversation. [A/D; pp. 5–8]
+
+The paper does explicitly compare agents with standalone LLMs at the conceptual level. R1 states that heterogeneous interfaces create a substantially larger attack surface. Section 2 scopes the review around unique or amplified risks, and §5.2 distinguishes agent-specific checks from ordinary model guardrails. However, these statements are literature-based synthesis. They do not isolate the effects of browsing, memory, planning, tool diversity, or access privileges experimentally. [A; pp. 3, 6, 8–9]
+
+Defenses address different links in the chain. An allowlist can restrict destinations without determining whether every permitted action matches the task. A model classifier can flag suspicious content without enforcing permission boundaries. A planner/parser split can constrain influence but lose useful functionality. Monitoring can observe distributed harm yet incur overhead and privacy costs. Human approval can supply judgment but suffers fatigue. These are the authors' reported tradeoffs, not evidence that defenses are futile. [A; pp. 9–15]
+
+Unresolved reporting issues include nine versus seven risk categories; three headline defense categories versus the separate identity/access category; a review cutoff that does not explain a November-identified citation; and duplicated credential-storage/lifecycle bullets on page 14. The duplication is compressed rather than interpreted as additional distinct dimensions. Appendix A is present despite its absence from the automatic appendix-detection metadata. None of these observations establishes that the underlying security mechanisms are false, but they constrain precision and reproducibility. [D]
+
+## 15. Contributions and novelty
+
+The conceptual contributions are a hybrid-system model, seven orthogonal flexibility dimensions, a capability-based threat taxonomy, a component-and-system risk taxonomy, and a map of cross-component amplification. The methodological contribution is the organization of reviewed work into a shared framework. The defense contribution is a landscape that connects security goals, mechanisms, design choices, coverage, limitations, and three design principles. Appendix A adds a crosswalk to MITRE ATLAS. [A; pp. 2–3, 21]
+
+The authors claim this is the first comprehensive systematization from a holistic systems perspective. That priority claim is author-reported and was not externally verified. Its practical aim is to serve as a handbook for research and development, rather than supply an implemented reference agent or benchmark. [A; pp. 2–3]
+
+There is no new dataset, trained model, executable system, algorithm implementation, empirical attack evaluation, or theoretical security proof produced by this paper. The authors explicitly explain why no additional computational artifacts accompany the analytical contribution. [A; p. 16]
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+Input guardrails face ambiguous security criteria, adaptive bypass, human effort for rules, and false positives/negatives. Output guardrails share those limitations and add time and computation because checks depend on generated outputs and process additional material. Information flow methods can incur substantial runtime overhead and label creep, where conservative propagation makes operation impractical without safe declassification. [A; pp. 9–11]
+
+Monitoring faces stochastic, context-dependent behavior, evasion, overhead, accumulated logs, and underexplored storage/privacy controls. Human validation faces decision fatigue, insufficient security literacy, and uncertainty about when escalation is appropriate. Privilege separation often studies simplified indirect-injection settings, can reduce utility, and needs better decomposition and communication strategies for realistic environments. Formal verification remains limited by probabilistic behavior and underspecified security properties. [A; pp. 11–13]
+
+Identity management lacks settled attribution and interoperable issuance, delegation, and revocation frameworks. Access control research is concentrated on vector-database retrieval, while broader tools and inter-agent interaction lack adaptive, consistent policies and usable configuration. Credential handling is often ad hoc, with exposed environment-variable secrets and multi-agent coordination challenges. Component hardening often assumes simplified scenarios and incompletely specified component roles or threat models. [A; pp. 13–15]
+
+The ethical discussion acknowledges misuse risk, possible false confidence, privacy risks from aggregated incidents, inability to prevent all misuse, technology outpacing implementation, and retrospective rather than fully prospective attention to researcher wellbeing. [A; pp. 15–16]
+
+### Additional evidence-based analyst observations
+
+The supplied methodology does not provide enough screening detail to reconstruct every inclusion decision. There is no formal evidence-quality grading or quantitative synthesis, and no controlled comparative estimate for web agents versus standalone models. Intended coverage in Table 2 must not be equated with demonstrated protection under a shared attacker model. The internal count, grouping, timing, and terminology discrepancies identified above reduce reporting precision. These observations are analyst assessments rather than author admissions. [D]
+
+## 17. Threats to validity
+
+These validity labels are analyst-applied. For internal validity, the paper does not identify causal effects through controlled intervention; its mechanism diagrams organize relationships rather than prove their magnitude. For external validity, cited incidents and reviewed environments need not represent every deployment, especially systems with different permissions, interfaces, or architectural restrictions. [D]
+
+For construct validity, 'flexibility,' 'risk,' and 'covered risks' are qualitative concepts. A reader should not treat them as standardized numerical scales. The count discrepancy between the contribution statement and R1–R7 also creates ambiguity about the exact taxonomy denominator. For statistical conclusion validity, no pooled effect, significance test, confidence interval, or comparative success rate is available; statistical claims about greater vulnerability cannot be inferred. [D]
+
+For ecological validity, the authors themselves note that several defenses focus on simplified scenarios that fail to capture web, filesystem, database, and cross-tool complexity. For reproducibility, references and categories are available, but full search strings, databases, screening records, and coding agreement are not supplied. The paper's claim that readers can independently validate the synthesis should be distinguished from exact reconstruction of the search and classification process. [A/D; pp. 12, 15–16]
+
+## 18. Future work and open questions
+
+### A. Author-proposed directions
+
+The paper calls for lightweight information-flow tracking and principled safe declassification; better long-run monitoring with privacy and storage controls; usable criteria and explanations for human escalation; least-privilege decomposition with efficient communication; formal models of stochastic agents and better-specified environment security properties; interoperable identity and credential lifecycles; adaptive access-control policies; coordinated multi-agent secret handling; and hardening against realistic cross-component attacks. It also defers deeper analysis of agent side channels to future work. [A; pp. 7, 11–15]
+
+The ethical section proposes structured pre-research ethics review with wellbeing safeguards, including warnings, rotation, and opt-out, and continued attention to research impact. [A; pp. 15–16]
+
+### B. Additional analyst questions
+
+For the user's research question, what share of additional risk comes from untrusted browsing versus permissions, persistence, or dynamic planning? How should agents and standalone models be compared when their capabilities differ? Which layered defenses preserve task utility under adaptive attackers and realistic web workflows? Can a common evaluation distinguish larger attack surface from greater attack success and greater loss conditional on success? These questions follow from missing comparative evidence; they are not experiments proposed or answered by this paper. [D]
+
+## 19. Terminology and notation glossary
+
+| Term | Beginner-friendly meaning in this work |
+|---|---|
+| SoK | Systematization of knowledge: an organized synthesis of existing research |
+| LLM | Large language model: the neural component producing language, plans, or tool decisions |
+| AI agent | Hybrid software combining neural and traditional software components |
+| Workflow | The sequence and coordination of actions, potentially generated dynamically |
+| Planner / actor | Roles for planning tasks and carrying out selected actions |
+| Memory | Stored knowledge, observations, and action history used later |
+| RAG | Retrieval-augmented generation: using retrieved information in model processing |
+| Tool | Symbolic function for interacting with resources or environments |
+| MCP | Model Context Protocol, cited as a standardized tool-integration mechanism |
+| Attack surface | Interfaces and resources through which adversaries can influence a system |
+| Prompt injection | Malicious instructions attempting to redirect intended behavior |
+| Tool poisoning | Malicious tool descriptions, names, or implementation code |
+| Memory poisoning | Manipulation of stored content to influence later behavior |
+| Hallucination | Model-generated incorrect or fabricated information |
+| Exfiltration | Unauthorized transmission of private information |
+| DoS | Denial-of-service: making a system unavailable through resource exhaustion or related disruption |
+| CIA | Confidentiality, integrity, and availability security goals |
+| Contextual security | Keeping the evolving context and behavior aligned with intended tasks and policies |
+| Guardrail | A check or restriction applied to inputs, outputs, or actions |
+| IFC | Information flow control: restricting how labeled information moves |
+| Taint tracking | Tracking the influence or propagation of data through operations |
+| Label creep | Excessive accumulation of restrictive labels that can prevent useful operation |
+| Declassification | Principled relaxation of information-flow restrictions when safe |
+| Privilege separation | Isolating components with different permissions or trust levels |
+| Least privilege | Granting only the permissions needed for the task |
+| Complete mediation | Checking every access to sensitive resources |
+| Defense-in-depth | Combining protections at different stages and boundaries |
+| IAM | Identity and access management: identity, permissions, and credentials |
+| RBAC / ABAC | Role-based / attribute-based access control |
+| SSO | Single sign-on across services |
+| Credential | Secret or token authorizing access, such as an API key or session token |
+| API | Application programming interface used to call a service or function |
+| DSL | Domain-specific language for a restricted specification task |
+| GUI / UI | Graphical user interface / user interface |
+| CVE | Common Vulnerabilities and Exposures identifier used for reported vulnerabilities |
+| SSRF / XSS / SQL injection | Named domain-specific attack classes cited as paths to protected resources; the paper does not develop their mechanics |
+| V1–V6 / R1–R7 | Attack-vector / security-risk identifiers, not numerical variables |
+
+## 20. Key numerical results
+
+These quantities describe the review and taxonomy, not original experimental performance.
+
+| Quantity / Result | Value | Unit | Condition / Context | Status | Source |
+|---|---:|---|---|---|---|
+| Supplied document sequence | 21 | physical PDF pages | Includes proceedings cover, references, and appendix | Directly observable from supplied records | pp. 1–21 |
+| Review period | 2023–October 2025 | calendar interval | Reported literature/web-document search; later-identified citation remains unexplained | Author-reported | p. 3 |
+| Reviewed corpus | 128 | papers | Search and manual agent-focused screening | Author-reported | p. 3 |
+| Attack methods | 51 | methods | Included in reported review | Author-reported | p. 3 |
+| Defense methods | 60 | methods | Included in reported review | Author-reported | p. 3 |
+| Arithmetic remainder | 17 | works under stated partition | 128 − 51 − 60; paper/method counting caveat applies | Analyst-derived | p. 3 |
+| Design dimensions | 7 | dimensions | Orthogonal flexibility dimensions | Author-reported | pp. 2, 4–5 |
+| Representative flexibility levels | 3 | levels per dimension | Illustrations of continua, not measured scores | Author-reported | pp. 4–5; T1 |
+| Adversary types | 3 | types | External, user-level, internal | Author-reported | p. 5 |
+| Numbered attack vectors | 6 | vectors | V1–V6 | Visually readable and author-reported | pp. 5–6; F2 |
+| Explicitly numbered risks | 7 | risks | R1–R7; differs from contribution statement | Visually readable and author-reported | pp. 6–7; F2–F3 |
+| Risk categories claimed in introduction | 9 | categories | Not reconciled explicitly with R1–R7 | Author-reported | p. 3 |
+| Named defense design principles | 3 | principles | Defense-in-depth, least privilege, complete mediation | Author-reported | p. 15 |
+
+No numerical claim about comparative vulnerability, attack success, defense accuracy, overhead, or monetary harm is supported by this paper's own evaluation. No approximate plot values are needed because the supplied visuals are conceptual diagrams and categorical tables.
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/Table/Analysis | Source | Qualification / Evidence strength |
+|---|---|---|---|---|
+| Agent security requires a system perspective | Hybrid components and interacting risks | F1–F3; X1, X4 | pp. 2–8 | HIGH for author position; conceptual synthesis |
+| The review contains 128 papers | Explicit methodology count | X2–X5 evidence base | p. 3 | HIGH for reported count; screening not independently reconstructed |
+| Flexibility spans seven orthogonal dimensions | Descriptions and table | T1; X2 | pp. 4–5 | HIGH; illustrative continua, not a metric |
+| Agents expose more heterogeneous interfaces than standalone LLMs | Explicit R1 comparison | F2; X4 | p. 6 | HIGH for conceptual comparison; no effect size |
+| Autonomy and environment access amplify model problems | Scope and risk interactions | F3; X4 | pp. 3, 6–8 | HIGH for author synthesis; no controlled causal estimate |
+| External adversaries can act through retrieved pages/documents | External threat definition | F2; X3 | p. 5 | HIGH; conditional on retrieval and subsequent influence |
+| Unsafe flow can connect web content to exfiltration | Automatic URL-fetch example | X4 | p. 6 | HIGH for reported mechanism; no incidence measurement |
+| Defenses need complementary layers | Mechanism map and design principles | F4, T2; X5 | pp. 9–15 | HIGH for recommendation; not a guarantee |
+| Privilege separation has practical utility/environment limits | Explicit limitations paragraph | X5 | p. 12 | HIGH for acknowledged limits |
+| No original empirical comparison was performed | Explicit open-science statement | X7 | p. 16 | HIGH; rules out paper-owned experimental results |
+| Web-agent relevance is strong but conditional | Web examples plus design/risk mapping | X1–X5 | pp. 4–9 | MEDIUM as analyst application; not a universal ranking |
+| Taxonomy reporting contains a count mismatch | Nine in contributions versus seven numbered risks | F2–F3 | pp. 3, 6–7 | HIGH for mismatch; resolution UNKNOWN |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+A language model can tell you something wrong. An AI agent can also use what it says to do something: open a page, retrieve private information, send a message, change a file, or call a service. That makes mistakes and malicious instructions more consequential when the agent has those capabilities.
+
+A web agent also reads material written by other people. An attacker may put instructions in a page or document the agent encounters. If the agent treats that material as guidance for what to do, the attacker can influence later actions even without directly chatting with the agent. Memory and third-party tools create additional places for such influence to enter or persist.
+
+The paper organizes these problems and the defenses people have proposed. Its recommendation is to combine checks, permission limits, separated components, monitoring, protected credentials, and appropriate user oversight. It does not run a contest proving how many times more vulnerable web agents are. It explains why particular combinations of access, autonomy, and untrusted information create additional security problems.
+
+## Completeness Audit
+
+The denominator is the supplied document inventory, not the length of this explanation. Every supplied substantive section and identified visual is represented below. 'Fully represented' means its substantive content is covered at explanation level, not that every original sentence or citation is reproduced.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| Cover and bibliographic identity | Yes, visual/text | Yes | Represented in compressed form | Title, authors, venue; logos and sponsor decoration omitted |
+| Abstract | Yes, visual/text | Yes | Fully represented | Systems scope, taxonomy, defenses, challenges |
+| §1 Introduction and contributions | Yes; continuation text-only | Yes | Fully represented | Motivation, prior-work gap, novelty claim, count discrepancy |
+| §2 Scope | Yes, text-only | Yes | Fully represented | Amplified/unique risks and model-internals exclusion |
+| §2 Methodology | Yes, text-only | Yes | Fully represented | Search period, four keyword dimensions, venues, exclusions, counts |
+| §2 Differences from surveys | Yes, text-only | Yes | Represented in compressed form | Author positioning retained; individual survey descriptions condensed |
+| §3.1 AI Agents | Yes, mixed | Yes | Fully represented | Components, actions, workflow, definition footnote |
+| §3.2 Seven design dimensions | Yes, visual/text | Yes | Fully represented | Each dimension and flexibility levels |
+| §4.1 External adversary, V1–V3 | Yes, visual/text | Yes | Fully represented | Capabilities and data/tool distinctions |
+| §4.1 User-level adversary, V4 | Yes, visual/text | Yes | Fully represented | Direct and poisoned-user input |
+| §4.1 Internal adversary, V5–V6 | Yes, visual/text | Yes | Fully represented | Model and memory compromise |
+| §4.2 R1–R7 | Yes, visual/text | Yes | Fully represented | Entry, model, confidentiality/integrity/availability risks |
+| §4.2 Other risks | Yes, visual/text | Yes | Fully represented | Proprietary-information theft and side channels |
+| §4.3 Design-to-risk mapping | Yes, visual/text | Yes | Fully represented | Qualitative mapping and cascading interactions |
+| §5.1 Security goals | Yes, visual/text | Yes | Fully represented | CIA and contextual security |
+| §5.2.1 Input guardrail | Yes, visual/text | Yes | Fully represented | Mechanisms, targets, mitigation, limitations |
+| §5.2.2 Output guardrail | Yes, visual/text | Yes | Fully represented | Task/tool checks, mechanisms, overhead and errors |
+| §5.2.3 IFC and taint tracking | Yes, mixed | Yes | Fully represented | Symbolic, multi-execution, model-based approaches and label creep |
+| §5.2.4 Monitoring | Yes, text-only | Yes | Fully represented | Whole trajectories, graphs, logging, evasion/privacy limits |
+| §5.2.5 Human validation | Yes, mixed | Yes | Fully represented | Scope, alert design, recurrence, fatigue |
+| §5.3.1 Privilege separation | Yes, visual/text | Yes | Fully represented | Vertical/horizontal, planner/parser, memory, environment, tradeoffs |
+| §5.3.2 Formal verification | Yes, visual/text | Yes | Fully represented | Targets, properties, stochastic modeling limits |
+| §5.4.1 Identity management | Yes, visual/text | Yes | Fully represented | Architecture, identity scope, delegation, attribution |
+| §5.4.2 Access control | Yes, mixed | Yes | Fully represented | Mechanism, policy, resource scope, configuration limits |
+| §5.4.3 Credential management | Yes, text-only | Yes | Represented in compressed form | Storage, lifecycle, provisioning; duplicate bullets consolidated |
+| §5.5 Model hardening | Yes, text-only | Yes | Fully represented | Instruction priority and robustness; simplified scenarios |
+| §5.5 Tool hardening | Yes, text-only | Yes | Fully represented | Signing, curation, proxies, audits, detection |
+| §5.6 Design principles | Yes, text-only | Yes | Fully represented | All three named principles; additional examples compressed |
+| §6 Conclusion | Yes, text-only | Yes | Represented in compressed form | Guidance and future-research purpose |
+| Ethical Considerations | Yes, text-only | Yes | Represented in compressed form | Stakeholders, four principles, misuse, assumptions, wellbeing |
+| Open Science | Yes, text-only | Yes | Fully represented | No experiments/artifacts; stated validation approach |
+| References [1]–[162] | Yes, mixed | Yes | Represented in compressed form | Source role and key examples retained; no external source contents reviewed |
+| Appendix A | Yes, text-only | Yes | Represented in compressed form | Crosswalk elaborated below |
+| F1 / Figure 1 | Yes, visual | Yes | Fully represented | Components, connections, action types, multi-agent note |
+| F2 / Figure 2 | Yes, visual | Yes | Fully represented | Encoding, vectors, distributed risks |
+| F3 / Figure 3 | Yes, visual | Yes | Fully represented | Design/risk groups; no quantitative edge interpretation |
+| F4 / Figure 4 | Yes, visual | Yes | Fully represented | Defense types and intervention locations |
+| T1 / Table 1 | Yes, visual/text | Yes | Fully represented | All dimensions and levels |
+| T2 / Table 2 | Yes, visual/text | Yes | Represented in compressed form | Every mechanism and risk scope; example lists condensed |
+| Explicit research questions and hypotheses | Not present | Accounted for | Not applicable | User question kept distinct from author objectives |
+| Original experiments and quantitative results | Explicitly absent | Accounted for | Not applicable | Analytical register substituted transparently |
+| Equations, algorithms, theorems | None identified | Accounted for | Not applicable | No mathematical reconstruction invented |
+| Major contributions | Yes | Yes | Fully represented | Conceptual/methodological, not new system or dataset |
+| Author-stated limitations | Yes | Yes | Represented in compressed form | All defense families and ethical limitations included |
+| Separate supplementary material | Not supplied | Accounted for | Not applicable | No absent file is claimed reviewed |
+
+Appendix A's substantive crosswalk is retained here to avoid leaving a table-of-contents-only mention. V5 maps to Poison Training Data, Publish Poisoned Datasets, and Publish Poisoned Models. V6 maps to RAG Poisoning, False RAG Entry Injection, and AI Agent Context Poisoning. V4 maps to LLM Prompt Injection. V1 maps to Retrieval Content Crafting, Drive-by Compromise, and Prompt Infiltration via Public-Facing Applications. R2 maps to AI Agent Tool Invocation. R5 maps to Credentials from AI Agent Configuration, OS Credential Dumping, RAG Credential Harvesting, Unsecured Credentials, and LLM Response Rendering. R6 maps to Modify AI Agent Configuration, LLM Trusted Output Components Manipulation, and External Harms. R7 maps to Denial of AI Service and External Harms. The supplied appendix does not provide an equally explicit mapping for every remaining V/R identifier; no missing correspondence is invented. [A; p. 21]
+
+### Missing or inaccessible material
+
+No supplied text page is missing. Full-page visuals are unavailable for pages 3, 11, 14–17, 19, and 21; their textual contents were inspected. Original documents behind references were not supplied as full texts and were not opened. No independent supplement, search log, screening dataset, or computational artifact was available. The paper does not claim an original empirical artifact is necessary. Exact file-hash validity and original-PDF completeness remain unverified.
+
+### Uncertain interpretations
+
+The relationship between the nine-category introductory claim and seven numbered risks is unresolved. The three-category headline defense statement and four-category detailed presentation are not fully reconciled. Inclusion of reference [145] is not explained by the October 2025 search endpoint. Table 2's R6 wording differs from the principal definition. Shared table cells and dense figure connections are interpreted alongside prose, without assigning unsupported exclusive coverage or numerical strength. Confidence in a numerical answer to 'how much more vulnerable' is UNKNOWN.
+
+### Deliberately compressed material
+
+Bibliographic entries, repeated motivation, recurring examples, full representative-work lists, acknowledgment details, sponsor logos, page headers/footers, and duplicated credential-management bullets are compressed. Ethical discussion is condensed while retaining its four principles: beneficence, respect for persons, justice, and respect for law/public interest. Specific product descriptions remain author-reported illustrations rather than current product guidance. No external citation validation was performed.
+
+### Potential omissions
+
+No identified substantive section, visual, table, appendix, contribution, or limitation family is knowingly left unrepresented. This does not mean every sentence, reference detail, or example has been preserved. Coverage is comprehensive at the supplied-document inventory level, with the explicit visual, methodological, and unresolved-consistency limitations above.

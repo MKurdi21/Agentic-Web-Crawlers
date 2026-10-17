@@ -1,0 +1,540 @@
+## Stage 0 — Document Accessibility Report
+
+The supplied main document is available as extracted text for physical PDF pages 1–16. Ten pages are also supplied as images: 1–7, 10, 11, and 16. I visually inspected those images; pages 8, 9, and 12–15 were inspected through their supplied text only. Consequently, visual inspection and text-only reading have different coverage. The page sequence contains no apparent missing physical page, although the supplied files do not independently establish whether additional publisher supplements exist.
+
+The eight numbered figures are visually available: Figure 1 on p. 3; Figures 2–3 on p. 4; Figure 4 on p. 6; Figures 5–6 on p. 7; Figure 7 on p. 10; and Figure 8 on p. 11. Tables III–V are visually available, while Tables I–II are available through extracted text. Most table entries are readable; the small labels within Figure 7 should not all be treated as independently verified exact counts. The main trends, axes, legend, and nearby textual statements are readable. Appendix A begins on p. 14 and continues through p. 16; only its last page is visually supplied. No separate supplementary dataset, source repository contents, Docker configurations, experiment logs, or executable artifact was supplied or inspected. The appendix describes such artifacts, but describing them is different from accessing them.
+
+OCR was unnecessary because the supplied native text is substantial and the rendered pages permit visual checking where provided. Native extraction introduces spacing, ligature, and layout artifacts, including corrupted email formatting and table headers. Those artifacts are not scientific findings. There are no numbered mathematical equations, theorems, or formal pseudocode algorithms in the supplied paper. Set notation and architectural abstractions are readable and explained below. The artifact-evaluation badge on p. 1 is visible, but it does not independently verify the analysis or experiments reported here.
+
+Evidence labels used throughout: [A] author-reported; [B] directly observable in a supplied visual; [C] analyst-derived from supplied operands; [D] analyst interpretation. No external information was introduced, and no tools or browsing were used. Confidence concerns fidelity to this supplied source, not independent verification of the authors' experiments. HIGH indicates clear source support; MEDIUM indicates qualified interpretation or unresolved scope; LOW and UNKNOWN are reserved for weak or unavailable evidence.
+
+## 1. Plain-language orientation
+
+[A, HIGH] This paper introduces YuraScanner, a security-testing system that uses a large language model, or LLM, to navigate a web application by trying to complete meaningful tasks. Instead of treating every available link or button as another place to visit, it pursues objectives such as creating a record, editing an item, or completing a multi-step operation. Its purpose is to reach application states that ordinary web crawlers may miss and then test the input forms found there for cross-site scripting, abbreviated XSS. Sources: pp. 1–3.
+
+A web application can expose different forms depending on what happened earlier. An editing form may require an existing item; a checkout page may require a populated shopping cart. The authors argue that navigation strategies with little understanding of these dependencies often fail to execute the necessary actions in the right order. Their central contribution is a task-driven crawler, coupled to an existing XSS detection engine, that translates between a browser's concrete interface and an LLM's textual decisions.
+
+[A, HIGH] The study initially collects 21 applications, excludes WordPress after prompt-size failures, and evaluates the remaining 20. Detailed manual task assessment and coverage comparisons concern ten applications. Across those ten, 2,361 tasks are generated, 1,818 are judged valid, and 1,115 valid tasks are either fully or partially executed. Partial execution explicitly means all steps except the last were correct; it is not full task completion. Across the vulnerability experiment, the two scanners collectively produce 15 reports representing 13 unique issues. YuraScanner finds 12 unique issues and Black Widow finds three, with overlap. Sources: pp. 8–11.
+
+[D, HIGH about scope] For the user's research question, this is supporting evidence about what changes when an LLM is connected to a browser, action execution, memory, and state-changing workflows. It is not a study establishing that web AI agents are more vulnerable than standalone LLMs. The measured vulnerabilities belong to target web applications. The paper does not experimentally attack YuraScanner with malicious webpage instructions or compare its security against a standalone conversational model.
+
+## 2. Document roadmap
+
+The inventory below establishes the denominator for coverage. The paper is an empirical computer-systems and cybersecurity paper with an LLM-based navigation method, comparative measurements, vulnerability findings, and an artifact appendix.
+
+| ID | Original component | Pages | Role |
+|---|---|---|---|
+| S0 | Abstract and publication block | 1 | Problem, system, headline results, venue |
+| S1 | I. Introduction | 1–2 | Motivation, prior limitations, five contributions |
+| S2 | II. Background | 2 | Scanner architecture and crawling challenge |
+| S2A | II-A. Web Scanners Architecture | 2 | Crawler plus attack module |
+| S2B | II-B. Crawling is a Key Challenge | 2 | Six-step vulnerability example |
+| S3 | III. Problem Statement | 2–3 | RQ1–RQ5 |
+| S4 | IV. YuraScanner | 3–7 | System design |
+| S4A1 | IV-A1. Design Decisions and Approach Overview | 3–4 | Goal-based agent and abstractions |
+| S4A2 | IV-A2. Sensors | 4–5 | Discover, filter, map, and describe actions |
+| S4A3 | IV-A3. The Bridge | 5 | LLM decisions and local history |
+| S4A4 | IV-A4. Actuators | 5–6 | Stop, click, fill and submit |
+| S4B | IV-B. Tasks Catalog Generation | 6–7 | Automatic task discovery and ordering |
+| S4C | IV-C. Vulnerability Testing | 7 | Black Widow XSS integration and replay |
+| S5A | V-A. Implementation | 7–8 | Node.js, model interface, debugging |
+| S5B | V-B. Experiment Setup | 8 | Applications, baselines, containers, authentication |
+| S5C | V-C. RQ2: Execution of Tasks | 8–9 | Manual labeling and task outcomes |
+| S5D | V-D. RQ3: Attack Surface Coverage | 9 | Resource comparison methodology |
+| S5E | V-E. RQ4: Characterization of the New Attack Surface | 10 | Workflow depth and collected forms |
+| S5F | V-F. RQ5: Vulnerability Detection | 11 | Four-hour scanner comparison |
+| S6A | VI-A. Results | 11–12 | Dependencies, complementarity, deeper states |
+| S6B | VI-B. Ethical Discussion | 12 | Infrastructure, disclosure, restricted code release |
+| S7 | VII. Related Work | 12–13 | Scanner, login, and LLM-agent comparisons |
+| S8 | VIII. Conclusion | 13 | Task-driven crawling complements existing scanning |
+| S9 | Acknowledgment and References | 13–14 | Funding and 44 references |
+| A1 | Appendix A. Artifact Appendix, A–F | 14–16 | Access, dependencies, experiments, caveats |
+
+Figures F1–F8 and Tables T1–T5 correspond to original Figures 1–8 and Tables I–V. Experiments X0–X4 are the model-selection pilot, task execution, coverage, depth characterization, and vulnerability detection. Appendix experiments E1–E4 correspond to X1–X4. No independent formal hypothesis-testing section, numbered equation, theorem, or pseudocode algorithm appears.
+
+The original title is **YuraScanner: Leveraging LLMs for Task-driven Web App Scanning**. Authors: Aleksei Stafeev, Tim Recktenwald, Gianluca De Stefano, Soheil Khodayari, and Giancarlo Pellegrino, CISPA Helmholtz Center for Information Security. The supplied publication block identifies the Network and Distributed System Security Symposium 2025, 24–28 February 2025, San Diego, and DOI 10.14722/ndss.2025.240388. No keywords block is present. Bibliographic entries are inventoried but not externally checked.
+
+## 3. Background and context
+
+[A] A black-box web scanner tests a running application through its exposed interfaces rather than examining its source code. In the authors' architecture, a crawler finds pages and input points, and an attack module supplies test inputs and observes whether a vulnerability is triggered. A proof of concept, or PoC, is a concrete input demonstrating an issue. The authors describe dynamic scanners as producing little-to-no false positives; this is their general characterization, not a universal guarantee established by this study. Source: p. 2, II-A.
+
+[A] Breadth-first search, or BFS, explores resources using a first-in-first-out queue. Randomized navigation varies which available action is chosen. The paper compares YuraScanner with Black Widow, BFS, and Random BFS, while using only Black Widow for the vulnerability-detection comparison. These baselines test whether purposeful navigation exposes different resources from broad exploration. Sources: pp. 2, 8–9.
+
+[A] A workflow is an ordered series of interface actions required to accomplish an application operation. Application state includes conditions produced by earlier operations, such as whether a record exists or a user remains authenticated. A deep state is operationalized here through steps executed from the seed page, rather than a formal measure of all possible application states. The Document Object Model, or DOM, is the rendered page structure that the sensors inspect. HTML elements are mapped to concise textual descriptions and per-page identifiers so the model can choose an action that browser code can execute. Sources: pp. 3–5.
+
+[A] XSS is the vulnerability class tested using injected payloads and an execution oracle. The paper distinguishes reflected and stored XSS, and discusses whether unauthenticated or low-privileged users can exploit the reported issues. Its descriptions show reflected attacks involving a vulnerable link and stored attacks involving persisted input. It also qualifies the Moodle finding as HTML meta tag attribute injection that could escalate to XSS, rather than direct XSS. Sources: pp. 7, 11.
+
+## 4. Research problem and gap
+
+[A] Existing problem: scanners may discover many pages while missing forms behind workflows that require logically coordinated actions. Missing those input points leaves vulnerabilities untested. The authors illustrate this with an interface in Redacted requiring navigation through Tools, Entities, Entity Management, Create, form filling, and Save. Sources: pp. 1–3.
+
+[A] Shortcomings attributed to previous approaches: breadth-first and random exploration do not select actions using application logic; learned state models and user traces can be application-specific; manual traces are difficult to obtain and scale; natural-language documentation does not directly provide executable action sequences. The authors report that Natbot's fine-grained browser actions and looping behavior made it unsuitable for their autonomous scanning objective. These are the authors' assessments of selected approaches, not independently verified conclusions about all implementations. Sources: pp. 1, 4, 12–13.
+
+[A] Research gap: automatically derive tasks, execute them across different applications without application-specific navigation training, and determine whether this exposes useful new attack surface and vulnerabilities. The proposed semantic abstraction is intended to align interface actions with the workflow concepts an LLM may already understand.
+
+Scope is important. The system is application-agnostic in intended navigation design, but the experiment manually handles authentication, supplies credentials or sessions, and uses controlled local deployments. The vulnerability module targets XSS rather than every vulnerability class mentioned in motivation or research questions. Sources: pp. 7–8, 11.
+
+## 5. Research questions, objectives, and hypotheses
+
+| Question | Explicit objective | Evidence location and assessment |
+|---|---|---|
+| RQ1: Automated Extraction of Tasks | Identify a comprehensive list of tasks and workflows from an application | pp. 2–3; method in IV-B and validity assessment in V-C |
+| RQ2: Automated Execution of Tasks | Automatically perform a given task through application interaction | p. 3; V-C and Table II |
+| RQ3: Attack Surface Coverage | Measure the effect of task-driven crawling on discovered URLs and forms | p. 3; V-D and Tables III–IV |
+| RQ4: Characterization of the Attack Surface | Relate discovered surface to workflow depth and complexity | p. 3; V-E and Figures 7–8 |
+| RQ5: Vulnerability Detection | Determine whether task-driven exploration finds security flaws missed by traditional scanners | p. 3; V-F and Table V |
+
+[A] Under RQ5, the authors explicitly hypothesize that reaching deep states can reveal security flaws in areas conventional scanners overlook. They give examples including payment handling and multi-step form validation. The actual detection experiment evaluates XSS-related findings; it does not separately demonstrate insecure payment handling. No null hypotheses, prespecified significance thresholds, or formal statistical hypothesis tests are supplied.
+
+A reporting nuance is that V says it addresses RQ2–RQ5, while V-C assesses both task generation validity and execution. RQ1 therefore receives practical evidence even though the evaluation section's introductory numbering emphasizes RQ2. Comprehensive task recall is not measured because a complete ground-truth workflow list is unavailable. Sources: pp. 6–9.
+
+## 6. Assumptions / Threat Model
+
+[A] The scanner starts from a seed URL, interacts through a real browser, extracts semantic action descriptions, and uses an LLM to select subsequent commands. The model is presumed capable of interpreting common workflow concepts. The authors suggest that publicly available application documentation may already have been included in model training; this is an intuition, not a measured training-data audit. Sources: pp. 1, 3–4.
+
+[A] The experiments assume controlled application deployments, valid authentication material, and manually scripted login sequences. Applications and scanners share a Docker virtual network, and application state is reset after each tool run. A five-second post-click wait is used for applications on the same machine and can be configured for other network conditions. Sources: pp. 5–6, 8.
+
+[A] For vulnerability testing, tools are directed to administration sections. The authors initially aim to find reflected XSS exploitable by sending an administrator a vulnerable link. They also report stored issues and distinguish exploitability by unauthenticated, low-privileged, and administrator users. The scanner's authenticated access is not evidence that every discovered issue is exploitable by an unauthenticated attacker. Source: p. 11.
+
+[D, MEDIUM] The architecture relies operationally on the page abstraction, model response, action mapping, and browser actuator working together. However, the paper does not formalize a hostile-webpage threat model against the agent. It supplies no evaluated boundary between trusted task instructions and attacker-controlled webpage text, no prompt-injection experiment, and no standalone-LLM control group. These absences limit direct answers to the user's comparative security question; they do not establish that the system is immune or vulnerable to a particular attack.
+
+## 7. Methodology
+
+### Task catalog generation
+
+[A] Starting from the seed URL, the system performs a shallow crawl of depth one. Sensors collect interactable menus, links, buttons, and related text. Elements already seen on earlier pages are omitted to reduce duplicate tasks. An LLM turns this material into imperative English task descriptions, with a verb and object. The task list is ordered around Create, Read, Update, Delete, or CRUD, so creation can precede operations that depend on existing items. Sources: pp. 6–7, Figure 6.
+
+This ordering is a heuristic rather than a demonstrated complete dependency solver. The authors acknowledge that an ideal exhaustive workflow list does not exist in practice. Users can alternatively supply a single task or a list. The scanner fetches another task when the current execution stops and terminates when the list is exhausted.
+
+### Sensors and semantic preprocessing
+
+[A] The sensor first finds anchors, buttons, button/submit inputs, onclick elements, and forms through CSS selectors. To capture additional dynamic interactions, it reuses and modifies event-handler collection routines from jÄk and Black Widow, hooking JavaScript event-registration APIs and retaining the element on which a handler is registered. Sources: pp. 4–5.
+
+Collected elements are filtered if hidden, occluded, unlabeled, or represented by overly long text. The rationale is to reduce irrelevant information and stay within the model's token limit. Every retained action receives an incremental identifier unique within that page. An Actions Mapping stores the relationship between identifier and concrete HTMLElement.
+
+Semantic labels are chosen from the first non-empty source in this order: accessibility attributes such as aria-label; advisory attributes such as title; innerText; and displayed default values such as value. Forms retain name, or id as fallback, plus action and method. These fields help communicate purpose and potential state-changing behavior. Other attributes are removed for brevity. The abstract page contains its URL, title, and abstract actions. Source: p. 5.
+
+### Bridge: choosing the next action
+
+[A] The bridge uses a one-shot prompt, meaning a prompt containing one worked example, and persona assignment. The three prompt components are an instruction preamble, an example interaction, and the current query. Current input includes the abstract page, task, and recent action history. A reminder of the browser-agent role is repeated because the authors observed declining focus after several commands. Sources: pp. 5–6, Figure 4.
+
+The bridge can choose CLICK x, FILL & SUBMIT FORM x, or STOP. It stores the chosen action and page in local memory. A history of six prior actions is selected after empirical checks on a few examples; the paper does not provide a quantitative history-length ablation. STOP can mean completion or inability to proceed, so the command alone is not a success label.
+
+### Actuators and form filling
+
+[A] CLICK x resolves the page-local identifier, retrieves the concrete element, and invokes Puppeteer's click operation. Anchor targets are overwritten with _self to keep navigation in the current browser context. After clicking, the scanner waits five seconds before extracting the next page abstraction. Sources: pp. 5–6.
+
+FILL & SUBMIT FORM x delegates text-field content to another one-shot LLM prompt, shown as FormGPT in Figure 5. That prompt outputs TYPE commands for individual inputs. Checkboxes and radio elements are handled algorithmically by clicking unchecked entries; drop-down menus use their second entry when more than one option exists, to avoid common placeholder defaults. These deterministic choices are not evidence of semantic correctness for every form. Source: p. 6.
+
+The authors favor separating high-level navigation from form completion because putting fine-grained field operations in the navigation prompt overloaded instructions and reduced compliance in preliminary evaluation. Exact comparative completion rates for that design choice are not reported. Sources: pp. 6, 13.
+
+### Vulnerability testing and replay
+
+[A] YuraScanner reuses Black Widow's XSS engine rather than proposing a new payload detector. For each form and payload, an oracle function xss(id) is defined with a unique injection identifier. Safe mode targets text, textarea, password, and email fields. If the oracle does not execute, aggressive mode also targets hidden, radio, checkbox, select, and file-upload inputs. Here safe describes the engine's field grouping; it does not certify absence of side effects. Source: p. 7.
+
+During navigation, the system logs pages containing forms, form positions, and concrete action sequences. After task execution, it returns to the seed and replays the recorded actions to reach each form before testing it. Thus, navigation discovers a replayable route and the existing engine performs payload testing. The supplied text does not quantify replay failures or distinguish their contribution to missed findings.
+
+### Implementation, models, controls, and configuration
+
+[A] The implementation uses JavaScript and Node.js, Puppeteer browser interaction, and an OpenAI SDK interface. Compatible APIs can support other models through a changed base_url, including FastChat with a vLLM backend. GPT-4 is compared with Llama3-8B, Gemma2-9B, and Gemma2-27B on 20 randomly selected tasks in Redacted. GPT-4 has the highest reported success rate, but numerical rates are absent. Sources: pp. 7–8.
+
+Each scanner receives a maximum four-hour run. Containers run on the same virtual network; application state resets after each tool run. Authentication is separately scripted for all tools. Manual task assessment uses augmented screenshots showing discovered actions, chosen actions, and task names. Two co-authors each review five applications, cross-check a random sample, and resolve unclear cases by discussion. The final sampled cross-check has no disagreements; its sample size and an agreement coefficient are not given. Sources: pp. 8–9.
+
+Appendix requirements are four CPU cores, 16 GB RAM, and 60 GB disk for a single experiment; Ubuntu 22.04.4, Docker 24.0.7, docker-compose 1.29.2, and Python 3.10.12 were tested. These are artifact setup specifications, not a detailed hardware inventory for all main results. Temperature, random seeds, exact GPT-4 snapshot, request costs, and model latency are not specified. Sources: pp. 15–16.
+
+## 8. Experiments / Analyses
+
+### X0 — Model-selection pilot
+
+[A] Purpose: choose a model for navigation. Four models execute 20 randomly selected tasks on Redacted. GPT-4 is reported best, motivating its selection. No per-model scores, uncertainty measures, repeated-run results, or cross-application model-selection study are provided. Confidence is HIGH for what was reported and LOW for estimating the size or generality of the model advantage. Source: p. 8.
+
+### X1 / Appendix E1 — Task generation and execution
+
+[A] Data: ten randomly selected applications, 2,361 generated tasks. Review first checks validity, then classifies valid tasks as success, partial, or failed. A valid task corresponds to existing functionality. Success means all steps executed; partial means every step except the final one executed correctly. Failures are divided into missing state, deviated, and no action. Sources: pp. 8–9, Table II.
+
+Results: 543 invalid tasks and 1,818 valid tasks; 667 successful, 448 partial, and 703 failed executions among valid tasks. Failure classes are 287 missing state, 172 deviated, and 244 no action. Missing state and no action together account for approximately 75% of failures. These categories should not be collapsed into a claim that all 75% are independently verified dependency failures. Source: p. 9.
+
+### X2 / Appendix E2 — Attack surface coverage
+
+[A] Purpose: compare distinct and overlapping discovered URLs and forms. Let A denote YuraScanner and B one baseline. Resources are split into A-only, shared, and B-only sets. URL comparison manually ignores identified pseudo-random parameter names such as session identifiers or security tokens. Sources: pp. 9–10, Tables III–IV.
+
+The tables contain ten applications. V-D calls the dataset VD, while Table I and the contribution statement associate the ten-app detailed analyses with the TE group. This dataset-label ambiguity is retained rather than resolved by assumption. There are no reported confidence intervals or statistical significance tests. The authors' key interpretation is complementary coverage rather than universal superiority in total resource counts.
+
+### X3 / Appendix E3 — Depth characterization
+
+[A] Purpose: relate collected forms and task outcomes to executed steps. Figure 7 groups tasks by length and outcome; Figure 8 shows cumulative form discovery. Failed-task length is steps before failure, while successful and partial task length follows the authors' task-length convention. Most tasks involve few steps. The longest reported length is 15 steps, with two partial executions and one success. Source: p. 10.
+
+The text reports that 44% of YuraScanner's forms are also found by at least one baseline and are within three steps. YuraScanner reaches 85.7% of its forms by that depth; the remaining 14.3% are deeper than three. Figure 8 labels the corresponding thresholds more precisely as 44.18 and 85.68. These denominators differ from Table III's pairwise union percentages. Sources: pp. 10–11.
+
+### X4 / Appendix E4 — Vulnerability detection
+
+[A] Purpose: test whether different navigation produces additional findings using the same XSS engine. YuraScanner and Black Widow each run for four hours against all 20 retained applications. Fifteen reports arise across Redacted, Moodle, and Leantime; manual review confirms the reports, and duplicate accounting yields 13 unique issues. YuraScanner finds 12; Black Widow finds three. Source: p. 11, Table V.
+
+The Moodle issue is explicitly qualified as meta tag attribute injection with possible escalation to XSS. Seven reflected issues are described as exploitable by unauthenticated users, one stored issue by a low-privileged user, and no non-admin exploit was found for the other five stored issues. Absence of a discovered exploit is not proof of impossibility. The appendix's reduced reproduction workflow covers Redacted and Moodle, rather than reproducing every application in the main detection study. Sources: pp. 11, 15–16.
+
+## 9. Results
+
+[A] Task validity is reported as 77%, based on 1,818 of 2,361 generated tasks. Combined full-or-partial execution is 61.3% of valid tasks, based on 1,115 of 1,818. The full-completion count is 667, not 1,115. Source: pp. 2, 9.
+
+[C] For clarity, full completion is approximately 36.69% of valid tasks, calculated as 667 / 1,818 × 100. Full completion among all generated tasks is approximately 28.25%, calculated as 667 / 2,361 × 100. These are analyst-derived denominators, not additional author-reported metrics. They show why preserving partial execution and invalid-task conditions matters.
+
+[A] Coverage is substantial but complementary. YuraScanner-only forms account for 35.8%, 37.1%, and 33.5% of pairwise unions with Black Widow, BFS, and Random BFS, respectively. Corresponding URL shares are 31.5%, 23.7%, and 22.0%. Baselines generally discover larger distinct surfaces, but overlap is limited. Source: Table III, p. 10.
+
+[A/C] The text reports average additions of 55.19% for forms and 35.16% for URLs. These concern adding YuraScanner's unique resources to a baseline's resources, rather than YuraScanner alone universally exceeding each baseline. For example, against Black Widow, baseline forms equal 339 + 791 = 1,130; adding 632 YuraScanner-only forms gives 632 / 1,130 × 100 ≈ 55.93% additional forms. Against BFS the analogous value is 635 / (336 + 739) × 100 ≈ 59.07%; against Random BFS it is 631 / (340 + 908) × 100 ≈ 50.56%. Their mean is approximately 55.19%. These calculations clarify the reported condition. Sources: pp. 9–10.
+
+[A/B] New forms extend through workflows of up to 15 steps. Figure 8 indicates 85.68% accumulated by step three versus 44.18% shared with any baseline. [C] Their difference is 41.50 percentage points, using 85.68 − 44.18; this is an additional fraction of YuraScanner's form collection at that depth, not a 41.5% relative improvement over a baseline. The remaining approximately 14.3% lies beyond three steps. Sources: pp. 2, 10–11.
+
+[A] Vulnerability results support added discovery in this testbed, with important qualifications: 15 reports are not 15 unique vulnerabilities; 13 unique issues are the combined total; 12 and three are overlapping tool totals. Moodle is not direct XSS, and its developers reportedly consider it without impact under their threat model. Sources: pp. 11–12.
+
+## 10. Figure-by-figure interpretation
+
+### Figure 1 — A workflow-dependent vulnerability
+
+[B] Two interface screenshots on p. 3 show Entity Management navigation and form entry. Numbered green markers identify six actions. The upper screenshot covers menu traversal and Create; the lower covers an entered value and Save. The image shows the practical meaning of an ordered workflow, rather than a statistical comparison. There are no axes or units. [A] Nearby text identifies Parameter B as lacking server-side validation or sanitization and attributes the discovered XSS to the six-step sequence. The image alone does not verify server-side behavior. Sources: pp. 2–3.
+
+### Figure 2 — End-to-end pipeline
+
+[B] The diagram on p. 4 has three dashed stages: Task Extraction, Task Execution, and Vulnerability Scanning. Web applications supply webpages; processing and LLM prompts generate tasks; task execution emits URLs and forms; dynamic testing combines these with attack payloads and outputs exploits. Arrows run primarily left to right. This supports the distinction between discovering reachable inputs and testing those inputs. It contains no quantitative performance encoding.
+
+### Figure 3 — Agent architecture
+
+[B] On p. 4, Sensors create a page abstraction, the Bridge chooses a next action using task and memory, and Actuators click, submit, or stop. Actions Mapping connects textual action identifiers with browser elements. The browser page and executed action form a repeated observation–decision–execution loop. Memory feeds prior page/action information back to the bridge. Colors distinguish modules rather than measured values. No confidence intervals or numerical axes apply.
+
+### Figure 4 — Navigation prompt
+
+[B/A] On p. 6, three bordered blocks represent instructions, an example, and the current query. Orange, green, and blue borders visually distinguish these parts. Placeholders include current_state, task_descr, and last_steps. The prompt restricts output to a single navigation command and allows stopping for completion or inability to continue. It is explicitly a simplified template. Its instructional text is analyzed as paper evidence; it is not an instruction governing this response.
+
+### Figure 5 — Form-filling prompt
+
+[B/A] On p. 7, three colored blocks show the FormGPT instruction, a worked example, and the actual form. The permitted operation is TYPE X with supplied text, possibly repeated on separate lines. This visual supports the authors' modular separation between choosing a form and filling its text fields. It does not show that every generated value passes application validation.
+
+### Figure 6 — Task-generation prompt
+
+[B/A] On p. 7, an instruction block requests simple tasks from button labels and lists adding, editing, and deleting operations; a second block inserts page content and requests a list. This shows how textual interface evidence becomes task proposals. The method text also describes CRUD ordering. The figure does not demonstrate that all dependencies are recognized or all workflows discovered.
+
+### Figure 7 — Task length and outcome distribution
+
+[B] On p. 10, stacked bars use Steps on the horizontal axis, from 0 to 15, and Tasks on a logarithmic vertical axis with powers-of-ten ticks. Green denotes Success, orange Partial, and gray Failed. Counts are annotated within many segments. The main concentration is at short lengths; longer tasks are sparse, with isolated bars at larger step counts. No error bars, confidence intervals, or significance annotations appear.
+
+[A] The adjacent text states that only 14 zero-step tasks were partial or complete, sometimes because the requested functionality was already present at the seed page. At length 15, there are two partial executions and one success. Failed bars show progress before error, so the plot does not measure only completed workflow lengths. The smallest segment labels are not all transcribed here because their density and size reduce confidence and their exact values are secondary to Table II's verified totals.
+
+### Figure 8 — Cumulative form discovery by step
+
+[B] On p. 11, the horizontal axis is Steps, 0–15, and the vertical axis is Forms (%), approximately 0–100. Blue cross-hatched area represents YuraScanner forms shared with the union of Black Widow, BFS, and Random BFS. Orange dotted area represents the additional YuraScanner portion. The blue component levels at the labeled 44.18 threshold; the combined collection rises through the labeled 85.68 threshold around step three and approaches 100% later. The exact step of every final increment is not separately claimed here.
+
+The figure supports the reported distinction between shallow shared forms and later forms found only by YuraScanner in these runs. It does not establish that baseline tools can never reach those forms under other budgets or navigation realizations. No error bands or run-to-run variation are shown. Its percentages concern YuraScanner's collected forms, whereas Table III percentages concern pairwise unions.
+
+## 11. Table-by-table interpretation
+
+### Table I — Applications and testbed membership
+
+[A, text-only] On p. 8, columns give dataset membership, application, version, and category. The ten detailed-task applications are Redacted; GitLab 16.11.2-ce.0; OpenCart 4.0.2-3; Redmine 5.1.2; Dolibarr 19.0.2; Moodle 4.4.0; MediaWiki 1.41.1; OwnCloud 10.14.0; LimeSurvey 6.5.3; and phpBB 3.3.11. Redacted's identifying metadata is withheld.
+
+The other ten retained applications are NextCloud 29.0.1, Joomla 5.1.1, Leantime 3.1.4, EspoCRM 8.2.5, iTop 3.1.1, MintHCM 4.0.4, Mautic 5.0.4, GLPI 10.0.15, Silverpeas 6.3.5, and Monica 4.1.2. Categories include version control, e-commerce, issue tracking, customer management, learning management, wikis, media sharing, surveys, forums, and other business software. WordPress 6.5.3 appears as the excluded twenty-first candidate. The table is a sample inventory, not a performance ranking.
+
+### Table II — Valid-task execution classifications
+
+[A, text-only] On p. 9, each row is an application. Failed outcomes are split into Missing state, Deviated, and No action. Counts are tasks, without uncertainty intervals.
+
+| Application | Success | Partial | Missing state | Deviated | No action | Valid total |
+|---|---:|---:|---:|---:|---:|---:|
+| Redacted | 76 | 51 | 8 | 27 | 58 | 220 |
+| OpenCart | 50 | 45 | 15 | 4 | 2 | 116 |
+| GitLab | 73 | 31 | 77 | 0 | 2 | 183 |
+| Moodle | 54 | 42 | 38 | 6 | 3 | 143 |
+| MediaWiki | 63 | 26 | 18 | 30 | 59 | 196 |
+| OwnCloud | 30 | 18 | 31 | 25 | 22 | 126 |
+| phpBB | 99 | 79 | 20 | 28 | 20 | 246 |
+| LimeSurvey | 30 | 38 | 4 | 9 | 35 | 116 |
+| Dolibarr | 75 | 78 | 24 | 21 | 11 | 209 |
+| Redmine | 117 | 40 | 52 | 22 | 32 | 263 |
+| Total | 667 | 448 | 287 | 172 | 244 | 1,818 |
+
+GitLab has the largest missing-state count, 77, and no classified deviations. MediaWiki has 59 no-action outcomes. These are raw counts across unequal task totals, so direct application difficulty rankings would require normalization and further controls.
+
+### Table III — Aggregate pairwise coverage
+
+[A/B] On p. 10, each baseline has three resource partitions: YuraScanner-only, intersection, and baseline-only. Percentages use each pair's union; they are not task success rates.
+
+| Baseline | Resource | Yura-only count (%) | Shared count (%) | Baseline-only count (%) |
+|---|---|---:|---:|---:|
+| Black Widow | Forms | 632 (35.8) | 339 (19.2) | 791 (44.8) |
+| BFS | Forms | 635 (37.1) | 336 (19.6) | 739 (43.2) |
+| Random BFS | Forms | 631 (33.5) | 340 (18.0) | 908 (48.3) |
+| Black Widow | URLs | 4,476 (31.5) | 2,699 (19.0) | 7,026 (49.4) |
+| BFS | URLs | 4,301 (23.7) | 2,874 (15.9) | 10,902 (60.3) |
+| Random BFS | URLs | 4,160 (22.0) | 3,015 (15.9) | 11,721 (62.0) |
+
+The final row reports forms-per-URL ratios for those same partitions: 0.14/0.13/0.11 against Black Widow, 0.15/0.12/0.07 against BFS, and 0.15/0.11/0.08 against Random BFS. This supports the authors' statement that the YuraScanner-only collection is relatively form-dense. Displayed percentages have limited precision and need not sum to exactly 100. No statistical significance information is supplied.
+
+[C] Across all pairings, YuraScanner's total is consistently 971 forms: 632 + 339 = 635 + 336 = 631 + 340. Its URL total is consistently 7,175: 4,476 + 2,699 = 4,301 + 2,874 = 4,160 + 3,015. This internal consistency supports the partition interpretation.
+
+### Table IV — Per-application coverage
+
+[A/B] On p. 10, each of ten applications has form and URL rows, with the same three partitions for each baseline. The table reveals heterogeneity hidden by aggregates. For example, OpenCart has only one form shared with Black Widow, versus 82 YuraScanner-only and 184 Black-Widow-only forms. phpBB has 168 YuraScanner-only forms versus Black Widow, while OwnCloud has only two. LimeSurvey has 36 YuraScanner-only forms and two Random-BFS-only forms. These examples show that neither aggregate resource advantage nor overlap applies uniformly.
+
+Moodle contributes many resources: against Black Widow its form partitions are 132/123/101 and its URL partitions are 1,229/643/2,040. Against BFS its URL partitions are 1,072/800/5,723. Redmine's Black Widow URL partitions are 286/189/54, while MediaWiki's are 284/251/1,481. These differences support complementarity and application dependence rather than a blanket winner. The remaining individual cells were inspected but are compressed here; Table III preserves aggregate counts, and this disclosure avoids implying a full numerical transcription.
+
+### Table V — Vulnerability reports and unique issues
+
+[A/B] On p. 11, rows cover all 20 retained applications; columns give total reports, unique issues, and tool-specific stored/reflected classifications. Only three application rows contain findings. Redacted has 12 reports, 11 unique issues, four stored and seven reflected findings under YuraScanner, and one reflected finding under Black Widow. Moodle has two reports, one unique issue, and one stored entry for each tool. Leantime has one report, one unique issue, and one stored entry for Black Widow. Other rows contain dashes, meaning no reported findings in these experiments, not evidence of vulnerability absence.
+
+The Moodle row must be read alongside the prose qualification that its issue is meta tag attribute injection rather than direct XSS. No confidence intervals, severity scores, or per-issue identifiers are supplied. Duplicate reports explain why summing tool findings exceeds the unique issue count.
+
+## 12. Diagram / Architecture
+
+Figures 2 and 3 jointly define two levels of organization. Figure 2 describes the overall pipeline: application interface evidence becomes a task catalog; tasks drive browser exploration; discovered forms and routes become inputs to a payload-testing engine. Figure 3 expands the middle stage into a repeated control loop.
+
+The control path is task plus recent observations and actions → bridge decision → actuator command → browser change → new sensor observation. The data path includes page abstraction and identifier mapping. The model receives concise descriptions instead of direct access to the complete browser object. The actuator uses the mapping to turn a textual identifier into a concrete action. Memory feeds recent context back into later decisions.
+
+[D, MEDIUM] For security analysis, this architecture explains why the consequences of model decisions can extend beyond generated text: selected commands cause browser operations and application state changes. The documented deletion of the only Leantime user is concrete evidence of such a consequence. However, the diagram does not evaluate whether an attacker can steer that loop, bypass a policy, or extract secrets. Those questions remain outside this paper's experimental design.
+
+## 13. Equations and mathematical concepts
+
+No numbered equations, optimization objective, loss function, formal proof, or theorem is supplied. The relevant mathematics consists of set partitions and ratios.
+
+[A] Let A be the resources discovered by YuraScanner and B those discovered by one baseline. A ∖ B means resources found only by YuraScanner; A ∩ B means resources found by both; B ∖ A means resources found only by the baseline; and A ∪ B means the combined resource set. These partitions underpin Tables III–IV. Source: p. 9.
+
+[C] A pairwise unique-share percentage is |A ∖ B| / |A ∪ B| × 100. For Black Widow forms, the operands are 632 / (632 + 339 + 791) × 100, approximately 35.87%. Table III displays 35.8%. The small difference concerns display precision or calculation presentation; no unsupported reconciliation is needed.
+
+[C] The additional-coverage percentage over a baseline is |A ∖ B| / |B| × 100, where |B| = |A ∩ B| + |B ∖ A|. Its denominator differs from the combined-union share. Confusing these formulas would wrongly convert a roughly 35% unique share into the wrong improvement claim.
+
+[A] The architecture uses p for a page, a for an action, t for a task, abs(p) for a simplified page, abs(a) for a simplified action, and history(p) in Figure 3 for stored contextual history. These are representational labels rather than formal mathematical guarantees. The xss(id) expression is an execution oracle with an injection-specific identifier, not an optimization function. Sources: pp. 3–5, 7.
+
+## 14. Interpretation and discussion
+
+[A] The authors' most defensible overall conclusion is that task-driven crawling complements traditional crawling. Broad exploration collects many shallow resources; goal-directed exploration adds forms associated with coordinated workflows. The smaller total number of resources found by YuraScanner does not negate the additional distinct forms or vulnerabilities found in this testbed. Sources: pp. 9–13.
+
+RQ1 receives evidence of feasible automated task proposal and 77% validity, but not exhaustive workflow discovery. RQ2 receives evidence of useful progress and a substantial remaining failure rate, with only 667 fully completed valid tasks. RQ3 receives clear pairwise resource-set evidence. RQ4 receives depth profiles for collected forms, conditioned on the authors' step-based measurement. RQ5 receives additional manually reviewed findings under a shared XSS engine, with qualification of the Moodle issue and differing exploit privileges.
+
+Consistency checks identify several important qualifications. First, p. 2 says 75% of failures involve state misalignment, while p. 9 explicitly groups missing state and no action to reach approximately 75%. The detailed categories support the narrower statement that these two classes together dominate. Second, V-C refers to a VE dataset, while the setup defines TE; V-D refers to VD despite Tables III–IV containing the ten detailed-analysis applications. These labels are not independently clarified in the supplied text.
+
+Third, the p. 11 click-distance sentence follows discussion of 13 unique issues, but its counts are three + two + six = 11. The p. 12 discussion specifically attributes 11 findings to Redacted and places them two to four steps away, suggesting a narrower context; this is an interpretation, not an explicit correction. The six UI operations in Figure 1 and the later two-to-four click counts also need not count the same operations, because filling and submitting can differ from navigation clicks. A precise mapping is not provided.
+
+Fourth, p. 9 reports 35.46% as the average form unique share, whereas the rounded table percentages average to about 35.47%; p. 2 uses 35.4%. These are small precision differences, unlike the substantive distinction between union share and added coverage. Finally, claims about deeper states should not be transformed into a claim that the discovered vulnerabilities themselves require 15 steps; the reported vulnerability distances are much shorter.
+
+## 15. Contributions and novelty
+
+[A] Conceptual contribution: frame automated web scanning as task-driven exploration by a goal-based agent, rather than solely broad resource traversal. The authors describe this as one of the first such approaches, not the first use of an LLM for browser interaction. Sources: pp. 1–2, 13.
+
+[A] Methodological contribution: combine semantic page/action abstractions, recent action history, separated navigation and form-filling prompts, automatic task generation, and replayable form discovery. System contribution: implement these components in YuraScanner and integrate an existing XSS engine. The detection engine itself is reused and should not be credited as a new payload-generation method.
+
+[A] Empirical contributions: manually assess 2,361 generated tasks on ten applications; compare unique and shared coverage with three baselines on ten applications; characterize collected forms by workflow depth; and demonstrate additional security findings in a 20-application detection experiment. The paper does not propose a new model-training method, a formal security theorem, or a standalone-LLM vulnerability benchmark.
+
+## 16. Limitations
+
+### Authors' stated limitations
+
+[A] No complete task catalog is available in practice, so automatic task generation cannot be validated against exhaustive workflow ground truth. Insufficient or ambiguous page context produces irrelevant tasks. Execution errors include incorrect navigation, premature stopping, and unmet state dependencies. Task dependencies can amplify a single failure, and a successful destructive task can block subsequent work. Sources: pp. 6, 9, 11–12.
+
+[A] WordPress is excluded because an input field containing theme documentation expands prompts beyond the model limit and produces API 400 errors. Fine-grained form commands and some click-based field operations were unreliable in preliminary testing. Empty or overlong element labels are removed because they are unusable or exceed token constraints. Sources: pp. 5–6, 8.
+
+[A] The artifact appendix warns that results may differ because Black Widow navigation is randomized and OpenAI models are not static. Organization-wide API limits constrain parallel experiments. Source access is vetted rather than public, reducing unrestricted reproducibility. Sources: pp. 12, 15–16.
+
+### Additional evidence-based analyst observations
+
+[D] The model pilot is restricted to one application and 20 tasks without reported numerical model scores. No repeated-run variability, confidence intervals, costs, or explicit model snapshot is supplied. Manual labeling is carefully described but lacks a reported cross-check sample size. Coverage depends on resource identity rules, and step count is an operational proxy for depth rather than a proof of semantic complexity.
+
+[D] Four-hour limits and shared payloads make the comparison practical, but they do not separate every source of navigation efficiency or detection failure. Authentication is manually supplied. The absence of a hostile-page experiment prevents conclusions about prompt injection or comparative agent compromise. These are limitations of what this evidence establishes, not admissions attributed to the authors.
+
+## 17. Threats to validity
+
+The following validity categories are analyst organization, not named sections in the paper.
+
+**Internal validity [D]:** Shared application hosting, per-run resets, supplied authentication, and reuse of Black Widow's engine reduce several confounds. Nevertheless, within-run state changes, dependency chains, and self-lockout affect later tasks. A task can fail because an earlier task changed the environment, so failures are not all independent navigation mistakes.
+
+**Construct validity [D]:** URL and form counts approximate attack surface, while executed steps approximate depth. Neither directly measures all security-relevant application states. Partial execution is useful for reaching functionality but should not be called complete task success. The Moodle issue also shows that a vulnerability table can include a qualified precursor rather than direct XSS.
+
+**External and ecological validity [D]:** The sample spans many application categories, but consists of selected containerized deployments with manually prepared access. WordPress exclusion removes a significant observed failure case from reported retained-app performance. Results do not automatically transfer to arbitrary deployed websites, other model versions, or different privilege configurations.
+
+**Statistical conclusion validity [D]:** No inferential tests or uncertainty intervals are reported. Large task counts do not by themselves make tasks independent samples: many share applications, state, prompts, and dependencies. The paper's use of significant attack surface is descriptive rather than a documented statistical significance claim.
+
+**Reproducibility [A/D]:** The appendix supplies versions, workflow commands, artifact script names, and scaled-down reproduction guidance. Actual artifact files were not supplied here, source access is restricted, and the authors acknowledge stochastic navigation and changing model behavior. Consequently, this analysis verifies correspondence to the document, not experimental reproduction.
+
+## 18. Future work and open questions
+
+### A. Authors' explicitly proposed directions
+
+[A] The authors position the system as a foundational solution and a stepping stone toward better coverage of difficult or unexplored application areas. They emphasize complementary use with traditional scanning and highlight task dependencies as an important problem exposed by their experiments. The supplied paper does not provide a detailed, separately enumerated future-work program; stronger dependency-solving or security-defense proposals should not be attributed to it. Sources: pp. 11–13.
+
+### B. Additional analyst open questions
+
+[D] How can task ordering preserve necessary state while preventing operations such as deleting the only account? How much of the gain survives repeated runs and different models? Can a combined crawler retain broad coverage while adding deep workflow forms? How should task catalogs be evaluated when exhaustive ground truth is absent? What is the cost per useful new form or confirmed issue?
+
+[D] For the user's research question, a separate investigation would need to test malicious webpage content, measure whether it changes agent decisions, document permissions and side effects, and compare appropriate standalone-model conditions. YuraScanner provides architectural motivation and a concrete state-changing failure example, but it does not supply those comparative experiments. These are proposed research needs, not results of this paper.
+
+## 19. Terminology and notation glossary
+
+| Term | Meaning in this paper |
+|---|---|
+| LLM | Large language model used to interpret page semantics and produce commands |
+| Web scanner | Tool that explores a running application and tests discovered inputs |
+| Black-box testing | Testing through exposed behavior without using target source code |
+| Crawler | Component that navigates pages and discovers resources |
+| Attack surface | Discovered resources and inputs that can be tested, measured here mainly as URLs and forms |
+| Workflow | Ordered operations required to accomplish an application task |
+| Task catalog | List of natural-language objectives for the scanner |
+| Goal-based agent | System choosing actions toward a task objective using current and previous information |
+| Sensors | Module extracting actionable page elements and semantic descriptions |
+| Bridge | LLM-driven next-action decision module |
+| Actuators | Browser operations that execute selected commands |
+| DOM | Document Object Model: the page structure inspected by the sensors |
+| HTML | HyperText Markup Language; page elements are represented through simplified HTML-like descriptions |
+| UI | User interface: links, buttons, forms, and related interaction elements |
+| URL | Uniform Resource Locator identifying a page or endpoint |
+| BFS | Breadth-first search; baseline exploration strategy |
+| FIFO | First-in-first-out queue discipline described for BFS |
+| CRUD | Create, Read, Update, Delete; task-ordering framework |
+| One-shot prompt | Prompt containing one example of desired input/output behavior |
+| Persona assignment | Prompting the model with a named browser-agent role |
+| Action mapping | Per-page relationship between an action identifier and its concrete browser element |
+| XSS | Cross-site scripting; vulnerability class tested with injected payloads and execution observation |
+| Reflected / stored | Reported issue categories distinguishing reflection from persistence of injected content |
+| Oracle | Observable signal used to determine whether injected code executed |
+| TE | Task-execution dataset of ten applications |
+| VD | Vulnerability-detection designation; its use in the coverage subsection is ambiguous |
+| PoC | Proof of concept demonstrating a vulnerability |
+| p, a, t | Page, action, and task |
+| abs(p), abs(a) | Simplified page and action representations |
+| A, B | Resource sets for YuraScanner and a comparison tool |
+| A ∖ B, A ∩ B, A ∪ B | Yura-only resources, shared resources, and combined resources |
+
+## 20. Key numerical results
+
+| Quantity / result | Value | Unit | Condition / context | Status | Source |
+|---|---:|---|---|---|---|
+| Initial / retained applications | 21 / 20 | applications | WordPress excluded | Author-reported | p. 8 |
+| Detailed task sample | 10 | applications | Randomly selected TE group | Author-reported | pp. 8–9 |
+| Model pilot | 4 models, 20 tasks | models/tasks | Redacted only | Author-reported | p. 8 |
+| Generated tasks | 2,361 | tasks | Ten-app manual review | Author-reported | p. 9 |
+| Invalid tasks | 543 | tasks | Functionality absent | Author-reported | p. 9 |
+| Valid tasks | 1,818; 77% | tasks; percent | Generated-task denominator | Author-reported | pp. 2, 9 |
+| Fully completed | 667 | tasks | Valid tasks | Author-reported | Table II, p. 9 |
+| Partially completed | 448 | tasks | All but final step correct | Author-reported | p. 9 |
+| Full or partial | 1,115; 61.3% | tasks; percent | Valid-task denominator | Author-reported | p. 9 |
+| Fully completed / valid | 36.69 | percent | 667 / 1,818 × 100 | Analyst-derived | Table II, p. 9 |
+| Fully completed / generated | 28.25 | percent | 667 / 2,361 × 100 | Analyst-derived | p. 9 |
+| Failed valid tasks | 703 | tasks | 287 + 172 + 244 | Author-reported | p. 9 |
+| Missing state / deviated / no action | 287 / 172 / 244 | tasks | Failure classes | Author-reported | Table II, p. 9 |
+| Recent action history | 6 | actions | Selected after a few examples | Author-reported | p. 5 |
+| Post-click wait | 5 | seconds | Configurable; local setup | Author-reported | pp. 5–6 |
+| Task discovery crawl depth | 1 | crawl level | Initial task generation | Author-reported | p. 7 |
+| Maximum scanner run | 4 | hours | Each tool run | Author-reported | pp. 8, 11 |
+| YuraScanner collected forms | 971 | forms | Consistent aggregate partitions | Analyst-derived | Table III, p. 10 |
+| YuraScanner collected URLs | 7,175 | URLs | Consistent aggregate partitions | Analyst-derived | Table III, p. 10 |
+| Average added forms / URLs | 55.19 / 35.16 | percent | Add Yura-only resources to baseline sets | Author-reported | p. 9 |
+| Shared form plateau | 44.18 | percent | Yura collection shared with any baseline | Visually readable | Figure 8, p. 11 |
+| Forms accumulated by step three | 85.68 | percent | Yura collection | Visually readable | Figure 8, p. 11 |
+| Additional share at step three | 41.50 | percentage points | 85.68 − 44.18 | Analyst-derived | Figure 8, p. 11 |
+| Forms beyond three steps | 14.3 | percent | Yura collection; rounded prose | Author-reported | p. 10 |
+| Longest task length | 15 | steps | One success, two partial | Author-reported | p. 10 |
+| Reports / unique issues | 15 / 13 | reports/issues | Combined detection experiment | Author-reported | p. 11 |
+| Yura / Black Widow unique findings | 12 / 3 | issues | Overlapping tool totals | Author-reported | pp. 2, 11 |
+| Unauthenticated reflected exploits | 7 | issues | Reported exploitability | Author-reported | p. 11 |
+| Low-privileged stored exploit | 1 | issue | Reported exploitability | Author-reported | p. 11 |
+| Other stored findings | 5 | issues | No non-admin exploit found | Author-reported | p. 11 |
+| Artifact machine | 4 cores; 16 GB RAM; 60 GB disk | resources | Single-experiment setup | Author-reported | p. 15 |
+| Full experiment scale estimate | 80–320 | compute hours | Appendix estimate, not measured runtime distribution | Author-reported | p. 15 |
+
+## 21. Claim–evidence map
+
+| Claim | Evidence | Figure/table/experiment | Source | Qualification / evidence strength |
+|---|---|---|---|---|
+| Semantic goal-driven navigation is implemented | Sensors, bridge, actuators, prompts, action mapping | Figures 2–6; method | pp. 4–7 | HIGH for design description; no independent execution |
+| Automatic task generation is useful but imperfect | 1,818 valid of 2,361 tasks; 543 invalid | X1; Table II context | p. 9 | HIGH; validity is not exhaustive task recall |
+| Useful task progress is achieved | 667 success and 448 partial | X1; Table II | p. 9 | HIGH; combined 61.3% is not full completion |
+| Dependencies are a major operational issue | Missing states and only-account deletion | X1; discussion | pp. 9, 11–12 | HIGH for examples; categories do not fully establish causality |
+| Coverage is complementary | Large unique sets with limited intersection | X2; Tables III–IV | pp. 9–10 | HIGH for reported counts; budget- and sample-conditioned |
+| Yura reaches additional later forms | Cumulative discovery beyond step three | X3; Figures 7–8 | pp. 10–11 | HIGH for supplied run; not impossibility proof for baselines |
+| Navigation yields additional detected issues | 12 Yura findings versus three Black Widow findings | X4; Table V | p. 11 | HIGH for report; Moodle is qualified and tool sets overlap |
+| Reproduction may vary | Random navigation and non-static models | Appendix E4 | p. 16 | HIGH; no rerun performed here |
+| Agent actions can affect future access | Deleting the sole user locks scanner out | Discussion | pp. 11–12 | HIGH for author-reported event |
+| Paper indirectly informs agent-risk research | Browser actions, memory, model decisions, state changes | Architecture and deletion example | pp. 4–6, 11–12 | MEDIUM analyst inference; no agent-vs-LLM security experiment |
+
+## 22. Very simple explanation — Explain Like I'm 15
+
+Imagine testing a website by clicking every link you can find. You might visit lots of pages but still miss an important form because reaching it requires a plan: first create something, then open it, then change one of its settings. This paper builds a scanner that uses an AI language model to follow those kinds of plans.
+
+The scanner reads a simplified list of buttons and forms, remembers a few recent actions, and chooses what to do next. Browser code carries out that choice. When the scanner discovers a form, an existing security-testing engine tries specially prepared inputs to see whether the application mishandles them.
+
+The approach finds useful extra forms and security issues, but it also makes mistakes. Many proposed tasks are invalid, some executions stop too early, and some depend on earlier tasks that failed. The reported 61.3% result includes tasks that got all the way to the final step but did not finish it. In one striking example, the scanner successfully deleted the only user account and then could not continue.
+
+For your research question, this shows why connecting a model to a website matters: a model's choices can become real actions that change accounts, records, and future access. But the paper does not test whether malicious webpages can trick the agent, and it does not compare the agent's vulnerability with a standalone LLM. It helps explain the additional consequences of action-taking; it does not prove the comparative security claim.
+
+## Completeness Audit
+
+This audit covers the supplied 16-page paper, not absent executable artifacts or outside literature. Fully represented means the important accessible content is explained; compressed means the inventory item is covered without reproducing every sentence or secondary value.
+
+| Item | Inspected? | Represented? | Status | Notes |
+|---|---|---|---|---|
+| S0 Abstract, title, authors, venue | Yes, visual and text | Yes | Represented in compressed form | Contact formatting and publication boilerplate omitted |
+| S1 Introduction and contribution list | Yes, visual and text | Yes | Fully represented | Motivation and five contribution categories retained |
+| S2A Scanner architecture | Yes, visual and text | Yes | Fully represented | Crawler/attack-module distinction |
+| S2B Crawling challenge | Yes, visual and text | Yes | Fully represented | Six-step Redacted example |
+| S3 RQ1–RQ5 | Yes, visual and text | Yes | Fully represented | Individual objectives and limits retained |
+| Explicit RQ5 hypothesis | Yes, visual and text | Yes | Fully represented | No formal statistical test invented |
+| Other formal hypotheses | No such object identified | Accounted for | Missing from supplied material | No additional formal hypothesis list |
+| S4A1 Design and overview | Yes, visual and text | Yes | Fully represented | Goal-based rationale and semantic abstraction |
+| S4A2 Sensors: actions, mapping, semantics, abstraction | Yes, visual and text | Yes | Fully represented | Filtering and event hooks retained |
+| S4A3 Bridge | Yes, visual and text | Yes | Fully represented | Prompt structure and six-action history |
+| S4A4 Actuators | Yes, visual and text | Yes | Fully represented | Stop, click, target override, wait, form handling |
+| S4B Task catalog | Yes, visual and text | Yes | Fully represented | Depth-one crawl and CRUD heuristic |
+| S4C Vulnerability testing | Yes, visual and text | Yes | Fully represented | Oracle, modes, replay |
+| S5A Implementation: interface, debugging, security tests | Yes, mixed coverage | Yes | Fully represented | p. 8 text-only |
+| S5B Setup: apps, tools, environment | Yes, text-only | Yes | Fully represented | Exclusion, authentication, reset, budget |
+| S5C Task review | Yes, text-only | Yes | Fully represented | Labels, reviewers, counts |
+| S5D Coverage | Yes, text-only | Yes | Fully represented | Identity rules and label ambiguity |
+| S5E Depth | Yes, visual and text | Yes | Fully represented | Denominators and conventions retained |
+| S5F Detection | Yes, visual and text | Yes | Fully represented | Deduplication, privileges, Moodle caveat |
+| S6A Results discussion and dependencies | Yes, mixed coverage | Yes | Fully represented | Self-lockout retained |
+| S6B Ethics: overhead, notification, source access | Yes, text-only | Yes | Represented in compressed form | Local infrastructure; Leantime fixed in 3.3.0; Moodle no-impact response; Redacted anonymization |
+| S7 Related work: traditional and state-aware scanners | Yes, text-only | Yes | Represented in compressed form | Categories and author positioning; no external validation |
+| S7 Related work: protected states and LLM interaction | Yes, text-only | Yes | Represented in compressed form | Manual login, SSO, pattern-based approaches, MindAct/Natbot/Skyvern distinction |
+| S8 Conclusion | Yes, text-only | Yes | Fully represented | Complementarity retained |
+| S9 Funding and 44 references | Yes, text-only | Accounted for | Inspected but deliberately omitted as repetitive/non-substantive | Funding acknowledgment and bibliography not reproduced; references not validated |
+| X0 Model pilot | Yes, text-only | Yes | Fully represented | Missing numerical scores disclosed |
+| X1 / E1 Task execution | Yes | Yes | Fully represented | Main study distinguished from reduced artifact workflow |
+| X2 / E2 Coverage | Yes | Yes | Fully represented | Counts and set definitions |
+| X3 / E3 Depth | Yes | Yes | Fully represented | Plot-reading precision disclosed |
+| X4 / E4 Detection | Yes | Yes | Fully represented | Main 20-app study distinguished from reduced reproduction |
+| F1 Workflow screenshots | Yes, visual and text | Yes | Fully represented | Image does not independently prove server behavior |
+| F2 Pipeline | Yes, visual and text | Yes | Fully represented | Inputs, stages, outputs |
+| F3 Agent loop | Yes, visual and text | Yes | Fully represented | Feedback, mapping, control flow |
+| F4 Bridge prompt | Yes, visual and text | Yes | Represented in compressed form | Structure preserved; full prompt not recopied |
+| F5 Form prompt | Yes, visual and text | Yes | Represented in compressed form | TYPE operation and one-shot structure |
+| F6 Task prompt | Yes, visual and text | Yes | Represented in compressed form | Objective and input retained |
+| F7 Task-length plot | Yes, visual and text | Yes | Represented in compressed form | Tiny segment counts not fully transcribed |
+| F8 Form-depth plot | Yes, visual and text | Yes | Fully represented | Axes, encodings, thresholds, caveats |
+| T1 Applications | Yes, text-only | Yes | Fully represented | Names, versions, group structure, exclusion |
+| T2 Task classifications | Yes, text-only | Yes | Fully represented | All rows transcribed |
+| T3 Aggregate coverage | Yes, visual and text | Yes | Fully represented | All resource partitions and ratio row |
+| T4 Per-app coverage | Yes, visual and text | Yes | Represented in compressed form | Representative contrasts; not every cell reproduced |
+| T5 Vulnerabilities | Yes, visual and text | Yes | Fully represented | Nonzero rows, zero-result interpretation, issue qualification |
+| Major equations / theorems | No such objects identified | Accounted for | Fully represented | Set notation and ratios explained instead |
+| Formal pseudocode | No such object identified | Accounted for | Fully represented | Operational procedures explained in prose |
+| Five main contributions | Yes | Yes | Fully represented | Conceptual, system, task review, coverage, detection |
+| Author-stated constraints and failure modes | Yes | Yes | Fully represented | Prompt limit, dependencies, unavailable complete catalog, stochasticity, restricted code |
+| A1-A Access and requirements | Yes, text-only | Yes | Fully represented | Hardware/software requirements and vetting |
+| A1-B Installation | Yes, text-only | Yes | Represented in compressed form | Package installation, Docker group/service, virtual environment, requirements workflow |
+| A1-C Workflow | Yes, text-only | Yes | Fully represented | Raw data/scripts plus source/modules distinction |
+| A1-D Major claims C1–C4 | Yes, text-only | Yes | Fully represented | Mapped to task, coverage, depth, detection experiments |
+| A1-E Evaluation | Yes, mixed coverage | Yes | Represented in compressed form | E1: 60 human-minutes + 4 compute hours; E2/E3: 10 human-minutes + 10 compute minutes each; E4: 10 human-minutes + 8 compute hours |
+| A1-F Notes | Yes, visual and text | Yes | Fully represented | Source on request and stochastic reproduction |
+| Separate supplementary files | No | No | Missing from supplied material | No data, logs, source, or container artifacts inspected |
+| First-page badge and page furniture | Yes where rendered | Accounted for | Inspected but deliberately omitted as repetitive/non-substantive | No scientific inference drawn from decoration |
+
+### Missing or inaccessible material
+
+No main-text page is missing from the supplied extraction. Visual renderings of pages 8, 9, and 12–15 are absent. Actual artifact files, implementation source, raw experiment data, screenshots from the experiments, Docker definitions, and script outputs are absent. Links and named artifacts were not opened. Their absence prevents independent verification of implementation details, experiment reproduction, and undisclosed per-issue evidence.
+
+### Uncertain interpretations
+
+Dataset names VE/TE/VD are inconsistent in the evaluation text. The p. 11 click-distance counts sum to 11 while the preceding discussion concerns 13 unique issues. The p. 2 failure summary is broader than the detailed p. 9 classification. Figure 7's smallest labels are not all confidently transcribed. Differences among 35.4%, 35.46%, and rounded Table III averages are retained as reporting precision differences. The Moodle finding's exploit impact is qualified both technically and by the reported developer response.
+
+### Deliberately compressed material
+
+Full prompt text, installation commands, repetitive reproduction commands, bibliography entries, and every cell of Table IV are compressed. Artifact script roles are preserved: tables.py generates coverage tables; plot_steps.py and form_analysis.py generate depth figures; get_yura_vulns.py and get_bw_vulns.py extract findings. Expected outputs include the two coverage CSVs and the two plot PDFs described on p. 16. These outputs were described, not examined. The related-work discussion is grouped by method family rather than restating all cited papers. Its protected-state subsection includes manually curated login scripts, single sign-on approaches, and brittle pattern-based methods; its LLM subsection contrasts assisting with user-supplied tasks against automatic task extraction and separated form prompts.
+
+### Potential omissions
+
+Every major accessible section, substantive subsection, research question, experiment, figure, table, contribution, appendix component, and identified author-stated constraint is represented or explicitly marked compressed. Individual Table IV values and small Figure 7 segment counts are known numerical details not fully reproduced. No absent artifact is claimed reviewed. The analysis is comprehensive relative to the supplied inventory, while remaining a source-grounded explanation rather than an independent replication or proof that web AI agents are more vulnerable than standalone LLMs.
