@@ -1,5 +1,5 @@
 {
-  "canonical_count": 112,
+  "canonical_count": 123,
   "archived_duplicate_count": 5,
   "archived_paths": [
     "99_Duplicates/Exact/AgentRewardBench_Evaluating_Automatic_Evaluations_of_Web_Agent_Trajectories.pdf",
@@ -71,6 +71,17 @@
       "tags": [
         "multimodal",
         "web-agent"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "02_Web_Agent_Benchmarks_Environments/A_Framework_for_Studying_AI_Agent_Behavior_Evidence_from_Consumer_Choice_Experiments.pdf",
+      "summary_name": "a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary.md",
+      "source_sha256": "84cfaf7782fdeea8402015dab34e629778b8b00765fa625322c4248e4ffa0033",
+      "category": "02_Web_Agent_Benchmarks_Environments",
+      "tags": [
+        "literature-extension"
       ],
       "excluded_holdout": null,
       "hash_basis": "observed"
@@ -284,6 +295,17 @@
         "benchmark",
         "information-seeking",
         "web-agent"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/A_Whole_New_World_Creating_a_Parallel-Poisoned_Web_Only_AI-Agents_Can_See.pdf",
+      "summary_name": "a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary.md",
+      "source_sha256": "24bd3d2796a06f294a4592ee58f16ef91c02d4d851e2b8f7f08e391805daa690",
+      "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+      "tags": [
+        "literature-extension"
       ],
       "excluded_holdout": null,
       "hash_basis": "observed"
@@ -561,6 +583,17 @@
       "hash_basis": "observed"
     },
     {
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Honeyval_A_Comprehensive_Evaluation_Framework_for_LLM-powered_HTTP_Honeypots.pdf",
+      "summary_name": "honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary.md",
+      "source_sha256": "32e446b46779825f21d14e2b4046d67bf5f5f04ecd8c27c4401ab82ba80102fd",
+      "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+      "tags": [
+        "literature-extension"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
       "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/How_Adversarial_Environments_Mislead_Agentic_AI.pdf",
       "summary_name": "how_adversarial_environments_mislead_agentic_ai_comprehensive_summary.md",
       "source_sha256": "0e5d385cfbbb91812762493dbc2bb5bc09806c1359ac195114765993201af3c2",
@@ -577,6 +610,28 @@
       "tags": [
         "benchmark",
         "web-agent"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/LoginTrap_Uncovering_Task-Agnostic_Phishing-Style_Indirect_Prompt_Injection_Attacks_against_LLM-based_Web_Agents.pdf",
+      "summary_name": "logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary.md",
+      "source_sha256": "ab2ce708eabd5e965c7f2271538bf16b5764231f43281a5dc0a97f2a10d6336f",
+      "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+      "tags": [
+        "literature-extension"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/LoopTrap_Termination_Poisoning_Attacks_on_LLM_Agents.pdf",
+      "summary_name": "looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary.md",
+      "source_sha256": "5a6a2e261f8b8ba4d8319b880ed98090033fba3ae983374028f35edc1d3fe747",
+      "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+      "tags": [
+        "literature-extension"
       ],
       "excluded_holdout": null,
       "hash_basis": "observed"
@@ -599,6 +654,17 @@
       "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
       "tags": [
         "web-agent"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/The_Compliance_Trap_Diagnosing_How_AI_Agents_Consume_Conflicting_Memory.pdf",
+      "summary_name": "the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary.md",
+      "source_sha256": "adf8426ba1a9120f62eb2310628803df7a0534da77444e31b7c460ba48f55e05",
+      "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+      "tags": [
+        "literature-extension"
       ],
       "excluded_holdout": null,
       "hash_basis": "observed"
@@ -727,6 +793,17 @@
       "tags": [
         "benchmark",
         "web-agent"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "07_Security_Benchmarks_Evaluation/Silent_Failures_in_Agentic_Security_Evaluation_A_Validated_Harness_for_Tool-Call_Mediation_Under_Indirect_Prompt_Injection.pdf",
+      "summary_name": "silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary.md",
+      "source_sha256": "34bf909bf87fd63db06a21e7f01cdeee811d1c71203ca4c94908bea507eac343",
+      "category": "07_Security_Benchmarks_Evaluation",
+      "tags": [
+        "literature-extension"
       ],
       "excluded_holdout": null,
       "hash_basis": "observed"
@@ -1046,6 +1123,39 @@
       "hash_basis": "observed"
     },
     {
+      "pdf": "09_Progress_Long_Horizon_Benign_Controls/WebRollback_Enhancing_Web_Agents_with_Explicit_Rollback_Mechanisms.pdf",
+      "summary_name": "webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary.md",
+      "source_sha256": "da04494b682ed3fbcccc93896aae3137132be6df0dac56d73e0a49e21a1d5061",
+      "category": "09_Progress_Long_Horizon_Benign_Controls",
+      "tags": [
+        "literature-extension"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "09_Progress_Long_Horizon_Benign_Controls/Where_Did_It_Go_Wrong_Process-Level_Evaluation_of_Web_Agents_with_Semantic_State_Tracking.pdf",
+      "summary_name": "where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary.md",
+      "source_sha256": "ce01b7c59832dbe11a1d60f3610d6bb620d956c5dcb3d0cf4192da56b2076037",
+      "category": "09_Progress_Long_Horizon_Benign_Controls",
+      "tags": [
+        "literature-extension"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "09_Progress_Long_Horizon_Benign_Controls/Why_Do_LLM-based_Web_Agents_Fail_A_Hierarchical_Planning_Perspective.pdf",
+      "summary_name": "why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary.md",
+      "source_sha256": "0301faefaf0d4ed159449e97a708e8c254d014b69c60a6a406171941245432b5",
+      "category": "09_Progress_Long_Horizon_Benign_Controls",
+      "tags": [
+        "literature-extension"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
       "pdf": "10_Traditional_Crawling_Crawler_Traps/Detection_of_crawler_traps_formalization_and_implementation—defeating_protection_on_internet_and_on_the_TOR_network.pdf",
       "summary_name": "detection_of_crawler_traps_formalization_and_implementation_defeating_protection_on_internet_and_on_the_tor_network_comprehensive_summary.md",
       "source_sha256": "1c7be7d81b301ee62efe1842315f99a161489a8e25fe711c6ce0697076c2769f",
@@ -1259,6 +1369,17 @@
         "benchmark",
         "prompt-injection",
         "tool-use"
+      ],
+      "excluded_holdout": null,
+      "hash_basis": "observed"
+    },
+    {
+      "pdf": "12_Contextual_Borderline/Machine-Readable_Ads_Accessibility_and_Trust_Patterns_for_AI_Web_Agents_interacting_with_Online_Advertisements.pdf",
+      "summary_name": "machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary.md",
+      "source_sha256": "e9ef5c7a4679b62abbb17bc8e79ff145ebc936810f721395b1b90c197a767eca",
+      "category": "12_Contextual_Borderline",
+      "tags": [
+        "literature-extension"
       ],
       "excluded_holdout": null,
       "hash_basis": "observed"

@@ -1,0 +1,2290 @@
+{
+  "dimensions": [
+    "Research question and contribution",
+    "Attacker objective and capabilities",
+    "Controlled input surface",
+    "Legitimate task and actions",
+    "Models, datasets and environments",
+    "Treatments, controls and confounders",
+    "Protocol and resource budgets",
+    "Attack and benign outcome definitions",
+    "Trial counts and denominators",
+    "Exposure, delivery and action verification",
+    "Recurrence, retention and termination",
+    "Recovery, rollback and legitimate progress",
+    "Resource accounting",
+    "Defenses and tradeoffs",
+    "Artifacts and availability",
+    "Validity limitations",
+    "Trap protocol implications",
+    "Established mechanisms and novelty exclusions"
+  ],
+  "papers": {
+    "EXT-04": {
+      "source_sha256": "34bf909bf87fd63db06a21e7f01cdeee811d1c71203ca4c94908bea507eac343",
+      "pdf": "07_Security_Benchmarks_Evaluation/Silent_Failures_in_Agentic_Security_Evaluation_A_Validated_Harness_for_Tool-Call_Mediation_Under_Indirect_Prompt_Injection.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-04-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            1,
+            3
+          ],
+          "statement": "Audits four defect classes in an IPI evaluation harness and proposes measurement-valid scenarios; this is not a web-navigation retention experiment.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            3
+          ],
+          "statement": "Attacker controls third-party email/file/SQL text; cannot modify trusted prompts, weights or defense configuration. Static versus defense-aware adaptive knowledge settings distinguished; reported experiments are static.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Structured file, email or SQL injection locator; tool-call mediation between proposed and executed actions.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Single-user tasks use read_email, send_email, read_file, write_file, execute_sql_query in sandboxed per-scenario environments; in-memory SQL effects observable.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            6
+          ],
+          "statement": "gpt-5.6-terra; local llama3.1:8b, gemma4:12b, qwen2.5-coder:7b. Core/reduced/probe suites. Model identifiers are retained as source-reported, not independently verified deployments.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "None, TypeChecker, CapabilityRouter and LLMJudge conditions. Identity versus argument scoring on identical traces; delivery needs a paired sweep. Model incapacity and environment mismatch confound utility/security.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            4
+          ],
+          "statement": "Greedy where provider permits; per-scenario timeout stated without a numeric duration; Fisher exact, Holm correction and Wilson intervals. No numerical token/call/cost cap reported.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "ASR is argument-constrained predicate on executed calls; UPR is coverage of required tool names, FRR=100-UPR on benign stratum. UPR is not independent end-state task verification.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            6
+          ],
+          "statement": "95 core scenarios=43 attack+52 benign; reduced55=43+12; capability10. D2 re-score258 attack runs; D3 282 benign runs. Judge367 decisions. Exact aggregation into the ablation denominators is insufficiently specified.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "Audited delivery4/43; corrected43/43. llama reading-tool exposure41/43. Structured placement and predicates plus persisted calls/results; reading-tool execution does not alone prove every payload token entered model context.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            1,
+            7
+          ],
+          "statement": "Sustained browser retention, semantic state recurrence and time-to-escape are NOT STUDIED; no zero-retention inference is warranted.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-04-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "Rollback recovery is NOT STUDIED. Utility under attack is represented via required-tool coverage; it cannot substitute for a trusted task-progress oracle.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-04-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Per-scenario manifests/traces described. Numeric tokens, wall-time, calls and monetary budgets NOT REPORTED as study outcomes; deterministic TypeChecker has no inference cost by design.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            6
+          ],
+          "statement": "Frontier none ASR2.3%, FRR7.7%; router ASR0%, FRR5.8%; judge ASR2.3%, FRR11.5%. These are paper-reported cells, not replication; no significant frontier defense differences reported.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "Author says harness/code/tests released but withholds full attack suites/per-scenario results until archival version. No concrete repository URL appears in supplied text; availability and numerical reconstruction are unverified.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-04-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Table I prints D3 10.3->6.7 with +3.5pp; displayed values differ by3.6pp (rounding may explain). Text alternates39 undelivered/38 undelivered. FRR attribution to defense remains stronger than a required-tool metric can establish; single domain, static attacks and underpowered frontier cells.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-04-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "Recommendation: validate delivery, scorer predicates and benign feasibility separately; retain complete traces and missingness. Require independent legitimate state/progress checks, stronger than tool coverage.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-04-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            7
+          ],
+          "statement": "Joint attack/benign utility measurement is explicitly attributed to AgentDojo. Harness validity checks and exposure accounting are prior methodological requirements, not a novel trap contribution.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-11": {
+      "source_sha256": "24bd3d2796a06f294a4592ee58f16ef91c02d4d851e2b8f7f08e391805daa690",
+      "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/A_Whole_New_World_Creating_a_Parallel-Poisoned_Web_Only_AI-Agents_Can_See.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-11-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            1,
+            6
+          ],
+          "statement": "Combines agent fingerprinting and server-side cloaking as delivery for known prompt-injection risks; includes a small internal demonstration in section4.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "Attacker controls web server and conditional content, knows agent/automation fingerprints; goal unauthorized actions with concealment.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "User-agent/IP/ASN and automation/behavior cues drive differential page delivery; proposed hidden payload or entirely different authentication page.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            7
+          ],
+          "statement": "Benign API-documentation access becomes a prerequisite to authenticate using an environment variable; Cursor agent has shell/local-secret access, stronger than ordinary browser-only delegated tasks.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            6
+          ],
+          "statement": "Internal website with server-side detection; Cursor powered by Claude4 Sonnet, GPT-5 Fast and Gemini2.5 Pro. Model/version strings are source-reported only.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "Benign-human versus agent-authentication flow illustrated, but randomized matched controls, assignment rules and repeated-trial outcomes NOT REPORTED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "No trial protocol, retry schedule, resource cap or sampling plan reported beyond testing the internal page with three listed models.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "States attack succeeded in all cases; successful secret-authentication flow illustrated. No formal success predicate, exfiltration verification rule or benign completion rubric reported.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "Three named model configurations are listed; number of trials per configuration and denominator for all cases NOT REPORTED. Do not reconstruct n=3 or an ASR estimate.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "Author-reported internal implementation; Figure1 contrasts benign and malicious flows. No raw execution traces or measured classifier sensitivity/specificity supplied.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            1,
+            10
+          ],
+          "statement": "Sustained retention, recurrent prerequisites and exit-time measurements NOT STUDIED as outcomes; this is targeted delivery and a reported credential prerequisite demonstration.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            9
+          ],
+          "statement": "Task completion is part of proposed concealment; recovery/rollback or independent progress after compromise NOT EVALUATED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            10
+          ],
+          "statement": "Tokens, calls, browser actions, latency and monetary costs NOT REPORTED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            8,
+            9
+          ],
+          "statement": "Fingerprint randomization, input sanitization, planner/executor isolation, anti-cloaking crawlers and honeypot agents proposed; no measured mitigation comparison in this source.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-11-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            10
+          ],
+          "statement": "Internal website described; no supplied reusable implementation, data or trace artifact identity. Citations to other systems do not establish availability of this implementation.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            1,
+            10
+          ],
+          "statement": "Broad stealth/scalability/reliability claims exceed demonstrated scope; no detection accuracy, trial denominators, controlled effectiveness or independent reproduction. Browser/shell privileges and visibility assumptions limit generalization. Section3.3 p.6 assumes full-HTML ingestion and local-browser-data access; these are threat-model assumptions, not universal browser-agent capabilities. Section3.2 p.5 explicitly allows an entirely different malicious page; visually identical delivery is not required by the demonstration.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "Recommendation: record exactly what agent and human inspectors receive; preserve server-side response and observation identities. Keep browser-only and shell/local-secret privileges in separate threat-model tiers.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-11-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            8
+          ],
+          "statement": "Agent-targeted differential content and authentication pretexts are prior art. A conceptual framing cannot support claimed prevalence or general effectiveness; internal demonstration does not establish sustained trapping.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-01": {
+      "source_sha256": "5a6a2e261f8b8ba4d8319b880ed98090033fba3ae983374028f35edc1d3fe747",
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/LoopTrap_Termination_Poisoning_Attacks_on_LLM_Agents.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-01-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            1,
+            3
+          ],
+          "statement": "Termination poisoning corrupts progress assessment to continue execution after legitimate completion; automated target profiling and task-specific payload synthesis.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            3
+          ],
+          "statement": "Can modify external content; knows task type; no system-prompt/memory/weight access or code/tool/orchestration modification; payload fixed during victim execution. Across-attempt feedback in optimization is a distinct interface.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Pages, retrieved documents, API returns, shared files/skills described. Main experiments inject through simulated tool returns, not a validated live hostile website.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "GAIA-style legitimate research/tool tasks; shared ReAct scaffold. Final answer/stop criterion can be delayed through purported checking and dependency requirements.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            10
+          ],
+          "statement": "Eight model engines in one unified main scaffold, 60 sampled GAIA tasks; main environment simulates tool returns; LangChain/LangGraph comparison is in AppendixC p.15.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            12
+          ],
+          "statement": "Clean baseline; ten static strategies; Static-Random/Rotate-All/LLM-Direct/Static-Best/NoProfile/LoopTrap. Same tasks for profiling-characterization/evaluation; reflection-removal also lowers attempts, confounding component attribution.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            8,
+            10
+          ],
+          "statement": "Four clean+four injected probe executions. Twenty episodes per agent-task pair; M3 refinements and n3 candidates; ten repeats in adaptive evaluation. Per-trial step ceiling mentioned pp.14-15 without numerical value.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            3,
+            21
+          ],
+          "statement": "SAF=Tprime/T; ASR uses alpha2. Strict > versus inclusive >= conflicts; Figure11 labels2.0x successful. Final-answer correctness and verified non-progress are not the success endpoint.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-01-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            10
+          ],
+          "statement": "Initial60 tasks x10 strategies x5 repetitions=3000/model. Eight models. Adaptive20 episodes/pair with10 independent runs; no reconstructed exact successful-trial counts from rounded ASR.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            11
+          ],
+          "statement": "Study assumes a modified source is encountered; simulation controls tool delivery. Live exposure/search-discovery probability and independent token-level delivery verification NOT REPORTED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-01-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            21
+          ],
+          "statement": "P7 recursive verification and P8 circular prerequisites explicitly defined. Illustrative tasks terminate with finite2-4x amplification; aggregate SAF3.57x, ASR86.3% (Table4 p.11); token3.93x (Table6 p.16). These are not literal nontermination or post-entry time-to-escape.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            12,
+            21
+          ],
+          "statement": "Independent progress/goal oracle and measured escape/rollback recovery NOT EVALUATED. Proposed independent progress verification is future work pp.12-13. Figure11 changes final answer Bravo->Hercules.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-01-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            10,
+            16
+          ],
+          "statement": "Reports SAF/TAF and episode-to-success; SAF3.57x and TAF3.93x aggregate. No billing audit, measured wall time or complete generator+victim query accounting. Peak25x lacks trace-level identification.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            12,
+            13
+          ],
+          "statement": "Independent progress verification and provenance-aware processing proposed, not evaluated adaptive defenses.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            15,
+            15
+          ],
+          "statement": "AppendixB asserts anonymous code/probe/skill/simulator package. Repository/code/raw outcomes not supplied to this analysis; availability and implementation correspondence unverified.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-01-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            5,
+            21
+          ],
+          "statement": "Unresolved model rankings, profile scores, seven versus fourteen categories, NoProfile averages/SAF, strategy frequencies totaling110%, SAF/CAF label, strict/inclusive boundary and changed-answer case. Retain original values, no silent correction.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-01-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            21
+          ],
+          "statement": "Recommendation: distinguish useful checking from verified non-progress; record exact observations and completion; separately measure entry/retention/recovery. Prespecify boundary, caps, repeat units and full attacker/victim budgets.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-01-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            21
+          ],
+          "statement": "No novelty claim for circular dependencies, task-specific verification loops, poisoned termination, profiling/adaptive synthesis or proposed independent progress verification. Narrower page-only semantic x recurrence causal test still requires competitor review.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-09": {
+      "source_sha256": "da04494b682ed3fbcccc93896aae3137132be6df0dac56d73e0a49e21a1d5061",
+      "pdf": "09_Progress_Long_Horizon_Benign_Controls/WebRollback_Enhancing_Web_Agents_with_Explicit_Rollback_Mechanisms.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-09-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            1,
+            2
+          ],
+          "statement": "Explicit model-directed multi-step rollback for benign web navigation; decides when and where to return rather than only greedy forward actions or highest-value switching.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            1,
+            5
+          ],
+          "statement": "NOT APPLICABLE: no adversarial attacker condition. Erroneous or unpromising navigation states are benign failures.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-09-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            3
+          ],
+          "statement": "Agent framework adds critique and rollback modules, with recorded URLs and navigation history; environment is represented via accessibility trees.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Mind2Web-Live and WebVoyager user tasks; click/type/scroll/wait/goback/restart/stop. Rollback picks an earlier step index.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Zero-shot Llama3.3-70B-Instruct/Qwen2.5-72B-Instruct; fine-tuned Llama3.1-8B-Instruct/Qwen2.5-7B-Instruct; GPT4o and mini subset; GPT4o evaluator.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "OneWay, BestFirst and Rollback comparisons. Rollback uses fewer state switches than BestFirst; extra model critique/rollback calls are distinct from browser navigation steps. Website filtering and judge validity constrain conclusions.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Default navigation budget16 steps; experiments repeated3 times; budget scaling8/16/24/32 on randomly chosen100-instance subset. Additional calls/cost caps NOT REPORTED.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Full task completion and partial0-1 judge score; average steps and switches; struggle-ratio is proportion requiring recovery. No adversarial ASR or trap-retention endpoint.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            10,
+            11
+          ],
+          "statement": "Filtered test sets42 Mind2Web-Live and342 WebVoyager;455 training instances. Closed-model results use100 randomly selected subset; repeated3 times. Do not substitute full benchmark sizes for filtered denominators.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            11
+          ],
+          "statement": "No malicious exposure/delivery condition. Agent navigation trajectories support benign outcome judging; no trust-boundary attack verification.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-09-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Repeated unproductive benign actions motivate rollback; no sustained hostile retention/time-to-escape distribution measured. Browser state switches are not proof of productive recovery.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-09-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            3,
+            9
+          ],
+          "statement": "Algorithm1 requests env.rollback(S[i]); actual implementation records each step URL and resets browser to selected URL. This is not a demonstrated general transaction/session/database undo. Appendix p.9 restricts return destinations to [Checkpoint Saved] steps; this need not mean every previous state is available.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Navigation-step and state-switch averages reported. Struggle-ratio19% OneWay vs7% Rollback. No full token, wall-time or monetary accounting; fewer browser steps do not establish fewer model calls.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Rollback is benign capability intervention, not a tested security defense; adversarial critique poisoning and irreversible state restoration NOT EVALUATED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-09-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            11
+          ],
+          "statement": "Prompts in appendicesB/C and dataset links in AppendixD; Playwright and OpenRLHF dependencies cited. Linked dependencies do not establish release of a complete implementation/trace package.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-09-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            3,
+            8,
+            10,
+            11
+          ],
+          "statement": "Live-site availability filtering limits external validity. GPT4o judge uses inferred partial progress; evaluation prompt can accept unsupported final-response content when absent from tree. URL restore cannot prove full state restoration. Untuned small-model appendix results include ties and BestFirst advantages; main-table superiority is not universal. Algorithm1 leaves initial S population implicit; this is documentary incompleteness, not a proven runtime bug.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-09-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            11
+          ],
+          "statement": "Recommendation: specify recovery interface and restored state components; verify post-rollback legitimate progress independently; account for critique/model costs and irreversible actions.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-09-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            1,
+            5
+          ],
+          "statement": "Explicit multi-step rollback, when/where decisions and efficiency-versus-recovery comparisons are prior art. Proposed trap research must test adversarial recovery without claiming rollback itself new.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-08": {
+      "source_sha256": "32e446b46779825f21d14e2b4046d67bf5f5f04ecd8c27c4401ab82ba80102fd",
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Honeyval_A_Comprehensive_Evaluation_Framework_for_LLM-powered_HTTP_Honeypots.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-08-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Honeyval evaluates LLM HTTP honeypots using main agent-honeypot interactions plus independent agent exploit and honeypot functional controls.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "Honeypot defender simulates HTTP API responses without underlying system-resource access. Evaluated adversary is an AI hacking agent assigned a concrete exploit goal; both know the full API spec.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "Hollow HTTP server routes API requests to a prompted LLM. Response content/state simulation, not browser-only DOM text, is controlled.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "Task is exploit real/decoy APIs (script download, database-table deletion, admin-password change or browser local-storage exfiltration). This is not ordinary delegated-user browsing.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            6
+          ],
+          "statement": "16 BaxBench-derived backend apps; ReAct curl/python agents with Gemini3 Flash or Claude Sonnet4.6; GeminiCLI and ClaudeCode. Five honeypot backends listed in Table1.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "LLM vs rule-based honeypots; agent controls on secure/insecure real implementations; honeypot functionality tests. Same configuration across main/control tasks, with prompt adaptation comparisons.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            6
+          ],
+          "statement": "Five independent repetitions; agent and LLM honeypot each$10/run. ReAct50 iterations; ClaudeCode/GeminiCLI1h/run. Caps differ in units and censor realized interaction lengths.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            8
+          ],
+          "statement": "HTTP request count, running costs, honeypot-detection TPR/FPR, exploit verifier callbacks on real apps, functional pass@1. No exploit can succeed against resource-free honeypot by construction.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            6
+          ],
+          "statement": "16backend apps and5 repetitions. Do not infer one pooled independent sample count across agent/backend/prompt/control configurations; distinguish each table cell and test denominator.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            6
+          ],
+          "statement": "Programmatic exploit verification on real apps; detection judged by agent reports/abort. Request count verifies interaction, not hostile instruction uptake or ordinary user-task non-progress.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            8
+          ],
+          "statement": "Mean request engagement82.6 LLM vs30.6 rule baseline in reported aggregate. Table3 None/CarefulPI/Convince lengths82.6/50.1/102.6. Endpoint is HTTP requests, not browser actions or survival time.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "Agent may declare honeypot and exit or give up; exploit utility control tests real apps. Escape declaration is not independently verified completion after trap entry; rollback recovery NOT STUDIED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-08-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            5,
+            7,
+            12
+          ],
+          "statement": "Author-reported: Table2 median latency3.3–13.7s and generated tokens87.7–523.9; Table3 baseline-prompt cost advantage3.6x. Full context is resubmitted per request while agents may batch requests. AppendixB p.12 estimates API cost from input/output/cache tokens but omits higher long-context pricing tiers. Analyst interpretation: a nominal $10-per-side limit is not an independently verified strict billed ceiling.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-08-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            7,
+            8
+          ],
+          "statement": "Convince length102.6 vs82.6 but TPR0.45 vs0.24; CarefulPI length50.1, TPR0.49 and fidelity0.62 vs0.84 baseline. Added deception objectives can harm stealth/fidelity.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Paper gives https://github.com/google-research/honeyval; describes specs, real secure/insecure implementations, tests and callbacks. Artifact content not executed/reproduced here.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-08-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "Impossible exploit goal on decoy differs from solvable legitimate task with reachable escape. Prompt/cap/cost asymmetries and agent-type differences constrain transfer to proposed website traps. Requests/calls/time not interchangeable.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-08-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "Recommendation: separate victim competence, environment fidelity, retention, detection and utility controls. Fix prompt variants and budgets; preserve assigned-episode and conditional-entry denominators.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-08-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            8
+          ],
+          "statement": "AI-agent engagement, deception prompts and retention-versus-detectability/cost tradeoffs are prior art. New study cannot claim first agent-retaining decoy; must distinguish solvable browser tasks and independently measured recovery.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-06": {
+      "source_sha256": "ab2ce708eabd5e965c7f2271538bf16b5764231f43281a5dc0a97f2a10d6336f",
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/LoginTrap_Uncovering_Task-Agnostic_Phishing-Style_Indirect_Prompt_Injection_Attacks_against_LLM-based_Web_Agents.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-06-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Login-inducing page-context attack leads from plausible prerequisite to controlled sensitive-information form.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            4
+          ],
+          "statement": "Controls cloned page/popup and login destination; knows neither actual user task nor agent/model/system prompt/safety policy; no runtime modification or internal reasoning access.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            6
+          ],
+          "statement": "Popup contains login rationale, forged entry and close button; contextualized local login page. Two shadow evaluators filter statements, not final victim success.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Ordinary Mind2Web-derived tasks with synthetic background information. Agent clicks/types/navigates; sensitive values come from supplied background.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            9
+          ],
+          "statement": "80 cloned pages/1175 tasks/five domains. Browser-Use with GPT4o/Gemini3Flash/ClaudeSonnet4/DeepSeekV3.2; GPT4o fixed for Browser-Use/LiteWebAgent/Skyvern comparison.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            5,
+            9
+          ],
+          "statement": "Varies backbone or architecture while fixing other comparison axis. No reported clean-page outcomes, popup-only control or component ablation; local cloning and unknown system versions confound transfer.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            7,
+            7
+          ],
+          "statement": "Fresh Chrome/reset per execution; all experiments max5 interaction steps. PER uses3 sampled tasks x3 repetitions=9attempts/page. Numerical generation budget NOT REPORTED.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "LER is forged-entry click; ASR is entry then sensitive-information input. Submission and network-received leakage are not consistently mandatory. PER is any successful attempt within9, distinct from per-run probability.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            9
+          ],
+          "statement": "Dataset80pages/1175tasks; PER9attempts/page. Exact task-level outcome counts and headline averaging weights NOT REPORTED. Figure6 gives page counts supporting derived80/80,75/80,79/80 across architectures.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            7,
+            7
+          ],
+          "statement": "Observable browser actions/navigation/form inputs when available label entry and ASR using synthetic background values. No inference from hidden reasoning; shadow predictions are not victim action verification.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            7,
+            9
+          ],
+          "statement": "Five-step credential-diversion flow; sustained browser retention, semantic recurrence and post-completion amplification NOT EVALUATED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            7,
+            8
+          ],
+          "statement": "Paper qualitatively mentions incomplete form filling, early stop and return to task; no quantified recovery oracle or rollback experiment. LER->ASR gap is not a sustained-retention estimate.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-06-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            11
+          ],
+          "statement": "Agent step5 and PER attempt9 caps reported. Tokens, total generator calls, wall-time and financial costs NOT REPORTED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            10,
+            11
+          ],
+          "statement": "Task-instruction/system-prompt/action-supervision defenses claimed to reduce but not eliminate leakage; detailed configurations and numerical results absent. Do not rank defenses.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            5,
+            12
+          ],
+          "statement": "Source describes local clone/login construction and browser logs; no supplied release URL, code, dataset or trace package. External artifact availability not verified.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            6,
+            11
+          ],
+          "statement": "Clonability selection, synthetic sensitive data, five-step cap, repeated tasks nested in pages, absent uncertainty and unspecified aggregate weights limit generality. Input is not automatically submitted exfiltration.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            11
+          ],
+          "statement": "Recommendation: separate page-context relevance from actual task knowledge; distinguish entry, input, submission, received effect and recovery. Provide legitimate close/escape route and source-defined denominators.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-06-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            11
+          ],
+          "statement": "Plausible login prerequisite and coherent multi-step malicious continuation are established prior art; a first prerequisite/login trap claim is unsupported. Retention must be measured separately from credential diversion.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-05": {
+      "source_sha256": "84cfaf7782fdeea8402015dab34e629778b8b00765fa625322c4248e4ffa0033",
+      "pdf": "02_Web_Agent_Benchmarks_Environments/A_Framework_for_Studying_AI_Agent_Behavior_Evidence_from_Consumer_Choice_Experiments.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-05-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "ABxLab uses observation interventions to study consumer choice, not a security attack benchmark.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "NOT APPLICABLE as malicious attacker objective: nudges intentionally influence choice; framework operator can intercept/modify observations.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-05-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Man-in-middle observation function modifies product-title-adjacent text and matched prices in pruned viewport HTML, with no visual input.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "Select better of two products and add to cart; nine browser actions; explicit short-term thoughts/memory; stop on cart addition or10 actions.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "OneStopMarket/AgentLab/WebArena-derived environment;17 model engines;50 product pairs; original human baseline and secondary6-model subsets.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "No nudge/first product nudged/second product nudged. Original vs matched ratings(MR) vs matched ratings+prices(MRaP). Pairs category-constrained; matched set differs from original set; order randomized. Matching does not remove all product-description confounds.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            6
+          ],
+          "statement": "Temperature0.1 where available,1 for OpenAI reasoning models;10-action cap; cluster-robust linear probability estimates, logit robustness and BH correction.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "Endpoint is chosen product/cart addition and marginal change in choice probability in percentage points. No harmful-action ASR, sustained retention or escape endpoint.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "Ten interventions x50pairs x3conditions=1500 base configurations; >80000 experiments,~2.5B tokens,~400k requests. Human30participants x50 decisions=1500 choices; do not infer identical agent/human UI trajectories.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Observation intervention and cart action determine exposure/choice; framework makes synthetic nudges available. Visible HTML is different from full DOM and screenshots; no measured attack-payload delivery chain.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "Recurrence/retention NOT STUDIED as attack outcomes; episodes terminate after choice or10actions. Product-choice bias is not proof of being trapped.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-05-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "Rollback, escape and post-entry legitimate recovery NOT STUDIED; correct preference satisfaction is not an independent trap-progress metric here.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-05-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            4
+          ],
+          "statement": "Global approximate2.5B tokens/~400k requests reported; do not derive per-episode averages from rounded totals or treat them as complete cost caps.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            6
+          ],
+          "statement": "Explicit user preference profiles are behavioral conditions; no demonstrated trap defense. Preference adherence and nudge susceptibility do not establish security or utility under attack.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-05-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            1,
+            3
+          ],
+          "statement": "Paper identifies abxlab.media.mit.edu and an open framework/benchmark; claimed artifacts require separate content/version verification, no experiments executed here.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-05-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            25
+          ],
+          "statement": "Forced binary choice, no visual observations, selected catalog, title filtering and different pair construction constrain generality; large behavioral effects are not a universal agent-human vulnerability multiplier. Original-to-MR changes pair/category composition; negative-nudge inversion and underspecified user priorities further limit normative harm interpretations. Generated thinking/memory is not independently faithful (pp.24-25).",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-05-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            6
+          ],
+          "statement": "Recommendation: use matched stimuli/counterfactual observation changes, randomized order, cluster-aware units and controlled factual utility. Separately manipulate task relevance and recurrence while holding topology/affordances fixed.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-05-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            6
+          ],
+          "statement": "Controlled webpage/observation nudges, framing comparisons and attribute matching are established methodology. New trap contribution must identify a distinct outcome/causal contrast, not merely renamed persuasion.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-02": {
+      "source_sha256": "adf8426ba1a9120f62eb2310628803df7a0534da77444e31b7c460ba48f55e05",
+      "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/The_Compliance_Trap_Diagnosing_How_AI_Agents_Consume_Conflicting_Memory.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-02-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Entry-Propagation-Recovery(EPR) diagnoses how retrieved memories change action trajectories; compliance trap is uptake of plausible task-wrong memory followed by low success/recovery.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Intervention controls retrieved textual memory content and injection timing. This is a memory-consumption experiment, not demonstrated page-only attacker access.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-02-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            24
+          ],
+          "statement": "Helpful/conflicting/cross-task memory in matched DO/DONT templates; early step1/persistent every step/late from step3. Primary system-prompt injection and observation-footer placement comparison are controlled memory insertion; similar effects do not establish a real webpage-only attacker delivery chain.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "BrowserGym AXTree tasks on WebArena and MemTrapBench; legitimate goal has task-correct and known decoy paths in constructed benchmark.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            25
+          ],
+          "statement": "Five models named in main WebArena protocol; main MemTrapBench Table3 reports four. Full684 non-map precheck, selected77 diagnostic subset,231 constructed main tasks, plus611 common-valid cross-family and MiniWoB controls. Preserve model/cohort-specific denominators.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "Paired no-memory baseline with same seed; fixed content varied availability; helpful/conflicting length/structure-matched and cross-task controls. WebArena subset selected on two Qwen outcomes; MemTrapBench constructed separately with hand verification claimed.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5,
+            14
+          ],
+          "statement": "Paired same-seed early/persistent/late schedules, greedy decoding; 10000 sign-flip and bootstrap iterations. Appendix p.14 specifies 15 browser steps, 600 seconds per trajectory, 8192-token context and max 2048 generated tokens; vLLM v0.19 on A6000 48GB, bfloat16, prefix caching, temperature0/top-p1. Gemini uses API temperature0.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "WebArena RCR is LLM-judge recommendation compliance at first exposure; DPC paired success difference on compliant subset. Main MemTrapBench Table3 DPC instead uses action-divergence subset. Do not pool these selected conditional measures or treat them as randomized entry effects.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            7
+          ],
+          "statement": "WebArena77 eligible diagnostic tasks; Table2 model validN75/67/77/75/77 and compliant47/42/53/54/51; figure caption Gemini n74 differs. Do not use full684 as diagnostic denominator.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Known schedule establishes memory availability. Judge compares first exposed action with recommendation and paired action. Divergence alone is not compliance; groundability gate distinguishes absent AXTree labels.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "Persistent conflicting memory produces more harm than early on selected models. RCR63-72%, compliance-conditioned success17-31%; Figure4 realignment7-15% conflicting vs27-42% helpful. Caption says cumulative divergence by7, prose by14.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "EPR explicitly separates correction/realignment from task-level recovery; paired no-memory reference and known constructed trap path support diagnosis. These measures are prior art, not a new proposed trap metric by themselves.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            7,
+            14
+          ],
+          "statement": "Step/trajectory analyses and explicit 15-step/600-second caps with 8192-context/2048-generation limits are supplied, but no complete per-condition token/call/currency ledger. Browser actions, generated tokens and wall time are separate units.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-02-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            9,
+            25
+          ],
+          "statement": "Caution wording trades helpful gain for less conflicting harm. Retry-on-fail compares first no-memory attempt with helpful-memory retry after observed failure; requires failure signal and extra attempt. Schedule oracle has outcome access; both are diagnostic, not demonstrated deployable controller gains.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-02-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            5,
+            7
+          ],
+          "statement": "Task/memory blueprints and audits described in appendices; external code/data release and independent execution not verified here.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-02-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            5,
+            25
+          ],
+          "statement": "Outcome-selected WebArena77, varying validN, main/appendix and caption/prose discrepancies remain. Table29 printed recovery22/40/35% differs from caption35-40%; no-memory gains2.0/2.6/2.7 differ from stated2.6-5.6. Grounding/entry factorial interaction is small relative to main effects (Table23 p.23), limiting a simple multiplicative-gate reading. Appendix p.14 calls Gemini MemTrap-only although WebArena tables include it; model and denominator scope must follow individual tables.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-02-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Recommendation: distinguish entry/compliance, propagation, trajectory realignment and independently verified completion. Use paired seeds, matched irrelevant/helpful controls and prespecified exposure schedules; selection on compliance remains conditional/descriptive.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-02-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            25
+          ],
+          "statement": "EPR, repeated misleading-memory exposure, known-correct-path diagnosis and recovery/utility analysis are prior art. AppendixE Table23 p.23 already tests identifiability x action-groundability2x2 (32tasks/cell/model); proposed semantics x recurrence must establish a distinct contrast rather than claim first factorial trap study.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-03": {
+      "source_sha256": "ce01b7c59832dbe11a1d60f3610d6bb620d956c5dcb3d0cf4192da56b2076037",
+      "pdf": "09_Progress_Long_Horizon_Benign_Controls/Where_Did_It_Go_Wrong_Process-Level_Evaluation_of_Web_Agents_with_Semantic_State_Tracking.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-03-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "WebStep evaluates process-level web-agent behavior through deterministic semantic MDPs behind GUI websites.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "NOT APPLICABLE: benign evaluation, no adversarial attacker; evaluator controls self-hosted world, distractors and task generation.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-03-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            17
+          ],
+          "statement": "GUI frontend renders from semantic state. AppendixC/Table3 p.17: Claude receives screenshot+interactive DOM with reference targeting/coordinate fallback; other evaluated agents are pixel-only. Do not attribute all differences solely to model capability.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Find unique target under constraints and execute commit;10 synthetic sites/1800 tasks with oracle trajectories, hard negatives and controlled information access.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            5
+          ],
+          "statement": "Fara7B, GUI-Owl1.5-8B, UI-TARS1.5-7B, Qwen3.5-122B, OpenAI CUA(GPT5.4), Claude CUA(Sonnet4.6); chosen workshop version.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            9
+          ],
+          "statement": "Agent/model comparisons and complexity strata; shared semantic states permit successful/failing trace alignment. No randomized hostile semantic-framing treatment.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            17,
+            19
+          ],
+          "statement": "Maximum50 GUI turns/task; source documents model-specific decoding. Environment deterministic conditional on seed/actions, not all model outputs deterministic.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            18
+          ],
+          "statement": "Main terminal/exploration/conditional-execution/coverage/step metrics are qualified by AppendixC.3 p.18: ALL terminal success uses SafePass, accepting sufficiently informed correct decision points without final commit. Ready-to-act differs from executed goal completion. Skill invocation is not skill success (p.7).",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "1800 task instances on10 websites; Table2 provides agent aggregates. Bifurcation Figure5 n-values count classified behaviors/trace units; do not interpret them as new independent task trials.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Semantic source-of-truth couples GUI updates to typed state transitions; automatic oracle replay/testing plus manual checks described. Delivery of hostile text NOT STUDIED.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            8,
+            9
+          ],
+          "statement": "Bifurcation is last shared state before divergence: wrong branch(neither next action commit), delayed commit(successful next commit), premature commit(failing next commit). Benign delayed completion is not attacker-caused retention.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            48
+          ],
+          "statement": "Semantic observer supports process diagnosis, but SafePass does not require final commit. Table22 p.35 shows seven-action oracle alongside successful4/3-action traces, qualifying global minimum claims. Case7 p.48 distinguishes guardrail stop from standard failure. Adversarial recovery NOT EVALUATED.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-03-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            17,
+            19
+          ],
+          "statement": "50-turn episode cap; open-model output maxima800 or2048 tokens (Table3). FourH200(140GB each) node for GPU models; full GPU evaluation approximately3-4days; each closed agent within1day with8workers(p.17). GUI and semantic counts differ; no complete per-condition token/currency ledger.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            10
+          ],
+          "statement": "NOT APPLICABLE as security defense comparison. Process diagnosis and skill weaknesses do not establish a trap mitigation.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-03-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            10,
+            10
+          ],
+          "statement": "Reproducibility statement says full benchmark will be released:10sites/1800definitions/world seeds/oracles/evaluation suite. Future release statement is not inspected artifact availability.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-03-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            1,
+            48
+          ],
+          "statement": "Workshop/public arXiv abstract mismatch retained. SafePass modifies actual completion; Claude DOM assistance confounds modality; oracles are not established globally shortest. Coverage non-discriminative for226/1800 initially satisfied tasks(p.18). Synthetic sites and disabled external actions constrain transfer.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-03-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            9
+          ],
+          "statement": "Recommendation: independent semantic progress oracle and explicit state/action transitions; distinguish exploration failure, delayed commit and premature stop; test solvable benign iterations and validate all exits.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-03-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            10
+          ],
+          "statement": "Semantic state tracking, oracle trajectories, progress-based diagnosis and bifurcation localization are prior art. Proposed study must contribute a new causal comparison/outcome, not claim first process evaluation.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-07": {
+      "source_sha256": "e9ef5c7a4679b62abbb17bc8e79ff145ebc936810f721395b1b90c197a767eca",
+      "pdf": "12_Contextual_Borderline/Machine-Readable_Ads_Accessibility_and_Trust_Patterns_for_AI_Web_Agents_interacting_with_Online_Advertisements.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-07-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            1,
+            4
+          ],
+          "statement": "Studies machine-readable ad accessibility and observable trust patterns on a cloned news website; not an adversarial prompt-injection efficacy study.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            4
+          ],
+          "statement": "NOT APPLICABLE as attacker objective. Study operator modifies ads/markup and supplied prompts; commercial persuasion need not be malicious instruction injection.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-07-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Manipulates semantic DOM buttons, offscreen spans, ARIA/data/alt attributes, placement, dynamic media, native dialogs and subscription/paywall framing.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "Ten authored tasks cover subscription, coupon, sweepstakes, news and consent behavior. Relevant prompts include fictitious personal/payment data.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            4
+          ],
+          "statement": "BrowserUse0.1.41 with GPT4o/Claude3.7Sonnet/Gemini2.0Flash; additional pixel-based Operator explorations June1-15,2025; cloned TirolerTageszeitung site.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            8
+          ],
+          "statement": "Identical initial prompts/UI/defaults for BrowserUse. Follow-up markup/media variants; Operator differs in action/confirmation/instrumentation, so cross-paradigm comparison is indicative.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            4
+          ],
+          "statement": "Each10 tasks x10repeats per3 BrowserUse models=300 baseline trials. Followups10trials/model/condition; reset sessions; connectivity/render failures excluded. Complete realized denominator and numeric step/time cap NOT REPORTED.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Observed ad clicks, coupon finding, scroll depth, cookies and subscription selection; human manually records Operator. No composite trust score, malicious ASR or sustained-trap endpoint.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            7
+          ],
+          "statement": "Baseline300 plus followups; TableIII10 trials/model/variant; TableIV10/model/strategy. Cookie30trials/banner variant. Subscription conditional denominators23/30/27 are not300.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            5
+          ],
+          "statement": "BrowserUse action JSON/final answer/screen GIF logs; Operator manually annotated. Hidden semantic span can affect agents despite visual invisibility; observation visibility must be documented.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            8
+          ],
+          "statement": "Deep coupon at virtualpage10 not reached; TableVI maxscroll3/2/5 by model. Broad never-beyond-two-viewports phrasing requires qualification. Early stopping does not demonstrate sustained retention.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            9
+          ],
+          "statement": "Escape/rollback recovery NOT STUDIED. Goal-contingent payment choices and incomplete search are distinct from a verified non-progress trap.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-07-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            9
+          ],
+          "statement": "Action and scroll counts reported; no full per-condition tokens/calls/latency/currency accounting. Operator cost/latency/confirmation differ qualitatively.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-07-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            8
+          ],
+          "statement": "DOMbutton overlays7/10 Claude and GPT,5/10 Gemini versus pixeltext0/10; offscreen span9/10,10/10,10/10. These are accessibility outcomes, not tested security defenses.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-07-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            9
+          ],
+          "statement": "Development stack and BrowserUse dependency cited; no independently inspected full clone/data/rawtrace release. Do not treat tool URLs as artifact verification.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-07-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            5,
+            9
+          ],
+          "statement": "Gemini subscription tiers5+0+20=25 with denominator27; unresolved remaining2. Oneclone, dummycredentials, modeldrift, followups and modality confounding. Goal-contingent purchases do not establish actual financial loss.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-07-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            4,
+            9
+          ],
+          "statement": "Recommendation: log actual observation extraction; match visual/DOM affordances and cost justification; use consent/utility controls. Do not assume hidden DOM text is delivered to every agent.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-07-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            5,
+            9
+          ],
+          "statement": "Semantic overlays, offscreen text and goal-contingent purchase pretexts are precedent for observation/framing effects; they are not evidence of new sustained adversarial trapping.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    },
+    "EXT-10": {
+      "source_sha256": "0301faefaf0d4ed159449e97a708e8c254d014b69c60a6a406171941245432b5",
+      "pdf": "09_Progress_Long_Horizon_Benign_Controls/Why_Do_LLM-based_Web_Agents_Fail_A_Hierarchical_Planning_Perspective.pdf",
+      "status": "ACCEPTED_SOURCE_EXTRACTION",
+      "dimensions": [
+        {
+          "claim_id": "EXT-10-E01",
+          "dimension": "Research question and contribution",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Hierarchical diagnosis separates high-level planning, low-level execution, postcondition checking and replanning in benign web tasks.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E02",
+          "dimension": "Attacker objective and capabilities",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "NOT APPLICABLE: no attacker tested. Benchmarked errors are reliability failures, not demonstrated adversarial manipulation.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-10-E03",
+          "dimension": "Controlled input surface",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Text-based DOM observations feed planning/execution and LLM postcondition checking; natural-language versus PDDL plan representations compared.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E04",
+          "dimension": "Legitimate task and actions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            5
+          ],
+          "statement": "Mind2Web-Live tasks with expert key nodes converted into reviewed high-level plans; actions vary across Expanded, ActionObject and ActionID settings.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E05",
+          "dimension": "Models, datasets and environments",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            5
+          ],
+          "statement": "104 test instances; gpt5nano primary actor/evaluator; ClaudeHaiku4.5 and GeminiFlash2.5 additional actors with gpt5nano evaluation.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E06",
+          "dimension": "Treatments, controls and confounders",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "Human/NL/PDDL plans,3 action settings, before/after one replanning round. Human-derived plans provide capability control; no equal-budget adversarial treatment.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E07",
+          "dimension": "Protocol and resource budgets",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            5
+          ],
+          "statement": "One replanning round; exact execution/prompt details in appendices. Main methods do not provide full token/wall/currency caps. Extra exploration/replanning budget must be accounted for.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E08",
+          "dimension": "Attack and benign outcome definitions",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "Plan alignment rates, subgoal/plan completion, task success, action validity/hallucinated links/repetition/redundancy. Judges assess postconditions/final task; metrics have different denominators.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E09",
+          "dimension": "Trial counts and denominators",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            5,
+            7
+          ],
+          "statement": "104 tasks in declared testset. Table5 repetition10.4% of failures, hallucinatedlinks32% of goto, redundant34.2% of all actions, out-of-domain16.7% of all actions; never pool these.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E10",
+          "dimension": "Exposure, delivery and action verification",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            4,
+            19
+          ],
+          "statement": "No malicious delivery condition. gpt5nano judges postconditions/final outcomes; AppendixA.3 p.19 reports author manual agreement 41/50 postconditions (82%) and43/50 final evaluations (86%). These sampled agreements do not establish all-trace accuracy, independent replication or attack-resistant scoring.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E11",
+          "dimension": "Recurrence, retention and termination",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            6,
+            7
+          ],
+          "statement": "Repetition means same failed action morethan3times; redundant action leaves DOM unchanged. These benign failures are alternative explanations for recurrence under attack.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E12",
+          "dimension": "Recovery, rollback and legitimate progress",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "Local/global replanning choice, one round. Figure3 success NL32.1->41.4 and PDDL36.4->45.1; Figure2 PDDL35.6 before, a discrepancy requiring retention. Not a tested adversarial escape strategy.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E13",
+          "dimension": "Resource accounting",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            3,
+            7
+          ],
+          "statement": "Plan/action lengths and one-replan outcomes; complete token/call/time/cost accounting NOT established in main results. A shorter plan is not automatically lower full-run cost.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-10-E14",
+          "dimension": "Defenses and tradeoffs",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            7
+          ],
+          "statement": "PDDL and replanning improve some benign outcomes but are not validated security defenses or trusted progress oracles.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-10-E15",
+          "dimension": "Artifacts and availability",
+          "evidence_type": "AUTHOR-REPORTED",
+          "physical_pdf_pages": [
+            2,
+            2
+          ],
+          "statement": "Source gives https://github.com/Ziyu-Yao-NLP-Lab/llm-hierarchical-web-agents; framework/data release claimed. No artifact code/experiments executed here.",
+          "confidence": "HIGH"
+        },
+        {
+          "claim_id": "EXT-10-E16",
+          "dimension": "Validity limitations",
+          "evidence_type": "DIRECTLY OBSERVED",
+          "physical_pdf_pages": [
+            5,
+            7,
+            15,
+            19,
+            20,
+            21,
+            22
+          ],
+          "statement": "Same model can act/evaluate; livewebsite drift and action-space differences confound mechanisms. Table2 NLmatched70.6 versus prose79.6; PDDLbefore-success35.6 versus36.4 across figures. Preserve conflicts. Appendix Figure7 labels Gemini-flash-4.5 although methods name2.5. Author manual judge agreement leaves9/50 postcondition and7/50 final disagreements; no universal ground-truth equivalence. Expanded-action prompt p.15 mandates google_search/goto initially or without AXTree, so action frequencies are partly scaffold-constrained. Additional source conflicts include Claude redundancy25.6 prose versus23.6 Table8, and NL matched/unmatched83.6+17.4=101.0 in Table6. Replanning alignment may compare remaining plans against full references; interpretation is unresolved.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-10-E17",
+          "dimension": "Trap protocol implications",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            7
+          ],
+          "statement": "Recommendation: classify planning, grounding/execution and replanning separately; include benign repeated-action controls; use independent state verification rather than model-only self-assessment.",
+          "confidence": "MEDIUM"
+        },
+        {
+          "claim_id": "EXT-10-E18",
+          "dimension": "Established mechanisms and novelty exclusions",
+          "evidence_type": "ANALYST INTERPRETATION",
+          "physical_pdf_pages": [
+            2,
+            7
+          ],
+          "statement": "Hierarchical failure diagnosis, oracle-plan controls and adaptive replanning are established methods. Proposed trap contribution must isolate adversarial retention beyond ordinary execution failures.",
+          "confidence": "MEDIUM"
+        }
+      ]
+    }
+  }
+}

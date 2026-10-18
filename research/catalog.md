@@ -1,10 +1,12 @@
-# Research catalog
+# Research literature catalog
 
-Current working question: How can adversarial web environments induce and sustain task-dependent navigation traps in autonomous AI web agents, and what determines whether agents escape, recover, or continue unproductive interaction?
+**Current coverage (2026-10-18):** 123 completed canonical records and summaries; five exact archived copies. The 11 authorized additions contribute 151 typed claims and 198 separate experiment-evidence entries. See the [completion report](extensions/2026-10-17/LITERATURE_EXTENSION_COMPLETION_REPORT.md) and [evidence bridge](synthesis/TRAP_EXPERIMENT_LITERATURE_EVIDENCE_BRIDGE.md). The original 112 outputs remain unchanged. Existing per-paper relevance fields retain Research Mode’s supporting standalone-versus-agent question; trap-specific analysis is in the 18-dimension crosswalk and evidence bridge.
 
-All 112 canonical entries below are retained. Source paths, methods and per-paper relevance analyses preserve the completed records, including their earlier comparison-oriented interpretation; those entries do not individually define current priorities. Use the [trap roadmap](synthesis/AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md), [evidence map](synthesis/THEMATIC_EVIDENCE_MAP.md) and [foundation handoff](../docs/RESEARCH_FOUNDATION_HANDOFF.md). The standalone comparison is secondary; no trap experiment has started. This is an editorial introduction change, not a regenerated catalog or changed catalog.json.
+Question: How do adversarial web environments induce bounded task-dependent non-progress, and what determines escape, recovery and useful completion?
 
 Relevance statements are analyst interpretation. Completion denotes lightweight checks, not scientific validation.
+
+Current corpus: 123 canonical source identities and accepted summary/record pairs; 1,819 typed claims; five exact archives excluded. The frozen original 112-paper tag is unchanged, as are its 224 output fingerprints. Related versions are not independent replications. The original per-record comparison relevance statements below are retained source-bound metadata; they do not make the standalone comparison the primary program. See the [extension admissions](extensions/2026-10-17/SOURCE_ADMISSIONS.md), [evidence bridge](synthesis/TRAP_EXPERIMENT_LITERATURE_EVIDENCE_BRIDGE.md), [NotebookLM reconciliation](supplemental/notebooklm/NOTEBOOKLM_RECONCILIATION.md) and [current documentation audit](../docs/DOCUMENTATION_SYNCHRONIZATION_AUDIT.md).
 
 ## AutoWebGLM: A Large Language Model-based Web Navigating Agent
 
@@ -77,6 +79,18 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 **Relevance:** MEDIUM confidence, analyst inference: WebVoyager documents how live website screenshots, element text, and parsed files enter a model-driven browser loop whose decisions become external actions. Together with explicit author warnings about malicious downloads, private-data submission, and fake requests, this is relevant to analyzing why browser integration may introduce additional exposure and consequences. The paper does not directly compare standalone LLM security, test adversaries, or establish greater vulnerability.
 
 **Limitations:** HIGH confidence in source boundaries: no security experiment, explicit attacker model, standalone-LLM comparison, authenticated-task evaluation, or tested defense. Non-login manually inspected harmless tasks constrain security relevance. Raw data, code, complete trajectories, full prompts, and separate supplements were not inspected. Pages 10–12 received text-only coverage; small embedded webpage details remain partially unreadable. Relevance beyond documented risks is labeled analyst inference.
+
+## A Framework for Studying AI Agent Behavior: Evidence from Consumer Choice Experiments
+
+[Summary](summaries/a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary.md) · Source: `02_Web_Agent_Benchmarks_Environments/A_Framework_for_Studying_AI_Agent_Behavior_Evidence_from_Consumer_Choice_Experiments.pdf`
+
+**Method:** Controlled consumer-choice experiments in OneStopMarket using ABxLab observation transformations; 17 LLM agents; ten nudge texts; fifty product pairs per primary set; Original, matched-rating, and matched-rating-plus-price regimes; Original human baseline; fixed-effect linear probability models with two-way cluster-robust standard errors, adjusted multiple testing, and logit robustness. Additional analyses examine user profiles, nudge/category heterogeneity, difference magnitude, action horizons, judged generated traces, BOGO plausibility, and product trios.
+
+**Attack surface:** ANALYST INFERENCE: The relevant influence surface is the pruned HTML observation stream, including promotional text, displayed ratings, prices, and presentation order. ABxLab supplies experimental observation-editing capability. The paper does not establish an attacker's real-world access, a malicious instruction payload, exfiltration, privilege escalation, or compromise.
+
+**Relevance:** MEDIUM confidence, ANALYST INFERENCE: The paper shows that environmental product-page information can strongly influence a web agent's delegated selection and cart action. It supports studying observation-mediated influence alongside task competence. It does not compare agents against standalone LLMs, quantify a relative vulnerability gap, or isolate tools, browsing, memory, or sequential interaction as causes of such a gap.
+
+**Limitations:** One domain, primarily binary textual choices, viewport-limited HTML, ten-action cap, filtered/reselected product pairs, contemporary model set, and no matched-condition human baseline limit generalization. Trace analysis has acknowledged faithfulness and judge limitations. Trio tests are smaller and Original-only. External release artifacts were not supplied or reviewed. Security relevance is interpretive; no standalone-LLM comparison or adversarial defense evaluation is performed.
 
 ## BEARCUBS: A benchmark for computer-using web agents
 
@@ -293,6 +307,18 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 **Relevance:** MEDIUM confidence, analyst inference: the work is relevant as a concrete architecture for identifying where external webpage content enters agent observations, navigation decisions, persistent critic memory, and RAG generation context. It does not directly answer why web AI agents are more vulnerable than standalone LLMs. Its close-book comparisons measure factual QA accuracy, not adversarial vulnerability; actual relative vulnerability is UNKNOWN from this source.
 
 **Limitations:** Author-stated limits include dataset size, approximately 14k insufficiently human-verified silver pairs, HTML-DOM-only interaction, no additional agent training, and supplied root URLs in hybrid integration. Analyst observations include missing statistical uncertainty and evaluator calibration, success-conditioned cost measurement, incomplete configurations and artifacts, unresolved numerical/notation/example inconsistencies, and complete absence of adversarial or matched security comparisons. Table 3 Qwen2.5-7B ReAct overall action count is below all displayed subgroup means; the aggregation remains unresolved.
+
+## A Whole New World: Creating a Parallel-Poisoned Web Only AI-Agents Can See
+
+[Summary](summaries/a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary.md) · Source: `04_Adversarial_Web_Prompt_Injection_Content_Manipulation/A_Whole_New_World_Creating_a_Parallel-Poisoned_Web_Only_AI-Agents_Can_See.pdf`
+
+**Method:** Conceptual two-stage fingerprinting-and-cloaking attack, structured threat model, six-step illustrative execution flow, and one internal API documentation-site demonstration in Cursor with Claude 4 Sonnet, GPT-5 Fast, and Gemini 2.5 Pro. Figure 1 depicts distinct human and agent paths.
+
+**Attack surface:** Attacker-controlled website responses selected using browser, automation, behavioral, or network fingerprints; malicious content may contain indirect prompt injection or an explicit authentication prerequisite involving a secret.
+
+**Relevance:** ANALYST INFERENCE, MEDIUM confidence: The paper suggests that autonomous retrieval of attacker-controlled web content, recognizable agent fingerprints, and tools with access to sensitive resources create additional attack routes. It does not directly compare agents with standalone LLMs or quantify a vulnerability difference.
+
+**Limitations:** Success is reported qualitatively without trial counts, detector metrics, detailed traces, exact permissions, or a standalone-model baseline. The experiment uses one described internal site and one agent application. Broad attack consequences and defensive proposals are not all experimentally tested. Text coverage spans pages 1–10; visual coverage is limited to pages 1, 5, 6, and 7.
 
 ## AdvAgent: Controllable Blackbox Red-teaming on Web Agents
 
@@ -582,6 +608,18 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 
 **Limitations:** Author limitations include judge disagreement, reconstructed provider pipelines, single-document scope, and omitted deletion/correction/review/provenance defenses. Analyst observations include standardized-memory fallback, broad action-uptake scoring, selected production validation, bundled setup effects, incompletely specified probe grouping and operational detector costs, estimated semantic end-to-end rates, unresolved text/table/figure discrepancies, and absent supplementary artifacts. All supplied text was inspected; visual inspection was limited to the 56 supplied rendered pages.
 
+## Honeyval: A Comprehensive Evaluation Framework for LLM-powered HTTP Honeypots
+
+[Summary](summaries/honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary.md) · Source: `05_Agentic_Traps_Persistence_Adaptive_Attacks/Honeyval_A_Comprehensive_Evaluation_Framework_for_LLM-powered_HTTP_Honeypots.pdf`
+
+**Method:** Benchmark and empirical systems evaluation using 16 BaxBench-derived backend applications, four exploit-goal families, a direct agent–honeypot task, an agent control on real secure/insecure implementations, and a honeypot control using functional tests. Four agent configurations face five LLM honeypots and simple rule-based mocks. Each experiment has five independent repetitions. Outcomes include HTTP request count, detection TPR/FPR, API-running cost ratio, latency, generated tokens, functional fidelity, and real-application exploit success under prompt variations.
+
+**Attack surface:** Author-described surface: HTTP REST API responses generated by an LLM-powered honeypot and consumed by hacking agents through curl, Python, or coding-agent tooling. Appendix F.15 attempts to use response content and formatting to influence the attacker into disclosing provider, instructions, tools, and organization. Both sides know the API specification; the honeypot is assumed to lack actual system-resource access.
+
+**Relevance:** ANALYST INFERENCE, MEDIUM confidence: Honeyval is relevant to how tool-using agents repeatedly consume potentially deceptive external service responses, make stopping decisions, and balance detection with legitimate capability. Its controls are useful for distinguishing sustained engagement, false alarms, simulation fidelity, and successful manipulation. It does not directly compare agents with standalone LLMs, isolate tool access as a cause of vulnerability, or establish a general successful prompt-injection rate.
+
+**Limitations:** Author-stated limitations include a naive full-context architecture, latency and token overhead, only 16 HTTP applications, often unsuccessful injection attempts, and omitted long-context pricing thresholds. Additional analyst observations include missing formal uncertainty definitions and complete executable artifacts in the supplied material, reliance on request count as an intelligence proxy, heterogeneous effects hidden by averages, and absence of a standalone-LLM comparator or dedicated successful-injection disclosure metric.
+
 ## How Adversarial Environments Mislead Agentic AI?
 
 [Summary](summaries/how_adversarial_environments_mislead_agentic_ai_comprehensive_summary.md) · Source: `05_Agentic_Traps_Persistence_Adaptive_Attacks/How_Adversarial_Environments_Mislead_Agentic_AI.pdf`
@@ -606,6 +644,30 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 
 **Limitations:** AUTHOR-REPORTED and ANALYST OBSERVATIONS: cloned/synthetic environments, textual focus, narrow task sample, one principal full-dataset run, selected small-sample tailoring, no evaluated defenses, initial-redirection rather than downstream-harm measurement, hosted-model reproducibility limits, and changed environments for newer-model results. ANALYST OBSERVATION, MEDIUM confidence: Tables 5 and 15 do not reconcile on location aggregation. HIGH confidence: no matched standalone comparison or independent inspection of the referenced repository was supplied.
 
+## LoginTrap: Uncovering Task-Agnostic Phishing-Style Indirect Prompt Injection Attacks against LLM-based Web Agents
+
+[Summary](summaries/logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary.md) · Source: `05_Agentic_Traps_Persistence_Adaptive_Attacks/LoginTrap_Uncovering_Task-Agnostic_Phishing-Style_Indirect_Prompt_Injection_Attacks_against_LLM-based_Web_Agents.pdf`
+
+**Method:** Page-context extraction and benign probe-task construction; semantic candidate initialization; agreement-based filtering by two shadow evaluators; MCTS-inspired failed-seed selection and mutation; local browser evaluation on 80 cloned webpages and 1,175 Mind2Web-derived task instances. Browser-Use is fixed for four-backbone comparisons; GPT-4o is fixed for three-architecture comparisons. Metrics distinguish login entry, sensitive input, and at least one successful attack per page within nine attempts.
+
+**Attack surface:** Attacker-controlled cloned webpage context, a popup containing a page-specific login-inducing statement and forged login entry, and the controlled login destination. The attacker lacks the actual assigned task and victim internals and cannot modify runtime or observe internal reasoning.
+
+**Relevance:** ANALYST INFERENCE, HIGH confidence for the demonstrated agent mechanism: the work shows how repeated exposure to untrusted webpage content can alter an agent's perceived task prerequisites, trigger browser navigation, and cause sensitive background information to be entered into an attacker-controlled form. This is relevant to explaining additional attack pathways in web agents. The paper does not directly compare standalone LLMs with web agents and cannot quantify how much more vulnerable agents are.
+
+**Limitations:** Controlled local clones, clonability filtering, synthetic sensitive information, five-interaction cap, unspecified averaging weights and statistical uncertainty, incomplete implementation details, no reported component ablations or clean-page outcome comparison, absent detailed defense and generation-outcome analyses, input-versus-submission wording differences, and no direct standalone-LLM comparison.
+
+## LoopTrap: Termination Poisoning Attacks on LLM Agents
+
+[Summary](summaries/looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary.md) · Source: `05_Agentic_Traps_Persistence_Adaptive_Attacks/LoopTrap_Termination_Poisoning_Attacks_on_LLM_Agents.pdf`
+
+**Method:** Ten strategies across four manipulation categories are evaluated on eight model-based agents and 60 GAIA tasks using a shared ReAct-style scaffold with simulated tool returns. LoopTrap uses eight diagnostic executions to build a four-dimensional profile, profile-biased UCB-style selection, GPT-4o candidate generation and self-scoring, up to three reflective attempts per episode, and a persistent skill library. Adaptive evaluation allows 20 episodes per agent–task pair and ten independent runs, reporting ASR, SAF, TAF, and EFS.
+
+**Attack surface:** Indirect prompt injection through retrieved web pages, documents, third-party API responses, shared files, and published skills/plugins that contaminate progress assessment. The stated attacker lacks system-prompt, internal-memory, model-weight, code, tool-definition, and orchestration access and cannot adapt a payload during the victim's running execution.
+
+**Relevance:** ANALYST INFERENCE — MEDIUM confidence: The paper identifies an additional agent-level vulnerability pathway: external observations influence both task reasoning and the decision to continue a repeated tool-use loop. Task-relevant malicious instructions can therefore create apparently necessary verification work and amplify resource consumption. This supports a mechanism relevant to why web agents may face additional risks, but the paper does not directly compare matched standalone LLMs and web agents or quantify their relative vulnerability.
+
+**Limitations:** No direct standalone-LLM comparator; simulated rather than live external tools; no inspected repository or raw data; no reported held-out task/model transfer protocol; unvalidated proposed defenses; incomplete configuration and feedback-access details; finite bounded runs do not establish literal nontermination. Material contradictions affect profiles, model rankings, category counts, aggregates, ablations, strategy distributions, and metric labels. Figure 11 changes the final answer between conditions.
+
 ## Mind the Web: The Security of Web-Use Agents
 
 [Summary](summaries/mind_the_web_the_security_of_web_use_agents_5a834c4e_comprehensive_summary.md) · Source: `05_Agentic_Traps_Persistence_Adaptive_Attacks/Mind_the_Web_The_Security_of_Web-Use_Agents.pdf`
@@ -629,6 +691,18 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 **Relevance:** ANALYST INFERENCE — MEDIUM confidence: The paper explains how autonomous browser execution combines LLM instruction susceptibility with repeated exposure to attacker-controlled web content, authenticated sessions, navigation, forms, and sometimes local-resource permissions. These features broaden exposure and potential harm compared with a standalone text responder. The paper does not conduct a matched standalone-LLM-versus-web-agent victim comparison, so it does not establish a universal susceptibility ranking or quantitative vulnerability ratio.
 
 **Limitations:** No matched standalone victim comparison; no separate quantitative ASR for every agent product; selected controlled environments and open-ended tasks; LLM-judged success without reported calibration; inconsistent 0.5 boundary; Claude version ambiguity; manual adaptation in the Operator P9 example; completed file delivery not independently established; proposed defenses not quantitatively evaluated; missing detailed splits, uncertainty estimates, software versions, and training settings. Visual coverage is pages 1–12, with page 13 reviewed as text only. Version-family qualification (analyst observation from authorized corpus identity review): this 13-page manuscript and the separately cataloged published 17-page Mind the Web: The Security of Web-Use Agents are versions of the same study, not independent replications. This manuscript reports approximately 1,500 candidates, approximately 300 SFT examples, approximately 12,000 preference pairs and 61%/82% SFT/DPO ASR; the published version reports approximately 2,000 candidates, approximately 400 SFT examples and 64%/85%. Repeated payload-transfer rates must not be counted as independent experiments. Published judge calibration and implemented defense observations must not be imported into this manuscript.
+
+## The Compliance Trap: Diagnosing How AI Agents Consume Conflicting Memory
+
+[Summary](summaries/the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary.md) · Source: `05_Agentic_Traps_Persistence_Adaptive_Attacks/The_Compliance_Trap_Diagnosing_How_AI_Agents_Consume_Conflicting_Memory.pdf`
+
+**Method:** Entry–Propagation–Recovery framework; paired no-memory and memory-conditioned browser trajectories; early, persistent, and late exposure; recommendation-compliance judging and conditional Damage Per Compliance; WebArena full-distribution and selected-subset analyses; 231-task main MemTrapBench plus a 16-task pilot; factorial entry/grounding probes; channel, model-family, horizon, and retry ablations.
+
+**Attack surface:** Controlled external textual memory inserted into agent context, primarily through system-prompt placement and an observation-footer ablation. Conflicting guidance is plausible but task-wrong and often references executable interface elements. Real-world memory poisoning, retrieval compromise, arbitrary website injection, and attacker access costs are not evaluated.
+
+**Relevance:** MEDIUM confidence, analyst inference: the paper explains a mechanism relevant to why web agents may face additional security risk—misleading contextual memory can redirect a multi-step action trajectory, repeated exposure can amplify influence, and behavioral correction may fail to reverse prior outcome damage. It does not directly compare web agents with standalone LLMs, so it cannot establish that web agents are generally more vulnerable or quantify a relative vulnerability gap.
+
+**Limitations:** Long-horizon evidence is limited to browser agents with AXTree observations; no standalone LLM baseline or deployed defense. WebArena diagnostic selection can inflate effects. Constructed traps support mechanism analysis rather than attack-prevalence estimates. Several source inconsistencies remain unresolved, and referenced implementation and trace artifacts were not supplied.
 
 ## Autonomy Comes with Costs: Detecting Denial-of-Service Vulnerabilities Caused by Resource Abusing in LLM-based Agents
 
@@ -761,6 +835,18 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 **Relevance:** Analyst inference, MEDIUM confidence: the paper provides mechanisms relevant to why web agents may face additional vulnerability—untrusted visual and textual website observations influence multistep decisions that become consequential actions. It does not directly compare standalone LLMs with matched web-agent configurations and therefore cannot establish the comparative vulnerability magnitude or isolate the causal effect of agent deployment.
 
 **Limitations:** Authors acknowledge simulation-to-real gaps, evolving/composite threats, and agent-scope limits. Analyst observations include absent standalone baselines, limited live coverage, unclear live denominators, no reported uncertainty intervals or repeated-run variation, incomplete reproduction details, annotation error, and several text–table inconsistencies. Exact radar vertices and some fine visual content remain unreadable; no absent supplements were reviewed.
+
+## Silent Failures in Agentic Security Evaluation: A Validated Harness for Tool-Call Mediation Under Indirect Prompt Injection
+
+[Summary](summaries/silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary.md) · Source: `07_Security_Benchmarks_Evaluation/Silent_Failures_in_Agentic_Security_Evaluation_A_Validated_Harness_for_Tool-Call_Mediation_Under_Indirect_Prompt_Injection.pdf`
+
+**Method:** Audit one benchmark and harness; classify four measurement defects; construct isolated scenario environments, structured payload locators, argument-level attacker predicates, preflight checks, and persistent traces; re-score recorded behavior and evaluate frontier and small models using security, utility, capability, disclosure, and judge-analysis measurements.
+
+**Attack surface:** Author-reported: attacker-controlled email bodies, files, attachments, and database cells encountered during trusted user tasks. Five tools support email, file, and SQL operations. Direct injection, multi-agent attacks, tool-description and supply-chain poisoning, persistent-memory attacks, and multimodal injection are outside scope.
+
+**Relevance:** Analyst inference, HIGH confidence: the paper explains an agent-specific exposure-and-action pathway in which untrusted retrieved content enters the instruction-bearing context and can redirect privileged tool calls. It also shows why apparent vulnerability differences can be artifacts of exposure, scoring, capability, and environment failures. It does not directly compare standalone LLMs with web agents, evaluate a browser-specific agent, or quantify relative vulnerability.
+
+**Limitations:** Static attacks; one domain and five tools; 43 attack scenarios; only 12 benign cases in the reduced suite; simulated environments; underpowered frontier comparisons and disclosure/calibration analyses; absent underlying artifacts; unresolved count, rounding, and FRR-attribution issues; no direct standalone-model comparator.
 
 ## ST-WebAgentBench: A Benchmark for Evaluating Safety and Trustworthiness in Web Agents
 
@@ -1074,6 +1160,42 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 
 **Limitations:** Controlled environments trade real-world coverage for diagnosis; website APIs are excluded; evaluation primarily scores final outcomes. Additional analyst observations include different human task coverage, confounded architecture comparisons, absent uncertainty estimates, optional-tool adoption effects, incomplete prompt examples, and no adversarial threat model or standalone-LLM security baseline.
 
+## WebRollback: Enhancing Web Agents with Explicit Rollback Mechanisms
+
+[Summary](summaries/webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary.md) · Source: `09_Progress_Long_Horizon_Benign_Controls/WebRollback_Enhancing_Web_Agents_with_Explicit_Rollback_Mechanisms.pdf`
+
+**Method:** Three-module serialized browser navigation: Action selects an operation, Critique chooses continue/back after assessing the resulting state, and Rollback selects a saved prior index and summarizes abandoned-path experience. Browser automation uses Playwright with accessibility-tree observations and recorded-URL redirection. Evaluation compares OneWay, BestFirst, and Rollback on 42 filtered Mind2Web-Live and 342 filtered WebVoyager tasks, with a default 16-step budget, three repetitions, GPT-4o scoring, large-model zero-shot tests, smaller-model full SFT using 455 training instances, and separate 100-instance analyses.
+
+**Attack surface:** Analyst inference only: the described interfaces expose action and critique decisions to webpage accessibility-tree observations and retain selected information in trace and experience summaries. These are potential subjects for a separate security study, not demonstrated attack surfaces exploited in this paper. The paper specifies no attacker capabilities, malicious-content construction, trust-boundary enforcement, or attack-success rate.
+
+**Relevance:** MEDIUM confidence, analyst inference: the paper supports discussion of environment interaction, accumulated navigation failures, recovery decisions, and irreversible consequences as additional responsibilities of web agents. It does not directly compare standalone LLMs with web agents, measure comparative vulnerability, define an attacker, or evaluate attacks. Its reliability results must not be relabeled as security measurements.
+
+**Limitations:** HIGH confidence for author-stated limits: web-navigation-only scope, around-7B fine-tuning under resource constraints, URL-based recovery, and difficulty undoing irreversible actions. Additional analyst observations: no standalone-LLM or adversarial comparison; filtered website distribution; undefined ± terms; no significance tests, complete cost accounting, evaluator validation, detailed training settings, or module ablations; plot configuration and recovery-protocol details remain incomplete.
+
+## Where Did It Go Wrong? Process-Level Evaluation of Web Agents with Semantic State Tracking
+
+[Summary](summaries/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary.md) · Source: `09_Progress_Long_Horizon_Benign_Controls/Where_Did_It_Go_Wrong_Process-Level_Evaluation_of_Web_Agents_with_Semantic_State_Tracking.pdf`
+
+**Method:** WEBSTEP pairs 10 deterministic self-hosted websites with semantic MDPs, generates 1,800 seeded tasks with controlled distractors, and evaluates six agents using exploration, conditional execution, coverage, skill invocation, shared-state bifurcations, and complexity strata. All reported terminal rates use Safe Pass. The supplied study reports descriptive comparisons rather than security experiments.
+
+**Attack surface:** No attack surface or adversary is experimentally defined. Analyst inference: task-facing page content, search/filter results, detail-only attributes, and browser controls are interaction points where a future security study could measure manipulated evidence or induced actions. The supplied hard negatives are benign generated confusables, not prompt injections. Cross-site navigation and external search are disabled.
+
+**Relevance:** MEDIUM confidence, analyst inference: the work identifies multi-step navigation, partial evidence acquisition, premature commitment, interface grounding, and action execution as distinct behavioral dimensions relevant to a security analysis of web agents. It does not establish that web agents are more vulnerable than standalone LLMs, does not include a standalone-LLM comparator, and does not evaluate attacks.
+
+**Limitations:** Deterministic synthetic replicas omit important live-web dynamics, sensitive-data handling, and complex authorization. Templates constrain ambiguity and action scope. Skill invocation is not skill success. Claude receives DOM assistance unlike the other agents. Safe Pass and oracle shortcuts complicate metric interpretation. Statistical uncertainty and bifurcation denominators are incompletely specified. Code, raw traces, and linked artifacts were not supplied or reviewed.
+
+## Why Do LLM-based Web Agents Fail? A Hierarchical Planning Perspective
+
+[Summary](summaries/why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary.md) · Source: `09_Progress_Long_Horizon_Benign_Controls/Why_Do_LLM-based_Web_Agents_Fail_A_Hierarchical_Planning_Perspective.pdf`
+
+**Method:** Hierarchical evaluation on 104 Mind2Web-Live test tasks; model-assisted, manually verified reference-plan construction; NL versus PDDL-style planning; Human/NL/PDDL execution comparisons; Action Object/Action ID/Expanded action settings; one-round replanning; three acting models with gpt-5-nano evaluation; sampled manual judge agreement.
+
+**Attack surface:** Analyst-inferred candidate surfaces are text-based DOM/accessibility-tree observations, browser action targets and destinations, history-conditioned state tracking, model-based postcondition checking, and replanning decisions. The paper defines no attacker, exploit, malicious-content condition, or security trust-boundary test.
+
+**Relevance:** MEDIUM confidence, analyst inference: the paper identifies operational weaknesses at the observation-to-action and feedback-to-replanning interfaces, including invalid destinations, domain drift, redundancy, and repeated failures. These mechanisms can motivate a security analysis of web agents. The paper does not directly compare standalone LLMs with web agents, introduce adversarial pages, or measure comparative vulnerability; that conclusion remains UNKNOWN.
+
+**Limitations:** Restricted models/configurations and text-only agent observations; reference-plan dependence; imperfect model judges; incomplete reproducibility and uncertainty reporting; internal numerical and denominator inconsistencies; no inspected implementation artifacts; no adversarial evaluation or standalone-LLM control. Source coverage includes all 24 text pages and 13 rendered pages containing every numbered figure and table.
+
 ## Detection of crawler traps: formalization and implementation—defeating protection on internet and on the TOR network
 
 [Summary](summaries/detection_of_crawler_traps_formalization_and_implementation_defeating_protection_on_internet_and_on_the_tor_network_comprehensive_summary.md) · Source: `10_Traditional_Crawling_Crawler_Traps/Detection_of_crawler_traps_formalization_and_implementation—defeating_protection_on_internet_and_on_the_TOR_network.pdf`
@@ -1301,6 +1423,18 @@ Relevance statements are analyst interpretation. Completion denotes lightweight 
 **Relevance:** ANALYST INFERENCE — MEDIUM confidence: The paper supports a mechanism relevant to why web-capable agents face additional security exposure: third-party content enters their decision context and can redirect available tools toward unauthorized actions or data disclosure. Browser snippets are one tested content type, but the benchmark also covers email, finance, home devices, and other domains. It does not directly compare matched standalone LLMs with agents or quantify a comparative vulnerability increase.
 
 **Limitations:** Authors identify one fixed enhancement prefix, limited mixed benign/malicious content, single-turn attacks of at most two steps, and only two fine-tuned configurations. Additional analyst observations include simulated continuation-based evaluation, restricted tool menus, absent standalone baseline, imperfect proxy metrics, configuration/version confounding, missing uncertainty estimates, and unresolved text–table and plot–table inconsistencies.
+
+## Machine-Readable Ads: Accessibility and Trust Patterns for AI Web Agents interacting with Online Advertisements
+
+[Summary](summaries/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary.md) · Source: `12_Contextual_Borderline/Machine-Readable_Ads_Accessibility_and_Trust_Patterns_for_AI_Web_Agents_interacting_with_Online_Advertisements.pdf`
+
+**Method:** Controlled empirical study on a React-based clone of the Tiroler Tageszeitung news site. Browser Use 0.1.41 connected GPT-4o, Claude 3.7 Sonnet, and Gemini 2.0 Flash to browser actions. Ten tasks with ten repetitions per model yielded 300 baseline trials; exploratory follow-ups usually used ten repetitions per model per condition. Sessions were reset, Browser Use actions and recordings were logged, and Operator outcomes were manually recorded. Results are descriptive counts and qualitative behavioral patterns.
+
+**Attack surface:** Analyst mapping of tested surfaces: advertisement markup and semantic controls, off-screen descriptions, spatial placement, dynamic media, consent dialogs, subscription choices, and website-defined payment dependencies. No formal attacker model or prompt-injection success metric is supplied. Control of system prompts, internal memory, runtime tools, or other agents was not tested.
+
+**Relevance:** MEDIUM confidence, analyst inference: the study shows how browser-connected agents' perception and actions depend on website-controlled markup, hidden descriptions, privacy interfaces, and payment prerequisites. These mechanisms are relevant to why web agency may introduce additional security exposure. The paper does not compare matched standalone LLMs with web agents, so it cannot establish a comparative vulnerability magnitude or a universal ranking.
+
+**Limitations:** Single cloned news environment; authored task prompts; dummy payment credentials; commercial-model opacity and drift; different Operator and Browser Use instrumentation and confirmation gates; limited hidden-text variants and one guiding description; no user study or composite trust score; no reported inferential statistics; unavailable raw artifacts; incomplete follow-up totals; unresolved Gemini tier accounting; and no standalone-LLM comparison. Visual inspection covered only supplied page images 1 and 8.
 
 ## SkillTrojan: Backdoor Attacks on Skill-Based Agent Systems
 

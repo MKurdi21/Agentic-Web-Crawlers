@@ -1,14 +1,16 @@
 # Research Mode handoff
 
-## Current guidance — research foundation, 2026-10-16
+## Current guidance — 123-paper extension, 2026-10-18
 
-**112 completed / 0 pending / 0 excluded / 0 failed or deferred; five archived exact duplicates.** Corpus processing and synthesis are complete. No further dispatch or Phase 4B resumption is required.
+**123 canonical / 123 completed / 0 pending / 0 excluded / 0 failed or deferred; five archived exact duplicates.** There are 1,819 typed claims and 198 experiment-focused evidence entries. The frozen 112-paper foundation is tag `research-foundation-2026-10-17-v1`; original 112 source identities and 224 output fingerprints are unchanged. Related study versions do not supply independent replication.
 
-**Working question:** How can adversarial web environments induce and sustain task-dependent navigation traps in autonomous AI web agents, and what determines whether agents escape, recover, or continue unproductive interaction?
+**Working question:** Does task-relevant framing of recurring website prerequisites increase bounded, independently verified non-progress and sustained retention relative to neutral framing on otherwise matched, solvable browser workflows? Can progress-aware escape/recovery reduce this burden without sacrificing legitimate task utility?
 
-Use the [foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md), [current roadmap](../research/synthesis/AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md) and [H1–H3](../research/synthesis/RESEARCH_GAPS_AND_HYPOTHESES.md). The earlier comparison proposal is secondary. No trap experiment has started; any future implementation belongs in a separately authorized repository, as described in the foundation handoff.
+Use the [foundation handoff](RESEARCH_FOUNDATION_HANDOFF.md), [inventory](../research/inventory.json), [catalog](../research/catalog.md), [11-paper admissions](../research/extensions/2026-10-17/SOURCE_ADMISSIONS.md), [evidence bridge](../research/synthesis/TRAP_EXPERIMENT_LITERATURE_EVIDENCE_BRIDGE.md) and [documentation audit](DOCUMENTATION_SYNCHRONIZATION_AUDIT.md). The [NotebookLM supplement](../research/supplemental/notebooklm/NOTEBOOKLM_RECONCILIATION.md) preserves both raw exports and 3,172 NOT_CHECKED entries among 4,140 crosswalk entries; its 80 targeted reviews and 31 identifier issues do not imply blanket scientific validation.
 
-The retirement decision and current Research Mode artifacts govern ordinary literature status. Historical analysis checkpoints govern their original workflow only. B02 remains historically consumed/primary-accepted with verifier/adjudication NOT_RUN; B03–B08 were untouched at retirement, and all seven later received ordinary Research Mode access. Retirement is not successful holdout validation and cannot restore pristine status.
+Processing is complete. No new model dispatch, Phase 4B resumption or output regeneration is needed. The exact existing non-dispatching tests are in the [Research Mode maintenance guide](../research/README.md#maintenance-without-dispatch). Historical checkpoints remain scoped to their retired workflow. B02 remains historically consumed/primary-accepted with verifier/adjudication NOT_RUN; retirement did not validate holdouts or restore pristine status.
+
+The proposed primary comparisons remain C, NF, TF, NR and TR in the [roadmap](../research/synthesis/AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md). H1–H3, pilot arithmetic and limits are unchanged planning proposals. The standalone comparison remains secondary. No trap experiment has started; Protocol V1.1 amendments are proposed, and Protocol V1.2 has not been created or approved. Next: human novelty, threat-model, exposure/oracle and feasibility review, then separate authorization for any implementation in the future experimental workspace.
 
 ## Historical operational handoffs — retained verbatim below
 

@@ -1,1 +1,10 @@
 *.pdf binary
+
+# Preserve the approved NotebookLM raw exports byte-for-byte.
+"research/supplemental/notebooklm/raw/Agentic Web Traps Literature Evidence Table.xlsx" -text
+"research/supplemental/notebooklm/raw/Comprehensive Evidence Table of AI Agent Literature Review - Table 1.csv" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Recognize preserved CRLF while retaining trailing-space and EOF checks.
+research/catalog.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+research/inventory.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+research/progress.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

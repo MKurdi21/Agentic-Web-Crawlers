@@ -1,0 +1,10 @@
+{
+  "classification": "OPERATIONAL_USAGE_LIMIT",
+  "observed_prior_attempt_log": "research/evidence/honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary/generation.log",
+  "prior_log_timestamp_utc": "2026-10-18T00:07:24.666891Z",
+  "observation_basis": "Log and progress read directly on continuation before restarting the existing runner; pending status carried OPERATIONAL_USAGE_LIMIT. No Honeyval model_output.json or accepted output existed at restart.",
+  "observed_diagnostic": "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 10:06 PM.",
+  "preservation_limit": "This is a derived observation of the diagnostic, not a byte-identical copy of the prior full log. The existing runner replaces generation.log on a fresh generation attempt.",
+  "resume_basis": "User explicitly said continue on 2026-10-18; one fresh existing-runner invocation was launched after the reported reset time. No automatic quota retry loop.",
+  "scientific_result": "No scientific failure or completed source analysis inferred from quota interruption."
+}

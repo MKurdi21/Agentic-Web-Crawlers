@@ -8,6 +8,18 @@ This document retains the earlier standalone-LLM/web-agent comparison methodolog
 
 The leading proposal is the [AI web-agent trap roadmap](AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md): task relevance, recurring prerequisites, bounded non-progress and recovery with a reachable goal and available escape. A single-decision replay can help explain entry but cannot measure closed-loop retention. The trap-specific protocol and implementation would belong to a separate future experiment repository; they are not substituted into this design. Neither study has been performed here.
 
+## NotebookLM reconciliation and review boundary
+
+The current working corpus contains **123 canonical PDF identities, 123 comprehensive summaries, 123 structured records, 1,819 typed claims and 198 experiment-focused evidence entries**, plus five archived exact duplicates. The frozen tag `research-foundation-2026-10-17-v1` preserves the original 112 sources and 224 output fingerprints. Related Mind the Web and AgentVigil/AgentFuzzer versions are not independent replications.
+
+The [NotebookLM reconciliation](../supplemental/notebooklm/NOTEBOOKLM_RECONCILIATION.md) retains 4,140 entries, 80 targeted assertion reviews, 31 problematic identifiers and 3,172 NOT_CHECKED entries. Identity checks and NotebookLM status labels are not independent scientific conclusions. Detailed unchecked cells remain supplemental. Raw exports are unchanged and approved for local tracking only. The [gap assessment](../supplemental/notebooklm/NOTEBOOKLM_GAP_ASSESSMENT.md) retains all ten Protocol V1.1 amendment clauses as proposals; no Protocol V1.2 or experiment is implemented or approved.
+
+The primary proposal retains **C = clean; NF = neutral + finite; TF = task-relevant + finite; NR = neutral + recurring; TR = task-relevant + recurring**. Served content, delivered observation, entry, continued decoy actions, semantic recurrence, trusted legitimate non-progress, safe stop, escape, recovery and committed completion remain separate outcomes. Keep all-assigned and conditional-on-entry denominators distinct; finite capped episodes do not establish literal infinity. H1–H3 and pilot arithmetic remain unaltered.
+
+This remains the secondary standalone/web-agent proposal. The original estimands, arms, budgets and paired replay methodology below are preserved. A replay decision does not measure closed-loop retention. Silent Failures physical p.5 requires source-bound endpoint/denominator auditing; WebStep p.18 qualifies readiness versus final commitment; WebRollback p.3 limits URL-restoration claims. These are interpretation constraints, not a newly applied protocol.
+
+See the [current documentation audit](../../docs/DOCUMENTATION_SYNCHRONIZATION_AUDIT.md) for scope, evidence and validation.
+
 ## 1. Objective and causal claims
 
 Test the neutral question: **How do web observation, delegated tool authority and persistent state change exposure, instruction deviation and verified sandbox effects relative to a matched standalone language model?** Do not assume a positive susceptibility effect.

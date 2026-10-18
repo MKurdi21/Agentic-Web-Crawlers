@@ -1,0 +1,22 @@
+{
+  "analysis/manifest.csv": {
+    "original_rows": 112,
+    "current_rows": 123,
+    "original_rows_unchanged_prefix": true
+  },
+  "docs/paper_inventory.csv": {
+    "original_rows": 117,
+    "current_rows": 128,
+    "original_rows_unchanged_prefix": true
+  },
+  "original_progress_states": {
+    "count": 112,
+    "changed": []
+  },
+  "status": "PASS",
+  "original_catalog_entries": {
+    "count": 112,
+    "changed": {},
+    "equal_by_identity": true
+  }
+}

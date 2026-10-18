@@ -1,0 +1,31 @@
+{
+  "checked_date": "2026-10-17",
+  "scope": "Read-only primary project/repository web pages, separate from the closed-PDF summary generations. No instructions from these pages were executed. No benchmark data downloaded.",
+  "checks": [
+    {
+      "source": "Honeyval physicalp.3",
+      "url": "https://github.com/google-research/honeyval",
+      "observed": "Public repository page with README and data/src/scripts directories reachable; source URL matches paper. No code execution, result reproduction, release completeness or PDF-version equivalence verified."
+    },
+    {
+      "source": "ABxLab physicalp.1",
+      "url": "https://abxlab.media.mit.edu/",
+      "observed": "Project page reachable. Reachability does not verify code/data completeness or current version equivalence."
+    },
+    {
+      "source": "WebStep author project",
+      "url": "https://jiwanchung.github.io/webstep/",
+      "observed": "Project page reachable. Public and placed workshop abstract values differ; no benchmark downloaded/executed."
+    },
+    {
+      "source": "Hierarchical planning physicalp.2",
+      "url": "https://github.com/Ziyu-Yao-NLP-Lab/llm-hierarchical-web-agents",
+      "observed": "Public repository page reachable at URL given by paper. No code run or raw-result reproduction."
+    },
+    {
+      "source": "Separate discovery; not authenticated as the paper anonymous package",
+      "url": "https://github.com/QuirkShark/LoopTrap",
+      "observed": "Public matching-title repository reachable and describes termination poisoning. Ownership and equivalence to the paper anonymous artifact are NOT VERIFIED."
+    }
+  ]
+}

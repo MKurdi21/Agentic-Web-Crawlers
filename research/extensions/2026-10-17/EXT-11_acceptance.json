@@ -1,0 +1,32 @@
+{
+  "extension_id": "EXT-11",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation/A_Whole_New_World_Creating_a_Parallel-Poisoned_Web_Only_AI-Agents_Can_See.pdf",
+    "summary_name": "a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary.md",
+    "source_sha256": "24bd3d2796a06f294a4592ee58f16ef91c02d4d851e2b8f7f08e391805daa690",
+    "category": "04_Adversarial_Web_Prompt_Injection_Content_Manipulation",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary.md",
+  "record": "research/records/a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary.json",
+  "summary_sha256": "0d82dd1a58b8ca5030fe36f6a2beb6557e04ac8df7910840908d3d1963b9bb2d",
+  "record_sha256": "8476205f381a54a1e65ee2411fc2b5f79c1305834e275e707543bdc76e7a0f1c",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 14,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record and14 typed claims reviewed against source threat model, delivery workflow, internal-site experiment, Figure1 and untested mitigation/future-work sections. Conceptual taxonomy separated from author-reported Cursor demonstration; three listed model configurations are not independent trial count or100% ASR. Unknown detector accuracy, transmission verification, permissions, visual identity and resource accounting retained. Parent visually inspected physicalp.7; model visual coverage is explicit. No replication or independent human scientific validation.",
+  "validation_attempts": [
+    "Initial retained response passed; no generation retry or transcription repair."
+  ]
+}

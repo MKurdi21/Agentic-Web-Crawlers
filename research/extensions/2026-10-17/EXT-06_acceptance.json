@@ -1,0 +1,47 @@
+{
+  "extension_id": "EXT-06",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/LoginTrap_Uncovering_Task-Agnostic_Phishing-Style_Indirect_Prompt_Injection_Attacks_against_LLM-based_Web_Agents.pdf",
+    "summary_name": "logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary.md",
+    "source_sha256": "ab2ce708eabd5e965c7f2271538bf16b5764231f43281a5dc0a97f2a10d6336f",
+    "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary.md",
+  "record": "research/records/logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary.json",
+  "summary_sha256": "1be39a5453d2ccc5834ca49d13b38b2eb7787253d0adb39696b0c86b143c2e32",
+  "record_sha256": "f7e58c5f49ba9b17ee88fe302e8717e44cda886bdcc544b1e85aa22af3f77529",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 13,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record readback, focused source method/results/limitations review and visual inspection physical pp.8-9; typed claims, source values and missingness reviewed. No replication or independent human validation.",
+  "visual_limitations": [
+    "Text for physical pages 1–12 and source images for pages 1–11 were supplied; page 12 received text-only review.",
+    "No tools, browsing, external research, original PDF binary inspection, or supplementary-file review was performed.",
+    "Exact individual bar values in Figures 3 and 5 are unlabeled and were not invented.",
+    "Defense configurations and quantitative results are absent despite qualitative claims of defense robustness.",
+    "Detailed accepted-statement and generation-outcome analysis is mentioned but not presented.",
+    "Reported average-rate weighting, uncertainty estimates, seeds, framework versions, exact prompts, reward function, and numerical generation budget are unspecified.",
+    "The attack is tested on local cloned pages with synthetic sensitive information and a maximum of five interaction steps.",
+    "ASR explicitly includes sensitive input after login entry; separate submission is not consistently required across descriptions.",
+    "The paper does not directly compare web agents with standalone LLMs; comparative research relevance is analyst inference.",
+    "No appendices or supplementary files were supplied, and none were assumed to contain missing results."
+  ],
+  "validation_attempts": [
+    "Rejected: three heading labels",
+    "Inspected five quotation mismatches against exact source lines; retained original",
+    "Passed after heading/hyphenation transcription repairs; no additional model call"
+  ],
+  "limitations_scope": "These are model-reported disclosures from the isolated summarization pass. Parent analyst source-hash checks, focused visual inspections and limited external metadata checks are recorded separately; no source hash or external artifact execution is inferred from model prose."
+}

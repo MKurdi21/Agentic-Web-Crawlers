@@ -1,0 +1,24 @@
+{
+  "protected_files_checked": 34171,
+  "authorized_mutation_paths": [
+    "analysis/manifest.csv",
+    "docs/LITERATURE_REVIEW_FINDINGS_HANDOFF.md",
+    "docs/paper_inventory.csv",
+    "research/catalog.json",
+    "research/catalog.md",
+    "research/inventory.json",
+    "research/progress.json",
+    "research/synthesis/AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md",
+    "research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md",
+    "research/synthesis/INITIAL_RESEARCH_FINDINGS.md",
+    "research/synthesis/RESEARCH_GAPS_AND_HYPOTHESES.md",
+    "research/synthesis/SECURITY_COMPARISON_MATRIX.md",
+    "research/synthesis/THEMATIC_EVIDENCE_MAP.md",
+    "scripts/test_research_mode.py"
+  ],
+  "missing": [],
+  "unexpected_changes": [],
+  "status": "PASS",
+  "tag_object_unchanged": true,
+  "tag_target_unchanged": true
+}
