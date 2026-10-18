@@ -1,0 +1,50 @@
+{
+  "extension_id": "EXT-01",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/LoopTrap_Termination_Poisoning_Attacks_on_LLM_Agents.pdf",
+    "summary_name": "looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary.md",
+    "source_sha256": "5a6a2e261f8b8ba4d8319b880ed98090033fba3ae983374028f35edc1d3fe747",
+    "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary.md",
+  "record": "research/records/looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary.json",
+  "source_sha256": "5a6a2e261f8b8ba4d8319b880ed98090033fba3ae983374028f35edc1d3fe747",
+  "summary_sha256": "1fcfe12dd800f243c97642c71b3d187864ef72167758df91c7dec3e1810b706c",
+  "record_sha256": "c435ee073dc393d7e9116a3ba69a95bf9b784648b8981da1d9354e7ea0a2a51d",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 16,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "analyst_review": "Full finalized narrative readback; focused source methods/results/limits, figures and tables; exact source checks through existing quality function. No replication or independent human validation.",
+  "visual_limitations": [
+    "Closed-document analysis using supplied text for all 21 pages and direct visual inspection of 18 rendered pages; no tools, browsing, or external verification.",
+    "Pages 8, 13, and 14 were inspected through extracted text only.",
+    "The claimed repository, executable code, raw results, full prompts, and complete task identifiers were not supplied.",
+    "Model rankings, behavioral-profile values, category counts, NoProfile aggregates, ablation results, strategy-frequency normalization, and framework metric labels contain unresolved inconsistencies.",
+    "The success threshold uses inconsistent strict and inclusive comparisons at 2×.",
+    "Main experiments use simulated tool returns, and the paper does not directly compare standalone LLMs with web agents.",
+    "Finite execution amplification does not prove infinite execution; a reported per-trial ceiling has no supplied numerical value.",
+    "The 25× maximum lacks an identified task-level result in the supplied evidence.",
+    "Result tables and repetitive templates are represented through disclosed compression rather than full cell-by-cell or verbatim reproduction.",
+    "Figure 11 changes the final answer between conditions, so answer preservation cannot be assumed."
+  ],
+  "validation_attempts": [
+    "Rejected: three required heading labels",
+    "Rejected: claim_04 line-break hyphenation",
+    "Passed after retained-output heading/quote repair",
+    "Passed after analyst readback corrections; no additional generation"
+  ],
+  "crosswalk": "experiment_evidence_crosswalk.json#EXT-01",
+  "limitations_scope": "These are model-reported disclosures from the isolated summarization pass. Parent analyst source-hash checks, focused visual inspections and limited external metadata checks are recorded separately; no source hash or external artifact execution is inferred from model prose."
+}

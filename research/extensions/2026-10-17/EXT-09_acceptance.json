@@ -1,0 +1,32 @@
+{
+  "extension_id": "EXT-09",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "09_Progress_Long_Horizon_Benign_Controls/WebRollback_Enhancing_Web_Agents_with_Explicit_Rollback_Mechanisms.pdf",
+    "summary_name": "webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary.md",
+    "source_sha256": "da04494b682ed3fbcccc93896aae3137132be6df0dac56d73e0a49e21a1d5061",
+    "category": "09_Progress_Long_Horizon_Benign_Controls",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary.md",
+  "record": "research/records/webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary.json",
+  "summary_sha256": "c5611dddeef165db4c35ecccdeb46b559b78397f030699d558c1bf5b24239ed6",
+  "record_sha256": "56f8fb8ed011d09f16e8026c509b7403ec53eb6a2c728ff5dca828fcaca7274a",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 15,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record/claim review against main tables, Algorithm1, small-model appendix, prompts, judge instructions and filtered test/training counts. Actual recorded-URL/checkpoint return distinguished from full state undo; benign recovery not adversarial defense. Partial/full scores, extra critique costs, undefined uncertainty and small-model exceptions retained. Parent visually inspected Algorithm1/Figure2 and Table1. No replication or independent human scientific validation.",
+  "validation_attempts": [
+    "Initial retained model response failed existing quality checks; original responses preserved. Section-label/source line-break repairs recorded in evidence/transcription_repair.json; existing runner retry finalized retained output without another model generation."
+  ]
+}

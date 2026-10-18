@@ -10,7 +10,11 @@ import research_mode as rm
 class ResearchTests(unittest.TestCase):
     def test_retired_holdouts_are_canonical_and_eligible(self):
         inv = rm.inventory()
-        self.assertEqual(inv['canonical_count'], 112)
+        with (rm.ROOT / 'analysis/manifest.csv').open(encoding='utf-8-sig', newline='') as stream:
+            authorized = list(csv.DictReader(stream))
+        self.assertEqual(inv['canonical_count'], len(authorized))
+        self.assertEqual({row['summary_name'] for row in inv['papers']},
+                         {row['SummaryName'] for row in authorized})
         self.assertEqual(inv['archived_duplicate_count'], 5)
         self.assertTrue(all(row['excluded_holdout'] is None for row in inv['papers']))
 

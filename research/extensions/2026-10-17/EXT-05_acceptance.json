@@ -1,0 +1,44 @@
+{
+  "extension_id": "EXT-05",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "02_Web_Agent_Benchmarks_Environments/A_Framework_for_Studying_AI_Agent_Behavior_Evidence_from_Consumer_Choice_Experiments.pdf",
+    "summary_name": "a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary.md",
+    "source_sha256": "84cfaf7782fdeea8402015dab34e629778b8b00765fa625322c4248e4ffa0033",
+    "category": "02_Web_Agent_Benchmarks_Environments",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary.md",
+  "record": "research/records/a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary.json",
+  "summary_sha256": "5dcd192fe74d8f9a3fe7e6ada738df11e88b786ef21ed262504c7fcd293f3c63",
+  "record_sha256": "24cf5990b2d59bd90dbdc4c180a709293fbccdeaca76fd3156e96081629e0cd5",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 12,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record readback and typed claims reviewed against source methods/results/limits; Table2 visually inspected. Choice sensitivity distinguished from malicious outcomes; matched regimes/human-interface limitations retained. No replication or independent human validation.",
+  "visual_limitations": [
+    "All 31 pages were inspected through supplied text; only 21 pages were visually rendered. All numbered figures and tables occur on rendered pages.",
+    "No tools, browsing, external sources, or executable artifact checks were used.",
+    "Dense plot coordinates, individual significance markers, and screenshot microtext were not exhaustively transcribed.",
+    "The full Table 2 matrix is compressed to major results, extremes, and exceptions; secondary cells are not all reproduced.",
+    "Figure 4 rating-unit scaling, Table 3 condition and interval level, and portions of statistical fixed-effect implementation remain uncertain.",
+    "The paper does not directly compare web agents with standalone LLMs and does not test a formal adversarial attack or defense.",
+    "Original and matched-rating samples differ in product and category composition; human comparisons cover Original only.",
+    "Generated thinking and memory are not guaranteed faithful, and the GPT-4o judge may misinterpret them.",
+    "The supplied source hash is preserved as provided and was not independently recomputed."
+  ],
+  "validation_attempts": [
+    "Initial runner output passed; no regeneration or repair"
+  ],
+  "limitations_scope": "These are model-reported disclosures from the isolated summarization pass. Parent analyst source-hash checks, focused visual inspections and limited external metadata checks are recorded separately; no source hash or external artifact execution is inferred from model prose."
+}

@@ -1,0 +1,28 @@
+{
+  "documents_checked": [
+    "research/synthesis/SECURITY_COMPARISON_MATRIX.md",
+    "research/synthesis/COMPREHENSIVE_LITERATURE_REVIEW.md",
+    "research/synthesis/THEMATIC_EVIDENCE_MAP.md",
+    "research/synthesis/INITIAL_RESEARCH_FINDINGS.md",
+    "research/synthesis/RESEARCH_GAPS_AND_HYPOTHESES.md",
+    "research/synthesis/AI_WEB_AGENT_TRAP_RESEARCH_ROADMAP.md",
+    "research/synthesis/TRAP_EXPERIMENT_LITERATURE_EVIDENCE_BRIDGE.md",
+    "research/catalog.md",
+    "docs/LITERATURE_REVIEW_FINDINGS_HANDOFF.md",
+    "research/extensions/2026-10-17/LITERATURE_EXTENSION_COMPLETION_REPORT.md",
+    "research/extensions/2026-10-17/SOURCE_ADMISSIONS.md"
+  ],
+  "local_links_checked": 1202,
+  "errors": [],
+  "excluded_mathematical_tokens": [],
+  "coverage": {
+    "matrix_profiles": 123,
+    "unique_matrix_profiles": 123,
+    "register_rows": 123,
+    "unique_register_rows": 123,
+    "matrix_exact_inventory_set": true,
+    "register_exact_inventory_set": true,
+    "changed_original_profiles": []
+  },
+  "status": "PASS"
+}

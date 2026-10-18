@@ -1,0 +1,32 @@
+{
+  "extension_id": "EXT-02",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/The_Compliance_Trap_Diagnosing_How_AI_Agents_Consume_Conflicting_Memory.pdf",
+    "summary_name": "the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary.md",
+    "source_sha256": "adf8426ba1a9120f62eb2310628803df7a0534da77444e31b7c460ba48f55e05",
+    "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary.md",
+  "record": "research/records/the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary.json",
+  "summary_sha256": "a6ccb66b385daf0d2008c93ffcfef448aea36501ce42c4e4caf9b8b9b8906a7b",
+  "record_sha256": "cfc4e2c21cc9e894c3937e9c9f0a55b8a31c39a563907f34c67d30c5e59125f4",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 12,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Full narrative/typed-claim review against source methods, results and appendices; physical pages 23 and 25 visually inspected. Conditional compliance/divergence metrics, outcome-selected diagnostic sample, system/footer privilege scope, trajectory realignment versus final success, failure-oracle retry and inconsistent appendix accounting retained. No replication or independent human scientific validation.",
+  "validation_attempts": [
+    "Retained initial output; normalized three required section labels only; existing runner retry accepted retained output without model regeneration."
+  ]
+}

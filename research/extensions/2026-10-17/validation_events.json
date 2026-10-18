@@ -1,0 +1,15 @@
+{
+  "test_research_mode_before_mapping": "12 run; 1 expected inventory mismatch error",
+  "test_research_mode_after_mapping_before_test_update": "12 run; fixed-count failure 123 != 112",
+  "compatibility_change": "Test now requires exact authorized manifest count and summary-name set; duplicate/eligibility checks retained. No runner/schema modification.",
+  "test_research_mode_after_test_update": "12 passed",
+  "test_summary_state": "4 passed",
+  "original_archive_hashes": "5/5 match existing canonical hashes",
+  "retained_output_validation_events": {
+    "EXT-08": "Initial exact-quote rejection honeyval_c05; inde-/pendent source line-break restored;16 claims passed; retained-output runner retry completed.",
+    "EXT-09": "Initial structure rejection sections6/8/12; labels normalized; exact quote wr_c01 required inspected multi-/step line break;15 claims passed; retained-output runner retry completed.",
+    "EXT-10": "Initial structure rejection sections6/8/12/14; section labels normalized;14 claims passed; retained-output runner retry completed.",
+    "EXT-07": "Initial exact quotation C12 rejected; source transcription restored;12 claims passed. Parent visual-review scope appended with preserved raw and prior deliverables; existing finalizer refreshed fingerprints without model generation.",
+    "EXT-11": "Initial response passed existing quality with14 claims; no repair or retry."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "extension_id": "EXT-04",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "07_Security_Benchmarks_Evaluation/Silent_Failures_in_Agentic_Security_Evaluation_A_Validated_Harness_for_Tool-Call_Mediation_Under_Indirect_Prompt_Injection.pdf",
+    "summary_name": "silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary.md",
+    "source_sha256": "34bf909bf87fd63db06a21e7f01cdeee811d1c71203ca4c94908bea507eac343",
+    "category": "07_Security_Benchmarks_Evaluation",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary.md",
+  "record": "research/records/silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary.json",
+  "summary_sha256": "1de6a128dd35360400f4902928acab10248727dee1ca03df4fced1a899704dfb",
+  "record_sha256": "3996bcfdf52e6a82312d4ea60824333c02f9f63b062c6a038dafc6d352ec938a",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 14,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record readback, typed claims and source method/results/limitations reviewed; focused visual inspection of consequential tables/figures. No independent human validation or reproduction.",
+  "review_findings": "Table I prints D3 10.3->6.7 with +3.5pp; displayed values differ by3.6pp (rounding may explain). Text alternates39 undelivered/38 undelivered. FRR attribution to defense remains stronger than a required-tool metric can establish; single domain, static attacks and underpowered frontier cells.",
+  "visual_limitations": [
+    "Only supplied paper text and source images were used; no tools or browsing were called.",
+    "Pages 1–6 were visually inspected; page 7 was reviewed through supplied text only.",
+    "The provided source SHA-256 was retained without independent computation.",
+    "Underlying code, experimental traces, manifests, and full scenarios were not supplied and were not independently verified.",
+    "No appendix or supplementary file was supplied.",
+    "D1 has an unexplained 39-versus-38 undelivered-payload discrepancy.",
+    "Table I's displayed D3 rates differ by 3.6 percentage points while its error column reports 3.5.",
+    "Positive no-defense FRR is not fully reconciled with claims of entirely defense-attributable FRR.",
+    "Static attacks, small samples, one tool domain, and simulated environments limit generalization.",
+    "The paper does not directly compare web agents with standalone LLMs; research relevance is explicitly analyst inference."
+  ],
+  "validation_attempts": [
+    "Initial headings rejected; original retained; repaired heading labels only; source quotations all pass"
+  ],
+  "limitations_scope": "These are model-reported disclosures from the isolated summarization pass. Parent analyst source-hash checks, focused visual inspections and limited external metadata checks are recorded separately; no source hash or external artifact execution is inferred from model prose."
+}

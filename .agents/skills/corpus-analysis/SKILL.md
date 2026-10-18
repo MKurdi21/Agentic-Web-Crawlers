@@ -3,7 +3,7 @@ name: corpus-analysis
 description: Resume and verify the academic PDF analyses in this repository using the saved rubric, stable paper mapping, cumulative evidence, and checkpoints.
 ---
 
-> Current scope notice — 2026-10-16: the 112-paper Research Mode corpus is complete. This skill documents the historical analysis workflow and is maintenance-only. Do not execute the refresh/resume instructions below for routine literature work. Read `docs/RESEARCH_FOUNDATION_HANDOFF.md` and `research/README.md` first; any workflow reactivation requires a separately authorized task. Phase 4B is discontinued and B02–B08 reservations are retired for ordinary literature processing without changing historical evidence. The primary research proposal concerns task-dependent web-agent traps; the comparison study is secondary.
+> Current scope notice — 2026-10-18: the 123-paper Research Mode working extension is complete. The original 112-paper foundation remains frozen at tag `research-foundation-2026-10-17-v1`; completed sources/outputs must not be regenerated. This skill documents the historical analysis workflow and is maintenance-only. Do not execute the refresh/resume instructions below for routine literature work. Read `docs/RESEARCH_FOUNDATION_HANDOFF.md`, `research/README.md` and `docs/DOCUMENTATION_SYNCHRONIZATION_AUDIT.md` first. Phase 4B is discontinued; historical evidence and retirement decisions remain unchanged. The primary proposal concerns task-dependent web-agent traps; the standalone comparison is secondary. Protocol amendments are proposals, not implementation authorization.
 # Corpus Analysis
 
 Read `analysis/WORKFLOW.md` and `analysis/CHECKPOINT.md` from the repository

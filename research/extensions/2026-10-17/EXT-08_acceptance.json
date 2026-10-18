@@ -1,0 +1,32 @@
+{
+  "extension_id": "EXT-08",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "05_Agentic_Traps_Persistence_Adaptive_Attacks/Honeyval_A_Comprehensive_Evaluation_Framework_for_LLM-powered_HTTP_Honeypots.pdf",
+    "summary_name": "honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary.md",
+    "source_sha256": "32e446b46779825f21d14e2b4046d67bf5f5f04ecd8c27c4401ab82ba80102fd",
+    "category": "05_Agentic_Traps_Persistence_Adaptive_Attacks",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary.md",
+  "record": "research/records/honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary.json",
+  "summary_sha256": "665af6499728bd3eaef9dabcbc143855d1026f409ba032afc6b21b90585e6740",
+  "record_sha256": "95b2c3b53a080e15d947c62aa449c60f1775f28b0d99ba5955848f74ac0a59cf",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 16,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record/claim review against main methods, tables and appendix controls, prompts and API accounting. Request engagement distinguished from exploits and intelligence yield; detection requires real-app FPR; five repeats do not provide a raw run manifest. Cost-tier omission, resource-free impossible-goal setting and incomplete visual/statistical coverage retained. Parent inspected tables on physical pages6/8. No replication or independent human scientific validation.",
+  "validation_attempts": [
+    "Initial retained model response failed existing quality checks; original responses preserved. Section-label/source line-break repairs recorded in evidence/transcription_repair.json; existing runner retry finalized retained output without another model generation."
+  ]
+}

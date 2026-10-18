@@ -1,0 +1,194 @@
+{
+  "review_scope": "Focused analyst inspection, additional to existing multimodal runner; rendering is not counted as inspection. No independent human validation.",
+  "pages": [
+    {
+      "paper": "looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary",
+      "physical_page": 5,
+      "image": "research/evidence/looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary/page_005.png",
+      "image_sha256": "10625c3b12e5667d1536f5bc1ec91eb759d8978ebaab74cddda71a9607ec377d",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary",
+      "physical_page": 11,
+      "image": "research/evidence/looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary/page_011.png",
+      "image_sha256": "4d08cbaee29bb603082a9d4d53d2f1b9ce317547857cabde94cdd04c634cd4ed",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary",
+      "physical_page": 5,
+      "image": "research/evidence/silent_failures_in_agentic_security_evaluation_a_validated_harness_for_tool_call_mediation_under_indirect_prompt_injection_comprehensive_summary/page_005.png",
+      "image_sha256": "005b401f7f943068f33fa5ec7f4633af62e5a5170c429aa0879df20cde30f228",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary",
+      "physical_page": 4,
+      "image": "research/evidence/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary/analyst_page_004.png",
+      "image_sha256": "9f4706a03097226a7326816b92f97147115099e6ed3eba544619188cf3100a30",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary",
+      "physical_page": 5,
+      "image": "research/evidence/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary/analyst_page_005.png",
+      "image_sha256": "31fd78d00e8cd7864f314fb2b92d3307396f96edcaf7bf240b38071c0eb032da",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary",
+      "physical_page": 6,
+      "image": "research/evidence/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary/analyst_page_006.png",
+      "image_sha256": "05c8516d93e12543c7a77dcb29c82b12e6320b3590d867a4cd30927222b82b83",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary",
+      "physical_page": 7,
+      "image": "research/evidence/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary/analyst_page_007.png",
+      "image_sha256": "fdc43909cd303b59b1aab56ef084e194c2ae3a39bfcfae92e552d8416ea8ce14",
+      "observed": "Visually inspected text/table/plot conditions; original values and contradictions retained."
+    },
+    {
+      "paper": "looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary",
+      "physical_page": 8,
+      "image": "research/evidence/looptrap_termination_poisoning_attacks_on_llm_agents_comprehensive_summary/analyst_page_008.png",
+      "image_sha256": "c804de136b35d2b7deab795e1c82bb1d133dd9c1290071d8ce3e81e78c464dc4",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary",
+      "physical_page": 8,
+      "image": "research/evidence/logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary/page_008.png",
+      "image_sha256": "03dbc44f8add8df59f9574b9fe8c9c3b9080abed53cebe0369088328542121f8",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary",
+      "physical_page": 9,
+      "image": "research/evidence/logintrap_uncovering_task_agnostic_phishing_style_indirect_prompt_injection_attacks_against_llm_based_web_agents_comprehensive_summary/page_009.png",
+      "image_sha256": "d13a880ab650c97190dbb332087f39b71e692e2bef1d055558f11b2ed35debac",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary",
+      "physical_page": 7,
+      "image": "research/evidence/a_whole_new_world_creating_a_parallel_poisoned_web_only_ai_agents_can_see_comprehensive_summary/page_007.png",
+      "image_sha256": "892d4d53dc4919569f9015ea0bc7315fe70b5b4047cabff8941bad6b38f3ae53",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary",
+      "physical_page": 6,
+      "image": "research/evidence/honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary/page_006.png",
+      "image_sha256": "5cf66d9c3568318880c101072bfb28631c6961fec5331b8f1473f718e1115e52",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary",
+      "physical_page": 8,
+      "image": "research/evidence/honeyval_a_comprehensive_evaluation_framework_for_llm_powered_http_honeypots_comprehensive_summary/page_008.png",
+      "image_sha256": "c703db58cff77f9af9eb41c702a3c48afffd049455476b327680f6c70e19e776",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary",
+      "physical_page": 7,
+      "image": "research/evidence/the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary/page_007.png",
+      "image_sha256": "7c52dde7b429bd9f10e082c1665298822805928441be54e6e233edcb88868944",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary",
+      "physical_page": 5,
+      "image": "research/evidence/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary/page_005.png",
+      "image_sha256": "f293c1ce12acc6ce84ea9f3a1052106542cec74bbdf0e2f908f7ec552b315c79",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary",
+      "physical_page": 8,
+      "image": "research/evidence/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary/page_008.png",
+      "image_sha256": "fab22f1ab9fbf9c3019cb68325e5056796eca1ca6a2f0bfdb9b870944d454594",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary",
+      "physical_page": 17,
+      "image": "research/evidence/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary/page_017.png",
+      "image_sha256": "41dfffab8795b1bd1e4afa97695d3ec608f6c664accb8b65b09f8ad99429f225",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary",
+      "physical_page": 35,
+      "image": "research/evidence/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary/page_035.png",
+      "image_sha256": "7c06fefac4d8227e91bd6975d7ec5f6ebe50b418cc8983ae92b30bf2f113b431",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary",
+      "physical_page": 6,
+      "image": "research/evidence/why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary/page_006.png",
+      "image_sha256": "8eb6d97b2d90700902b55c1e540d60ba5ea634c5d8110ce4f1aff02971810630",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary",
+      "physical_page": 7,
+      "image": "research/evidence/why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary/page_007.png",
+      "image_sha256": "4653a61b18d1aeeb75fff440e78fee3c36b3c2be5cb33d103842daa5a3bc55c8",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary",
+      "physical_page": 6,
+      "image": "research/evidence/a_framework_for_studying_ai_agent_behavior_evidence_from_consumer_choice_experiments_comprehensive_summary/page_006.png",
+      "image_sha256": "68e0e79d546a28e09d8c29f754fc0b4943b63e17424b32e1dc0c423e207f01e0",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary",
+      "physical_page": 3,
+      "image": "research/evidence/webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary/page_003.png",
+      "image_sha256": "e56a270ed1250661f97ae945e45ecb0f3473c5a8bd50fae368966426183760cf",
+      "observed": "Actually visually inspected consequential table/plot/diagram/equation and compared with source text; original values and limitations retained."
+    },
+    {
+      "paper": "the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary",
+      "physical_page": 23,
+      "image": "research/evidence/the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary/page_023.png",
+      "image_sha256": "b2fe82f136a0df90169e93f9c22f0963a7621a07696d10cfa535ad80e83238ed",
+      "observed": "Previously visually inspected: Table23 factorial and Table29 retry rows; caption and row discrepancies retained."
+    },
+    {
+      "paper": "the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary",
+      "physical_page": 25,
+      "image": "research/evidence/the_compliance_trap_diagnosing_how_ai_agents_consume_conflicting_memory_comprehensive_summary/page_025.png",
+      "image_sha256": "739377342eeb1cc279d63627e760a7e439bcac14c55eebebccfef69725bbf7f3",
+      "observed": "Previously visually inspected: Table23 factorial and Table29 retry rows; caption and row discrepancies retained."
+    },
+    {
+      "paper": "why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary",
+      "physical_page": 20,
+      "image": "research/evidence/why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary/page_020.png",
+      "image_sha256": "e05dbf142d76bef4afa0e04af51e1498e0cac6a03a150b646059fe1e11b375a1",
+      "observed": "Figure6 NL/PDDL illustration and Figure7 action-frequency panels inspected. Gemini panel visibly labels flash4.5, conflicting with method flash2.5. Counts are action frequencies, not independent tasks."
+    },
+    {
+      "paper": "webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary",
+      "physical_page": 2,
+      "image": "research/evidence/webrollback_enhancing_web_agents_with_explicit_rollback_mechanisms_comprehensive_summary/page_002.png",
+      "image_sha256": "24bec3e9fde855ed87d4673409b517837357fa6c6b2ce91a32f166caa6b346a0",
+      "observed": "Figure2 and Algorithm1 visually inspected; when/where rollback, S initialization/truncation and multi-step compound-word line break checked. No runtime execution inferred."
+    },
+    {
+      "paper": "why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary",
+      "physical_page": 21,
+      "image": "research/evidence/why_do_llm_based_web_agents_fail_a_hierarchical_planning_perspective_comprehensive_summary/page_021.png",
+      "image_sha256": "1575e4b24c69494d36059c0d850bbbcc465db519b903be8578484b9a302da9fd",
+      "observed": "Tables6\u20139 and Figures9\u201311 visually inspected: Claude23.6 redundancy;17.4+83.6 alignment total101;16.3 versus16.2 initial PDDL panel discrepancy. Endpoint/denominator labels preserved."
+    }
+  ]
+}

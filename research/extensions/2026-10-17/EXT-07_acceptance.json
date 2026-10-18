@@ -1,0 +1,32 @@
+{
+  "extension_id": "EXT-07",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "12_Contextual_Borderline/Machine-Readable_Ads_Accessibility_and_Trust_Patterns_for_AI_Web_Agents_interacting_with_Online_Advertisements.pdf",
+    "summary_name": "machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary.md",
+    "source_sha256": "e9ef5c7a4679b62abbb17bc8e79ff145ebc936810f721395b1b90c197a767eca",
+    "category": "12_Contextual_Borderline",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary.md",
+  "record": "research/records/machine_readable_ads_accessibility_and_trust_patterns_for_ai_web_agents_interacting_with_online_advertisements_comprehensive_summary.json",
+  "summary_sha256": "c71990defbdb0b28a1de119ee9e36390264b13aed0855e5e2da04132c7b16387",
+  "record_sha256": "6761f7b66c1f17d512339583523ae831afb7a197b5030e88eaaf60f63a977179",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 12,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record and12 typed claims reviewed against methods, all seven tables and discussion. Parent visually inspected physical pages4–7; isolated-model image coverage is explicitly scoped in amended Stage0. DOM/button/offscreen access, synthetic subscription choices, coarse consent, runtime/modality confounding, scroll-summary and tier-accounting inconsistencies retained. Legal interpretation remains source-reported, not independently validated. No replication or independent human scientific validation.",
+  "validation_attempts": [
+    "Initial raw response failed existing quality; response preserved. Section-label or source line-break transcription corrections recorded; retained-output retry used no new generation. Ads additionally received scoped parent visual-review amendment through the existing finalizer, preserving prior deliverables."
+  ]
+}

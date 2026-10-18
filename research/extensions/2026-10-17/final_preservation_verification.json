@@ -1,0 +1,18 @@
+{
+  "observed_at_utc": "2026-10-18T13:53:35.562508+00:00",
+  "protected_files_checked": 34171,
+  "unexpected_protected_changes": [],
+  "original_evidence_files_checked": 2786,
+  "changed_original_evidence": [],
+  "original_source_count": 112,
+  "changed_original_sources": [],
+  "original_summary_record_files": 224,
+  "archive_count": 5,
+  "changed_archives": [],
+  "head_unchanged": true,
+  "tag_object_unchanged": true,
+  "tag_target_unchanged": true,
+  "staged_paths": [],
+  "scope": "Protected paths exclude only the14 previously declared authorized mutations; new source/output/evidence paths are outside historical baseline. Current metadata/synthesis are validated separately.",
+  "status": "PASS"
+}

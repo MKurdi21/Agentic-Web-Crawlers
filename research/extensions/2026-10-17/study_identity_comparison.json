@@ -1,0 +1,222 @@
+[
+  {
+    "extension_id": "EXT-01",
+    "nearest_titles": [
+      [
+        0.5740740740740741,
+        "Prompt Injection Attack to Tool Selection in LLM Agents",
+        "toolhijacker_comprehensive_summary.md"
+      ],
+      [
+        0.5688073394495413,
+        "Hidden in Memory: Sleeper Memory Poisoning in LLM Agents",
+        "hidden_in_memory_sleeper_memory_poisoning_in_llm_agents_comprehensive_summary.md"
+      ],
+      [
+        0.5346534653465347,
+        "WebInject: Prompt Injection Attack to Web Agents",
+        "webinject_prompt_injection_attack_to_web_agents_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-02",
+    "nearest_titles": [
+      [
+        0.47297297297297297,
+        "The Long-Horizon Task Mirage? Diagnosing Where and Why Agentic Systems Break",
+        "the_long_horizon_task_mirage_diagnosing_where_and_why_agentic_systems_break_comprehensive_summary.md"
+      ],
+      [
+        0.4533333333333333,
+        "DoomArena: A Framework for Testing AI Agents Against Evolving Security Threats",
+        "doomarena_a_framework_for_testing_ai_agents_against_evolving_security_threats_comprehensive_summary.md"
+      ],
+      [
+        0.44642857142857145,
+        "The Hidden Dangers of Browsing AI Agents",
+        "the_hidden_dangers_of_browsing_ai_agents_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-03",
+    "nearest_titles": [
+      [
+        0.48484848484848486,
+        "AgentRewardBench: Evaluating Automatic Evaluations of Web Agent Trajectories",
+        "agentrewardbench_evaluating_automatic_evaluations_of_web_agent_trajectories_comprehensive_summary.md"
+      ],
+      [
+        0.46060606060606063,
+        "WebChoreArena: Evaluating Web Browsing Agents on Realistic Tedious Web Tasks",
+        "webchorearena_evaluating_web_browsing_agents_on_realistic_tedious_web_tasks_comprehensive_summary.md"
+      ],
+      [
+        0.4444444444444444,
+        "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+        "webvoyager_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-04",
+    "nearest_titles": [
+      [
+        0.4682926829268293,
+        "SecureWebArena: A Holistic Security Evaluation Benchmark for LVLM-based Web Agents",
+        "securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md"
+      ],
+      [
+        0.46632124352331605,
+        "WASP: Benchmarking Web Agent Security Against Prompt Injection Attacks",
+        "wasp_comprehensive_summary.md"
+      ],
+      [
+        0.42857142857142855,
+        "Overcoming the Retrieval Barrier: Indirect Prompt Injection in the Wild for LLM Systems",
+        "retrieval_barrier_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-05",
+    "nearest_titles": [
+      [
+        0.5555555555555556,
+        "DoomArena: A Framework for Testing AI Agents Against Evolving Security Threats",
+        "doomarena_a_framework_for_testing_ai_agents_against_evolving_security_threats_comprehensive_summary.md"
+      ],
+      [
+        0.40993788819875776,
+        "AUTOSCRAPER: A Progressive Understanding Web Agent for Web Scraper Generation",
+        "autoscraper_comprehensive_summary.md"
+      ],
+      [
+        0.39473684210526316,
+        "Don\u2019t Click That: Teaching Web Agents to Resist Deceptive Interfaces",
+        "dont_click_that_teaching_web_agents_to_resist_deceptive_interfaces_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-06",
+    "nearest_titles": [
+      [
+        0.5658536585365853,
+        "AGENTVIGIL: Automatic Black-Box Red-teaming for Indirect Prompt Injection against LLM Agents",
+        "agentvigil_generic_black_box_red_teaming_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md"
+      ],
+      [
+        0.5615763546798029,
+        "AgentVigil: Generic Black-Box Red-teaming for Indirect Prompt Injection against LLM Agents",
+        "agentfuzzer_generic_black_box_fuzzing_for_indirect_prompt_injection_against_llm_agents_comprehensive_summary.md"
+      ],
+      [
+        0.5471698113207547,
+        "The Task Shield: Enforcing Task Alignment to Defend Against Indirect Prompt Injection in LLM Agents",
+        "the_task_shield_enforcing_task_alignment_to_defend_against_indirect_prompt_injection_in_llm_agents_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-07",
+    "nearest_titles": [
+      [
+        0.4756756756756757,
+        "WARD: Adversarially Robust Defense of Web Agents Against Prompt Injections",
+        "ward_comprehensive_summary.md"
+      ],
+      [
+        0.45595854922279794,
+        "WebShop: Towards Scalable Real-World Web Interaction with Grounded Language Agents",
+        "webshop_comprehensive_summary.md"
+      ],
+      [
+        0.42328042328042326,
+        "DoomArena: A Framework for Testing AI Agents Against Evolving Security Threats",
+        "doomarena_a_framework_for_testing_ai_agents_against_evolving_security_threats_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-08",
+    "nearest_titles": [
+      [
+        0.4936708860759494,
+        "SecureWebArena: A Holistic Security Evaluation Benchmark for LVLM-based Web Agents",
+        "securewebarena_a_holistic_security_evaluation_benchmark_for_lvlm_based_web_agents_comprehensive_summary.md"
+      ],
+      [
+        0.43137254901960786,
+        "IsolateGPT: An Execution Isolation Architecture for LLM-Based Agentic Systems",
+        "isolategpt_an_execution_isolation_architecture_for_llm_based_agentic_systems_comprehensive_summary.md"
+      ],
+      [
+        0.4105960264900662,
+        "BackdoorAgent: A Unified Framework for Backdoor Attacks on LLM-based Agents",
+        "backdooragent_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-09",
+    "nearest_titles": [
+      [
+        0.5190839694656488,
+        "Untrusted Content Masking for Web Agents with Security Guarantees",
+        "untrusted_content_masking_for_web_agents_with_security_guarantees_comprehensive_summary.md"
+      ],
+      [
+        0.5161290322580645,
+        "Go-Browse: Training Web Agents with Structured Exploration",
+        "go_browse_comprehensive_summary.md"
+      ],
+      [
+        0.4732824427480916,
+        "Odysseys: Benchmarking Web Agents on Realistic Long Horizon Tasks",
+        "odysseys_benchmarking_web_agents_on_realistic_long_horizon_tasks_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-10",
+    "nearest_titles": [
+      [
+        0.45588235294117646,
+        "GUIDE: Interpretable GUI Agent Evaluation via Hierarchical Diagnosis",
+        "guide_interpretable_gui_agent_evaluation_via_hierarchical_diagnosis_comprehensive_summary.md"
+      ],
+      [
+        0.4166666666666667,
+        "Commercial LLM Agents Are Already Vulnerable to Simple Yet Dangerous Attacks",
+        "commercial_llm_agents_are_already_vulnerable_to_simple_yet_dangerous_attacks_comprehensive_summary.md"
+      ],
+      [
+        0.41134751773049644,
+        "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+        "webvoyager_comprehensive_summary.md"
+      ]
+    ]
+  },
+  {
+    "extension_id": "EXT-11",
+    "nearest_titles": [
+      [
+        0.4533333333333333,
+        "AgentRewardBench: Evaluating Automatic Evaluations of Web Agent Trajectories",
+        "agentrewardbench_evaluating_automatic_evaluations_of_web_agent_trajectories_comprehensive_summary.md"
+      ],
+      [
+        0.44,
+        "WebChoreArena: Evaluating Web Browsing Agents on Realistic Tedious Web Tasks",
+        "webchorearena_evaluating_web_browsing_agents_on_realistic_tedious_web_tasks_comprehensive_summary.md"
+      ],
+      [
+        0.42748091603053434,
+        "SafeArena: Evaluating the Safety of Autonomous Web Agents",
+        "safearena_comprehensive_summary.md"
+      ]
+    ]
+  }
+]

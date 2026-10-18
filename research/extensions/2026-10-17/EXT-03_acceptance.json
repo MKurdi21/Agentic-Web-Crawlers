@@ -1,0 +1,45 @@
+{
+  "extension_id": "EXT-03",
+  "decision": "ADMIT",
+  "acceptance": "ACCEPTED_FOR_LITERATURE_USE_WITH_REPORTED_LIMITATIONS",
+  "source": {
+    "pdf": "09_Progress_Long_Horizon_Benign_Controls/Where_Did_It_Go_Wrong_Process-Level_Evaluation_of_Web_Agents_with_Semantic_State_Tracking.pdf",
+    "summary_name": "where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary.md",
+    "source_sha256": "ce01b7c59832dbe11a1d60f3610d6bb620d956c5dcb3d0cf4192da56b2076037",
+    "category": "09_Progress_Long_Horizon_Benign_Controls",
+    "tags": [
+      "literature-extension"
+    ],
+    "excluded_holdout": null,
+    "hash_basis": "observed"
+  },
+  "summary": "research/summaries/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary.md",
+  "record": "research/records/where_did_it_go_wrong_process_level_evaluation_of_web_agents_with_semantic_state_tracking_comprehensive_summary.json",
+  "summary_sha256": "0e9418f764ff2964edc669cdd8ca9dd92c252c6a7dda3b18a707f75b765ac9c6",
+  "record_sha256": "cef7baf36688c531f729137486b46b4eb2f3a1b51562dcf61df8005a18b8067a",
+  "checks": {
+    "structural_checks": "passed",
+    "schema_checks": "passed",
+    "source_quote_checks": "passed",
+    "supported_claim_count": 13,
+    "scientific_validation": "not performed",
+    "limitations": "Quotation presence and page bounds do not prove claim entailment or full coverage."
+  },
+  "review": "Narrative/record readback, typed claims and source method/results/limitations reviewed; focused visual inspection of consequential tables/figures. No independent human validation or reproduction.",
+  "review_findings": "Workshop/public arXiv abstract mismatch retained. SafePass modifies actual completion; Claude DOM assistance confounds modality; oracles are not established globally shortest. Coverage non-discriminative for226/1800 initially satisfied tasks(p.18). Synthetic sites and disabled external actions constrain transfer.",
+  "visual_limitations": [
+    "Closed-document analysis used only supplied text and images; no tools, browsing, OCR, code execution, or hash verification.",
+    "All 48 pages have supplied text, but seven pages lack visual renderings; Equation (2) and Appendix A have text-only coverage.",
+    "Dense screenshot details are partially unreadable; readable captions and extracted text were used with explicit visual qualifications.",
+    "Some secondary table cells, template labels, skill lists, graph actions, and repeated examples are deliberately compressed.",
+    "All reported terminal success rates use Safe Pass, modifying the simpler complete-final-action definition.",
+    "Claude's DOM-assisted harness differs from the pixel-based inputs of the other agents.",
+    "Oracle optimality, Figure 5 counting units, Figure 6 uncertainty encoding, Calendar graph completeness, and Figure 26 step wording remain unresolved.",
+    "The paper evaluates benign task performance, not adversarial security, and provides no standalone-LLM vulnerability comparison.",
+    "No separate supplements or executable artifacts were supplied; release promises were not verified."
+  ],
+  "validation_attempts": [
+    "Initial runner output passed; source appendix qualifications explicitly reviewed"
+  ],
+  "limitations_scope": "These are model-reported disclosures from the isolated summarization pass. Parent analyst source-hash checks, focused visual inspections and limited external metadata checks are recorded separately; no source hash or external artifact execution is inferred from model prose."
+}
